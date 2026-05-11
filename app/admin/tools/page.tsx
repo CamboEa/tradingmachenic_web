@@ -1,3 +1,5 @@
+import { R2Uploader } from "@/components/r2-uploader";
+
 export const metadata = { title: "Tools" };
 
 const TOOL_TYPES = ["Indicator", "Expert Advisor (EA)"] as const;
@@ -106,35 +108,13 @@ export default function ToolsPage() {
             </div>
 
             {/* File upload */}
-            <div>
-              <label className="mb-1.5 block text-xs font-semibold text-slate-600">
-                File (.ex4 / .ex5 / .mq4 / .mq5)
-              </label>
-              <div className="flex cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-slate-200 bg-slate-50 px-4 py-8 transition hover:border-[#0ea5e9] hover:bg-sky-50">
-                <div className="text-center">
-                  <svg
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                    className="mx-auto h-8 w-8 text-slate-300"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M10 1a.75.75 0 0 1 .75.75v6.69l2.22-2.22a.75.75 0 0 1 1.06 1.06l-3.5 3.5a.75.75 0 0 1-1.06 0l-3.5-3.5a.75.75 0 0 1 1.06-1.06l2.22 2.22V1.75A.75.75 0 0 1 10 1ZM3 15.75a.75.75 0 0 1 .75-.75h12.5a.75.75 0 0 1 0 1.5H3.75a.75.75 0 0 1-.75-.75Z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  <p className="mt-2 text-xs text-slate-500">
-                    Drop file here or{" "}
-                    <span className="font-semibold text-[#0ea5e9]">
-                      browse
-                    </span>
-                  </p>
-                  <p className="mt-1 text-[10px] text-slate-400">
-                    .ex4, .ex5, .mq4, .mq5 — max 10 MB
-                  </p>
-                </div>
-              </div>
-            </div>
+            <R2Uploader
+              folder="tools"
+              accept=".ex4,.ex5,.mq4,.mq5,.zip"
+              label="File (.ex4 / .ex5 / .mq4 / .mq5)"
+              hint=".ex4, .ex5, .mq4, .mq5, .zip — max 20 MB"
+              onUploaded={(url) => console.log("Tool uploaded:", url)}
+            />
 
             {/* Install guide URL */}
             <div>

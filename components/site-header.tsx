@@ -1,8 +1,10 @@
 "use client";
 
+import type { User } from "@supabase/supabase-js";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import { ProfileMenu } from "@/components/profile-menu";
 import type { Dictionary, Locale } from "@/lib/i18n";
 import { locales } from "@/lib/i18n";
 
@@ -32,7 +34,7 @@ function LanguageToggle({
         href={hrefWithLocale(pathname, "en")}
         className={
           locale === "en"
-            ? "rounded-full bg-[color-mix(in_oklab,var(--color-gold)_22%,transparent)] px-3 py-1 text-[var(--color-ink)]"
+            ? "rounded-full bg-[color-mix(in_oklab,var(--color-gold)_22%,transparent)] px-3 py-1 text-(--color-ink)"
             : "rounded-full px-3 py-1 transition-colors hover:bg-[color-mix(in_oklab,var(--color-teal)_12%,transparent)]"
         }
         hrefLang="en"
@@ -43,7 +45,7 @@ function LanguageToggle({
         href={hrefWithLocale(pathname, "km")}
         className={
           locale === "km"
-            ? "rounded-full bg-[color-mix(in_oklab,var(--color-gold)_22%,transparent)] px-3 py-1 text-[var(--color-ink)]"
+            ? "rounded-full bg-[color-mix(in_oklab,var(--color-gold)_22%,transparent)] px-3 py-1 text-(--color-ink)"
             : "rounded-full px-3 py-1 transition-colors hover:bg-[color-mix(in_oklab,var(--color-teal)_12%,transparent)]"
         }
         hrefLang="km"
@@ -65,13 +67,13 @@ function RegisterLoginLinks({
     <>
       <Link
         href={`/${locale}/register`}
-        className="rounded-lg border border-[color-mix(in_oklab,var(--color-gold)_42%,var(--color-bridge))] bg-[var(--color-surface)] px-3 py-1.5 text-xs font-semibold text-[var(--color-ink)] transition hover:border-[var(--color-gold)] sm:px-4 sm:py-2 sm:text-sm"
+        className="rounded-lg border border-[color-mix(in_oklab,var(--color-gold)_42%,var(--color-bridge))] bg-(--color-surface) px-3 py-1.5 text-xs font-semibold text-(--color-ink) transition hover:border-(--color-gold) sm:px-4 sm:py-2 sm:text-sm"
       >
         {dict.nav.register}
       </Link>
       <Link
         href={`/${locale}/login`}
-        className="rounded-lg bg-[var(--color-teal)] px-3 py-1.5 text-xs font-semibold text-white transition hover:brightness-105 sm:px-4 sm:py-2 sm:text-sm"
+        className="rounded-lg bg-(--color-teal) px-3 py-1.5 text-xs font-semibold text-white transition hover:brightness-105 sm:px-4 sm:py-2 sm:text-sm"
       >
         {dict.nav.login}
       </Link>
@@ -79,19 +81,25 @@ function RegisterLoginLinks({
   );
 }
 
-/** Register, Login, and language toggle aligned on the right */
+/** Register, Login (or Sign Out), and language toggle aligned on the right */
 function AuthLanguageCluster({
   locale,
   pathname,
   dict,
+  user,
 }: {
   locale: Locale;
   pathname: string;
   dict: Dictionary;
+  user?: User | null;
 }) {
   return (
     <div className="flex max-w-full flex-wrap items-center justify-end gap-x-2 gap-y-2 sm:gap-x-3">
-      <RegisterLoginLinks locale={locale} dict={dict} />
+      {user ? (
+        <ProfileMenu user={user} signOutLabel={dict.nav.signOut} />
+      ) : (
+        <RegisterLoginLinks locale={locale} dict={dict} />
+      )}
       <span
         className="hidden h-5 w-px shrink-0 bg-[color-mix(in_oklab,var(--color-bridge)_55%,transparent)] sm:block"
         aria-hidden
@@ -111,7 +119,7 @@ function CenterNav({
   linkClass: string;
 }) {
   return (
-    <nav className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-sm font-medium text-[var(--color-ink-muted)] lg:gap-x-6">
+    <nav className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-sm font-medium text-(--color-ink-muted) lg:gap-x-6">
       <Link href={`/${locale}`} className={linkClass}>
         {dict.nav.home}
       </Link>
@@ -134,22 +142,24 @@ function CenterNav({
 export function SiteHeader({
   locale,
   dict,
+  user,
 }: {
   locale: Locale;
   dict: Dictionary;
+  user?: User | null;
 }) {
   const pathname = usePathname() ?? `/${locale}`;
   const linkClass =
-    "transition-colors hover:text-[var(--color-gold)] whitespace-nowrap";
+    "transition-colors hover:text-(--color-gold) whitespace-nowrap";
 
   return (
-    <header className="border-b border-[color-mix(in_oklab,var(--color-bridge)_12%,transparent)] bg-[var(--color-surface)]">
+    <header className="border-b border-[color-mix(in_oklab,var(--color-bridge)_12%,transparent)] bg-(--color-surface)">
       <div className="mx-auto max-w-6xl px-4 py-4 lg:px-8">
         <div className="flex flex-col gap-4 sm:hidden">
           <div className="flex items-start justify-between gap-3">
             <Link
               href={`/${locale}`}
-              className="text-lg font-semibold tracking-tight text-[var(--color-ink)]"
+              className="text-lg font-semibold tracking-tight text-(--color-ink)"
             >
               Trading Machenic
             </Link>
@@ -157,6 +167,7 @@ export function SiteHeader({
               locale={locale}
               pathname={pathname}
               dict={dict}
+              user={user}
             />
           </div>
           <CenterNav locale={locale} dict={dict} linkClass={linkClass} />
@@ -166,7 +177,7 @@ export function SiteHeader({
           <div className="flex min-w-0 justify-start">
             <Link
               href={`/${locale}`}
-              className="text-lg font-semibold tracking-tight text-[var(--color-ink)]"
+              className="text-lg font-semibold tracking-tight text-(--color-ink)"
             >
               Trading Machenic
             </Link>
@@ -177,6 +188,7 @@ export function SiteHeader({
               locale={locale}
               pathname={pathname}
               dict={dict}
+              user={user}
             />
           </div>
         </div>

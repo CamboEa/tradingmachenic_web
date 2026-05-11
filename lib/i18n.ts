@@ -16,6 +16,7 @@ export type Dictionary = {
     about: string;
     register: string;
     login: string;
+    signOut: string;
     language: string;
     english: string;
     khmer: string;
@@ -142,6 +143,7 @@ const en: Dictionary = {
     about: "About",
     register: "Register",
     login: "Login",
+    signOut: "Sign Out",
     language: "Language",
     english: "ENG",
     khmer: "KH",
@@ -336,6 +338,7 @@ const km: Dictionary = {
     about: "អំពី",
     register: "ចុះឈ្មោះ",
     login: "ចូល",
+    signOut: "ចាកចេញ",
     language: "ភាសា",
     english: "ENG",
     khmer: "KH",

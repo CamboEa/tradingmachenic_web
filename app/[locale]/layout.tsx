@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { getDictionary, isLocale, type Locale } from "@/lib/i18n";
+import { createClient } from "@/lib/supabase/server";
 
 export async function generateStaticParams() {
   return [{ locale: "km" }, { locale: "en" }];
@@ -42,9 +43,12 @@ export default async function LocaleLayout({
   const locale = raw as Locale;
   const dict = await getDictionary(locale);
 
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
   return (
     <div className="flex flex-1 flex-col">
-      <SiteHeader locale={locale} dict={dict} />
+      <SiteHeader locale={locale} dict={dict} user={user} />
       <div className="flex flex-1 flex-col">{children}</div>
       <SiteFooter dict={dict} />
     </div>

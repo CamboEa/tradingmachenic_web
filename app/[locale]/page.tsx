@@ -56,19 +56,7 @@ export default async function HomePage({
               >
                 {dict.home.ctaOutline}
               </Link>
-            </div>
-            <dl className="mt-14 grid grid-cols-3 gap-6 border-t border-[color-mix(in_oklab,var(--color-bridge)_55%,transparent)] pt-10">
-              {stats.map((item) => (
-                <div key={item.label}>
-                  <dt className="text-[11px] font-medium uppercase tracking-wide text-[var(--color-ink-soft)]">
-                    {item.label}
-                  </dt>
-                  <dd className="mt-2 text-2xl font-semibold tabular-nums tracking-tight text-[var(--color-ink)]">
-                    {item.value}
-                  </dd>
-                </div>
-              ))}
-            </dl>
+            </div>            
           </div>
           </Reveal>
         </div>

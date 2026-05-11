@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { AuthPlaceholderForm } from "@/components/auth-placeholder-form";
+import { AuthForm } from "@/components/auth-form";
 import { getDictionary, isLocale, type Locale } from "@/lib/i18n";
 
 export default async function RegisterPage({
@@ -16,23 +16,21 @@ export default async function RegisterPage({
 
   return (
     <main className="mx-auto w-full max-w-md flex-1 px-4 py-12 sm:px-6 lg:px-8 lg:py-20">
-      <h1 className="text-3xl font-semibold tracking-tight text-[var(--color-ink)]">
+      <h1 className="text-3xl font-semibold tracking-tight text-(--color-ink)">
         {dict.registerPage.title}
       </h1>
-      <p className="mt-3 text-sm leading-relaxed text-[var(--color-ink-muted)]">
-        {dict.registerPage.intro}
-      </p>
-      <AuthPlaceholderForm
+      <AuthForm
         mode="register"
         emailLabel={dict.registerPage.emailLabel}
         passwordLabel={dict.registerPage.passwordLabel}
         submitLabel={dict.registerPage.submit}
+        locale={locale}
       />
-      <p className="mt-8 text-center text-sm text-[var(--color-ink-muted)]">
+      <p className="mt-8 text-center text-sm text-(--color-ink-muted)">
         {dict.registerPage.switchPrompt}{" "}
         <Link
           href={`/${locale}/login`}
-          className="font-semibold text-[var(--color-teal)] hover:underline"
+          className="font-semibold text-(--color-teal) hover:underline"
         >
           {dict.registerPage.switchLink}
         </Link>
