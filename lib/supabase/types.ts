@@ -1,31 +1,13 @@
 export type ToolType = "indicator" | "ea";
 export type ToolStatus = "draft" | "published";
+export type LessonStatus = "draft" | "published";
+export type LessonType = "free" | "paid";
 export type Platform = "MT4" | "MT5" | "MT4 & MT5";
 export type UserRole = "student" | "admin";
 
 export type Database = {
   public: {
     Tables: {
-      tools: {
-        Row: {
-          id: string;
-          created_at: string;
-          name: string;
-          type: ToolType;
-          platform: Platform;
-          version: string;
-          description_en: string | null;
-          description_km: string | null;
-          install_guide_url: string | null;
-          file_url: string | null;
-          status: ToolStatus;
-        };
-        Insert: Omit<
-          Database["public"]["Tables"]["tools"]["Row"],
-          "id" | "created_at"
-        >;
-        Update: Partial<Database["public"]["Tables"]["tools"]["Insert"]>;
-      };
       profiles: {
         Row: {
           id: string;
@@ -34,11 +16,75 @@ export type Database = {
           full_name: string | null;
           role: UserRole;
         };
-        Insert: Omit<
-          Database["public"]["Tables"]["profiles"]["Row"],
-          "created_at"
-        >;
+        Insert: Omit<Database["public"]["Tables"]["profiles"]["Row"], "created_at">;
         Update: Partial<Database["public"]["Tables"]["profiles"]["Insert"]>;
+        Relationships: [];
+      };
+      tools: {
+        Row: {
+          id: string;
+          created_at: string;
+          name: string;
+          type: ToolType;
+          platform: Platform;
+          pricing: "free" | "paid";
+          version: string;
+          description_en: string | null;
+          description_km: string | null;
+          install_guide_url: string | null;
+          file_url: string | null;
+          image_url: string | null;
+          status: ToolStatus;
+        };
+        Insert: Omit<Database["public"]["Tables"]["tools"]["Row"], "id" | "created_at">;
+        Update: Partial<Database["public"]["Tables"]["tools"]["Insert"]>;
+        Relationships: [];
+      };
+      lessons: {
+        Row: {
+          id: string;
+          created_at: string;
+          slug: string;
+          title_en: string;
+          title_km: string;
+          summary_en: string | null;
+          summary_km: string | null;
+          thumbnail_url: string | null;
+          approximate_minutes: number | null;
+          type: LessonType | null;
+          objectives_en: string[];
+          objectives_km: string[];
+          status: LessonStatus;
+        };
+        Insert: Omit<Database["public"]["Tables"]["lessons"]["Row"], "id" | "created_at" | "thumbnail_url" | "objectives_en" | "objectives_km"> & {
+          thumbnail_url?: string | null;
+          objectives_en?: string[];
+          objectives_km?: string[];
+        };
+        Update: Partial<Database["public"]["Tables"]["lessons"]["Insert"]>;
+        Relationships: [];
+      };
+      lesson_videos: {
+        Row: {
+          id: string;
+          created_at: string;
+          lesson_id: string;
+          embed_url: string;
+          title_en: string | null;
+          title_km: string | null;
+          sort_order: number;
+        };
+        Insert: Omit<Database["public"]["Tables"]["lesson_videos"]["Row"], "id" | "created_at">;
+        Update: Partial<Database["public"]["Tables"]["lesson_videos"]["Insert"]>;
+        Relationships: [
+          {
+            foreignKeyName: "lesson_videos_lesson_id_fkey";
+            columns: ["lesson_id"];
+            isOneToOne: false;
+            referencedRelation: "lessons";
+            referencedColumns: ["id"];
+          }
+        ];
       };
     };
     Views: Record<string, never>;

@@ -2,11 +2,12 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { LessonPlayer } from "@/components/lesson-player";
-import { getLessonBySlug, lessons } from "@/lib/course";
+import { getAllLessons, getLessonBySlug } from "@/lib/supabase/lessons";
 import { getDictionary, isLocale, type Locale } from "@/lib/i18n";
 
 export async function generateStaticParams() {
   const paths: { locale: Locale; slug: string }[] = [];
+  const lessons = await getAllLessons();
   for (const locale of ["km", "en"] as const) {
     for (const lesson of lessons) {
       paths.push({ locale, slug: lesson.slug });
@@ -23,7 +24,7 @@ export async function generateMetadata({
   const { locale: raw, slug } = await params;
   if (!isLocale(raw)) return {};
   const locale = raw as Locale;
-  const lesson = getLessonBySlug(slug);
+  const lesson = await getLessonBySlug(slug);
   if (!lesson) return {};
   return {
     title: lesson.titles[locale],
@@ -40,7 +41,7 @@ export default async function LessonPage({
   if (!isLocale(raw)) notFound();
   const locale = raw as Locale;
   const dict = await getDictionary(locale);
-  const lesson = getLessonBySlug(slug);
+  const lesson = await getLessonBySlug(slug);
   if (!lesson) notFound();
   return (
     <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-12 sm:px-6 lg:px-8 lg:py-16">  

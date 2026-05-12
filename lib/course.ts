@@ -16,6 +16,7 @@ export type Lesson = {
   titles: Record<Locale, string>;
   summaries: Record<Locale, string>;
   objectives: Record<Locale, string[]>;
+  type?: "free" | "paid";
 };
 
 export function youtubeThumbnailFromEmbed(embedUrl: string): string | null {

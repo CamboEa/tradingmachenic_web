@@ -1,55 +1,94 @@
 import { type NextRequest, NextResponse } from "next/server";
 
-import { presignUpload, type UploadFolder } from "@/lib/r2/upload";
+import { presignUpload, type BucketName } from "@/lib/r2/upload";
+import { createClient as createSupabaseAdmin } from "@supabase/supabase-js";
+import { createClient } from "@/lib/supabase/server";
 
-const ALLOWED_FOLDERS: UploadFolder[] = ["videos", "tools"];
+const ALLOWED_BUCKETS: BucketName[] = ["trading-lesson", "trading-tool"];
 
-const ALLOWED_TYPES: Record<UploadFolder, string[]> = {
-  videos: ["video/mp4", "video/webm", "video/quicktime"],
-  tools: [
+const ALLOWED_TYPES: Record<BucketName, string[]> = {
+  "trading-lesson": ["video/mp4", "video/webm", "video/quicktime"],
+  "trading-tool": [
     "application/octet-stream",
     "application/zip",
     "application/x-zip-compressed",
   ],
 };
 
-const MAX_SIZE_MB: Record<UploadFolder, number> = {
-  videos: 500,
-  tools: 20,
+const MAX_SIZE_MB: Record<BucketName, number> = {
+  "trading-lesson": 500,
+  "trading-tool": 20,
 };
 
 export async function POST(request: NextRequest) {
   try {
+    // Check authentication
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      return NextResponse.json(
+        { error: "Unauthorized: Please sign in" },
+        { status: 401 }
+      );
+    }
+
+    // Check admin role using bare service-role client (no cookies needed)
+    const serviceClient = createSupabaseAdmin(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!,
+      { auth: { autoRefreshToken: false, persistSession: false } }
+    );
+
+    const { data: profile } = await serviceClient
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .single();
+
+    if (!profile || profile.role !== "admin") {
+      return NextResponse.json(
+        { error: "Forbidden: Admin access required" },
+        { status: 403 }
+      );
+    }
+
     const body = await request.json();
-    const { folder, filename, contentType, sizeBytes } = body as {
-      folder: string;
+    const { bucketName, filename, contentType, sizeBytes } = body as {
+      bucketName: string;
       filename: string;
       contentType: string;
       sizeBytes: number;
     };
 
-    if (!ALLOWED_FOLDERS.includes(folder as UploadFolder)) {
-      return NextResponse.json({ error: "Invalid folder" }, { status: 400 });
+    if (!ALLOWED_BUCKETS.includes(bucketName as BucketName)) {
+      return NextResponse.json({ error: "Invalid bucket" }, { status: 400 });
     }
 
-    const typedFolder = folder as UploadFolder;
-    const maxBytes = MAX_SIZE_MB[typedFolder] * 1024 * 1024;
+    const typedBucket = bucketName as BucketName;
+    const maxBytes = MAX_SIZE_MB[typedBucket] * 1024 * 1024;
 
     if (sizeBytes > maxBytes) {
       return NextResponse.json(
-        { error: `File exceeds ${MAX_SIZE_MB[typedFolder]} MB limit` },
+        { error: `File exceeds ${MAX_SIZE_MB[typedBucket]} MB limit` },
         { status: 400 },
       );
     }
 
-    if (!ALLOWED_TYPES[typedFolder].includes(contentType)) {
+    if (!ALLOWED_TYPES[typedBucket].includes(contentType)) {
       return NextResponse.json(
-        { error: `Content type ${contentType} not allowed for ${folder}` },
+        { error: `Content type ${contentType} not allowed for ${bucketName}` },
         { status: 400 },
       );
     }
 
-    const result = await presignUpload({ folder: typedFolder, filename, contentType });
+    const result = await presignUpload({
+      bucketName: typedBucket,
+      filename,
+      contentType,
+    });
 
     return NextResponse.json(result);
   } catch (err) {

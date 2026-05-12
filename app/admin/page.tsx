@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import { curriculum } from "@/lib/curriculum";
-import { lessons } from "@/lib/course";
+import { getAllLessons } from "@/lib/supabase/lessons";
 
 function StatCard({
   label,
@@ -36,7 +36,8 @@ function StatCard({
   );
 }
 
-export default function AdminDashboard() {
+export default async function AdminDashboard() {
+  const lessons = await getAllLessons();
   const theoryModules =
     curriculum.find((p) => p.phase === "theory")?.weeks.length ?? 0;
   const practiceModules =

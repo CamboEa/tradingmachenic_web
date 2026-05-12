@@ -5,27 +5,28 @@ import {
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
-import { R2_BUCKET, R2_FOLDERS, R2_PUBLIC_URL, r2 } from "./client";
+import { R2_BUCKETS, R2_PUBLIC_URL, r2 } from "./client";
 
-export type UploadFolder = keyof typeof R2_FOLDERS;
+export type BucketName = keyof typeof R2_BUCKETS;
 
 /** Generate a presigned PUT URL so the browser can upload directly to R2. */
 export async function presignUpload({
-  folder,
+  bucketName,
   filename,
   contentType,
   expiresIn = 600,
 }: {
-  folder: UploadFolder;
+  bucketName: BucketName;
   filename: string;
   contentType: string;
   expiresIn?: number;
 }): Promise<{ presignedUrl: string; publicUrl: string; key: string }> {
   const sanitized = filename.replace(/[^a-zA-Z0-9._-]/g, "_");
-  const key = `${R2_FOLDERS[folder]}/${Date.now()}-${sanitized}`;
+  const key = `${Date.now()}-${sanitized}`;
+  const bucket = R2_BUCKETS[bucketName];
 
   const command = new PutObjectCommand({
-    Bucket: R2_BUCKET,
+    Bucket: bucket,
     Key: key,
     ContentType: contentType,
   });
@@ -38,14 +39,20 @@ export async function presignUpload({
 
 /** Generate a presigned GET URL for private objects (e.g. tool files). */
 export async function presignDownload(
+  bucketName: BucketName,
   key: string,
   expiresIn = 3600,
 ): Promise<string> {
-  const command = new GetObjectCommand({ Bucket: R2_BUCKET, Key: key });
+  const bucket = R2_BUCKETS[bucketName];
+  const command = new GetObjectCommand({ Bucket: bucket, Key: key });
   return getSignedUrl(r2, command, { expiresIn });
 }
 
 /** Delete an object from R2 by its key. */
-export async function deleteObject(key: string): Promise<void> {
-  await r2.send(new DeleteObjectCommand({ Bucket: R2_BUCKET, Key: key }));
+export async function deleteObject(
+  bucketName: BucketName,
+  key: string,
+): Promise<void> {
+  const bucket = R2_BUCKETS[bucketName];
+  await r2.send(new DeleteObjectCommand({ Bucket: bucket, Key: key }));
 }

@@ -1,14 +1,17 @@
 "use client";
 
 import { useRef, useState } from "react";
+import type { ReactNode } from "react";
+import { toast } from "react-toastify";
 
-type UploadFolder = "videos" | "tools";
+type BucketName = "trading-lesson" | "trading-tool";
 
 interface R2UploaderProps {
-  folder: UploadFolder;
+  bucketName: BucketName;
   accept: string;
-  label: string;
+  label: ReactNode;
   hint: string;
+  initialUrl?: string;
   onUploaded: (publicUrl: string, key: string) => void;
 }
 
@@ -19,69 +22,57 @@ type State =
   | { status: "error"; message: string };
 
 export function R2Uploader({
-  folder,
+  bucketName,
   accept,
   label,
   hint,
+  initialUrl,
   onUploaded,
 }: R2UploaderProps) {
-  const [state, setState] = useState<State>({ status: "idle" });
+  const [state, setState] = useState<State>(
+    initialUrl ? { status: "done", publicUrl: initialUrl } : { status: "idle" }
+  );
   const inputRef = useRef<HTMLInputElement>(null);
 
   async function handleFile(file: File) {
     setState({ status: "uploading", progress: 0 });
 
     try {
-      // 1. Get presigned URL from our API
-      const res = await fetch("/api/r2/presign", {
+      // Create FormData with file and bucket name
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("bucketName", bucketName);
+
+      // 1. Upload file to our server endpoint
+      const uploadRes = await fetch("/api/r2/upload", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          folder,
-          filename: file.name,
-          contentType: file.type || "application/octet-stream",
-          sizeBytes: file.size,
-        }),
+        body: formData,
       });
 
-      if (!res.ok) {
-        const { error } = await res.json();
-        throw new Error(error ?? "Failed to get upload URL");
+      if (!uploadRes.ok) {
+        const { error } = await uploadRes.json();
+        
+        if (uploadRes.status === 401) {
+          throw new Error("You must be signed in to upload files");
+        } else if (uploadRes.status === 403) {
+          throw new Error("Only admins can upload files");
+        }
+        
+        throw new Error(error ?? "Failed to upload file");
       }
 
-      const { presignedUrl, publicUrl, key } = await res.json();
-
-      // 2. Upload directly to R2 with XHR so we can track progress
-      await new Promise<void>((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.open("PUT", presignedUrl);
-        xhr.setRequestHeader("Content-Type", file.type || "application/octet-stream");
-
-        xhr.upload.onprogress = (e) => {
-          if (e.lengthComputable) {
-            setState({
-              status: "uploading",
-              progress: Math.round((e.loaded / e.total) * 100),
-            });
-          }
-        };
-
-        xhr.onload = () => {
-          if (xhr.status >= 200 && xhr.status < 300) resolve();
-          else reject(new Error(`R2 upload failed: ${xhr.status}`));
-        };
-
-        xhr.onerror = () => reject(new Error("Network error during upload"));
-        xhr.send(file);
-      });
+      const { publicUrl, key } = await uploadRes.json();
 
       setState({ status: "done", publicUrl });
       onUploaded(publicUrl, key);
+      toast.success("File uploaded successfully!");
     } catch (err) {
+      const message = err instanceof Error ? err.message : "Upload failed";
       setState({
         status: "error",
-        message: err instanceof Error ? err.message : "Upload failed",
+        message,
       });
+      toast.error(message);
     }
   }
 

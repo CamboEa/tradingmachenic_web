@@ -1,5 +1,7 @@
 "use client";
 
+import { toast } from "react-toastify";
+
 export function AuthPlaceholderForm({
   mode,
   emailLabel,
@@ -14,12 +16,15 @@ export function AuthPlaceholderForm({
   const idEmail = mode === "login" ? "login-email" : "register-email";
   const idPassword = mode === "login" ? "login-password" : "register-password";
 
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    toast.info("Authentication coming soon!");
+  };
+
   return (
     <form
       className="mt-8 space-y-5"
-      onSubmit={(e) => {
-        e.preventDefault();
-      }}
+      onSubmit={handleSubmit}
       noValidate
     >
       <div>

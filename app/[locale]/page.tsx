@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { Reveal } from "@/components/reveal";
-import { lessons } from "@/lib/course";
+import { getAllLessons } from "@/lib/supabase/lessons";
 import { getDictionary, isLocale, type Locale } from "@/lib/i18n";
 
 export default async function HomePage({
@@ -14,6 +14,7 @@ export default async function HomePage({
   if (!isLocale(raw)) notFound();
   const locale = raw as Locale;
   const dict = await getDictionary(locale);
+  const lessons = await getAllLessons();
   const lessonCount = lessons.length;
   const stats = dict.home.stats.map((s) => ({
     value: s.value.replace("{count}", String(lessonCount)),

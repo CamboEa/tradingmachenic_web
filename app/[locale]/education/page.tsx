@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 
 import { CourseLessonCard } from "@/components/course-lesson-card";
 import { Reveal } from "@/components/reveal";
-import { lessons } from "@/lib/course";
+import { getAllLessons } from "@/lib/supabase/lessons";
 import { getDictionary, isLocale, type Locale } from "@/lib/i18n";
 
 export default async function EducationPage({
@@ -14,6 +14,7 @@ export default async function EducationPage({
   if (!isLocale(raw)) notFound();
   const locale = raw as Locale;
   const dict = await getDictionary(locale);
+  const lessons = await getAllLessons();
   const total = lessons.length;
 
   return (

@@ -1,6 +1,7 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
+import { toast } from "react-toastify";
 
 import { signIn, signUp, type AuthState } from "@/lib/supabase/actions";
 
@@ -33,6 +34,17 @@ export function AuthForm({
   // signUp returns null on success (email confirmation sent)
   const showConfirmation = mode === "register" && state === null && !isPending;
 
+  // Show toast on sign in/up
+  useEffect(() => {
+    if (isPending) return;
+    
+    if (state?.error) {
+      toast.error(state.error);
+    } else if (mode === "register" && state === null && !isPending) {
+      toast.success("Check your email to confirm your account!");
+    }
+  }, [state, isPending, mode]);
+
   if (showConfirmation) {
     return (
       <div className="mt-8 rounded-xl border border-[color-mix(in_oklab,var(--color-teal)_35%,var(--color-bridge))] bg-[color-mix(in_oklab,var(--color-teal)_06%,var(--color-surface))] px-5 py-6">
@@ -53,13 +65,6 @@ export function AuthForm({
       <input type="hidden" name="locale" value={locale} />
       {redirectTo && (
         <input type="hidden" name="redirectTo" value={redirectTo} />
-      )}
-
-      {/* Error banner */}
-      {state?.error && (
-        <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-          {state.error}
-        </div>
       )}
 
       {/* Email */}

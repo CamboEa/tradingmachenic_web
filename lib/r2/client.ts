@@ -4,6 +4,8 @@ if (!process.env.R2_ACCOUNT_ID) throw new Error("Missing R2_ACCOUNT_ID");
 if (!process.env.R2_ACCESS_KEY_ID) throw new Error("Missing R2_ACCESS_KEY_ID");
 if (!process.env.R2_SECRET_ACCESS_KEY)
   throw new Error("Missing R2_SECRET_ACCESS_KEY");
+if (!process.env.R2_BUCKET_LESSON) throw new Error("Missing R2_BUCKET_LESSON");
+if (!process.env.R2_BUCKET_TOOL) throw new Error("Missing R2_BUCKET_TOOL");
 
 export const r2 = new S3Client({
   region: "auto",
@@ -14,11 +16,9 @@ export const r2 = new S3Client({
   },
 });
 
-export const R2_BUCKET = process.env.R2_BUCKET_NAME!;
-export const R2_PUBLIC_URL = process.env.NEXT_PUBLIC_R2_PUBLIC_URL!;
-
-/** Folders inside the bucket */
-export const R2_FOLDERS = {
-  videos: "videos",
-  tools: "tools",
+export const R2_BUCKETS = {
+  "trading-lesson": process.env.R2_BUCKET_LESSON,
+  "trading-tool": process.env.R2_BUCKET_TOOL,
 } as const;
+
+export const R2_PUBLIC_URL = process.env.NEXT_PUBLIC_R2_PUBLIC_URL!;
