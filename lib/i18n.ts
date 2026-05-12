@@ -291,10 +291,10 @@ const en: Dictionary = {
       "The lessons focus on risk, sizing, and disciplined routines so you can avoid common pitfalls and put protecting your capital first—not hype or shortcuts.",
     ],
     mentorBadge: "Your mentor",
-    mentorName: "Bean Rotana",
+    mentorName: "Bean Ratana",
     experienceLine: "Director of Strategic Partnership & Education · Trading since 2015",
     bioParagraphs: [
-      "Bean Rotana began his trading journey in 2015, driven by a deep curiosity for market behavior and a relentless desire to master strategic execution. Over the years, this passion evolved into a commitment to building smarter, more adaptive trading systems—culminating in his transition to algorithmic development with MQL5 in 2025.",
+      "Bean Ratana began his trading journey in 2015, driven by a deep curiosity for market behavior and a relentless desire to master strategic execution. Over the years, this passion evolved into a commitment to building smarter, more adaptive trading systems—culminating in his transition to algorithmic development with MQL5 in 2025.",
       "He currently serves as Director of Strategic Partnership and Education at STMarket, where he specialises in educating traders, refining strategies, and bridging the gap between theory and execution. He takes pride in making complex trading concepts accessible, especially for emerging traders and Khmer-speaking learners.",
       "Whether it's through teaching, coding, or collaborating, Bean is always excited to share what he has learned—and even more excited to keep learning alongside others.",
     ],
@@ -314,8 +314,8 @@ const en: Dictionary = {
       },
     ],
     teachingStatement:
-      "Every lesson in this programme is taught by Bean Rotana.",
-    imageAlt: "Bean Rotana, mentor at Trading Machenic",
+      "Every lesson in this programme is taught by Bean Ratana.",
+    imageAlt: "Bean Ratana, mentor at Trading Machenic",
     ctaEducation: "Browse lessons",
   },
   footer: {
@@ -486,10 +486,10 @@ const km: Dictionary = {
       "មេរៀនផ្តោតលើហានិភ័យ ទំហំលុយ និងទមលាប់វិន័យ ដើម្បីជួយអ្នកជៀសវាងកំហុសទូទៅ និងដាក់ការរក្សាដើមទុនជាមូលដ្ឋាន—មិនមែនតាមសំឡេងរន្ទះ ឬផ្លូវកាត់។",
     ],
     mentorBadge: "អ្នកណែនាំរបស់អ្នក",
-    mentorName: "Bean Rotana",
+    mentorName: "Bean Ratana",
     experienceLine: "នាយកភាពជាដៃគូ និងការអប់រំ · ចាប់ផ្តើមពាណិជ្ជកម្មពីឆ្នាំ ២០១៥",
     bioParagraphs: [
-      "Bean Rotana ចាប់ផ្តើមដំណើរពាណិជ្ជកម្មក្នុងឆ្នាំ ២០១៥ ដោយបំណង ចង់ស្វែងយល់ពីអាកប្បកិរិយាទីផ្សារ និងការប្រើប្រាស់ strategy ដោយការប្តេជ្ញាចិត្ត។ ជំនាញ និងចំណង់ចំណូលចិត្តនេះ បានវិវត្ត ក្លាយជាការប្តេជ្ញាចិត្តក្នុងការបង្កើតប្រព័ន្ធ trading ដែលឆ្លាតវៃ— ជាពិសេស ការអភិវឌ្ឍ algorithmic ជាមួយ MQL5 ក្នុងឆ្នាំ ២០២៥។",
+      "Bean Ratana ចាប់ផ្តើមដំណើរពាណិជ្ជកម្មក្នុងឆ្នាំ ២០១៥ ដោយបំណង ចង់ស្វែងយល់ពីអាកប្បកិរិយាទីផ្សារ និងការប្រើប្រាស់ strategy ដោយការប្តេជ្ញាចិត្ត។ ជំនាញ និងចំណង់ចំណូលចិត្តនេះ បានវិវត្ត ក្លាយជាការប្តេជ្ញាចិត្តក្នុងការបង្កើតប្រព័ន្ធ trading ដែលឆ្លាតវៃ— ជាពិសេស ការអភិវឌ្ឍ algorithmic ជាមួយ MQL5 ក្នុងឆ្នាំ ២០២៥។",
       "លោកបច្ចុប្បន្នកាន់តំណែងជា នាយកភាពជាដៃគូ និងការអប់រំ នៅ STMarket ដែលជំនាញ ក្នុងការបង្រៀន traders ការកែលម្អ strategy និងការភ្ជាប់គំនិត ទ្រឹស្តី ទៅ execution ពិត ប្រាកដ។ លោក ធ្វើឲ្យគំនិតពាណិជ្ជកម្មមានតម្លៃ ងាយ ចូលដំណើររួម ជាពិសេសសម្រាប់ traders ដែលកំពុងរៀន និងអ្នកប្រើ ភាសាខ្មែរ។",
       "មិនថាតាមរយៈការបង្រៀន ការសរសេរ code ឬការ សហការ Bean តែងតែចង់ចែករំលែក អ្វីដែលលោកបានរៀន—ហើយនៅ ក្ដោបក្ដាប់ ការរៀនបន្ថែម ជាមួយអ្នកដទៃ។",
     ],
@@ -509,8 +509,8 @@ const km: Dictionary = {
       },
     ],
     teachingStatement:
-      "មេរៀនទាំងអស់ក្នុងកម្មវិធីសិក្សានេះបង្រៀនដោយ Bean Rotana។",
-    imageAlt: "Bean Rotana គ្រូនៅ Trading Machenic",
+      "មេរៀនទាំងអស់ក្នុងកម្មវិធីសិក្សានេះបង្រៀនដោយ Bean Ratana។",
+    imageAlt: "Bean Ratana គ្រូនៅ Trading Machenic",
     ctaEducation: "មើលមេរៀន",
   },
   footer: {
