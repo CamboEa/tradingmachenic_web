@@ -76,6 +76,14 @@ create table if not exists public.tools (
   version            text not null default '1.0.0',
   description_en     text,
   description_km     text,
+  requirements_en    text,
+  requirements_km    text,
+  how_it_works_en    text,
+  how_it_works_km    text,
+  key_features_en    text,
+  key_features_km    text,
+  usage_notes_en     text,
+  usage_notes_km     text,
   install_guide_url  text,
   file_url           text,
   image_url          text,
@@ -156,6 +164,53 @@ create policy "lesson_videos: public read published"
 create policy "lesson_videos: authenticated all"
   on public.lesson_videos for all
   using (auth.role() = 'authenticated');
+
+
+-- ── Curriculum (phases + modules) ─────────────────────────────
+-- Seed data: run migration `20260515100000_curriculum.sql` (or `npx tsx scripts/gen-curriculum-sql.ts`).
+
+create table if not exists public.curriculum_phases (
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz not null default now(),
+  sort_order integer not null default 0,
+  slug text not null unique,
+  accent text not null check (accent in ('gold', 'teal')),
+  label_en text not null,
+  label_km text not null,
+  sublabel_en text not null,
+  sublabel_km text not null
+);
+
+create table if not exists public.curriculum_modules (
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz not null default now(),
+  phase_id uuid not null references public.curriculum_phases(id) on delete cascade,
+  sort_order integer not null default 0,
+  title_en text not null,
+  title_km text not null,
+  focus_en text not null,
+  focus_km text not null,
+  activities_en text not null,
+  activities_km text not null
+);
+
+create index if not exists curriculum_modules_phase_sort_idx
+  on public.curriculum_modules(phase_id, sort_order);
+
+alter table public.curriculum_phases enable row level security;
+alter table public.curriculum_modules enable row level security;
+
+create policy "curriculum_phases: public read"
+  on public.curriculum_phases for select using (true);
+
+create policy "curriculum_phases: admin all"
+  on public.curriculum_phases for all using (public.is_admin());
+
+create policy "curriculum_modules: public read"
+  on public.curriculum_modules for select using (true);
+
+create policy "curriculum_modules: admin all"
+  on public.curriculum_modules for all using (public.is_admin());
 
 
 -- ── Storage bucket for tool files ─────────────────────────────

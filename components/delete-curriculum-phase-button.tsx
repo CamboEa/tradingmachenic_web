@@ -2,37 +2,39 @@
 
 import { useState } from "react";
 import { toast } from "react-toastify";
-import { deleteTool } from "@/lib/supabase/actions";
+import { deleteCurriculumPhase } from "@/lib/supabase/actions";
 
-export function DeleteToolButton({ id, name }: { id: string; name: string }) {
+export function DeleteCurriculumPhaseButton({ id, label }: { id: string; label: string }) {
   const [confirming, setConfirming] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
   async function handleDelete() {
     setDeleting(true);
-    const { error } = await deleteTool(id);
+    const { error } = await deleteCurriculumPhase(id);
     if (error) {
       toast.error(error);
       setDeleting(false);
       setConfirming(false);
     } else {
-      toast.success(`"${name}" deleted`);
-      window.location.reload();
+      toast.success(`Phase "${label}" deleted`);
+      window.location.href = "/admin/program";
     }
   }
 
   if (confirming) {
     return (
       <div className="flex items-center gap-1.5">
-        <span className="text-xs text-slate-500">Sure?</span>
+        <span className="text-xs text-slate-500">Delete phase and all modules?</span>
         <button
+          type="button"
           onClick={handleDelete}
           disabled={deleting}
           className="rounded-md bg-red-500 px-3 py-2 text-xs font-semibold text-white transition hover:bg-red-600 disabled:opacity-50"
         >
-          {deleting ? "..." : "Yes"}
+          {deleting ? "…" : "Yes"}
         </button>
         <button
+          type="button"
           onClick={() => setConfirming(false)}
           className="rounded-md border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-600 transition hover:bg-slate-50"
         >
@@ -48,7 +50,7 @@ export function DeleteToolButton({ id, name }: { id: string; name: string }) {
       onClick={() => setConfirming(true)}
       className="rounded-md border border-slate-200 px-3 py-2 text-xs font-medium text-slate-400 transition-colors hover:border-red-300 hover:text-red-500"
     >
-      Delete
+      Delete phase
     </button>
   );
 }

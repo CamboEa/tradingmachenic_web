@@ -32,6 +32,14 @@ export function ToolsForm({ tool }: Props) {
     const platform = formData.get("platform") as string;
     const description_en = formData.get("description_en") as string;
     const description_km = formData.get("description_km") as string;
+    const requirements_en = formData.get("requirements_en") as string;
+    const requirements_km = formData.get("requirements_km") as string;
+    const how_it_works_en = formData.get("how_it_works_en") as string;
+    const how_it_works_km = formData.get("how_it_works_km") as string;
+    const key_features_en = formData.get("key_features_en") as string;
+    const key_features_km = formData.get("key_features_km") as string;
+    const usage_notes_en = formData.get("usage_notes_en") as string;
+    const usage_notes_km = formData.get("usage_notes_km") as string;
     const install_guide_url = formData.get("install_guide_url") as string;
     const status = formData.get("status") as string;
 
@@ -56,6 +64,14 @@ export function ToolsForm({ tool }: Props) {
         version,
         description_en: description_en || undefined,
         description_km: description_km || undefined,
+        requirements_en: requirements_en || undefined,
+        requirements_km: requirements_km || undefined,
+        how_it_works_en: how_it_works_en || undefined,
+        how_it_works_km: how_it_works_km || undefined,
+        key_features_en: key_features_en || undefined,
+        key_features_km: key_features_km || undefined,
+        usage_notes_en: usage_notes_en || undefined,
+        usage_notes_km: usage_notes_km || undefined,
         file_url: uploadedFileUrl,
         image_url: uploadedImageUrl || undefined,
         install_guide_url: install_guide_url || undefined,
@@ -84,10 +100,8 @@ export function ToolsForm({ tool }: Props) {
   const defaultStatus = tool?.status === "published" ? "Published" : "Draft";
 
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-      <h2 className="mb-6 text-base font-bold text-[#1e293b]">
-        {isEdit ? "Edit Tool" : "Create New Tool"}
-      </h2>
+    <div className="w-full rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+      <h2 className="mb-6 text-base font-bold text-[#1e293b]">Tool details</h2>
 
       <form className="space-y-5" onSubmit={handleSubmit}>
         {/* Tool type */}
@@ -146,6 +160,46 @@ export function ToolsForm({ tool }: Props) {
         <div>
           <label className="mb-1.5 block text-xs font-semibold text-slate-600">Description (Khmer)</label>
           <textarea rows={3} name="description_km" defaultValue={tool?.description_km ?? ""} placeholder="ការពិពណ៌នា..." className="w-full resize-none rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#0ea5e9] focus:bg-white focus:ring-2 focus:ring-[#0ea5e9]/20" />
+        </div>
+
+        <div className="border-t border-slate-100 pt-5">
+          <h3 className="mb-1 text-sm font-bold text-[#1e293b]">Extra detail for the public page</h3>
+          <p className="mb-4 text-xs text-slate-500">All optional. Shown on the tool page when filled. Use English and Khmer so both locales read well.</p>
+
+          <div className="space-y-4">
+            <div>
+              <label className="mb-1.5 block text-xs font-semibold text-slate-600">What to use with (English)</label>
+              <textarea rows={3} name="requirements_en" defaultValue={tool?.requirements_en ?? ""} placeholder="Symbols, timeframes, account type, broker or VPS notes…" className="w-full resize-y rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#0ea5e9] focus:bg-white focus:ring-2 focus:ring-[#0ea5e9]/20" />
+            </div>
+            <div>
+              <label className="mb-1.5 block text-xs font-semibold text-slate-600">What to use with (Khmer)</label>
+              <textarea rows={3} name="requirements_km" defaultValue={tool?.requirements_km ?? ""} placeholder="គូរប្រាក់ កាលបរិច្ឆេទ ប្រភេគគណនី…" className="w-full resize-y rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#0ea5e9] focus:bg-white focus:ring-2 focus:ring-[#0ea5e9]/20" />
+            </div>
+            <div>
+              <label className="mb-1.5 block text-xs font-semibold text-slate-600">How it works (English)</label>
+              <textarea rows={4} name="how_it_works_en" defaultValue={tool?.how_it_works_en ?? ""} placeholder="Signals, logic, automation behavior, what appears on chart…" className="w-full resize-y rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#0ea5e9] focus:bg-white focus:ring-2 focus:ring-[#0ea5e9]/20" />
+            </div>
+            <div>
+              <label className="mb-1.5 block text-xs font-semibold text-slate-600">How it works (Khmer)</label>
+              <textarea rows={4} name="how_it_works_km" defaultValue={tool?.how_it_works_km ?? ""} className="w-full resize-y rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#0ea5e9] focus:bg-white focus:ring-2 focus:ring-[#0ea5e9]/20" />
+            </div>
+            <div>
+              <label className="mb-1.5 block text-xs font-semibold text-slate-600">Key features (English)</label>
+              <textarea rows={4} name="key_features_en" defaultValue={tool?.key_features_en ?? ""} placeholder="One feature per line or short bullets…" className="w-full resize-y rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#0ea5e9] focus:bg-white focus:ring-2 focus:ring-[#0ea5e9]/20" />
+            </div>
+            <div>
+              <label className="mb-1.5 block text-xs font-semibold text-slate-600">Key features (Khmer)</label>
+              <textarea rows={4} name="key_features_km" defaultValue={tool?.key_features_km ?? ""} className="w-full resize-y rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#0ea5e9] focus:bg-white focus:ring-2 focus:ring-[#0ea5e9]/20" />
+            </div>
+            <div>
+              <label className="mb-1.5 block text-xs font-semibold text-slate-600">Usage tips & risk (English)</label>
+              <textarea rows={3} name="usage_notes_en" defaultValue={tool?.usage_notes_en ?? ""} placeholder="Recommended settings, limitations, risk disclaimer…" className="w-full resize-y rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#0ea5e9] focus:bg-white focus:ring-2 focus:ring-[#0ea5e9]/20" />
+            </div>
+            <div>
+              <label className="mb-1.5 block text-xs font-semibold text-slate-600">Usage tips & risk (Khmer)</label>
+              <textarea rows={3} name="usage_notes_km" defaultValue={tool?.usage_notes_km ?? ""} className="w-full resize-y rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#0ea5e9] focus:bg-white focus:ring-2 focus:ring-[#0ea5e9]/20" />
+            </div>
+          </div>
         </div>
 
         {/* Tool file upload */}

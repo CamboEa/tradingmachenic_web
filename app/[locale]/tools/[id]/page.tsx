@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 
 import { isLocale, type Locale } from "@/lib/i18n";
-import { getPublishedToolById } from "@/lib/supabase/tools";
+import { getPublishedToolById, type Tool } from "@/lib/supabase/tools";
 
 function DownloadIcon() {
   return (
@@ -19,6 +19,66 @@ function GuideIcon() {
       <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
     </svg>
   );
+}
+
+function localizedToolText(
+  locale: Locale,
+  en: string | null | undefined,
+  km: string | null | undefined,
+): string | null {
+  const raw = locale === "km" ? (km ?? en) : (en ?? km);
+  const text = (raw ?? "").trim();
+  return text.length > 0 ? text : null;
+}
+
+function toolExtraBlocks(locale: Locale, tool: Tool) {
+  const labels =
+    locale === "km"
+      ? {
+          need: "អ្វីដែលអ្នកត្រូវមាន",
+          how: "របៀបដែលវាដំណើរការ",
+          features: "លក្ខណៈពិសេស",
+          usage: "ការណែនាំ និងហានិភ័យ",
+        }
+      : {
+          need: "What you'll need",
+          how: "How it works",
+          features: "Key features",
+          usage: "Usage tips & risk",
+        };
+
+  const blocks = [
+    {
+      key: "req",
+      title: labels.need,
+      body: localizedToolText(locale, tool.requirements_en, tool.requirements_km),
+      preserveLines: false,
+      caution: false,
+    },
+    {
+      key: "how",
+      title: labels.how,
+      body: localizedToolText(locale, tool.how_it_works_en, tool.how_it_works_km),
+      preserveLines: false,
+      caution: false,
+    },
+    {
+      key: "feat",
+      title: labels.features,
+      body: localizedToolText(locale, tool.key_features_en, tool.key_features_km),
+      preserveLines: true,
+      caution: false,
+    },
+    {
+      key: "usage",
+      title: labels.usage,
+      body: localizedToolText(locale, tool.usage_notes_en, tool.usage_notes_km),
+      preserveLines: false,
+      caution: true,
+    },
+  ];
+
+  return blocks.filter((b): b is typeof b & { body: string } => b.body !== null);
 }
 
 export default async function ToolDetailPage({
@@ -99,13 +159,6 @@ export default async function ToolDetailPage({
                 {tool.name}
               </h1>
 
-              {/* Description */}
-              {(tool.description_en || tool.description_km) && (
-                <p className="mt-4 max-w-xl text-base leading-relaxed text-slate-400">
-                  {locale === "km" ? (tool.description_km ?? tool.description_en) : (tool.description_en ?? tool.description_km)}
-                </p>
-              )}
-
               {/* CTAs */}
               <div className="mt-8 flex flex-wrap gap-3">
                 {tool.file_url && (
@@ -139,8 +192,8 @@ export default async function ToolDetailPage({
       <main className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid gap-8 lg:grid-cols-[1fr_300px]">
 
-          {/* Left — description (locale-aware) */}
-          <div>
+          {/* Left — description & extended info (locale-aware) */}
+          <div className="space-y-6">
             {(() => {
               const desc = locale === "km" ? (tool.description_km ?? tool.description_en) : (tool.description_en ?? tool.description_km);
               const heading = locale === "km" ? "អំពីឧបករណ៍នេះ" : "About this tool";
@@ -156,6 +209,31 @@ export default async function ToolDetailPage({
                 </section>
               );
             })()}
+
+            {toolExtraBlocks(locale, tool).map((block) => (
+              <section
+                key={block.key}
+                className={`rounded-2xl border bg-white p-8 shadow-sm ${
+                  block.caution
+                    ? "border-slate-200 border-l-4 border-l-[#d4af37] bg-[#fffdf8]"
+                    : "border-slate-200"
+                }`}
+              >
+                <div className="mb-4 flex items-center gap-3">
+                  <div
+                    className={`h-1 w-8 rounded-full ${
+                      block.caution ? "bg-[#d4af37]" : locale === "km" ? "bg-[#d4af37]" : "bg-[#0ea5e9]"
+                    }`}
+                  />
+                  <h2 className="text-lg font-bold text-[#1e293b]">{block.title}</h2>
+                </div>
+                <p
+                  className={`leading-relaxed text-slate-600 ${block.preserveLines ? "whitespace-pre-wrap" : ""}`}
+                >
+                  {block.body}
+                </p>
+              </section>
+            ))}
           </div>
 
           {/* Right — info card */}

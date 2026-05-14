@@ -1,7 +1,7 @@
 import Link from "next/link";
 
-import { curriculum } from "@/lib/curriculum";
 import { getAllLessons } from "@/lib/supabase/lessons";
+import { getCurriculum } from "@/lib/supabase/curriculum-data";
 
 function StatCard({
   label,
@@ -38,10 +38,12 @@ function StatCard({
 
 export default async function AdminDashboard() {
   const lessons = await getAllLessons();
-  const theoryModules =
-    curriculum.find((p) => p.phase === "theory")?.weeks.length ?? 0;
-  const practiceModules =
-    curriculum.find((p) => p.phase === "practice")?.weeks.length ?? 0;
+  const curriculum = await getCurriculum();
+  const sorted = [...curriculum].sort((a, b) => a.sort_order - b.sort_order);
+  const phase0 = sorted[0];
+  const phase1 = sorted[1];
+  const theoryModules = phase0?.weeks.length ?? 0;
+  const practiceModules = phase1?.weeks.length ?? 0;
   const totalVideos = lessons.reduce((acc, l) => acc + l.videos.length, 0);
 
   return (
@@ -62,16 +64,16 @@ export default async function AdminDashboard() {
           accent="teal"
         />
         <StatCard
-          label="Theory Modules"
+          label="Theory modules"
           value={theoryModules}
-          sub="Phase I curriculum"
+          sub={phase0?.label_en ?? "Phase I curriculum"}
           accent="gold"
         />
         <StatCard
-          label="Practice Modules"
+          label="Practice modules"
           value={practiceModules}
-          sub="Phase II curriculum"
-          accent="gold"
+          sub={phase1?.label_en ?? "Phase II curriculum"}
+          accent="teal"
         />
         <StatCard
           label="Tools Published"
@@ -174,46 +176,45 @@ export default async function AdminDashboard() {
           </Link>
         </div>
         <div className="grid gap-4 sm:grid-cols-2">
-          {curriculum.map((phase) => (
-            <div
-              key={phase.phase}
-              className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm"
-            >
-              <div className="flex items-center justify-between">
-                <p
-                  className={`text-xs font-semibold uppercase tracking-wide ${
-                    phase.phase === "theory"
-                      ? "text-[#d4af37]"
-                      : "text-[#0ea5e9]"
-                  }`}
-                >
-                  {phase.phase === "theory" ? "Phase I — Theory" : "Phase II — Practice"}
-                </p>
-                <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-600">
-                  {phase.weeks.length} modules
-                </span>
-              </div>
-              <ul className="mt-3 space-y-1.5">
-                {phase.weeks.map((week, i) => (
-                  <li
-                    key={i}
-                    className="flex items-center gap-2 text-sm text-slate-600"
+          {sorted.map((phase) => {
+            const isGold = phase.accent === "gold";
+            return (
+              <div
+                key={phase.id}
+                className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm"
+              >
+                <div className="flex items-center justify-between">
+                  <p
+                    className={`text-xs font-semibold uppercase tracking-wide ${
+                      isGold ? "text-[#d4af37]" : "text-[#0ea5e9]"
+                    }`}
                   >
-                    <span
-                      className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold ${
-                        phase.phase === "theory"
-                          ? "bg-amber-100 text-amber-700"
-                          : "bg-sky-100 text-sky-700"
-                      }`}
+                    {phase.label_en}
+                  </p>
+                  <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-600">
+                    {phase.weeks.length} modules
+                  </span>
+                </div>
+                <ul className="mt-3 space-y-1.5">
+                  {phase.weeks.map((week, i) => (
+                    <li
+                      key={week.id}
+                      className="flex items-center gap-2 text-sm text-slate-600"
                     >
-                      {i + 1}
-                    </span>
-                    {week.titles.en}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+                      <span
+                        className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold ${
+                          isGold ? "bg-amber-100 text-amber-700" : "bg-sky-100 text-sky-700"
+                        }`}
+                      >
+                        {i + 1}
+                      </span>
+                      {week.titles.en}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>

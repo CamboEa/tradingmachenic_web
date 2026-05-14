@@ -5,9 +5,52 @@ export type LessonType = "free" | "paid";
 export type Platform = "MT4" | "MT5" | "MT4 & MT5";
 export type UserRole = "student" | "admin";
 
+export type CurriculumAccent = "gold" | "teal";
+
 export type Database = {
   public: {
     Tables: {
+      curriculum_phases: {
+        Row: {
+          id: string;
+          created_at: string;
+          sort_order: number;
+          slug: string;
+          accent: CurriculumAccent;
+          label_en: string;
+          label_km: string;
+          sublabel_en: string;
+          sublabel_km: string;
+        };
+        Insert: Omit<Database["public"]["Tables"]["curriculum_phases"]["Row"], "id" | "created_at">;
+        Update: Partial<Database["public"]["Tables"]["curriculum_phases"]["Insert"]>;
+        Relationships: [];
+      };
+      curriculum_modules: {
+        Row: {
+          id: string;
+          created_at: string;
+          phase_id: string;
+          sort_order: number;
+          title_en: string;
+          title_km: string;
+          focus_en: string;
+          focus_km: string;
+          activities_en: string;
+          activities_km: string;
+        };
+        Insert: Omit<Database["public"]["Tables"]["curriculum_modules"]["Row"], "id" | "created_at">;
+        Update: Partial<Database["public"]["Tables"]["curriculum_modules"]["Insert"]>;
+        Relationships: [
+          {
+            foreignKeyName: "curriculum_modules_phase_id_fkey";
+            columns: ["phase_id"];
+            isOneToOne: false;
+            referencedRelation: "curriculum_phases";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
       profiles: {
         Row: {
           id: string;
@@ -31,6 +74,14 @@ export type Database = {
           version: string;
           description_en: string | null;
           description_km: string | null;
+          requirements_en: string | null;
+          requirements_km: string | null;
+          how_it_works_en: string | null;
+          how_it_works_km: string | null;
+          key_features_en: string | null;
+          key_features_km: string | null;
+          usage_notes_en: string | null;
+          usage_notes_km: string | null;
           install_guide_url: string | null;
           file_url: string | null;
           image_url: string | null;

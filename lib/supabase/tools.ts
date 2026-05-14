@@ -11,6 +11,14 @@ export interface Tool {
   version: string;
   description_en: string | null;
   description_km: string | null;
+  requirements_en: string | null;
+  requirements_km: string | null;
+  how_it_works_en: string | null;
+  how_it_works_km: string | null;
+  key_features_en: string | null;
+  key_features_km: string | null;
+  usage_notes_en: string | null;
+  usage_notes_km: string | null;
   install_guide_url: string | null;
   file_url: string | null;
   image_url: string | null;

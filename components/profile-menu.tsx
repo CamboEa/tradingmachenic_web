@@ -45,15 +45,15 @@ export function ProfileMenu({
         onClick={() => setOpen((v) => !v)}
         aria-label="Account menu"
         aria-expanded={open}
-        className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--color-teal)] text-xs font-bold text-white shadow-sm ring-2 ring-transparent transition hover:brightness-110 focus-visible:outline-none focus-visible:ring-[var(--color-teal)] sm:h-9 sm:w-9"
+        className="flex h-9 w-9 items-center justify-center rounded-full bg-[#0ea5e9] text-xs font-bold text-white shadow-sm shadow-sky-900/20 ring-2 ring-transparent transition hover:bg-sky-600 focus-visible:outline-none focus-visible:ring-[#0ea5e9]/50"
       >
         {initials}
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full z-50 mt-2 w-52 overflow-hidden rounded-xl border border-[color-mix(in_oklab,var(--color-bridge)_18%,transparent)] bg-[var(--color-surface)] shadow-lg">
-          <div className="border-b border-[color-mix(in_oklab,var(--color-bridge)_12%,transparent)] px-4 py-3">
-            <p className="truncate text-xs font-semibold text-(--color-ink)">
+        <div className="absolute right-0 top-full z-50 mt-2 w-52 overflow-hidden rounded-xl border border-slate-200/90 bg-[#f8fafc] shadow-lg shadow-slate-900/10">
+          <div className="border-b border-slate-200/80 px-4 py-3">
+            <p className="truncate text-xs font-semibold text-[#1e293b]">
               {email}
             </p>
           </div>
@@ -65,7 +65,7 @@ export function ProfileMenu({
           >
             <button
               type="submit"
-              className="flex w-full items-center gap-2 px-4 py-3 text-sm text-(--color-ink-muted) transition hover:bg-[color-mix(in_oklab,var(--color-bridge)_8%,transparent)] hover:text-(--color-ink)"
+              className="flex w-full items-center gap-2 px-4 py-3 text-sm text-slate-600 transition hover:bg-slate-100 hover:text-[#1e293b]"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"

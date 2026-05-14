@@ -1,8 +1,10 @@
+import { Fragment } from "react";
 import { notFound } from "next/navigation";
 
 import { Reveal } from "@/components/reveal";
-import { curriculum, type CurriculumWeek } from "@/lib/curriculum";
+import type { CurriculumAccent, CurriculumWeek } from "@/lib/curriculum";
 import { getDictionary, isLocale, type Locale } from "@/lib/i18n";
+import { getCurriculum } from "@/lib/supabase/curriculum-data";
 
 function pad(n: number) {
   return String(n).padStart(2, "0");
@@ -11,24 +13,23 @@ function pad(n: number) {
 function TimelineCard({
   week,
   index,
-  phase,
+  accent,
   phaseLabel,
   locale,
 }: {
   week: CurriculumWeek;
   index: number;
-  phase: "theory" | "practice";
+  accent: CurriculumAccent;
   phaseLabel: string;
   locale: Locale;
 }) {
-  const accentColor =
-    phase === "theory" ? "var(--color-gold)" : "var(--color-teal)";
+  const accentColor = accent === "gold" ? "var(--color-gold)" : "var(--color-teal)";
   const accentBg =
-    phase === "theory"
+    accent === "gold"
       ? "color-mix(in oklab, var(--color-gold) 06%, var(--color-surface))"
       : "color-mix(in oklab, var(--color-teal) 06%, var(--color-surface))";
   const borderColor =
-    phase === "theory"
+    accent === "gold"
       ? "color-mix(in oklab, var(--color-gold) 28%, var(--color-bridge))"
       : "color-mix(in oklab, var(--color-teal) 22%, var(--color-bridge))";
 
@@ -68,19 +69,12 @@ function TimelineCard({
   );
 }
 
-function TimelineCircle({
-  number,
-  phase,
-}: {
-  number: number;
-  phase: "theory" | "practice";
-}) {
+function TimelineCircle({ number, accent }: { number: number; accent: CurriculumAccent }) {
   const ringColor =
-    phase === "theory"
+    accent === "gold"
       ? "color-mix(in oklab, var(--color-gold) 50%, var(--color-bridge))"
       : "color-mix(in oklab, var(--color-teal) 45%, var(--color-bridge))";
-  const textColor =
-    phase === "theory" ? "var(--color-gold)" : "var(--color-teal)";
+  const textColor = accent === "gold" ? "var(--color-gold)" : "var(--color-teal)";
 
   return (
     <div
@@ -89,6 +83,32 @@ function TimelineCircle({
     >
       {pad(number)}
     </div>
+  );
+}
+
+function PhaseDivider({ accent, label }: { accent: CurriculumAccent; label: string }) {
+  const border =
+    accent === "gold"
+      ? "border-[color-mix(in_oklab,var(--color-gold)_35%,var(--color-bridge))]"
+      : "border-[color-mix(in_oklab,var(--color-teal)_35%,var(--color-bridge))]";
+  const bg =
+    accent === "gold"
+      ? "bg-[color-mix(in_oklab,var(--color-gold)_08%,var(--color-surface))]"
+      : "bg-[color-mix(in_oklab,var(--color-teal)_07%,var(--color-surface))]";
+  const text = accent === "gold" ? "text-(--color-gold)" : "text-(--color-teal)";
+
+  return (
+    <Reveal>
+      <div className="my-16 flex items-center gap-4">
+        <div className="h-px flex-1 bg-[color-mix(in_oklab,var(--color-bridge)_55%,transparent)]" />
+        <span
+          className={`rounded-full border px-5 py-2 text-xs font-semibold uppercase tracking-wide ${border} ${bg} ${text}`}
+        >
+          {label}
+        </span>
+        <div className="h-px flex-1 bg-[color-mix(in_oklab,var(--color-bridge)_55%,transparent)]" />
+      </div>
+    </Reveal>
   );
 }
 
@@ -103,12 +123,10 @@ export default async function CurriculumPage({
   const dict = await getDictionary(locale);
   const cp = dict.curriculumPage;
 
-  const theoryPhase = curriculum.find((p) => p.phase === "theory")!;
-  const practicePhase = curriculum.find((p) => p.phase === "practice")!;
+  const curriculum = await getCurriculum();
 
   return (
     <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
-      {/* Header */}
       <Reveal variant="mount">
         <header className="mx-auto max-w-2xl text-center">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-(--color-gold)">
@@ -127,189 +145,113 @@ export default async function CurriculumPage({
         </header>
       </Reveal>
 
-      {/* ── Theory Phase ── */}
-      <section className="mt-16" aria-labelledby="theory-heading">
-        <Reveal>
-          <div className="mb-10 text-center">
-            <span className="inline-flex items-center gap-2 rounded-full border border-[color-mix(in_oklab,var(--color-gold)_40%,var(--color-bridge))] bg-[color-mix(in_oklab,var(--color-gold)_08%,var(--color-surface))] px-5 py-2 text-sm font-semibold text-(--color-gold)">
-              {cp.theoryPhaseLabel} · {cp.theoryPhaseSub}
-            </span>
-          </div>
-        </Reveal>
+      {curriculum.length === 0 ? (
+        <p className="mt-16 text-center text-sm text-(--color-ink-muted)">
+          {locale === "km" ? "មិនទាន់មានកម្មវិធីសិក្សា។" : "Curriculum content is not available yet."}
+        </p>
+      ) : (
+        curriculum.map((phase, phaseIdx) => {
+          const phaseLabel = locale === "km" ? phase.label_km : phase.label_en;
+          const phaseSub = locale === "km" ? phase.sublabel_km : phase.sublabel_en;
+          const lineGradient =
+            phase.accent === "gold"
+              ? "linear-gradient(to bottom, transparent, color-mix(in oklab, var(--color-gold) 35%, var(--color-bridge)) 8%, color-mix(in oklab, var(--color-gold) 35%, var(--color-bridge)) 92%, transparent)"
+              : "linear-gradient(to bottom, transparent, color-mix(in oklab, var(--color-teal) 32%, var(--color-bridge)) 4%, color-mix(in oklab, var(--color-teal) 32%, var(--color-bridge)) 96%, transparent)";
+          const headerBorder =
+            phase.accent === "gold"
+              ? "border-[color-mix(in_oklab,var(--color-gold)_40%,var(--color-bridge))] bg-[color-mix(in_oklab,var(--color-gold)_08%,var(--color-surface))] text-(--color-gold)"
+              : "border-[color-mix(in_oklab,var(--color-teal)_35%,var(--color-bridge))] bg-[color-mix(in_oklab,var(--color-teal)_07%,var(--color-surface))] text-(--color-teal)";
 
-        {/* Zigzag timeline */}
-        <div className="relative">
-          {/* Vertical line — desktop only */}
-          <div
-            className="pointer-events-none absolute inset-y-0 left-1/2 hidden w-px -translate-x-1/2 lg:block"
-            style={{
-              background:
-                "linear-gradient(to bottom, transparent, color-mix(in oklab, var(--color-gold) 35%, var(--color-bridge)) 8%, color-mix(in oklab, var(--color-gold) 35%, var(--color-bridge)) 92%, transparent)",
-            }}
-            aria-hidden
-          />
+          return (
+            <Fragment key={phase.id}>
+              {phaseIdx > 0 && (
+                <PhaseDivider accent={phase.accent} label={phaseLabel} />
+              )}
 
-          <ol className="space-y-10 lg:space-y-0">
-            {theoryPhase.weeks.map((week, i) => {
-              const isLeft = i % 2 === 0;
-              return (
-                <li
-                  key={i}
-                  className="relative lg:grid lg:grid-cols-[1fr_3rem_1fr] lg:items-center lg:gap-0"
-                >
-                  {/* Left slot */}
-                  <div className={isLeft ? "lg:pr-10" : "lg:pr-10 lg:invisible"}>
-                    {isLeft && (
-                      <Reveal delayMs={i * 70}>
-                        <TimelineCard
-                          week={week}
-                          index={i}
-                          phase="theory"
-                          phaseLabel={cp.theoryPhaseLabel}
-                          locale={locale}
-                        />
-                      </Reveal>
-                    )}
+              <section className={phaseIdx === 0 ? "mt-16" : ""} aria-labelledby={`phase-${phase.slug}`}>
+                <Reveal>
+                  <div className="mb-10 text-center">
+                    <span
+                      id={`phase-${phase.slug}`}
+                      className={`inline-flex items-center gap-2 rounded-full border px-5 py-2 text-sm font-semibold ${headerBorder}`}
+                    >
+                      {phaseLabel} · {phaseSub}
+                    </span>
                   </div>
+                </Reveal>
 
-                  {/* Center circle */}
-                  <div className="hidden lg:flex lg:justify-center">
-                    <TimelineCircle number={i + 1} phase="theory" />
-                  </div>
+                <div className="relative">
+                  <div
+                    className="pointer-events-none absolute inset-y-0 left-1/2 hidden w-px -translate-x-1/2 lg:block"
+                    style={{ background: lineGradient }}
+                    aria-hidden
+                  />
 
-                  {/* Right slot */}
-                  <div className={!isLeft ? "lg:pl-10" : "lg:pl-10 lg:invisible"}>
-                    {!isLeft && (
-                      <Reveal delayMs={i * 70}>
-                        <TimelineCard
-                          week={week}
-                          index={i}
-                          phase="theory"
-                          phaseLabel={cp.theoryPhaseLabel}
-                          locale={locale}
-                        />
-                      </Reveal>
-                    )}
-                  </div>
+                  <ol className="space-y-10 lg:space-y-0">
+                    {phase.weeks.map((week, i) => {
+                      const isLeft = i % 2 === 0;
+                      const delay = phase.accent === "gold" ? i * 70 : i * 50;
+                      return (
+                        <li
+                          key={week.id}
+                          className="relative lg:grid lg:grid-cols-[1fr_3rem_1fr] lg:items-center lg:gap-0"
+                        >
+                          <div className={isLeft ? "lg:pr-10" : "lg:pr-10 lg:invisible"}>
+                            {isLeft && (
+                              <Reveal delayMs={delay}>
+                                <TimelineCard
+                                  week={week}
+                                  index={i}
+                                  accent={phase.accent}
+                                  phaseLabel={phaseLabel}
+                                  locale={locale}
+                                />
+                              </Reveal>
+                            )}
+                          </div>
 
-                  {/* Mobile: always show card + circle on the left */}
-                  <div className="flex items-start gap-4 lg:hidden">
-                    <div className="mt-1 shrink-0">
-                      <TimelineCircle number={i + 1} phase="theory" />
-                    </div>
-                    <Reveal className="flex-1" delayMs={i * 70}>
-                      <TimelineCard
-                        week={week}
-                        index={i}
-                        phase="theory"
-                        phaseLabel={cp.theoryPhaseLabel}
-                        locale={locale}
-                      />
-                    </Reveal>
-                  </div>
-                </li>
-              );
-            })}
-          </ol>
-        </div>
-      </section>
+                          <div className="hidden lg:flex lg:justify-center">
+                            <TimelineCircle number={i + 1} accent={phase.accent} />
+                          </div>
 
-      {/* Phase transition */}
-      <Reveal>
-        <div className="my-16 flex items-center gap-4">
-          <div className="h-px flex-1 bg-[color-mix(in_oklab,var(--color-bridge)_55%,transparent)]" />
-          <span className="rounded-full border border-[color-mix(in_oklab,var(--color-teal)_35%,var(--color-bridge))] bg-[color-mix(in_oklab,var(--color-teal)_07%,var(--color-surface))] px-5 py-2 text-xs font-semibold uppercase tracking-wide text-(--color-teal)">
-            {cp.practicePhaseLabel}
-          </span>
-          <div className="h-px flex-1 bg-[color-mix(in_oklab,var(--color-bridge)_55%,transparent)]" />
-        </div>
-      </Reveal>
+                          <div className={!isLeft ? "lg:pl-10" : "lg:pl-10 lg:invisible"}>
+                            {!isLeft && (
+                              <Reveal delayMs={delay}>
+                                <TimelineCard
+                                  week={week}
+                                  index={i}
+                                  accent={phase.accent}
+                                  phaseLabel={phaseLabel}
+                                  locale={locale}
+                                />
+                              </Reveal>
+                            )}
+                          </div>
 
-      {/* ── Practice Phase ── */}
-      <section aria-labelledby="practice-heading">
-        <Reveal>
-          <div className="mb-10 text-center">
-            <span className="inline-flex items-center gap-2 rounded-full border border-[color-mix(in_oklab,var(--color-teal)_35%,var(--color-bridge))] bg-[color-mix(in_oklab,var(--color-teal)_07%,var(--color-surface))] px-5 py-2 text-sm font-semibold text-(--color-teal)">
-              {cp.practicePhaseLabel} · {cp.practicePhaseSub}
-            </span>
-          </div>
-        </Reveal>
-
-        <div className="relative">
-          {/* Vertical line — desktop only */}
-          <div
-            className="pointer-events-none absolute inset-y-0 left-1/2 hidden w-px -translate-x-1/2 lg:block"
-            style={{
-              background:
-                "linear-gradient(to bottom, transparent, color-mix(in oklab, var(--color-teal) 32%, var(--color-bridge)) 4%, color-mix(in oklab, var(--color-teal) 32%, var(--color-bridge)) 96%, transparent)",
-            }}
-            aria-hidden
-          />
-
-          <ol className="space-y-10 lg:space-y-0">
-            {practicePhase.weeks.map((week, i) => {
-              const isLeft = i % 2 === 0;
-              return (
-                <li
-                  key={i}
-                  className="relative lg:grid lg:grid-cols-[1fr_3rem_1fr] lg:items-center lg:gap-0"
-                >
-                  {/* Left slot */}
-                  <div className={isLeft ? "lg:pr-10" : "lg:pr-10 lg:invisible"}>
-                    {isLeft && (
-                      <Reveal delayMs={i * 50}>
-                        <TimelineCard
-                          week={week}
-                          index={i}
-                          phase="practice"
-                          phaseLabel={cp.practicePhaseLabel}
-                          locale={locale}
-                        />
-                      </Reveal>
-                    )}
-                  </div>
-
-                  {/* Center circle */}
-                  <div className="hidden lg:flex lg:justify-center">
-                    <TimelineCircle number={i + 1} phase="practice" />
-                  </div>
-
-                  {/* Right slot */}
-                  <div className={!isLeft ? "lg:pl-10" : "lg:pl-10 lg:invisible"}>
-                    {!isLeft && (
-                      <Reveal delayMs={i * 50}>
-                        <TimelineCard
-                          week={week}
-                          index={i}
-                          phase="practice"
-                          phaseLabel={cp.practicePhaseLabel}
-                          locale={locale}
-                        />
-                      </Reveal>
-                    )}
-                  </div>
-
-                  {/* Mobile */}
-                  <div className="flex items-start gap-4 lg:hidden">
-                    <div className="mt-1 shrink-0">
-                      <TimelineCircle number={i + 1} phase="practice" />
-                    </div>
-                    <Reveal className="flex-1" delayMs={i * 50}>
-                      <TimelineCard
-                        week={week}
-                        index={i}
-                        phase="practice"
-                        phaseLabel={cp.practicePhaseLabel}
-                        locale={locale}
-                      />
-                    </Reveal>
-                  </div>
-                </li>
-              );
-            })}
-          </ol>
-        </div>
-      </section>
+                          <div className="flex items-start gap-4 lg:hidden">
+                            <div className="mt-1 shrink-0">
+                              <TimelineCircle number={i + 1} accent={phase.accent} />
+                            </div>
+                            <Reveal className="flex-1" delayMs={delay}>
+                              <TimelineCard
+                                week={week}
+                                index={i}
+                                accent={phase.accent}
+                                phaseLabel={phaseLabel}
+                                locale={locale}
+                              />
+                            </Reveal>
+                          </div>
+                        </li>
+                      );
+                    })}
+                  </ol>
+                </div>
+              </section>
+            </Fragment>
+          );
+        })
+      )}
     </main>
   );
 }
