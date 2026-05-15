@@ -29,6 +29,10 @@ export const metadata: Metadata = {
   },
   description:
     "Structured trading education with video lessons on risk, execution, and mindset.",
+  icons: {
+    icon: "/Logo/logo.png",
+    apple: "/Logo/logo.png",
+  },
 };
 
 export default function RootLayout({

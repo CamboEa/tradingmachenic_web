@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useId, useRef, useState } from "react";
 
 import { ProfileMenu } from "@/components/profile-menu";
+import { SiteLogo } from "@/components/site-logo";
 import type { Dictionary, Locale } from "@/lib/i18n";
 import { locales } from "@/lib/i18n";
 
@@ -274,8 +275,9 @@ export function SiteHeader({
   const brand = (
     <Link
       href={`/${locale}`}
-      className="group flex min-w-0 items-center gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0ea5e9]/35 focus-visible:ring-offset-2"
+      className="group flex min-w-0 items-center gap-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0ea5e9]/35 focus-visible:ring-offset-2 sm:gap-3"
     >
+      <SiteLogo size="md" priority className="rounded-lg" />
       <span className="min-w-0">
         <span className="block truncate text-lg font-bold tracking-tight text-[#1e293b] transition group-hover:text-[#0f172a] sm:text-xl">
           Trading Machenic

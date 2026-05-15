@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import { SiteLogo } from "@/components/site-logo";
+
 const NAV = [
   {
     href: "/admin",
@@ -80,9 +82,7 @@ export function AdminSidebar() {
     <aside className="flex h-screen w-64 shrink-0 flex-col border-r border-white/10 bg-[#1e293b] text-slate-300 shadow-2xl shadow-slate-950/20">
       {/* Logo */}
       <div className="flex items-center gap-3 border-b border-white/10 px-5 py-5">
-        <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#d4af37] shadow-lg shadow-amber-950/25">
-          <span className="text-xs font-black text-[#1e293b]">TM</span>
-        </div>
+        <SiteLogo size="md" className="rounded-lg ring-1 ring-white/10" />
         <div>
           <p className="text-sm font-semibold text-white">Trading Machenic</p>
           <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-400">Admin Panel</p>
