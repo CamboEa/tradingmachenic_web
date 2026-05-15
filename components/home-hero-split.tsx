@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import type { Dictionary, Locale } from "@/lib/i18n";
+import { SiteLogo } from "@/components/site-logo";
 
 const STUDENT_INITIALS = ["BR", "SK", "MK", "LR", "CN", "TM"] as const;
 
@@ -51,11 +52,12 @@ export function HomeHeroSplit({ locale, dict }: { locale: Locale; dict: Dictiona
               <h1
                 id="home-hero-heading"
                 className={[
-                  "mt-5 max-w-xl text-pretty pb-4 text-3xl font-bold leading-[1.08] tracking-tight text-white sm:pb-5 sm:text-4xl lg:pb-6 lg:text-[2.65rem] lg:leading-[1.05]",
+                  "mt-5 flex max-w-3xl items-start gap-4 text-pretty pb-4 text-3xl font-bold leading-[1.08] tracking-tight text-white sm:gap-5 sm:pb-5 sm:text-4xl lg:pb-6 lg:text-[2.65rem] lg:leading-[1.05]",
                   titleCaps ? "uppercase tracking-[0.04em]" : "",
                 ].join(" ")}
               >
-                {h.heroSplitHeadline}
+                <SiteLogo size="hero" priority className="shrink-0 bg-transparent shadow-none" />
+                <span>{h.heroSplitHeadline}</span>
               </h1>
               <p className="mt-5 max-w-md text-pretty text-base leading-relaxed text-slate-200 sm:text-lg">
                 {h.heroSplitSubhead}

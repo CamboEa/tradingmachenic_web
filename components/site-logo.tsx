@@ -7,6 +7,8 @@ const SIZES = {
   sm: { box: "h-8 w-8", px: 32 },
   md: { box: "h-10 w-10", px: 40 },
   lg: { box: "h-12 w-12", px: 48 },
+  /** Hero headline — large display, no extra chrome */
+  hero: { box: "h-32 w-32 sm:h-36 sm:w-36 lg:h-44 lg:w-44", px: 176 },
 } as const;
 
 type SiteLogoSize = keyof typeof SIZES;
