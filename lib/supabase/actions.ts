@@ -6,6 +6,8 @@ import { redirect } from "next/navigation";
 import { defaultLocale, locales } from "@/lib/i18n";
 import type { CurriculumAccent } from "@/lib/curriculum";
 import type { Tool } from "@/lib/supabase/tools";
+import type { Podcast } from "@/lib/supabase/podcasts";
+import { extractYouTubeVideoId } from "@/lib/youtube";
 
 import { createClient, createAdminClient } from "./server";
 
@@ -367,6 +369,96 @@ export async function deleteTool(id: string): Promise<{ error?: string }> {
   if (error) return { error: error.message };
   revalidatePath("/admin/tools");
   revalidateToolPaths();
+  return {};
+}
+
+type PodcastFormData = {
+  youtube_url: string;
+  title_en: string;
+  title_km: string;
+  description_en?: string;
+  description_km?: string;
+  sort_order: number;
+  status: "draft" | "published";
+};
+
+function revalidatePodcastPaths(podcastId?: string) {
+  for (const loc of locales) {
+    revalidatePath(`/${loc}/podcast`);
+    if (podcastId) revalidatePath(`/${loc}/podcast/${podcastId}`);
+  }
+}
+
+export async function getPodcastForEdit(id: string): Promise<Podcast | null> {
+  const supabase = await createAdminClient();
+  const { data, error } = await supabase.from("podcasts").select("*").eq("id", id).single();
+  if (error) return null;
+  return data as Podcast;
+}
+
+export async function createPodcast(
+  formData: PodcastFormData,
+): Promise<{ error?: string; success?: boolean }> {
+  if (!extractYouTubeVideoId(formData.youtube_url)) {
+    return { error: "Enter a valid YouTube link or 11-character video ID." };
+  }
+  const supabase = await createAdminClient();
+  try {
+    const row = {
+      youtube_url: formData.youtube_url.trim(),
+      title_en: formData.title_en.trim(),
+      title_km: formData.title_km.trim(),
+      description_en: formData.description_en?.trim() || null,
+      description_km: formData.description_km?.trim() || null,
+      sort_order: formData.sort_order,
+      status: formData.status,
+    };
+    const { data, error } = await supabase.from("podcasts").insert([row]).select("id").single();
+    if (error) return { error: error.message };
+    revalidatePath("/admin/podcasts");
+    revalidatePodcastPaths(data?.id);
+    return { success: true };
+  } catch (err) {
+    return { error: err instanceof Error ? err.message : "Failed to create episode" };
+  }
+}
+
+export async function updatePodcast(
+  id: string,
+  formData: PodcastFormData,
+): Promise<{ error?: string; success?: boolean }> {
+  if (!extractYouTubeVideoId(formData.youtube_url)) {
+    return { error: "Enter a valid YouTube link or 11-character video ID." };
+  }
+  const supabase = await createAdminClient();
+  try {
+    const { error } = await supabase
+      .from("podcasts")
+      .update({
+        youtube_url: formData.youtube_url.trim(),
+        title_en: formData.title_en.trim(),
+        title_km: formData.title_km.trim(),
+        description_en: formData.description_en?.trim() || null,
+        description_km: formData.description_km?.trim() || null,
+        sort_order: formData.sort_order,
+        status: formData.status,
+      })
+      .eq("id", id);
+    if (error) return { error: error.message };
+    revalidatePath("/admin/podcasts");
+    revalidatePodcastPaths(id);
+    return { success: true };
+  } catch (err) {
+    return { error: err instanceof Error ? err.message : "Failed to update episode" };
+  }
+}
+
+export async function deletePodcast(id: string): Promise<{ error?: string }> {
+  const supabase = await createAdminClient();
+  const { error } = await supabase.from("podcasts").delete().eq("id", id);
+  if (error) return { error: error.message };
+  revalidatePath("/admin/podcasts");
+  revalidatePodcastPaths(id);
   return {};
 }
 

@@ -21,6 +21,28 @@ function GuideIcon() {
   );
 }
 
+function ToolPlaceholder({ type }: { type: Tool["type"] }) {
+  return (
+    <div className="flex aspect-video w-full items-center justify-center bg-slate-800 text-slate-500">
+      <svg viewBox="0 0 64 64" fill="none" className="h-16 w-16" aria-hidden>
+        {type === "indicator" ? (
+          <>
+            <path d="M12 46h40" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
+            <path d="M18 40V26M32 40V16M46 40V30" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
+            <path d="M14 24c7 5 12 6 18 1s10-8 18-2" stroke="#0EA5E9" strokeWidth="4" strokeLinecap="round" />
+          </>
+        ) : (
+          <>
+            <rect x="15" y="18" width="34" height="28" rx="8" stroke="currentColor" strokeWidth="4" />
+            <path d="M24 30h.01M40 30h.01M27 39h10" stroke="#0EA5E9" strokeWidth="4" strokeLinecap="round" />
+            <path d="M32 18v-6" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
+          </>
+        )}
+      </svg>
+    </div>
+  );
+}
+
 function localizedToolText(
   locale: Locale,
   en: string | null | undefined,
@@ -101,6 +123,7 @@ export default async function ToolDetailPage({
 
       {/* ── Hero ── */}
       <section className="relative overflow-hidden bg-[#1e293b]">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_16%_18%,rgba(212,175,55,0.16),transparent_24rem),radial-gradient(circle_at_86%_8%,rgba(14,165,233,0.18),transparent_28rem)]" aria-hidden />
         {/* Background image blur */}
         {tool.image_url && (
           <div className="absolute inset-0 opacity-10">
@@ -123,14 +146,12 @@ export default async function ToolDetailPage({
 
           <div className="mt-6 flex flex-col gap-8 lg:flex-row lg:items-start">
             {/* Image */}
-            <div className="w-full overflow-hidden rounded-2xl border border-white/10 shadow-2xl lg:w-105 lg:shrink-0">
+            <div className="w-full overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/5 shadow-2xl shadow-slate-950/30 lg:w-105 lg:shrink-0">
               {tool.image_url ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={tool.image_url} alt={tool.name} className="aspect-video w-full object-cover" />
               ) : (
-                <div className="flex aspect-video w-full items-center justify-center bg-slate-800 text-7xl opacity-30">
-                  {tool.type === "indicator" ? "📊" : "🤖"}
-                </div>
+                <ToolPlaceholder type={tool.type} />
               )}
             </div>
 
@@ -165,7 +186,7 @@ export default async function ToolDetailPage({
                   <a
                     href={tool.file_url}
                     download
-                    className="flex items-center gap-2.5 rounded-xl bg-[#0ea5e9] px-6 py-3 text-sm font-bold text-white shadow-lg shadow-sky-900/30 transition hover:bg-sky-500 active:scale-95"
+                    className="flex items-center gap-2.5 rounded-xl bg-[#0ea5e9] px-6 py-3 text-sm font-bold text-white shadow-lg shadow-sky-900/30 transition hover:-translate-y-0.5 hover:bg-sky-500"
                   >
                     <DownloadIcon />
                     Download Free
@@ -189,7 +210,7 @@ export default async function ToolDetailPage({
       </section>
 
       {/* ── Details body ── */}
-      <main className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
+      <main className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid gap-8 lg:grid-cols-[1fr_300px]">
 
           {/* Left — description & extended info (locale-aware) */}
@@ -200,7 +221,7 @@ export default async function ToolDetailPage({
               const accent = locale === "km" ? "bg-[#d4af37]" : "bg-[#0ea5e9]";
               if (!desc) return null;
               return (
-                <section className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+                <section className="rounded-[1.5rem] border border-white/80 bg-white/88 p-8 shadow-sm shadow-slate-900/5 backdrop-blur">
                   <div className="mb-4 flex items-center gap-3">
                     <div className={`h-1 w-8 rounded-full ${accent}`} />
                     <h2 className="text-lg font-bold text-[#1e293b]">{heading}</h2>
@@ -213,7 +234,7 @@ export default async function ToolDetailPage({
             {toolExtraBlocks(locale, tool).map((block) => (
               <section
                 key={block.key}
-                className={`rounded-2xl border bg-white p-8 shadow-sm ${
+                className={`rounded-[1.5rem] border bg-white/88 p-8 shadow-sm shadow-slate-900/5 backdrop-blur ${
                   block.caution
                     ? "border-slate-200 border-l-4 border-l-[#d4af37] bg-[#fffdf8]"
                     : "border-slate-200"
@@ -238,7 +259,7 @@ export default async function ToolDetailPage({
 
           {/* Right — info card */}
           <aside className="space-y-4">
-            <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div className="rounded-[1.5rem] border border-white/80 bg-white/88 p-6 shadow-sm shadow-slate-900/5 backdrop-blur">
               <h3 className="mb-4 text-sm font-bold uppercase tracking-wider text-slate-400">
                 Tool Details
               </h3>

@@ -31,22 +31,25 @@ export default async function AboutPage({
   const a = dict.aboutPage;
 
   return (
-    <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
+    <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
       <Reveal variant="mount">
-        <div>
+        <div className="relative overflow-hidden rounded-[2rem] border border-white/80 bg-white/78 px-6 py-10 shadow-[0_24px_70px_-42px_rgba(15,23,42,0.45)] backdrop-blur sm:px-8">
+          <div className="absolute right-0 top-0 h-40 w-40 rounded-full bg-[color-mix(in_oklab,var(--color-gold)_16%,transparent)] blur-3xl" aria-hidden />
+          <div className="relative">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-gold)]">
             {a.eyebrow}
           </p>
-          <h1 className="mt-3 text-3xl font-semibold tracking-tight text-[var(--color-ink)] sm:text-4xl">
+          <h1 className="mt-3 max-w-3xl text-3xl font-semibold tracking-[-0.025em] text-[var(--color-ink)] sm:text-5xl">
             {a.title}
           </h1>
+          </div>
         </div>
       </Reveal>
 
       <Reveal delayMs={90}>
         <section
         aria-labelledby="about-why-heading"
-        className="mt-10 rounded-2xl border border-[color-mix(in_oklab,var(--color-bridge)_55%,transparent)] bg-[color-mix(in_oklab,var(--color-teal)_06%,var(--color-surface))] px-5 py-7 sm:px-8 sm:py-8"
+        className="mt-10 rounded-[1.5rem] border border-[color-mix(in_oklab,var(--color-teal)_18%,var(--color-bridge))] bg-[color-mix(in_oklab,var(--color-teal)_06%,var(--color-surface))] px-5 py-7 shadow-sm shadow-slate-900/5 sm:px-8 sm:py-8"
       >
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--color-teal)]">
           {a.whyEyebrow}
@@ -108,9 +111,9 @@ export default async function AboutPage({
             </p>
             <ul className="mt-4 space-y-3">
               {a.roles.map((role) => (
-                <li
+              <li
                   key={role.org}
-                  className="rounded-xl border border-[color-mix(in_oklab,var(--color-bridge)_60%,transparent)] bg-(--color-surface) px-5 py-4"
+                  className="rounded-2xl border border-white/80 bg-white/88 px-5 py-4 shadow-sm shadow-slate-900/5"
                 >
                   <p className="text-[11px] font-semibold uppercase tracking-wide text-(--color-teal)">
                     {role.org}
@@ -126,13 +129,13 @@ export default async function AboutPage({
             </ul>
           </div>
 
-          <blockquote className="mt-10 border-l-4 border-[var(--color-gold)] bg-[color-mix(in_oklab,var(--color-gold)_07%,var(--color-surface))] px-5 py-4 text-[var(--color-ink)]">
+          <blockquote className="mt-10 rounded-2xl border border-[color-mix(in_oklab,var(--color-gold)_28%,var(--color-bridge))] border-l-4 border-l-[var(--color-gold)] bg-[color-mix(in_oklab,var(--color-gold)_07%,var(--color-surface))] px-5 py-4 text-[var(--color-ink)] shadow-sm shadow-slate-900/5">
             {a.teachingStatement}
           </blockquote>
 
           <Link
             href={`/${locale}/education`}
-            className="mt-10 inline-flex items-center justify-center rounded-xl bg-[var(--color-teal)] px-6 py-3 text-sm font-semibold text-white transition hover:brightness-105"
+            className="mt-10 inline-flex items-center justify-center rounded-2xl bg-[var(--color-teal)] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-[color-mix(in_oklab,var(--color-teal)_25%,transparent)] transition hover:-translate-y-0.5 hover:brightness-105"
           >
             {a.ctaEducation}
           </Link>

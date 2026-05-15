@@ -49,6 +49,15 @@ const NAV = [
     ),
   },
   {
+    href: "/admin/podcasts",
+    label: "Podcasts",
+    icon: (
+      <svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
+        <path d="M4 5.5A1.5 1.5 0 0 1 5.5 4h9A1.5 1.5 0 0 1 16 5.5v9a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 4 14.5v-9ZM8.25 7.75a.75.75 0 0 0-1.28-.53l-2 2a.75.75 0 0 0 0 1.06l2 2a.75.75 0 1 0 1.06-1.06L7.06 10l1.03-1.03a.75.75 0 0 0 0-1.22ZM10.75 12h2.5a.75.75 0 0 0 0-1.5h-2.5a.75.75 0 0 0 0 1.5Z" />
+      </svg>
+    ),
+  },
+  {
     href: "/admin/students",
     label: "Students",
     icon: (
@@ -68,15 +77,15 @@ export function AdminSidebar() {
   }
 
   return (
-    <aside className="flex h-screen w-60 shrink-0 flex-col bg-[#1e293b] text-slate-300">
+    <aside className="flex h-screen w-64 shrink-0 flex-col border-r border-white/10 bg-[#1e293b] text-slate-300 shadow-2xl shadow-slate-950/20">
       {/* Logo */}
-      <div className="flex items-center gap-2.5 border-b border-white/10 px-5 py-5">
-        <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#d4af37]">
-          <span className="text-[11px] font-bold text-[#1e293b]">TM</span>
+      <div className="flex items-center gap-3 border-b border-white/10 px-5 py-5">
+        <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#d4af37] shadow-lg shadow-amber-950/25">
+          <span className="text-xs font-black text-[#1e293b]">TM</span>
         </div>
         <div>
           <p className="text-sm font-semibold text-white">Trading Machenic</p>
-          <p className="text-[10px] text-slate-400">Admin Panel</p>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-400">Admin Panel</p>
         </div>
       </div>
 
@@ -91,9 +100,9 @@ export function AdminSidebar() {
               <Link
                 href={item.href}
                 className={[
-                  "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+                  "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition-colors",
                   isActive(item.href)
-                    ? "bg-[#0ea5e9]/15 text-[#0ea5e9]"
+                    ? "bg-[#0ea5e9]/15 text-sky-200 ring-1 ring-[#0ea5e9]/20"
                     : "text-slate-400 hover:bg-white/5 hover:text-white",
                 ].join(" ")}
               >
@@ -109,7 +118,7 @@ export function AdminSidebar() {
       <div className="border-t border-white/10 px-5 py-4">
         <Link
           href="/"
-          className="flex items-center gap-2 text-xs text-slate-500 transition-colors hover:text-slate-300"
+          className="flex items-center gap-2 rounded-xl px-2 py-2 text-xs font-semibold text-slate-500 transition-colors hover:bg-white/5 hover:text-slate-300"
         >
           <svg viewBox="0 0 16 16" fill="currentColor" className="h-3.5 w-3.5">
             <path d="M7.78 12.53a.75.75 0 0 1-1.06 0L2.47 8.28a.75.75 0 0 1 0-1.06l4.25-4.25a.75.75 0 0 1 1.06 1.06L4.81 7h7.44a.75.75 0 0 1 0 1.5H4.81l2.97 2.97a.75.75 0 0 1 0 1.06Z" />

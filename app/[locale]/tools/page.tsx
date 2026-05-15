@@ -4,13 +4,40 @@ import Link from "next/link";
 import { getDictionary, isLocale, type Locale } from "@/lib/i18n";
 import { getPublishedTools, type Tool } from "@/lib/supabase/tools";
 
+function ToolPlaceholder({ type }: { type: Tool["type"] }) {
+  return (
+    <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-slate-100 via-white to-sky-50">
+      <svg
+        viewBox="0 0 64 64"
+        fill="none"
+        className="h-16 w-16 text-slate-300"
+        aria-hidden
+      >
+        {type === "indicator" ? (
+          <>
+            <path d="M12 46h40" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
+            <path d="M18 40V26M32 40V16M46 40V30" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
+            <path d="M14 24c7 5 12 6 18 1s10-8 18-2" stroke="#0EA5E9" strokeWidth="4" strokeLinecap="round" />
+          </>
+        ) : (
+          <>
+            <rect x="15" y="18" width="34" height="28" rx="8" stroke="currentColor" strokeWidth="4" />
+            <path d="M24 30h.01M40 30h.01M27 39h10" stroke="#0EA5E9" strokeWidth="4" strokeLinecap="round" />
+            <path d="M32 18v-6" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
+          </>
+        )}
+      </svg>
+    </div>
+  );
+}
+
 /* ── Single tool card ─────────────────────────────────────── */
 function ToolCard({ tool, locale }: { tool: Tool; locale: Locale }) {
   const description = locale === "km" ? tool.description_km : tool.description_en;
   const isFree = tool.pricing === "free";
 
   return (
-    <Link href={`/${locale}/tools/${tool.id}`} className="group flex flex-col overflow-hidden rounded-xl border border-slate-200/80 bg-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-slate-200/60" aria-label={tool.name}>
+    <Link href={`/${locale}/tools/${tool.id}`} className="group flex flex-col overflow-hidden rounded-[1.5rem] border border-white/80 bg-white/88 shadow-sm shadow-slate-900/5 backdrop-blur transition-all duration-300 hover:-translate-y-1 hover:border-sky-200 hover:shadow-2xl hover:shadow-slate-900/10" aria-label={tool.name}>
 
       {/* ── Image area ── */}
       <div className="relative aspect-video w-full overflow-hidden bg-slate-100">
@@ -22,9 +49,7 @@ function ToolCard({ tool, locale }: { tool: Tool; locale: Locale }) {
             className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-slate-100 to-slate-200">
-            <span className="text-5xl opacity-20">{tool.type === "indicator" ? "📊" : "🤖"}</span>
-          </div>
+          <ToolPlaceholder type={tool.type} />
         )}
 
         {/* Dark gradient overlay */}
@@ -54,7 +79,7 @@ function ToolCard({ tool, locale }: { tool: Tool; locale: Locale }) {
       <div className="flex flex-1 flex-col p-5">
         {/* Name + version */}
         <div className="flex items-baseline justify-between gap-2">
-          <h3 className="font-bold leading-snug text-[#1e293b] group-hover:text-[#0ea5e9] transition-colors">
+          <h3 className="font-bold leading-snug text-[#1e293b] transition-colors group-hover:text-[#0ea5e9]">
             {tool.name}
           </h3>
           <span className="shrink-0 rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[10px] text-slate-400">
@@ -76,7 +101,7 @@ function ToolCard({ tool, locale }: { tool: Tool; locale: Locale }) {
 
         {/* CTA hint */}
         <div className="mt-auto flex items-center justify-between">
-          <span className="text-xs font-semibold text-[#0ea5e9]">View details →</span>
+          <span className="text-xs font-semibold text-[#0ea5e9] transition group-hover:translate-x-0.5">View details →</span>
           {tool.pricing === "free" && (
             <span className="rounded-full bg-sky-50 px-2.5 py-0.5 text-[11px] font-bold text-[#0ea5e9]">Free Download</span>
           )}
@@ -103,7 +128,7 @@ function FilterTabs({
   ];
 
   return (
-    <div className="flex items-center gap-1 rounded-xl border border-slate-200 bg-white p-1 shadow-sm">
+    <div className="flex flex-wrap items-center gap-1 rounded-2xl border border-slate-200/90 bg-white/85 p-1 shadow-sm shadow-slate-900/5 backdrop-blur">
       {tabs.map((tab) => (
         <Link
           key={tab.key}
@@ -157,15 +182,16 @@ export default async function ToolsPage({
     <div className="flex flex-col">
 
       {/* ── Hero ── */}
-      <section className="bg-[#1e293b] px-4 py-16 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-6xl">
+      <section className="relative overflow-hidden bg-[#1e293b] px-4 py-16 sm:px-6 lg:px-8">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,rgba(212,175,55,0.18),transparent_24rem),radial-gradient(circle_at_86%_10%,rgba(14,165,233,0.2),transparent_26rem)]" aria-hidden />
+        <div className="relative mx-auto max-w-7xl">
           <p className="text-xs font-bold uppercase tracking-[0.25em] text-[#d4af37]">
             {t.eyebrow}
           </p>
           <h1 className="mt-3 max-w-2xl text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl">
             {t.title}
           </h1>
-          <p className="mt-4 max-w-xl text-base leading-relaxed text-slate-400">
+          <p className="mt-4 max-w-xl text-base leading-7 text-slate-300">
             {t.intro}
           </p>
 
@@ -173,7 +199,7 @@ export default async function ToolsPage({
       </section>
 
       {/* ── Content ── */}
-      <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-10 sm:px-6 lg:px-8">
+      <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-10 sm:px-6 lg:px-8">
 
         {allTools.length === 0 ? (
           <div className="mt-4 rounded-2xl border border-[#d4af37]/30 bg-[#d4af37]/5 px-8 py-14 text-center">

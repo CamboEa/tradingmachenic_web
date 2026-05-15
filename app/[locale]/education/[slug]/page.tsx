@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { LessonPlayer } from "@/components/lesson-player";
@@ -44,12 +43,12 @@ export default async function LessonPage({
   const lesson = await getLessonBySlug(slug);
   if (!lesson) notFound();
   return (
-    <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-12 sm:px-6 lg:px-8 lg:py-16">  
-      <header className="mt-6 max-w-3xl">
-        <h1 className="text-3xl font-semibold tracking-tight text-[var(--color-ink)] sm:text-4xl">
+    <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-12 sm:px-6 lg:px-8 lg:py-16">  
+      <header className="mt-6 max-w-4xl rounded-[2rem] border border-white/80 bg-white/78 p-6 shadow-sm shadow-slate-900/5 backdrop-blur sm:p-8">
+        <h1 className="text-3xl font-semibold tracking-[-0.025em] text-[var(--color-ink)] sm:text-5xl">
           {lesson.titles[locale]}
         </h1>
-        <p className="mt-4 text-lg text-[var(--color-ink-muted)]">
+        <p className="mt-4 max-w-3xl text-lg leading-8 text-[var(--color-ink-muted)]">
           {lesson.summaries[locale]}
         </p>
       </header>
@@ -65,7 +64,7 @@ export default async function LessonPage({
         {dict.course.videoFallback}
       </p>
 
-      <section className="mt-10 max-w-3xl rounded-2xl border border-[color-mix(in_oklab,var(--color-bridge)_65%,transparent)] bg-[var(--color-surface)] p-6">
+      <section className="mt-10 max-w-4xl rounded-[1.5rem] border border-white/80 bg-white/88 p-6 shadow-sm shadow-slate-900/5 backdrop-blur">
         <h2 className="text-sm font-semibold uppercase tracking-wide text-[var(--color-ink-soft)]">
           {dict.course.objectives}
         </h2>

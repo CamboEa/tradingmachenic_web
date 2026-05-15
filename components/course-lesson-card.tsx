@@ -44,7 +44,7 @@ export function CourseLessonCard({
   );
 
   return (
-    <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-[color-mix(in_oklab,var(--color-bridge)_70%,transparent)] bg-[var(--color-surface)] shadow-sm transition-[box-shadow,transform,border-color] duration-300 hover:-translate-y-0.5 hover:border-[color-mix(in_oklab,var(--color-teal)_35%,var(--color-bridge))] hover:shadow-lg">
+    <article className="flex h-full flex-col overflow-hidden rounded-[1.65rem] border border-white/80 bg-white/88 shadow-sm shadow-slate-900/5 backdrop-blur transition-[box-shadow,transform,border-color] duration-300 hover:-translate-y-1 hover:border-[color-mix(in_oklab,var(--color-teal)_35%,var(--color-bridge))] hover:shadow-2xl hover:shadow-slate-900/10">
       <Link href={href} className="group flex flex-1 flex-col outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-teal)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)]">
         <div className="relative aspect-[16/10] overflow-hidden bg-[color-mix(in_oklab,var(--color-bridge)_35%,var(--color-surface))]">
           {thumbSrc ? (

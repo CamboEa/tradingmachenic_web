@@ -13,7 +13,10 @@ export type Dictionary = {
     education: string;
     curriculum: string;
     tools: string;
+    podcast: string;
     about: string;
+    /** Primary nav overflow — opens menu with extra links */
+    more: string;
     register: string;
     login: string;
     signOut: string;
@@ -45,6 +48,16 @@ export type Dictionary = {
     ctaBandButton: string;
     principlesTagline: string;
     lessonsNoun: string;
+    /** Split hero (home) */
+    heroSplitHeadline: string;
+    heroSplitSubhead: string;
+    heroSplitCta: string;
+    heroSplitTab: string;
+    heroImageAlt: string;
+    socialProofRating: string;
+    socialStudentsTitle: string;
+    socialExpertTitle: string;
+    socialExpertQuote: string;
   };
   course: {
     title: string;
@@ -88,6 +101,17 @@ export type Dictionary = {
     indicatorsDescription: string;
     expertAdvisorsTitle: string;
     expertAdvisorsDescription: string;
+  };
+  podcastPage: {
+    eyebrow: string;
+    title: string;
+    intro: string;
+    emptyTitle: string;
+    emptyBody: string;
+    openEpisode: string;
+    backToList: string;
+    watchOnYouTube: string;
+    episodeEyebrow: string;
   };
   registerPage: {
     title: string;
@@ -140,7 +164,9 @@ const en: Dictionary = {
     education: "Education",
     curriculum: "Curriculum",
     tools: "Tools",
+    podcast: "Podcast",
     about: "About",
+    more: "More",
     register: "Register",
     login: "Login",
     signOut: "Sign Out",
@@ -214,6 +240,16 @@ const en: Dictionary = {
     principlesTagline:
       "Grounded lessons you can apply—not noise.",
     lessonsNoun: "lessons",
+    heroSplitHeadline: "Trade with confidence, in any market",
+    heroSplitSubhead: "Get started with a free intro class",
+    heroSplitCta: "Register now",
+    heroSplitTab: "Free intro class",
+    heroImageAlt: "Trading Machenic classroom and learning session",
+    socialProofRating: "Learners rate the programme highly for clarity and structure.",
+    socialStudentsTitle: "Hear from our students",
+    socialExpertTitle: "Insights from your mentor",
+    socialExpertQuote:
+      "The education from Trading Machenic delivers serious learning value—risk, process, and mechanics explained without hype. It is built for traders who want a calm, repeatable path instead of chasing shortcuts.",
   },
   course: {
     title: "Trading fundamentals",
@@ -260,6 +296,19 @@ const en: Dictionary = {
     expertAdvisorsTitle: "Expert Advisors",
     expertAdvisorsDescription:
       "Template automation for supported platforms, documented assumptions, and explicit limits—shipping after QA.",
+  },
+  podcastPage: {
+    eyebrow: "Podcast",
+    title: "Conversations on markets, process, and mechanics",
+    intro:
+      "Episodes are hosted on YouTube. Browse here for a calm, structured playlist aligned with how we teach in the academy.",
+    emptyTitle: "Episodes on the way",
+    emptyBody:
+      "When episodes are published in the admin panel, they will appear here with an embedded player on each episode page.",
+    openEpisode: "Open episode",
+    backToList: "All episodes",
+    watchOnYouTube: "Watch on YouTube",
+    episodeEyebrow: "Episode",
   },
   registerPage: {
     title: "Create an account",
@@ -335,7 +384,9 @@ const km: Dictionary = {
     education: "ការអប់រំ",
     curriculum: "កម្មវិធីសិក្សា",
     tools: "ឧបករណ៍",
+    podcast: "ប៉ូដ្យាកាស",
     about: "អំពី",
+    more: "ច្រើនទៀត",
     register: "ចុះឈ្មោះ",
     login: "ចូល",
     signOut: "ចាកចេញ",
@@ -409,6 +460,16 @@ const km: Dictionary = {
     principlesTagline:
       "មេរៀនរឹងមាំដែលយកទៅអនុវត្តបាន—មិនមែនសំឡេងរំខាន។",
     lessonsNoun: "មេរៀន",
+    heroSplitHeadline: "ធ្វើពាណិជ្ជកម្មដោយទំនុកចិត្ត និងវិន័យ—នៅគ្រប់ទីផ្សារ",
+    heroSplitSubhead: "ចាប់ផ្តើមដោយថ្នាក់ណែនាំឥតគិតថ្លៃ",
+    heroSplitCta: "ចុះឈ្មោះឥឡូវនេះ",
+    heroSplitTab: "ថ្នាក់ណែនាំឥតគិតថ្លៃ",
+    heroImageAlt: "បន្ទប់រៀន និងសមាជិក Trading Machenic",
+    socialProofRating: "អ្នករៀនឲ្យពិន្ទុខ្ពស់ចំពោះភាពច្បាស់លាស់ និងរចនាសម្ព័ន្ធកម្មវិធី។",
+    socialStudentsTitle: "ស្តាប់ពីសិស្សរបស់យើង",
+    socialExpertTitle: "យល់ដឹងពីអ្នកណែនាំ",
+    socialExpertQuote:
+      "ការអប់រំពី Trading Machenic ផ្តល់តម្លៃសិក្សាពិតប្រាកដ—ពន្យល់ហានិភ័យ ដំណើរការ និងលក្ខណៈបច្ចេកទេសដោយគ្មានសំឡេងរន្ទះ។ សាងសម្រាប់អ្នកជួញដូរដែលចង់ផ្លូវស្ងប់ និងធ្វើម្តងហើយម្តងទៀត ជំនួសការរត់តាមផ្លូវកាត់។",
   },
   course: {
     title: "មូលដ្ឋានពាណិជ្ជកម្ម",
@@ -455,6 +516,19 @@ const km: Dictionary = {
     expertAdvisorsTitle: "ទីប្រឹក្សារបស់អ្នកជំនាញ (EA)",
     expertAdvisorsDescription:
       "គំរូស្វ័យប្រវត្តិសម្រាប់វេទិកាដែលគាំទ្រ ឯកសារសន្និដ្ឋានច្បាស់លាស់ និងដែនកំណត់ច្បាស់លាស់—នឹងដាក់បន្ទាប់ពីតេស្តគុណភាព។",
+  },
+  podcastPage: {
+    eyebrow: "ប៉ូដ្យាកាស",
+    title: "ការសន្ទនាអំពីទីផ្សារ ដំណើរការ និងលក្ខណៈបច្ចេកទេស",
+    intro:
+      "វគ្គត្រូវបានផ្ទុកនៅលើ YouTube។ មើលនៅទីនេះសម្រាប់បញ្ជីដែលស្របនឹងរបៀបបង្រៀនរបស់យើង។",
+    emptyTitle: "វគ្គនឹងមកដល់ឆាប់ៗ",
+    emptyBody:
+      "នៅពេលដែលវគ្គត្រូវបានផ្សាយពីផ្ទាំងគ្រប់គ្រង ពួកវានឹងបង្ហាញនៅទីនេះជាមួយការបង្កប់នៅលើទំព័រវគ្គនីមួយៗ។",
+    openEpisode: "បើកវគ្គ",
+    backToList: "វគ្គទាំងអស់",
+    watchOnYouTube: "មើលនៅ YouTube",
+    episodeEyebrow: "វគ្គ",
   },
   registerPage: {
     title: "បង្កើតគណនី",

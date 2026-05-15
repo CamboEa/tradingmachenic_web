@@ -82,7 +82,7 @@ export function AuthForm({
           autoComplete="email"
           required
           disabled={isPending}
-          className="mt-2 w-full rounded-lg border border-[color-mix(in_oklab,var(--color-bridge)_65%,transparent)] bg-[var(--color-surface)] px-4 py-3 text-[var(--color-ink)] outline-none transition focus:ring-2 focus:ring-[var(--color-teal)] disabled:opacity-60"
+          className="mt-2 w-full rounded-xl border border-[color-mix(in_oklab,var(--color-bridge)_65%,transparent)] bg-white/90 px-4 py-3 text-[var(--color-ink)] shadow-sm shadow-slate-900/5 outline-none transition focus:border-[var(--color-teal)] focus:ring-2 focus:ring-[color-mix(in_oklab,var(--color-teal)_22%,transparent)] disabled:opacity-60"
         />
       </div>
 
@@ -101,14 +101,14 @@ export function AuthForm({
           autoComplete={mode === "login" ? "current-password" : "new-password"}
           required
           disabled={isPending}
-          className="mt-2 w-full rounded-lg border border-[color-mix(in_oklab,var(--color-bridge)_65%,transparent)] bg-[var(--color-surface)] px-4 py-3 text-[var(--color-ink)] outline-none transition focus:ring-2 focus:ring-[var(--color-teal)] disabled:opacity-60"
+          className="mt-2 w-full rounded-xl border border-[color-mix(in_oklab,var(--color-bridge)_65%,transparent)] bg-white/90 px-4 py-3 text-[var(--color-ink)] shadow-sm shadow-slate-900/5 outline-none transition focus:border-[var(--color-teal)] focus:ring-2 focus:ring-[color-mix(in_oklab,var(--color-teal)_22%,transparent)] disabled:opacity-60"
         />
       </div>
 
       <button
         type="submit"
         disabled={isPending}
-        className="w-full rounded-lg bg-[var(--color-teal)] px-4 py-3 text-sm font-semibold text-white transition hover:brightness-105 disabled:opacity-60 sm:w-auto sm:min-w-[140px]"
+        className="w-full rounded-xl bg-[var(--color-teal)] px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-[color-mix(in_oklab,var(--color-teal)_24%,transparent)] transition hover:-translate-y-0.5 hover:brightness-105 disabled:translate-y-0 disabled:opacity-60 sm:w-auto sm:min-w-[140px]"
       >
         {isPending ? "Please wait…" : submitLabel}
       </button>

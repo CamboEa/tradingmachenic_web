@@ -39,7 +39,7 @@ export function LessonPlayer({
         <h2 className="mb-4 text-base font-semibold tracking-tight text-[var(--color-ink)]">
           {activeTitle}
         </h2>
-        <div className="overflow-hidden rounded-2xl border border-[color-mix(in_oklab,var(--color-bridge)_65%,transparent)] bg-black shadow-lg">
+        <div className="overflow-hidden rounded-[1.5rem] border border-slate-900/10 bg-black shadow-2xl shadow-slate-900/18">
           <div className="aspect-video w-full">
             <iframe
               key={activeIndex}
@@ -71,7 +71,7 @@ export function LessonPlayer({
                   type="button"
                   onClick={() => setActiveIndex(index)}
                   className={[
-                    "flex w-full items-center gap-3 rounded-xl border px-4 py-3 text-left transition",
+                    "flex w-full cursor-pointer items-center gap-3 rounded-xl border px-4 py-3 text-left shadow-sm shadow-slate-900/5 transition",
                     isActive
                       ? "border-[var(--color-teal)] bg-[color-mix(in_oklab,var(--color-teal)_8%,var(--color-surface))] text-[var(--color-teal)]"
                       : "border-[color-mix(in_oklab,var(--color-bridge)_65%,transparent)] bg-[var(--color-surface)] text-[var(--color-ink-muted)] hover:border-[color-mix(in_oklab,var(--color-teal)_40%,transparent)] hover:text-[var(--color-ink)]",

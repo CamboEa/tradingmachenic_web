@@ -1,5 +1,6 @@
 export type ToolType = "indicator" | "ea";
 export type ToolStatus = "draft" | "published";
+export type PodcastStatus = "draft" | "published";
 export type LessonStatus = "draft" | "published";
 export type LessonType = "free" | "paid";
 export type Platform = "MT4" | "MT5" | "MT4 & MT5";
@@ -89,6 +90,22 @@ export type Database = {
         };
         Insert: Omit<Database["public"]["Tables"]["tools"]["Row"], "id" | "created_at">;
         Update: Partial<Database["public"]["Tables"]["tools"]["Insert"]>;
+        Relationships: [];
+      };
+      podcasts: {
+        Row: {
+          id: string;
+          created_at: string;
+          youtube_url: string;
+          title_en: string;
+          title_km: string;
+          description_en: string | null;
+          description_km: string | null;
+          sort_order: number;
+          status: PodcastStatus;
+        };
+        Insert: Omit<Database["public"]["Tables"]["podcasts"]["Row"], "id" | "created_at">;
+        Update: Partial<Database["public"]["Tables"]["podcasts"]["Insert"]>;
         Relationships: [];
       };
       lessons: {

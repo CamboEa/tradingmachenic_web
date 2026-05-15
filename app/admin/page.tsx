@@ -23,7 +23,7 @@ function StatCard({
 
   return (
     <div
-      className={`rounded-xl border border-slate-200 border-l-4 bg-white p-5 shadow-sm ${ring}`}
+      className={`rounded-2xl border border-white/80 border-l-4 bg-white/88 p-5 shadow-sm shadow-slate-900/5 backdrop-blur transition hover:-translate-y-0.5 hover:shadow-xl hover:shadow-slate-900/10 ${ring}`}
     >
       <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
         {label}
@@ -48,10 +48,13 @@ export default async function AdminDashboard() {
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-[#1e293b]">Dashboard</h1>
-        <p className="mt-1 text-sm text-slate-500">
-          Overview of your Trading Machenic content.
+      <div className="mb-8 rounded-[2rem] border border-white/80 bg-white/78 p-6 shadow-sm shadow-slate-900/5 backdrop-blur">
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#d4af37]">
+          Admin workspace
+        </p>
+        <h1 className="mt-2 text-3xl font-bold tracking-tight text-[#1e293b]">Dashboard</h1>
+        <p className="mt-2 text-sm leading-6 text-slate-500">
+          Overview of your Trading Machenic content, curriculum, and tools.
         </p>
       </div>
 
@@ -93,11 +96,12 @@ export default async function AdminDashboard() {
             { href: "/admin/program", label: "Manage Program", color: "bg-[#d4af37] text-[#1e293b]" },
             { href: "/admin/lessons", label: "Manage Lessons", color: "bg-[#0ea5e9] text-white" },
             { href: "/admin/tools", label: "Create Tool", color: "bg-[#1e293b] text-white" },
+            { href: "/admin/podcasts", label: "Manage Podcasts", color: "bg-slate-600 text-white" },
           ].map((a) => (
             <Link
               key={a.href}
               href={a.href}
-              className={`rounded-lg px-5 py-2.5 text-sm font-semibold shadow-sm transition hover:opacity-90 ${a.color}`}
+              className={`rounded-xl px-5 py-2.5 text-sm font-semibold shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg ${a.color}`}
             >
               {a.label}
             </Link>
@@ -118,7 +122,7 @@ export default async function AdminDashboard() {
             View all →
           </Link>
         </div>
-        <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+        <div className="overflow-hidden rounded-2xl border border-white/80 bg-white/88 shadow-sm shadow-slate-900/5 backdrop-blur">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-slate-100 bg-slate-50 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
@@ -181,7 +185,7 @@ export default async function AdminDashboard() {
             return (
               <div
                 key={phase.id}
-                className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm"
+                className="rounded-2xl border border-white/80 bg-white/88 p-5 shadow-sm shadow-slate-900/5 backdrop-blur"
               >
                 <div className="flex items-center justify-between">
                   <p

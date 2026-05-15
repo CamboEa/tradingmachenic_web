@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { HomeHeroSplit } from "@/components/home-hero-split";
 import { Reveal } from "@/components/reveal";
 import { getAllLessons } from "@/lib/supabase/lessons";
 import { getDictionary, isLocale, type Locale } from "@/lib/i18n";
@@ -23,47 +24,9 @@ export default async function HomePage({
 
   return (
     <main className="flex-1">
-      <section className="relative overflow-hidden border-b border-[color-mix(in_oklab,var(--color-bridge)_45%,transparent)] bg-[color-mix(in_oklab,var(--color-teal)_05%,var(--background))]">
-        <div
-          className="hero-ambient pointer-events-none absolute inset-0 opacity-[0.35]"
-          style={{
-            backgroundImage: `linear-gradient(105deg, transparent 40%, color-mix(in oklab, var(--color-gold) 12%, transparent) 48%, transparent 58%)`,
-          }}
-          aria-hidden
-        />
-        <div className="relative mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
-          <Reveal variant="mount">
-            <div>
-            <h1 className="mt-6 text-balance text-4xl font-semibold tracking-tight text-[var(--color-ink)] sm:text-5xl lg:text-[3.25rem] lg:leading-[1.08]">
-              {dict.home.headline}
-            </h1>
-            <p className="mt-6 max-w-xl text-pretty text-lg leading-relaxed text-[var(--color-ink-muted)]">
-              {dict.home.subhead}
-            </p>
-            <p className="mt-5 inline-flex items-center gap-2 rounded-full border border-[color-mix(in_oklab,var(--color-gold)_45%,var(--color-bridge))] bg-[color-mix(in_oklab,var(--color-gold)_08%,var(--color-surface))] px-4 py-1.5 text-sm font-medium text-[var(--color-ink)]">
-              <span className="h-2 w-2 rounded-full bg-[var(--color-gold)]" aria-hidden />
-              {dict.course.programStructure}
-            </p>
-            <div className="mt-8 flex flex-wrap gap-4">
-              <Link
-                href={`/${locale}/education`}
-                className="inline-flex items-center justify-center rounded-xl bg-[var(--color-teal)] px-7 py-3.5 text-sm font-semibold text-white shadow-md shadow-[color-mix(in_oklab,var(--color-teal)_35%,transparent)] transition hover:brightness-[1.06]"
-              >
-                {dict.home.ctaCourse}
-              </Link>
-              <Link
-                href={`/${locale}/education`}
-                className="inline-flex items-center justify-center rounded-xl border border-[color-mix(in_oklab,var(--color-gold)_42%,var(--color-bridge))] bg-[var(--color-surface)] px-7 py-3.5 text-sm font-semibold text-[var(--color-ink)] shadow-sm transition hover:border-[var(--color-gold)] hover:shadow-md"
-              >
-                {dict.home.ctaOutline}
-              </Link>
-            </div>            
-          </div>
-          </Reveal>
-        </div>
-      </section>
+      <HomeHeroSplit locale={locale} dict={dict} />
 
-      <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
+      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
         <section aria-labelledby="home-principles">
           <Reveal>
             <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">

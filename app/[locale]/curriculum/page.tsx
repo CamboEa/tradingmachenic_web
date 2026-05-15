@@ -39,7 +39,7 @@ function TimelineCard({
         backgroundColor: accentBg,
         borderColor: borderColor,
       }}
-      className="flex flex-col rounded-2xl border p-7 shadow-sm"
+      className="flex flex-col rounded-[1.5rem] border p-7 shadow-sm shadow-slate-900/5 backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-slate-900/10"
     >
       <p
         style={{ color: accentColor }}
@@ -126,16 +126,16 @@ export default async function CurriculumPage({
   const curriculum = await getCurriculum();
 
   return (
-    <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
+    <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
       <Reveal variant="mount">
-        <header className="mx-auto max-w-2xl text-center">
+        <header className="mx-auto max-w-3xl rounded-[2rem] border border-white/80 bg-white/78 px-6 py-10 text-center shadow-[0_24px_70px_-42px_rgba(15,23,42,0.45)] backdrop-blur sm:px-8">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-(--color-gold)">
             {cp.eyebrow}
           </p>
-          <h1 className="mt-3 text-3xl font-semibold tracking-tight text-(--color-ink) sm:text-4xl">
+          <h1 className="mt-3 text-3xl font-semibold tracking-[-0.025em] text-(--color-ink) sm:text-5xl">
             {cp.title}
           </h1>
-          <p className="mt-4 text-pretty text-lg leading-relaxed text-(--color-ink-muted)">
+          <p className="mt-4 text-pretty text-lg leading-8 text-(--color-ink-muted)">
             {cp.intro}
           </p>
           <p className="mt-5 inline-flex items-center gap-2 rounded-full border border-[color-mix(in_oklab,var(--color-gold)_45%,var(--color-bridge))] bg-[color-mix(in_oklab,var(--color-gold)_08%,var(--color-surface))] px-4 py-1.5 text-sm font-medium text-(--color-ink)">
