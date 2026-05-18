@@ -7,11 +7,21 @@ import { createClient } from "@/lib/supabase/server";
 const ALLOWED_BUCKETS: BucketName[] = ["trading-lesson", "trading-tool"];
 
 const ALLOWED_TYPES: Record<BucketName, string[]> = {
-  "trading-lesson": ["video/mp4", "video/webm", "video/quicktime"],
+  "trading-lesson": [
+    "video/mp4",
+    "video/webm",
+    "video/quicktime",
+    "video/x-msvideo",
+    "video/x-matroska",
+  ],
   "trading-tool": [
     "application/octet-stream",
     "application/zip",
     "application/x-zip-compressed",
+    "image/png",
+    "image/jpeg",
+    "image/webp",
+    "image/gif",
   ],
 };
 

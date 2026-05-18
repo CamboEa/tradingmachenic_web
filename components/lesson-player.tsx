@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import type { LessonVideo } from "@/lib/course";
 import type { Locale } from "@/lib/i18n";
+import { resolveLessonVideoEmbedUrl } from "@/lib/youtube";
 
 interface LessonPlayerProps {
   videos: LessonVideo[];
@@ -32,6 +33,8 @@ export function LessonPlayer({
     activeVideo.titles?.[locale] ??
     formatHeading(videoInLessonHeading, activeIndex + 1, total);
 
+  const embedSrc = resolveLessonVideoEmbedUrl(activeVideo.embedUrl);
+
   return (
     <div className="mt-10 flex flex-col gap-6 lg:flex-row lg:items-start">
       {/* Main player — left column */}
@@ -44,7 +47,7 @@ export function LessonPlayer({
             <iframe
               key={activeIndex}
               title={`${lessonTitle} — ${activeTitle}`}
-              src={activeVideo.embedUrl}
+              src={embedSrc}
               className="h-full w-full"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen

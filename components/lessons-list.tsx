@@ -111,6 +111,15 @@ export function LessonsList({ lessons }: LessonsListProps) {
                             {lesson.type}
                           </span>
                         )}
+                        <span
+                          className={`rounded-full px-2 py-0.5 text-xs font-semibold ${
+                            lesson.status === "published"
+                              ? "bg-emerald-100 text-emerald-700"
+                              : "bg-amber-100 text-amber-800"
+                          }`}
+                        >
+                          {lesson.status === "published" ? "Published" : "Draft"}
+                        </span>
                       </div>
                       <p className="text-xs text-slate-400">{lesson.titles.km}</p>
                     </div>

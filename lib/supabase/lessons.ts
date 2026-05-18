@@ -1,10 +1,22 @@
 import type { Lesson } from "@/lib/course";
-import { createClient } from "@supabase/supabase-js";
+import { resolveLessonVideoEmbedUrl } from "@/lib/youtube";
+import { createClient, createClient as createAdminClient } from "@supabase/supabase-js";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
+
+function adminSupabase() {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    return null;
+  }
+  return createAdminClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_ROLE_KEY,
+    { auth: { autoRefreshToken: false, persistSession: false } },
+  );
+}
 
 type LessonRow = {
   id: string;
@@ -59,6 +71,46 @@ export async function getAllLessons(): Promise<Lesson[]> {
     }
 
     lessons.push(transformLessonRow(row, videos as LessonVideoRow[]));
+  }
+
+  return lessons;
+}
+
+/**
+ * Fetch all lessons for admin (draft + published).
+ */
+export async function getAllLessonsForAdmin(): Promise<Lesson[]> {
+  const client = adminSupabase();
+  if (!client) {
+    console.error("Missing Supabase admin credentials for lessons");
+    return [];
+  }
+
+  const { data: lessonRows, error: lessonError } = await client
+    .from("lessons")
+    .select("*")
+    .order("created_at", { ascending: true });
+
+  if (lessonError) {
+    console.error("Error fetching admin lessons:", lessonError);
+    return [];
+  }
+
+  const lessons: Lesson[] = [];
+
+  for (const row of (lessonRows || []) as LessonRow[]) {
+    const { data: videos, error: videoError } = await client
+      .from("lesson_videos")
+      .select("*")
+      .eq("lesson_id", row.id)
+      .order("sort_order", { ascending: true });
+
+    if (videoError) {
+      console.error(`Error fetching videos for lesson ${row.slug}:`, videoError);
+      continue;
+    }
+
+    lessons.push(transformLessonRow(row, (videos || []) as LessonVideoRow[]));
   }
 
   return lessons;
@@ -121,8 +173,9 @@ function transformLessonRow(
       km: row.objectives_km || [],
     },
     type: (row.type as "free" | "paid") || undefined,
+    status: row.status === "published" ? "published" : "draft",
     videos: videos.map((v) => ({
-      embedUrl: v.embed_url,
+      embedUrl: resolveLessonVideoEmbedUrl(v.embed_url),
       titles: {
         en: v.title_en || "",
         km: v.title_km || "",

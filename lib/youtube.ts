@@ -43,6 +43,18 @@ export function youtubeEmbedSrc(videoId: string): string {
   return `https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoId)}?rel=0`;
 }
 
+/**
+ * Turn any YouTube watch/share URL into an iframe-safe embed URL.
+ * Non-YouTube URLs (e.g. R2 hosted video) are returned unchanged.
+ */
+export function resolveLessonVideoEmbedUrl(url: string): string {
+  const trimmed = url.trim();
+  if (!trimmed) return trimmed;
+  const id = extractYouTubeVideoId(trimmed);
+  if (id) return youtubeEmbedSrc(id);
+  return trimmed;
+}
+
 export function youtubeWatchUrl(videoId: string): string {
   return `https://www.youtube.com/watch?v=${encodeURIComponent(videoId)}`;
 }

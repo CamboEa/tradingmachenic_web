@@ -1,4 +1,5 @@
 import type { Locale } from "./i18n";
+import { extractYouTubeVideoId, youtubeThumbnailUrl } from "./youtube";
 
 export type LessonVideo = {
   /** Public embed URL, e.g. YouTube embed link */
@@ -17,21 +18,13 @@ export type Lesson = {
   summaries: Record<Locale, string>;
   objectives: Record<Locale, string[]>;
   type?: "free" | "paid";
+  /** Set when loaded from admin (draft lessons are hidden on the public site). */
+  status?: "draft" | "published";
 };
 
 export function youtubeThumbnailFromEmbed(embedUrl: string): string | null {
-  try {
-    const u = new URL(embedUrl);
-    if (
-      u.hostname.includes("youtube.com") &&
-      u.pathname.startsWith("/embed/")
-    ) {
-      const id = u.pathname.replace("/embed/", "").split("/")[0];
-      if (id) return `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
-    }
-  } catch {
-    return null;
-  }
+  const id = extractYouTubeVideoId(embedUrl);
+  if (id) return youtubeThumbnailUrl(id);
   return null;
 }
 

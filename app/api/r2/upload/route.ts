@@ -7,7 +7,13 @@ import { createClient } from "@/lib/supabase/server";
 const ALLOWED_BUCKETS = ["trading-lesson", "trading-tool"] as const;
 
 const ALLOWED_TYPES: Record<string, string[]> = {
-  "trading-lesson": ["video/mp4", "video/webm", "video/quicktime"],
+  "trading-lesson": [
+    "video/mp4",
+    "video/webm",
+    "video/quicktime",
+    "video/x-msvideo",
+    "video/x-matroska",
+  ],
   "trading-tool": [
     "application/octet-stream",
     "application/zip",

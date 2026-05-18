@@ -7,7 +7,7 @@ import { defaultLocale, locales } from "@/lib/i18n";
 import type { CurriculumAccent } from "@/lib/curriculum";
 import type { Tool } from "@/lib/supabase/tools";
 import type { Podcast } from "@/lib/supabase/podcasts";
-import { extractYouTubeVideoId } from "@/lib/youtube";
+import { extractYouTubeVideoId, resolveLessonVideoEmbedUrl } from "@/lib/youtube";
 
 import { createClient, createAdminClient } from "./server";
 
@@ -117,7 +117,11 @@ export async function createLesson(formData: {
   summary_en: string;
   summary_km: string;
   approximate_minutes: number;
+  objectives_en: string[];
+  objectives_km: string[];
   type: "free" | "paid";
+  status: "draft" | "published";
+  thumbnail_url?: string | null;
   videos: Array<{
     embedUrl?: string;
     url?: string;
@@ -139,8 +143,11 @@ export async function createLesson(formData: {
           summary_en: formData.summary_en,
           summary_km: formData.summary_km,
           approximate_minutes: formData.approximate_minutes,
+          objectives_en: formData.objectives_en,
+          objectives_km: formData.objectives_km,
           type: formData.type,
-          status: "draft",
+          status: formData.status,
+          thumbnail_url: formData.thumbnail_url?.trim() || null,
         },
       ])
       .select()
@@ -153,7 +160,7 @@ export async function createLesson(formData: {
     // Create videos
     const videosToInsert = formData.videos.map((v, idx) => ({
       lesson_id: lesson.id,
-      embed_url: v.embedUrl || v.url || "",
+      embed_url: resolveLessonVideoEmbedUrl(v.embedUrl || v.url || ""),
       title_en: v.title_en,
       title_km: v.title_km,
       sort_order: idx,
@@ -168,7 +175,10 @@ export async function createLesson(formData: {
     }
 
     revalidatePath("/admin/lessons");
-    revalidatePath("/education");
+    for (const loc of locales) {
+      revalidatePath(`/${loc}/education`);
+      revalidatePath(`/${loc}/education/${formData.slug}`);
+    }
     return { success: true };
   } catch (err) {
     return { error: err instanceof Error ? err.message : "Failed to create lesson" };
@@ -183,7 +193,11 @@ export async function updateLesson(
     summary_en: string;
     summary_km: string;
     approximate_minutes: number;
+    objectives_en: string[];
+    objectives_km: string[];
     type: "free" | "paid";
+    status: "draft" | "published";
+    thumbnail_url?: string | null;
     videos: Array<{
       id?: string;
       embedUrl?: string;
@@ -216,7 +230,11 @@ export async function updateLesson(
         summary_en: formData.summary_en,
         summary_km: formData.summary_km,
         approximate_minutes: formData.approximate_minutes,
+        objectives_en: formData.objectives_en,
+        objectives_km: formData.objectives_km,
         type: formData.type,
+        status: formData.status,
+        thumbnail_url: formData.thumbnail_url?.trim() || null,
       })
       .eq("id", lesson.id);
 
@@ -230,7 +248,7 @@ export async function updateLesson(
     // Insert new videos
     const videosToInsert = formData.videos.map((v, idx) => ({
       lesson_id: lesson.id,
-      embed_url: v.embedUrl || v.url || "",
+      embed_url: resolveLessonVideoEmbedUrl(v.embedUrl || v.url || ""),
       title_en: v.title_en,
       title_km: v.title_km,
       sort_order: idx,
@@ -245,7 +263,10 @@ export async function updateLesson(
     }
 
     revalidatePath("/admin/lessons");
-    revalidatePath("/education");
+    for (const loc of locales) {
+      revalidatePath(`/${loc}/education`);
+      revalidatePath(`/${loc}/education/${slug}`);
+    }
     return { success: true };
   } catch (err) {
     return { error: err instanceof Error ? err.message : "Failed to update lesson" };

@@ -1,11 +1,11 @@
 import Link from "next/link";
-import { getAllLessons } from "@/lib/supabase/lessons";
+import { getAllLessonsForAdmin } from "@/lib/supabase/lessons";
 import { LessonsList } from "@/components/lessons-list";
 
 export const metadata = { title: "Lessons" };
 
 export default async function LessonsPage() {
-  const lessons = await getAllLessons();
+  const lessons = await getAllLessonsForAdmin();
 
   return (
     <div>

@@ -4,8 +4,16 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import { createLesson, updateLesson } from "@/lib/supabase/actions";
 import { R2Uploader } from "@/components/r2-uploader";
+import { extractYouTubeVideoId, resolveLessonVideoEmbedUrl } from "@/lib/youtube";
 
 type LessonType = "free" | "paid";
+
+function parseObjectives(value: string): string[] {
+  return value
+    .split("\n")
+    .map((line) => line.trim().replace(/^[•\-*]\s*/, ""))
+    .filter(Boolean);
+}
 
 interface InitialData {
   lesson: {
@@ -20,6 +28,7 @@ interface InitialData {
     objectives_en: string[] | null;
     objectives_km: string[] | null;
     type: "free" | "paid" | null;
+    status: "draft" | "published" | null;
   };
   videos: Array<{
     id: string;
@@ -35,35 +44,79 @@ interface LessonFormProps {
   isEditing?: boolean;
 }
 
+type FreeVideo = { embedUrl: string; titles: { en: string; km: string } };
+type PaidVideo = { url: string; titles: { en: string; km: string } };
+
+function initialVideoState(data?: InitialData): {
+  videos: FreeVideo[];
+  paidVideos: PaidVideo[];
+} {
+  if (!data?.videos.length) {
+    return { videos: [], paidVideos: [] };
+  }
+
+  const mapped = data.videos.map((v) => ({
+    embedUrl: v.embed_url,
+    url: v.embed_url,
+    titles: { en: v.title_en || "", km: v.title_km || "" },
+  }));
+
+  if (data.lesson.type === "paid") {
+    return {
+      videos: [],
+      paidVideos: mapped.map(({ url, titles }) => ({ url, titles })),
+    };
+  }
+
+  return {
+    videos: mapped.map(({ embedUrl, titles }) => ({ embedUrl, titles })),
+    paidVideos: [],
+  };
+}
+
 export function LessonForm({ initialData, isEditing = false }: LessonFormProps) {
+  const initialVideos = initialVideoState(initialData);
+
   const [lessonType, setLessonType] = useState<LessonType>(
     initialData?.lesson.type || "free"
   );
-  const [videos, setVideos] = useState<
-    Array<{ embedUrl: string; titles: { en: string; km: string } }>
-  >(
-    initialData?.videos.map((v) => ({
-      embedUrl: v.embed_url,
-      titles: { en: v.title_en || "", km: v.title_km || "" },
-    })) || []
+  const [videos, setVideos] = useState<FreeVideo[]>(initialVideos.videos);
+  const [paidVideos, setPaidVideos] = useState<PaidVideo[]>(initialVideos.paidVideos);
+  const [thumbnailMode, setThumbnailMode] = useState<"url" | "upload">("url");
+  const [thumbnailUrl, setThumbnailUrl] = useState(
+    initialData?.lesson.thumbnail_url || "",
   );
-  const [paidVideos, setPaidVideos] = useState<
-    Array<{ url: string; titles: { en: string; km: string } }>
-  >([]);
   const [isSaving, setIsSaving] = useState(false);
+
+  const defaultStatus =
+    initialData?.lesson.status === "published" ? "Published" : "Draft";
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     
     // Validation
-    if (videos.length === 0 && paidVideos.length === 0) {
-      toast.error("Please add at least one video");
-      return;
-    }
-
-    if (lessonType === "paid" && paidVideos.some(v => !v.url)) {
-      toast.error("Please upload all paid videos before submitting");
-      return;
+    if (lessonType === "free") {
+      if (videos.length === 0) {
+        toast.error("Please add at least one YouTube video");
+        return;
+      }
+      if (videos.some((v) => !v.embedUrl.trim())) {
+        toast.error("Each free video needs a YouTube URL");
+        return;
+      }
+      if (videos.some((v) => !extractYouTubeVideoId(v.embedUrl))) {
+        toast.error("Use a valid YouTube watch, share, or embed link for each free video");
+        return;
+      }
+    } else {
+      if (paidVideos.length === 0) {
+        toast.error("Please add at least one paid video");
+        return;
+      }
+      if (paidVideos.some((v) => !v.url.trim())) {
+        toast.error("Please upload all paid videos before submitting");
+        return;
+      }
     }
 
     setIsSaving(true);
@@ -76,6 +129,14 @@ export function LessonForm({ initialData, isEditing = false }: LessonFormProps) 
       const summary_en = (form.querySelector('textarea[name="summary_en"]') as HTMLTextAreaElement)?.value;
       const summary_km = (form.querySelector('textarea[name="summary_km"]') as HTMLTextAreaElement)?.value;
       const approximate_minutes = parseInt((form.querySelector('input[name="approximate_minutes"]') as HTMLInputElement)?.value || "0");
+      const objectives_en = parseObjectives(
+        (form.querySelector('textarea[name="objectives_en"]') as HTMLTextAreaElement)?.value || "",
+      );
+      const objectives_km = parseObjectives(
+        (form.querySelector('textarea[name="objectives_km"]') as HTMLTextAreaElement)?.value || "",
+      );
+      const statusRaw = (form.querySelector('input[name="status"]:checked') as HTMLInputElement)?.value;
+      const status = statusRaw === "Published" ? "published" : "draft";
 
       if (!slug || !title_en || !title_km || !summary_en || !summary_km) {
         toast.error("Please fill in all required fields");
@@ -83,9 +144,15 @@ export function LessonForm({ initialData, isEditing = false }: LessonFormProps) 
         return;
       }
 
-      const videosToSave = lessonType === "free" 
-        ? videos.map(v => ({ embedUrl: v.embedUrl, title_en: v.titles.en, title_km: v.titles.km }))
-        : paidVideos.map(v => ({ url: v.url, title_en: v.titles.en, title_km: v.titles.km }));
+      const videosToSave = lessonType === "free"
+        ? videos.map((v) => ({
+            embedUrl: resolveLessonVideoEmbedUrl(v.embedUrl),
+            title_en: v.titles.en,
+            title_km: v.titles.km,
+          }))
+        : paidVideos.map((v) => ({ url: v.url, title_en: v.titles.en, title_km: v.titles.km }));
+
+      const thumbnail_url = thumbnailUrl.trim() || null;
 
       if (isEditing && initialData) {
         const result = await updateLesson(slug, {
@@ -94,7 +161,11 @@ export function LessonForm({ initialData, isEditing = false }: LessonFormProps) 
           summary_en,
           summary_km,
           approximate_minutes,
+          objectives_en,
+          objectives_km,
           type: lessonType,
+          status,
+          thumbnail_url,
           videos: videosToSave,
         });
 
@@ -113,7 +184,11 @@ export function LessonForm({ initialData, isEditing = false }: LessonFormProps) 
           summary_en,
           summary_km,
           approximate_minutes,
+          objectives_en,
+          objectives_km,
           type: lessonType,
+          status,
+          thumbnail_url,
           videos: videosToSave,
         });
 
@@ -333,11 +408,11 @@ export function LessonForm({ initialData, isEditing = false }: LessonFormProps) 
                   <div className="space-y-3">
                     <div>
                       <label className="mb-1 block text-xs font-semibold text-slate-600">
-                        Embed URL <span className="text-red-500">*</span>
+                        YouTube URL <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="url"
-                        placeholder="https://www.youtube.com/embed/..."
+                        placeholder="https://www.youtube.com/watch?v=… or youtu.be/…"
                         value={video.embedUrl}
                         onChange={(e) =>
                           updateVideo(idx, "embedUrl", e.target.value)
@@ -432,11 +507,18 @@ export function LessonForm({ initialData, isEditing = false }: LessonFormProps) 
                         />
                       </div>
                     ) : (
-                      <div className="rounded-lg border border-green-200 bg-green-50 p-3">
-                        <p className="break-all text-xs text-green-800">
-                          {video.url}
-                        </p>
-                      </div>
+                      <R2Uploader
+                        bucketName="trading-lesson"
+                        accept=".mp4,.mov,.webm,.avi,.mkv"
+                        label="Video File"
+                        hint=".mp4, .mov, .webm, .avi, .mkv — max 500 MB"
+                        initialUrl={video.url}
+                        onUploaded={(url) => {
+                          const newVideos = [...paidVideos];
+                          newVideos[idx].url = url;
+                          setPaidVideos(newVideos);
+                        }}
+                      />
                     )}
 
                     <div>
@@ -490,6 +572,7 @@ export function LessonForm({ initialData, isEditing = false }: LessonFormProps) 
               Objectives (English) <span className="text-red-500">*</span>
             </label>
             <textarea
+              name="objectives_en"
               rows={3}
               placeholder="• Objective 1&#10;• Objective 2&#10;• Objective 3"
               defaultValue={(initialData?.lesson.objectives_en || []).join("\n")}
@@ -505,6 +588,7 @@ export function LessonForm({ initialData, isEditing = false }: LessonFormProps) 
               Objectives (Khmer) <span className="text-red-500">*</span>
             </label>
             <textarea
+              name="objectives_km"
               rows={3}
               placeholder="• គោលបំណង ១&#10;• គោលបំណង ២&#10;• គោលបំណង ៣"
               defaultValue={(initialData?.lesson.objectives_km || []).join("\n")}
@@ -513,19 +597,88 @@ export function LessonForm({ initialData, isEditing = false }: LessonFormProps) 
           </div>
         </div>
 
-        {/* Thumbnail URL */}
+        {/* Publish status */}
         <div>
-          <label className="mb-1.5 block text-xs font-semibold text-slate-600">
-            Thumbnail URL <span className="font-normal text-slate-400">(optional)</span>
-          </label>
-          <input
-            type="url"
-            placeholder="https://..."
-            defaultValue={initialData?.lesson.thumbnail_url || ""}
-            className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#0ea5e9] focus:bg-white focus:ring-2 focus:ring-[#0ea5e9]/20"
-          />
+          <span className="mb-1.5 block text-xs font-semibold text-slate-600">
+            Status <span className="text-red-500">*</span>
+          </span>
+          <div className="flex gap-3">
+            {(["Draft", "Published"] as const).map((s) => (
+              <label
+                key={s}
+                className="flex cursor-pointer items-center gap-2 rounded-lg border border-slate-200 px-4 py-2.5 text-sm transition-colors has-[:checked]:border-[#0ea5e9] has-[:checked]:bg-sky-50"
+              >
+                <input
+                  type="radio"
+                  name="status"
+                  value={s}
+                  defaultChecked={s === defaultStatus}
+                  className="accent-[#0ea5e9]"
+                />
+                {s}
+              </label>
+            ))}
+          </div>
           <p className="mt-1 text-xs text-slate-400">
-            Falls back to first video thumbnail if not provided
+            Only <strong className="font-semibold text-slate-600">Published</strong> lessons appear on the public Education page.
+          </p>
+        </div>
+
+        {/* Thumbnail */}
+        <div className="space-y-3">
+          <label className="block text-xs font-semibold text-slate-600">
+            Thumbnail <span className="font-normal text-slate-400">(optional)</span>
+          </label>
+          <div className="flex gap-2">
+            {(["url", "upload"] as const).map((mode) => (
+              <button
+                key={mode}
+                type="button"
+                onClick={() => setThumbnailMode(mode)}
+                className={[
+                  "rounded-lg px-4 py-2 text-sm font-semibold transition",
+                  thumbnailMode === mode
+                    ? "bg-[#0ea5e9] text-white shadow-sm"
+                    : "border border-slate-200 text-slate-600 hover:border-[#0ea5e9] hover:text-[#0ea5e9]",
+                ].join(" ")}
+              >
+                {mode === "url" ? "Paste URL" : "Upload image"}
+              </button>
+            ))}
+          </div>
+
+          {thumbnailMode === "url" ? (
+            <input
+              type="url"
+              placeholder="https://example.com/thumbnail.jpg"
+              value={thumbnailUrl}
+              onChange={(e) => setThumbnailUrl(e.target.value)}
+              className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#0ea5e9] focus:bg-white focus:ring-2 focus:ring-[#0ea5e9]/20"
+            />
+          ) : (
+            <R2Uploader
+              bucketName="trading-tool"
+              accept="image/png,image/jpeg,image/webp,image/gif"
+              label="Thumbnail image"
+              hint="PNG, JPG, WebP, GIF — max 20 MB"
+              initialUrl={thumbnailUrl || undefined}
+              onUploaded={(url) => setThumbnailUrl(url)}
+            />
+          )}
+
+          {thumbnailUrl ? (
+            <div className="overflow-hidden rounded-lg border border-slate-200 bg-slate-50 p-2">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={thumbnailUrl}
+                alt="Thumbnail preview"
+                className="mx-auto max-h-40 w-full object-contain"
+              />
+            </div>
+          ) : null}
+
+          <p className="text-xs text-slate-400">
+            Used on course cards. If empty, the first YouTube video thumbnail is used when available.
           </p>
         </div>
 

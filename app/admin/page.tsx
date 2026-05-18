@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { getAllLessons } from "@/lib/supabase/lessons";
+import { getAllLessonsForAdmin } from "@/lib/supabase/lessons";
 import { getCurriculum } from "@/lib/supabase/curriculum-data";
 
 function StatCard({
@@ -37,7 +37,7 @@ function StatCard({
 }
 
 export default async function AdminDashboard() {
-  const lessons = await getAllLessons();
+  const lessons = await getAllLessonsForAdmin();
   const curriculum = await getCurriculum();
   const sorted = [...curriculum].sort((a, b) => a.sort_order - b.sort_order);
   const phase0 = sorted[0];
