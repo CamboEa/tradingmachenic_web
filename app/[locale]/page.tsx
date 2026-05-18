@@ -1,9 +1,12 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { ContinueLearningBanner } from "@/components/continue-learning-banner";
 import { HomeHeroSplit } from "@/components/home-hero-split";
 import { Reveal } from "@/components/reveal";
+import { getContinueLessonSlug } from "@/lib/supabase/lesson-progress";
 import { getAllLessons } from "@/lib/supabase/lessons";
+import { createClient } from "@/lib/supabase/server";
 import { getDictionary, isLocale, type Locale } from "@/lib/i18n";
 
 export default async function HomePage({
@@ -17,6 +20,15 @@ export default async function HomePage({
   const dict = await getDictionary(locale);
   const lessons = await getAllLessons();
   const lessonCount = lessons.length;
+  const orderedSlugs = lessons.map((l) => l.slug);
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const continueSlug = user ? await getContinueLessonSlug(user.id, orderedSlugs) : null;
+  const continueLesson = continueSlug ? lessons.find((l) => l.slug === continueSlug) : null;
+
   const stats = dict.home.stats.map((s) => ({
     value: s.value.replace("{count}", String(lessonCount)),
     label: s.label,
@@ -25,6 +37,15 @@ export default async function HomePage({
   return (
     <main className="flex-1">
       <HomeHeroSplit locale={locale} dict={dict} />
+
+      {continueLesson ? (
+        <ContinueLearningBanner
+          href={`/${locale}/education/${continueLesson.slug}`}
+          title={dict.home.continueLearningTitle}
+          lessonTitle={continueLesson.titles[locale]}
+          cta={dict.home.continueLearningCta}
+        />
+      ) : null}
 
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
         <section aria-labelledby="home-principles">

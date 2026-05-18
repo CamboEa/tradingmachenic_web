@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 
-import { CourseLessonCard } from "@/components/course-lesson-card";
+import { EducationLessonGrid } from "@/components/education-lesson-grid";
 import { Reveal } from "@/components/reveal";
 import { getAllLessons } from "@/lib/supabase/lessons";
 import { getDictionary, isLocale, type Locale } from "@/lib/i18n";
@@ -15,7 +15,6 @@ export default async function EducationPage({
   const locale = raw as Locale;
   const dict = await getDictionary(locale);
   const lessons = await getAllLessons();
-  const total = lessons.length;
 
   return (
     <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
@@ -40,23 +39,8 @@ export default async function EducationPage({
         </header>
       </Reveal>
 
-      <section
-        className="mt-14"
-        aria-labelledby="education-lessons-heading"
-      >        
-        <div className="mt-10 grid gap-8 sm:grid-cols-2 xl:grid-cols-3">
-          {lessons.map((lesson, index) => (
-            <Reveal key={lesson.slug} className="h-full" delayMs={index * 70}>
-              <CourseLessonCard
-                lesson={lesson}
-                locale={locale}
-                index={index}
-                total={total}
-                dict={dict}
-              />
-            </Reveal>
-          ))}
-        </div>
+      <section className="mt-14" aria-labelledby="education-lessons-heading">
+        <EducationLessonGrid lessons={lessons} locale={locale} dict={dict} />
       </section>
     </main>
   );

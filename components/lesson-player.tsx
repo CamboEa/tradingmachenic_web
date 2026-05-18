@@ -4,13 +4,18 @@ import { useState } from "react";
 
 import type { LessonVideo } from "@/lib/course";
 import type { Locale } from "@/lib/i18n";
-import { resolveLessonVideoEmbedUrl } from "@/lib/youtube";
+import {
+  isDirectVideoFileUrl,
+  isYouTubeVideoUrl,
+  resolveLessonVideoEmbedUrl,
+} from "@/lib/video";
 
 interface LessonPlayerProps {
   videos: LessonVideo[];
   locale: Locale;
   lessonTitle: string;
   videoInLessonHeading: string;
+  paidVideoHint?: string;
 }
 
 function formatHeading(template: string, current: number, total: number) {
@@ -19,11 +24,49 @@ function formatHeading(template: string, current: number, total: number) {
     .replace("{total}", String(total));
 }
 
+function VideoSurface({
+  src,
+  title,
+  isDirectFile,
+}: {
+  src: string;
+  title: string;
+  isDirectFile: boolean;
+}) {
+  if (isDirectFile) {
+    return (
+      <video
+        key={src}
+        src={src}
+        controls
+        playsInline
+        preload="metadata"
+        className="h-full w-full bg-black object-contain"
+        title={title}
+      >
+        <track kind="captions" />
+      </video>
+    );
+  }
+
+  return (
+    <iframe
+      key={src}
+      title={title}
+      src={src}
+      className="h-full w-full"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowFullScreen
+    />
+  );
+}
+
 export function LessonPlayer({
   videos,
   locale,
   lessonTitle,
   videoInLessonHeading,
+  paidVideoHint,
 }: LessonPlayerProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const activeVideo = videos[activeIndex];
@@ -33,30 +76,27 @@ export function LessonPlayer({
     activeVideo.titles?.[locale] ??
     formatHeading(videoInLessonHeading, activeIndex + 1, total);
 
-  const embedSrc = resolveLessonVideoEmbedUrl(activeVideo.embedUrl);
+  const rawUrl = activeVideo.embedUrl;
+  const isDirect = isDirectVideoFileUrl(rawUrl);
+  const playbackSrc = isDirect ? rawUrl.trim() : resolveLessonVideoEmbedUrl(rawUrl);
+  const showPaidHint = paidVideoHint && isDirect && !isYouTubeVideoUrl(rawUrl);
 
   return (
     <div className="mt-10 flex flex-col gap-6 lg:flex-row lg:items-start">
-      {/* Main player — left column */}
       <div className="min-w-0 flex-1">
         <h2 className="mb-4 text-base font-semibold tracking-tight text-[var(--color-ink)]">
           {activeTitle}
         </h2>
         <div className="overflow-hidden rounded-[1.5rem] border border-slate-900/10 bg-black shadow-2xl shadow-slate-900/18">
           <div className="aspect-video w-full">
-            <iframe
-              key={activeIndex}
-              title={`${lessonTitle} — ${activeTitle}`}
-              src={embedSrc}
-              className="h-full w-full"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
+            <VideoSurface src={playbackSrc} title={`${lessonTitle} — ${activeTitle}`} isDirectFile={isDirect} />
           </div>
         </div>
+        {showPaidHint ? (
+          <p className="mt-3 text-xs leading-relaxed text-[var(--color-ink-soft)]">{paidVideoHint}</p>
+        ) : null}
       </div>
 
-      {/* Video list — right column */}
       <aside className="w-full shrink-0 lg:w-72 xl:w-80">
         <p className="mb-3 text-xs font-semibold uppercase tracking-[0.15em] text-[var(--color-ink-soft)]">
           {total} {total === 1 ? "video" : "videos"}
@@ -80,7 +120,6 @@ export function LessonPlayer({
                       : "border-[color-mix(in_oklab,var(--color-bridge)_65%,transparent)] bg-[var(--color-surface)] text-[var(--color-ink-muted)] hover:border-[color-mix(in_oklab,var(--color-teal)_40%,transparent)] hover:text-[var(--color-ink)]",
                   ].join(" ")}
                 >
-                  {/* Index bubble */}
                   <span
                     className={[
                       "flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold",
@@ -91,11 +130,8 @@ export function LessonPlayer({
                   >
                     {index + 1}
                   </span>
-                  <span className="line-clamp-2 text-sm font-medium leading-snug">
-                    {title}
-                  </span>
-                  {/* Playing indicator */}
-                  {isActive && (
+                  <span className="line-clamp-2 text-sm font-medium leading-snug">{title}</span>
+                  {isActive ? (
                     <span className="ml-auto shrink-0">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -106,7 +142,7 @@ export function LessonPlayer({
                         <path d="M3 3.732a1.5 1.5 0 0 1 2.305-1.265l6.706 4.268a1.5 1.5 0 0 1 0 2.53L5.305 13.533A1.5 1.5 0 0 1 3 12.268V3.732Z" />
                       </svg>
                     </span>
-                  )}
+                  ) : null}
                 </button>
               </li>
             );

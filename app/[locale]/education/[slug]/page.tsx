@@ -1,8 +1,14 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { LessonPlayer } from "@/components/lesson-player";
+import { MarkLessonComplete } from "@/components/mark-lesson-complete";
+import { RelatedLessons } from "@/components/related-lessons";
 import { getAllLessons, getLessonBySlug } from "@/lib/supabase/lessons";
+import { getCompletedLessonSlugs } from "@/lib/supabase/lesson-progress";
+import { createClient } from "@/lib/supabase/server";
 import { getDictionary, isLocale, type Locale } from "@/lib/i18n";
+import { isDirectVideoFileUrl } from "@/lib/video";
 
 export async function generateStaticParams() {
   const paths: { locale: Locale; slug: string }[] = [];
@@ -40,10 +46,36 @@ export default async function LessonPage({
   if (!isLocale(raw)) notFound();
   const locale = raw as Locale;
   const dict = await getDictionary(locale);
-  const lesson = await getLessonBySlug(slug);
+
+  const allLessons = await getAllLessons();
+  const lesson = allLessons.find((l) => l.slug === slug);
   if (!lesson) notFound();
+
+  const index = allLessons.findIndex((l) => l.slug === slug);
+  const related = allLessons.filter((_, i) => i > index).slice(0, 3);
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const completedSlugs = user ? await getCompletedLessonSlugs(user.id) : [];
+  const isCompleted = completedSlugs.includes(slug);
+
+  const showHostedHint =
+    lesson.type === "paid" ||
+    lesson.videos.some((v) => isDirectVideoFileUrl(v.embedUrl));
+
   return (
-    <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-12 sm:px-6 lg:px-8 lg:py-16">  
+    <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
+      <p className="text-sm">
+        <Link
+          href={`/${locale}/education`}
+          className="font-semibold text-[#0ea5e9] transition hover:text-sky-700"
+        >
+          ← {dict.course.backToCourse}
+        </Link>
+      </p>
+
       <header className="mt-6 max-w-4xl rounded-[2rem] border border-white/80 bg-white/78 p-6 shadow-sm shadow-slate-900/5 backdrop-blur sm:p-8">
         <h1 className="text-3xl font-semibold tracking-[-0.025em] text-[var(--color-ink)] sm:text-5xl">
           {lesson.titles[locale]}
@@ -58,11 +90,21 @@ export default async function LessonPage({
         locale={locale}
         lessonTitle={lesson.titles[locale]}
         videoInLessonHeading={dict.course.videoInLessonHeading}
+        paidVideoHint={showHostedHint ? dict.course.paidVideoHint : undefined}
       />
 
-      <p className="mt-6 text-xs text-[var(--color-ink-soft)]">
-        {dict.course.videoFallback}
-      </p>
+      {showHostedHint ? (
+        <p className="mt-2 text-xs text-[var(--color-ink-soft)]">{dict.course.videoFallback}</p>
+      ) : null}
+
+      <MarkLessonComplete
+        slug={slug}
+        locale={locale}
+        initialCompleted={isCompleted}
+        completedLabel={dict.course.lessonCompleted}
+        markCompleteLabel={dict.course.markComplete}
+        signInHint={dict.course.signInToTrackProgress}
+      />
 
       <section className="mt-10 max-w-4xl rounded-[1.5rem] border border-white/80 bg-white/88 p-6 shadow-sm shadow-slate-900/5 backdrop-blur">
         <h2 className="text-sm font-semibold uppercase tracking-wide text-[var(--color-ink-soft)]">
@@ -74,6 +116,8 @@ export default async function LessonPage({
           ))}
         </ul>
       </section>
+
+      <RelatedLessons lessons={related} locale={locale} title={dict.course.relatedLessons} />
     </main>
   );
 }

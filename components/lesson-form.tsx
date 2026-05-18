@@ -3,7 +3,9 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { createLesson, updateLesson } from "@/lib/supabase/actions";
+import { LocaleParityHint } from "@/components/locale-parity-hint";
 import { R2Uploader } from "@/components/r2-uploader";
+import { YoutubeUrlPreview } from "@/components/youtube-url-preview";
 import { extractYouTubeVideoId, resolveLessonVideoEmbedUrl } from "@/lib/youtube";
 
 type LessonType = "free" | "paid";
@@ -86,10 +88,17 @@ export function LessonForm({ initialData, isEditing = false }: LessonFormProps) 
   const [thumbnailUrl, setThumbnailUrl] = useState(
     initialData?.lesson.thumbnail_url || "",
   );
+  const [titleEn, setTitleEn] = useState(initialData?.lesson.title_en ?? "");
+  const [titleKm, setTitleKm] = useState(initialData?.lesson.title_km ?? "");
+  const [summaryEn, setSummaryEn] = useState(initialData?.lesson.summary_en ?? "");
+  const [summaryKm, setSummaryKm] = useState(initialData?.lesson.summary_km ?? "");
   const [isSaving, setIsSaving] = useState(false);
 
-  const defaultStatus =
-    initialData?.lesson.status === "published" ? "Published" : "Draft";
+  const defaultStatus = isEditing
+    ? initialData?.lesson.status === "published"
+      ? "Published"
+      : "Draft"
+    : "Published";
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -195,8 +204,11 @@ export function LessonForm({ initialData, isEditing = false }: LessonFormProps) 
         if (result.error) {
           toast.error(result.error);
         } else {
-          toast.success("Lesson created successfully!");
-          // Redirect after a short delay
+          toast.success(
+            status === "published"
+              ? "Lesson published — visible on Education."
+              : "Saved as draft — set status to Published to show on Education.",
+          );
           setTimeout(() => window.location.href = "/admin/lessons", 1500);
         }
       }
@@ -310,8 +322,13 @@ export function LessonForm({ initialData, isEditing = false }: LessonFormProps) 
             type="text"
             name="title_en"
             placeholder="e.g. Price Action Basics"
-            defaultValue={initialData?.lesson.title_en || ""}
+            value={titleEn}
+            onChange={(e) => setTitleEn(e.target.value)}
             className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#0ea5e9] focus:bg-white focus:ring-2 focus:ring-[#0ea5e9]/20"
+          />
+          <LocaleParityHint
+            enFilled={titleEn.trim().length > 0}
+            kmFilled={titleKm.trim().length > 0}
           />
         </div>
 
@@ -324,7 +341,8 @@ export function LessonForm({ initialData, isEditing = false }: LessonFormProps) 
             type="text"
             name="title_km"
             placeholder="ឧ. មូលដ្ឋានគោលលេខ"
-            defaultValue={initialData?.lesson.title_km || ""}
+            value={titleKm}
+            onChange={(e) => setTitleKm(e.target.value)}
             className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#0ea5e9] focus:bg-white focus:ring-2 focus:ring-[#0ea5e9]/20"
           />
         </div>
@@ -338,8 +356,14 @@ export function LessonForm({ initialData, isEditing = false }: LessonFormProps) 
             rows={3}
             name="summary_en"
             placeholder="Brief overview of this lesson..."
-            defaultValue={initialData?.lesson.summary_en || ""}
+            value={summaryEn}
+            onChange={(e) => setSummaryEn(e.target.value)}
             className="w-full resize-none rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#0ea5e9] focus:bg-white focus:ring-2 focus:ring-[#0ea5e9]/20"
+          />
+          <LocaleParityHint
+            enFilled={summaryEn.trim().length > 0}
+            kmFilled={summaryKm.trim().length > 0}
+            label="Khmer summary missing"
           />
         </div>
 
@@ -352,7 +376,8 @@ export function LessonForm({ initialData, isEditing = false }: LessonFormProps) 
             rows={3}
             name="summary_km"
             placeholder="ពិពណ៌នាសង្ខេប..."
-            defaultValue={initialData?.lesson.summary_km || ""}
+            value={summaryKm}
+            onChange={(e) => setSummaryKm(e.target.value)}
             className="w-full resize-none rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#0ea5e9] focus:bg-white focus:ring-2 focus:ring-[#0ea5e9]/20"
           />
         </div>
@@ -419,6 +444,7 @@ export function LessonForm({ initialData, isEditing = false }: LessonFormProps) 
                         }
                         className="w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#0ea5e9] focus:bg-white focus:ring-2 focus:ring-[#0ea5e9]/20"
                       />
+                      <YoutubeUrlPreview url={video.embedUrl} />
                     </div>
 
                     <div>

@@ -271,6 +271,11 @@ export function SiteHeader({
   user?: User | null;
 }) {
   const pathname = usePathname() ?? `/${locale}`;
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
+
+  useEffect(() => {
+    setMobileNavOpen(false);
+  }, [pathname]);
 
   const brand = (
     <Link
@@ -295,16 +300,43 @@ export function SiteHeader({
         <div className="flex flex-col gap-3 sm:hidden">
           <div className="flex items-start justify-between gap-3">
             {brand}
-            <AuthLanguageCluster
-              locale={locale}
-              pathname={pathname}
-              dict={dict}
-              user={user}
-            />
+            <div className="flex shrink-0 items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setMobileNavOpen((open) => !open)}
+                aria-expanded={mobileNavOpen}
+                aria-controls="mobile-site-nav"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 shadow-sm transition hover:border-[#0ea5e9]/40 hover:text-[#0ea5e9] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0ea5e9]/35"
+              >
+                <span className="sr-only">{mobileNavOpen ? "Close menu" : "Open menu"}</span>
+                <svg
+                  aria-hidden
+                  className="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  {mobileNavOpen ? (
+                    <path strokeLinecap="round" d="M6 6l12 12M18 6L6 18" />
+                  ) : (
+                    <path strokeLinecap="round" d="M4 7h16M4 12h16M4 17h16" />
+                  )}
+                </svg>
+              </button>
+              <AuthLanguageCluster
+                locale={locale}
+                pathname={pathname}
+                dict={dict}
+                user={user}
+              />
+            </div>
           </div>
-          <div className="border-t border-slate-200/70 pt-3">
-            <CenterNav key={pathname} locale={locale} dict={dict} pathname={pathname} />
-          </div>
+          {mobileNavOpen ? (
+            <div id="mobile-site-nav" className="border-t border-slate-200/70 pt-3">
+              <CenterNav key={pathname} locale={locale} dict={dict} pathname={pathname} />
+            </div>
+          ) : null}
         </div>
 
         <div className="hidden sm:grid sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:items-center sm:gap-x-6">

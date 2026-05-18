@@ -71,6 +71,38 @@ export async function signOut(): Promise<never> {
   redirect(`/${defaultLocale}`);
 }
 
+export async function markLessonComplete(
+  slug: string,
+  locale: string,
+): Promise<{ error?: string; success?: boolean }> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return { error: "Sign in to save progress" };
+  }
+
+  const { error } = await supabase.from("lesson_progress").upsert(
+    {
+      user_id: user.id,
+      lesson_slug: slug,
+      completed_at: new Date().toISOString(),
+    },
+    { onConflict: "user_id,lesson_slug" },
+  );
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  revalidatePath(`/${locale}/education`);
+  revalidatePath(`/${locale}/education/${slug}`);
+  revalidatePath(`/${locale}`);
+  return { success: true };
+}
+
 export async function deleteLesson(slug: string): Promise<{ error?: string }> {
   const supabase = await createClient();
 

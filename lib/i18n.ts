@@ -58,6 +58,8 @@ export type Dictionary = {
     socialStudentsTitle: string;
     socialExpertTitle: string;
     socialExpertQuote: string;
+    continueLearningTitle: string;
+    continueLearningCta: string;
   };
   course: {
     title: string;
@@ -79,6 +81,16 @@ export type Dictionary = {
     /** "{count}" = number of lessons */
     lessonsSummary: string;
     programStructure: string;
+    searchPlaceholder: string;
+    filterAll: string;
+    filterFree: string;
+    filterPaid: string;
+    noLessonsMatch: string;
+    relatedLessons: string;
+    markComplete: string;
+    lessonCompleted: string;
+    signInToTrackProgress: string;
+    paidVideoHint: string;
   };
   curriculumPage: {
     eyebrow: string;
@@ -250,6 +262,8 @@ const en: Dictionary = {
     socialExpertTitle: "Insights from your mentor",
     socialExpertQuote:
       "The education from Trading Machenic delivers serious learning value—risk, process, and mechanics explained without hype. It is built for traders who want a calm, repeatable path instead of chasing shortcuts.",
+    continueLearningTitle: "Continue learning",
+    continueLearningCta: "Resume lesson",
   },
   course: {
     title: "Trading fundamentals",
@@ -260,7 +274,7 @@ const en: Dictionary = {
     openLesson: "Open lesson",
     backToCourse: "Back to education",
     videoFallback:
-      "Replace this embed with your own hosted video or streaming link.",
+      "Use the player controls to watch this hosted lesson video.",
     objectives: "What you will practice",
     lessonProgress: "Lesson {current} of {total}",
     keyOutcomes: "Key outcomes",
@@ -269,6 +283,16 @@ const en: Dictionary = {
     videoInLessonHeading: "Video {current} of {total}",
     lessonsSummary: "{count} video lessons",
     programStructure: "Phase I: Theory · Phase II: Practice",
+    searchPlaceholder: "Search lessons…",
+    filterAll: "All",
+    filterFree: "Free",
+    filterPaid: "Paid",
+    noLessonsMatch: "No lessons match your search.",
+    relatedLessons: "Continue with",
+    markComplete: "Mark lesson complete",
+    lessonCompleted: "You completed this lesson",
+    signInToTrackProgress: "Sign in to save your progress",
+    paidVideoHint: "Hosted lesson video — use the controls to play, pause, and adjust volume.",
   },
   curriculumPage: {
     eyebrow: "Programme Structure",
@@ -470,6 +494,8 @@ const km: Dictionary = {
     socialExpertTitle: "យល់ដឹងពីអ្នកណែនាំ",
     socialExpertQuote:
       "ការអប់រំពី Trading Machenic ផ្តល់តម្លៃសិក្សាពិតប្រាកដ—ពន្យល់ហានិភ័យ ដំណើរការ និងលក្ខណៈបច្ចេកទេសដោយគ្មានសំឡេងរន្ទះ។ សាងសម្រាប់អ្នកជួញដូរដែលចង់ផ្លូវស្ងប់ និងធ្វើម្តងហើយម្តងទៀត ជំនួសការរត់តាមផ្លូវកាត់។",
+    continueLearningTitle: "បន្តសិក្សា",
+    continueLearningCta: "បន្តមេរៀន",
   },
   course: {
     title: "មូលដ្ឋានពាណិជ្ជកម្ម",
@@ -480,7 +506,7 @@ const km: Dictionary = {
     openLesson: "បើកមេរៀន",
     backToCourse: "ត្រលប់ទៅការអប់រំ",
     videoFallback:
-      "សូមជំនួសការបង្កប់នេះដោយវីដេអូរបស់អ្នក ឬតំណស្ទ្រីម។",
+      "ប្រើប៊ូតុងគ្រប់គ្រងដើម្បីមើលវីដេអូមេរៀននេះ។",
     objectives: "អ្វីដែលអ្នកនឹងអនុវត្ត",
     lessonProgress: "មេរៀន {current} នៃ {total}",
     keyOutcomes: "លទ្ធផលសំខាន់",
@@ -489,6 +515,16 @@ const km: Dictionary = {
     videoInLessonHeading: "វីដេអូ {current} នៃ {total}",
     lessonsSummary: "មេរៀនវីដេអូចំនួន {count}",
     programStructure: "ដំណាក់កាល I: ទ្រឹស្តី · ដំណាក់កាល II: អនុវត្ត",
+    searchPlaceholder: "ស្វែងរកមេរៀន…",
+    filterAll: "ទាំងអស់",
+    filterFree: "ឥតគិតថ្លៃ",
+    filterPaid: "បង់ប្រាក់",
+    noLessonsMatch: "រកមិនឃើញមេរៀនដែលត្រូវគ្នា។",
+    relatedLessons: "បន្តជាមួយ",
+    markComplete: "សម្គាល់ថាបានបញ្ចប់មេរៀន",
+    lessonCompleted: "អ្នកបានបញ្ចប់មេរៀននេះ",
+    signInToTrackProgress: "ចូលគណនីដើម្បីរក្សាវឌ្ឍនភាព",
+    paidVideoHint: "វីដេអូមេរៀន — ប្រើប៊ូតុងគ្រប់គ្រងដើម្បីលេង ផ្អាក និងកែកម្រិតសំឡេង។",
   },
   curriculumPage: {
     eyebrow: "រចនាសម្ព័ន្ធកម្មវិធី",

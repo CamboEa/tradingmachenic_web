@@ -28,12 +28,13 @@ export async function middleware(request: NextRequest) {
 
   // ── Refresh Supabase session (required for SSR auth) ───────────
   let user: { id: string } | null = null;
+  let supabase: ReturnType<typeof createServerClient> | null = null;
 
   if (
     process.env.NEXT_PUBLIC_SUPABASE_URL &&
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
   ) {
-    const supabase = createServerClient(
+    supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
       {
@@ -56,13 +57,27 @@ export async function middleware(request: NextRequest) {
     user = data.user;
   }
 
-  // ── Protect /admin ─────────────────────────────────────────────
+  // ── Protect /admin (signed-in admins only) ─────────────────────
   if (pathname.startsWith("/admin")) {
     if (!user) {
       const loginUrl = new URL(`/${defaultLocale}/login`, request.url);
       loginUrl.searchParams.set("redirectTo", pathname);
       return NextResponse.redirect(loginUrl);
     }
+
+    if (supabase) {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", user.id)
+        .single();
+
+      if (profile?.role !== "admin") {
+        const home = new URL(`/${defaultLocale}`, request.url);
+        return NextResponse.redirect(home);
+      }
+    }
+
     return response;
   }
 

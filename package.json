@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "test:youtube": "tsx --test lib/youtube.test.ts",
     "gen:curriculum-sql": "tsx scripts/gen-curriculum-sql.ts"
   },
   "dependencies": {
