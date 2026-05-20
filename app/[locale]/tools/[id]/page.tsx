@@ -53,6 +53,15 @@ function localizedToolText(
   return text.length > 0 ? text : null;
 }
 
+function galleryCaption(locale: Locale, item: Tool["gallery"][number]): string | null {
+  const text = localizedToolText(
+    locale,
+    item.description_en,
+    item.description_km,
+  );
+  return text;
+}
+
 function toolExtraBlocks(locale: Locale, tool: Tool) {
   const labels =
     locale === "km"
@@ -60,12 +69,14 @@ function toolExtraBlocks(locale: Locale, tool: Tool) {
           need: "អ្វីដែលអ្នកត្រូវមាន",
           how: "របៀបដែលវាដំណើរការ",
           features: "លក្ខណៈពិសេស",
+          proof: "ភស្តុតាងការសាកល្បង",
           usage: "ការណែនាំ និងហានិភ័យ",
         }
       : {
           need: "What you'll need",
           how: "How it works",
           features: "Key features",
+          proof: "Proof of testing",
           usage: "Usage tips & risk",
         };
 
@@ -88,6 +99,17 @@ function toolExtraBlocks(locale: Locale, tool: Tool) {
       key: "feat",
       title: labels.features,
       body: localizedToolText(locale, tool.key_features_en, tool.key_features_km),
+      preserveLines: true,
+      caution: false,
+    },
+    {
+      key: "proof",
+      title: labels.proof,
+      body: localizedToolText(
+        locale,
+        tool.proof_of_testing_en,
+        tool.proof_of_testing_km,
+      ),
       preserveLines: true,
       caution: false,
     },
@@ -255,6 +277,49 @@ export default async function ToolDetailPage({
                 </p>
               </section>
             ))}
+
+            {tool.gallery.length > 0 ? (
+              <section className="rounded-[1.5rem] border border-slate-200 bg-white/88 p-8 shadow-sm shadow-slate-900/5 backdrop-blur">
+                <div className="mb-6 flex items-center gap-3">
+                  <div
+                    className={`h-1 w-8 rounded-full ${
+                      locale === "km" ? "bg-[#d4af37]" : "bg-[#0ea5e9]"
+                    }`}
+                  />
+                  <h2 className="text-lg font-bold text-[#1e293b]">
+                    {locale === "km" ? "រូបភាព និងភស្តុតាង" : "Screenshots & proof"}
+                  </h2>
+                </div>
+                <ul className="grid gap-6 sm:grid-cols-2">
+                  {tool.gallery.map((item, index) => {
+                    const caption = galleryCaption(locale, item);
+                    return (
+                      <li
+                        key={`${item.image_url}-${index}`}
+                        className="overflow-hidden rounded-xl border border-slate-200 bg-slate-50/80"
+                      >
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={item.image_url}
+                          alt={
+                            caption ??
+                            (locale === "km"
+                              ? `រូបភាពភស្តុតាង ${index + 1}`
+                              : `Proof image ${index + 1}`)
+                          }
+                          className="aspect-video w-full object-cover"
+                        />
+                        {caption ? (
+                          <p className="border-t border-slate-200 px-4 py-3 text-sm leading-relaxed text-slate-600">
+                            {caption}
+                          </p>
+                        ) : null}
+                      </li>
+                    );
+                  })}
+                </ul>
+              </section>
+            ) : null}
           </div>
 
           {/* Right — info card */}

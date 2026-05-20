@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
+import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { TradingViewTickerTape } from "@/components/tradingview-ticker-tape";
 import { getDictionary, isLocale, type Locale } from "@/lib/i18n";
@@ -50,6 +51,7 @@ export default async function LocaleLayout({
       <TradingViewTickerTape locale={locale} />
       <SiteHeader locale={locale} dict={dict} user={user} />
       <div className="flex flex-1 flex-col">{children}</div>
+      <SiteFooter locale={locale} dict={dict} />
     </div>
   );
 }

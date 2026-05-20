@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { createLesson, updateLesson } from "@/lib/supabase/actions";
 import { useConfirm } from "@/components/confirm-dialog";
@@ -12,11 +12,27 @@ import { extractYouTubeVideoId, resolveLessonVideoEmbedUrl } from "@/lib/youtube
 
 type LessonType = "free" | "paid";
 
+const STEPS = [
+  { title: "Basics", hint: "Lesson type, titles, slug, and duration" },
+  { title: "Summary", hint: "Short overview in English and Khmer" },
+  { title: "Videos", hint: "YouTube links or uploaded video files" },
+  { title: "Objectives", hint: "What learners will achieve" },
+  { title: "Thumbnail & publish", hint: "Cover image and visibility" },
+] as const;
+
+const fieldClass =
+  "w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#0ea5e9] focus:bg-white focus:ring-2 focus:ring-[#0ea5e9]/20";
+
 function parseObjectives(value: string): string[] {
   return value
     .split("\n")
     .map((line) => line.trim().replace(/^[•\-*]\s*/, ""))
     .filter(Boolean);
+}
+
+function readFormString(form: HTMLFormElement, name: string): string {
+  const raw = new FormData(form).get(name);
+  return typeof raw === "string" ? raw.trim() : "";
 }
 
 interface InitialData {
@@ -78,11 +94,41 @@ function initialVideoState(data?: InitialData): {
   };
 }
 
+function validateVideos(lessonType: LessonType, videos: FreeVideo[], paidVideos: PaidVideo[]): boolean {
+  if (lessonType === "free") {
+    if (videos.length === 0) {
+      toast.error("Please add at least one YouTube video");
+      return false;
+    }
+    if (videos.some((v) => !v.embedUrl.trim())) {
+      toast.error("Each free video needs a YouTube URL");
+      return false;
+    }
+    if (videos.some((v) => !extractYouTubeVideoId(v.embedUrl))) {
+      toast.error("Use a valid YouTube watch, share, or embed link for each free video");
+      return false;
+    }
+    return true;
+  }
+
+  if (paidVideos.length === 0) {
+    toast.error("Please add at least one paid video");
+    return false;
+  }
+  if (paidVideos.some((v) => !v.url.trim())) {
+    toast.error("Please upload all paid videos before continuing");
+    return false;
+  }
+  return true;
+}
+
 export function LessonForm({ initialData, isEditing = false }: LessonFormProps) {
+  const formRef = useRef<HTMLFormElement>(null);
   const initialVideos = initialVideoState(initialData);
 
+  const [step, setStep] = useState(0);
   const [lessonType, setLessonType] = useState<LessonType>(
-    initialData?.lesson.type || "free"
+    initialData?.lesson.type || "free",
   );
   const [videos, setVideos] = useState<FreeVideo[]>(initialVideos.videos);
   const [paidVideos, setPaidVideos] = useState<PaidVideo[]>(initialVideos.paidVideos);
@@ -100,6 +146,68 @@ export function LessonForm({ initialData, isEditing = false }: LessonFormProps) 
   const { confirm, ConfirmDialogHost } = useConfirm();
 
   const originalSlug = initialData?.lesson.slug ?? "";
+  const isLastStep = step === STEPS.length - 1;
+
+  const defaultStatus = isEditing
+    ? initialData?.lesson.status === "published"
+      ? "Published"
+      : "Draft"
+    : "Published";
+
+  function goToStep(next: number) {
+    setStep(next);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function validateStep(index: number): boolean {
+    const form = formRef.current;
+    if (!form) return false;
+
+    if (index === 0) {
+      const minutes = parseInt(readFormString(form, "approximate_minutes"), 10);
+      if (
+        !titleEn.trim() ||
+        !titleKm.trim() ||
+        !slugify(slug) ||
+        !Number.isFinite(minutes) ||
+        minutes < 1
+      ) {
+        toast.error("Complete lesson type, titles, slug, and duration (at least 1 minute)");
+        return false;
+      }
+    }
+
+    if (index === 1) {
+      if (!summaryEn.trim() || !summaryKm.trim()) {
+        toast.error("Please add summaries in English and Khmer");
+        return false;
+      }
+    }
+
+    if (index === 2) {
+      if (!validateVideos(lessonType, videos, paidVideos)) return false;
+    }
+
+    if (index === 3) {
+      const objectives_en = parseObjectives(readFormString(form, "objectives_en"));
+      const objectives_km = parseObjectives(readFormString(form, "objectives_km"));
+      if (objectives_en.length === 0 || objectives_km.length === 0) {
+        toast.error("Add at least one learning objective in English and Khmer");
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  function handleNext() {
+    if (!validateStep(step)) return;
+    if (step < STEPS.length - 1) goToStep(step + 1);
+  }
+
+  function handleBack() {
+    if (step > 0) goToStep(step - 1);
+  }
 
   function handleTitleEnChange(value: string) {
     setTitleEn(value);
@@ -116,72 +224,45 @@ export function LessonForm({ initialData, isEditing = false }: LessonFormProps) 
     }
   }
 
-  const defaultStatus = isEditing
-    ? initialData?.lesson.status === "published"
-      ? "Published"
-      : "Draft"
-    : "Published";
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
-    // Validation
-    if (lessonType === "free") {
-      if (videos.length === 0) {
-        toast.error("Please add at least one YouTube video");
-        return;
-      }
-      if (videos.some((v) => !v.embedUrl.trim())) {
-        toast.error("Each free video needs a YouTube URL");
-        return;
-      }
-      if (videos.some((v) => !extractYouTubeVideoId(v.embedUrl))) {
-        toast.error("Use a valid YouTube watch, share, or embed link for each free video");
-        return;
-      }
-    } else {
-      if (paidVideos.length === 0) {
-        toast.error("Please add at least one paid video");
-        return;
-      }
-      if (paidVideos.some((v) => !v.url.trim())) {
-        toast.error("Please upload all paid videos before submitting");
-        return;
-      }
+
+    if (!isLastStep) {
+      handleNext();
+      return;
     }
 
+    const form = formRef.current;
+    if (!form || !validateStep(step)) return;
+
+    if (!validateVideos(lessonType, videos, paidVideos)) return;
+
     setIsSaving(true);
-    const form = e.currentTarget;
-    
+
     try {
       const normalizedSlug = slugify(slug);
       const title_en = titleEn.trim();
       const title_km = titleKm.trim();
-      const summary_en = (form.querySelector('textarea[name="summary_en"]') as HTMLTextAreaElement)?.value;
-      const summary_km = (form.querySelector('textarea[name="summary_km"]') as HTMLTextAreaElement)?.value;
-      const approximate_minutes = parseInt((form.querySelector('input[name="approximate_minutes"]') as HTMLInputElement)?.value || "0");
-      const objectives_en = parseObjectives(
-        (form.querySelector('textarea[name="objectives_en"]') as HTMLTextAreaElement)?.value || "",
-      );
-      const objectives_km = parseObjectives(
-        (form.querySelector('textarea[name="objectives_km"]') as HTMLTextAreaElement)?.value || "",
-      );
-      const statusRaw = (form.querySelector('input[name="status"]:checked') as HTMLInputElement)?.value;
+      const summary_en = summaryEn.trim();
+      const summary_km = summaryKm.trim();
+      const approximate_minutes = parseInt(readFormString(form, "approximate_minutes"), 10);
+      const objectives_en = parseObjectives(readFormString(form, "objectives_en"));
+      const objectives_km = parseObjectives(readFormString(form, "objectives_km"));
+      const statusRaw = readFormString(form, "status") || defaultStatus;
       const status = statusRaw === "Published" ? "published" : "draft";
 
-      if (!normalizedSlug || !title_en || !title_km || !summary_en || !summary_km) {
-        toast.error("Please fill in all required fields (English title generates the slug)");
-        setIsSaving(false);
-        return;
-      }
-
-      const videosToSave = lessonType === "free"
-        ? videos.map((v) => ({
-            embedUrl: resolveLessonVideoEmbedUrl(v.embedUrl),
-            title_en: v.titles.en,
-            title_km: v.titles.km,
-          }))
-        : paidVideos.map((v) => ({ url: v.url, title_en: v.titles.en, title_km: v.titles.km }));
+      const videosToSave =
+        lessonType === "free"
+          ? videos.map((v) => ({
+              embedUrl: resolveLessonVideoEmbedUrl(v.embedUrl),
+              title_en: v.titles.en,
+              title_km: v.titles.km,
+            }))
+          : paidVideos.map((v) => ({
+              url: v.url,
+              title_en: v.titles.en,
+              title_km: v.titles.km,
+            }));
 
       const thumbnail_url = thumbnailUrl.trim() || null;
 
@@ -238,7 +319,7 @@ export function LessonForm({ initialData, isEditing = false }: LessonFormProps) 
               ? "Lesson published — visible on Education."
               : "Saved as draft — set status to Published to show on Education.",
           );
-          setTimeout(() => window.location.href = "/admin/lessons", 1500);
+          setTimeout(() => (window.location.href = "/admin/lessons"), 1500);
         }
       }
     } catch (err) {
@@ -270,7 +351,7 @@ export function LessonForm({ initialData, isEditing = false }: LessonFormProps) 
     index: number,
     field: string,
     value: string,
-    locale?: string
+    locale?: string,
   ) => {
     const newVideos = [...videos];
     if (field === "embedUrl") {
@@ -306,7 +387,7 @@ export function LessonForm({ initialData, isEditing = false }: LessonFormProps) 
     index: number,
     field: string,
     value: string,
-    locale?: string
+    locale?: string,
   ) => {
     const newVideos = [...paidVideos];
     if (field === "titles" && locale) {
@@ -315,477 +396,541 @@ export function LessonForm({ initialData, isEditing = false }: LessonFormProps) 
     setPaidVideos(newVideos);
   };
 
-  return (
+  const freeVideoSection = (
     <>
-    <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-      <h2 className="mb-6 text-base font-bold text-[#1e293b]">
-        Lesson Details
-      </h2>
+      <div className="flex items-center justify-between">
+        <h3 className="font-semibold text-[#1e293b]">YouTube videos</h3>
+        <button
+          type="button"
+          onClick={addVideo}
+          className="text-xs font-semibold text-[#0ea5e9] transition hover:text-sky-700"
+        >
+          + Add video
+        </button>
+      </div>
 
-      <form className="space-y-5" onSubmit={handleSubmit}>
-        {/* Lesson Type */}
-        <div>
-          <label className="mb-1.5 block text-xs font-semibold text-slate-600">
-            Lesson Type <span className="text-red-500">*</span>
-          </label>
-          <div className="flex gap-3">
-            {(["free", "paid"] as const).map((type) => (
-              <label
-                key={type}
-                className="flex cursor-pointer items-center gap-2 rounded-lg border border-slate-200 px-4 py-2.5 text-sm transition-colors has-[:checked]:border-[#0ea5e9] has-[:checked]:bg-sky-50"
-              >
-                <input
-                  type="radio"
-                  name="lessonType"
-                  value={type}
-                  checked={lessonType === type}
-                  onChange={(e) => setLessonType(e.target.value as LessonType)}
-                  className="accent-[#0ea5e9]"
-                />
-                {type === "free" ? "Free (YouTube)" : "Paid (Cloudflare)"}
+      {videos.map((video, idx) => (
+        <div key={idx} className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+          <div className="mb-3 flex items-center justify-between">
+            <span className="text-xs font-semibold text-slate-600">Video {idx + 1}</span>
+            <button
+              type="button"
+              onClick={() => requestRemoveVideo(idx)}
+              className="text-xs font-semibold text-red-500 transition hover:text-red-700"
+            >
+              Remove
+            </button>
+          </div>
+
+          <div className="space-y-3">
+            <div>
+              <label className="mb-1 block text-xs font-semibold text-slate-600">
+                YouTube URL <span className="text-red-500">*</span>
               </label>
-            ))}
-          </div>
-        </div>
+              <input
+                type="url"
+                placeholder="https://www.youtube.com/watch?v=… or youtu.be/…"
+                value={video.embedUrl}
+                onChange={(e) => updateVideo(idx, "embedUrl", e.target.value)}
+                className="w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#0ea5e9] focus:ring-2 focus:ring-[#0ea5e9]/20"
+              />
+              <YoutubeUrlPreview url={video.embedUrl} />
+            </div>
 
-        {/* Title EN — fill first; slug auto-generates below */}
-        <div>
-          <label className="mb-1.5 block text-xs font-semibold text-slate-600">
-            Title (English) <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="text"
-            name="title_en"
-            placeholder="e.g. Price Action Basics"
-            value={titleEn}
-            onChange={(e) => handleTitleEnChange(e.target.value)}
-            className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#0ea5e9] focus:bg-white focus:ring-2 focus:ring-[#0ea5e9]/20"
-          />
-          <LocaleParityHint
-            enFilled={titleEn.trim().length > 0}
-            kmFilled={titleKm.trim().length > 0}
-          />
-        </div>
-
-        {/* Slug */}
-        <div>
-          <div className="mb-1.5 flex flex-wrap items-center justify-between gap-2">
-            <label className="text-xs font-semibold text-slate-600">
-              Slug <span className="text-red-500">*</span>
-            </label>
-            {slugTouched && titleEn.trim() ? (
-              <button
-                type="button"
-                onClick={syncSlugFromTitle}
-                className="text-xs font-semibold text-[#0ea5e9] transition hover:text-sky-700"
-              >
-                Regenerate from title
-              </button>
-            ) : null}
-          </div>
-          <input
-            type="text"
-            name="slug"
-            placeholder="Generated when you enter the English title"
-            value={slug}
-            onChange={(e) => {
-              setSlugTouched(true);
-              setSlug(e.target.value);
-            }}
-            className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 font-mono text-sm text-slate-800 outline-none transition focus:border-[#0ea5e9] focus:bg-white focus:ring-2 focus:ring-[#0ea5e9]/20"
-          />
-          <p className="mt-1 text-xs text-slate-400">
-            URL path for this lesson (e.g. /education/your-slug). Auto-filled from the English title; edit anytime.
-          </p>
-        </div>
-
-        {/* Title KM */}
-        <div>
-          <label className="mb-1.5 block text-xs font-semibold text-slate-600">
-            Title (Khmer) <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="text"
-            name="title_km"
-            placeholder="ឧ. មូលដ្ឋានគោលលេខ"
-            value={titleKm}
-            onChange={(e) => setTitleKm(e.target.value)}
-            className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#0ea5e9] focus:bg-white focus:ring-2 focus:ring-[#0ea5e9]/20"
-          />
-        </div>
-
-        {/* Summary EN */}
-        <div>
-          <label className="mb-1.5 block text-xs font-semibold text-slate-600">
-            Summary (English) <span className="text-red-500">*</span>
-          </label>
-          <textarea
-            rows={3}
-            name="summary_en"
-            placeholder="Brief overview of this lesson..."
-            value={summaryEn}
-            onChange={(e) => setSummaryEn(e.target.value)}
-            className="w-full resize-none rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#0ea5e9] focus:bg-white focus:ring-2 focus:ring-[#0ea5e9]/20"
-          />
-          <LocaleParityHint
-            enFilled={summaryEn.trim().length > 0}
-            kmFilled={summaryKm.trim().length > 0}
-            label="Khmer summary missing"
-          />
-        </div>
-
-        {/* Summary KM */}
-        <div>
-          <label className="mb-1.5 block text-xs font-semibold text-slate-600">
-            Summary (Khmer) <span className="text-red-500">*</span>
-          </label>
-          <textarea
-            rows={3}
-            name="summary_km"
-            placeholder="ពិពណ៌នាសង្ខេប..."
-            value={summaryKm}
-            onChange={(e) => setSummaryKm(e.target.value)}
-            className="w-full resize-none rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#0ea5e9] focus:bg-white focus:ring-2 focus:ring-[#0ea5e9]/20"
-          />
-        </div>
-
-        {/* Approximate Minutes */}
-        <div>
-          <label className="mb-1.5 block text-xs font-semibold text-slate-600">
-            Approximate Duration (minutes) <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="number"
-            name="approximate_minutes"
-            min="1"
-            placeholder="45"
-            defaultValue={initialData?.lesson.approximate_minutes || ""}
-            className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#0ea5e9] focus:bg-white focus:ring-2 focus:ring-[#0ea5e9]/20"
-          />
-        </div>
-
-        {/* Videos Section */}
-        <div className="space-y-4 border-t border-slate-200 pt-5">
-          {lessonType === "free" ? (
-            <>
-              <div className="flex items-center justify-between">
-                <h3 className="font-semibold text-[#1e293b]">YouTube Videos</h3>
-                <button
-                  type="button"
-                  onClick={addVideo}
-                  className="text-xs font-semibold text-[#0ea5e9] transition hover:text-sky-700"
-                >
-                  + Add Video
-                </button>
-              </div>
-
-              {videos.map((video, idx) => (
-                <div
-                  key={idx}
-                  className="rounded-lg border border-slate-200 bg-slate-50 p-4"
-                >
-                  <div className="mb-3 flex items-center justify-between">
-                    <span className="text-xs font-semibold text-slate-600">
-                      Video {idx + 1}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => requestRemoveVideo(idx)}
-                      className="text-xs font-semibold text-red-500 transition hover:text-red-700"
-                    >
-                      Remove
-                    </button>
-                  </div>
-
-                  <div className="space-y-3">
-                    <div>
-                      <label className="mb-1 block text-xs font-semibold text-slate-600">
-                        YouTube URL <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="url"
-                        placeholder="https://www.youtube.com/watch?v=… or youtu.be/…"
-                        value={video.embedUrl}
-                        onChange={(e) =>
-                          updateVideo(idx, "embedUrl", e.target.value)
-                        }
-                        className="w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#0ea5e9] focus:bg-white focus:ring-2 focus:ring-[#0ea5e9]/20"
-                      />
-                      <YoutubeUrlPreview url={video.embedUrl} />
-                    </div>
-
-                    <div>
-                      <label className="mb-1 block text-xs font-semibold text-slate-600">
-                        Video Title (English)
-                      </label>
-                      <input
-                        type="text"
-                        placeholder="Optional heading for this video"
-                        value={video.titles.en}
-                        onChange={(e) =>
-                          updateVideo(idx, "titles", e.target.value, "en")
-                        }
-                        className="w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#0ea5e9] focus:bg-white focus:ring-2 focus:ring-[#0ea5e9]/20"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="mb-1 block text-xs font-semibold text-slate-600">
-                        Video Title (Khmer)
-                      </label>
-                      <input
-                        type="text"
-                        placeholder="ចំណងជើងវីដេអូ (ច្រើនឯក)"
-                        value={video.titles.km}
-                        onChange={(e) =>
-                          updateVideo(idx, "titles", e.target.value, "km")
-                        }
-                        className="w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#0ea5e9] focus:bg-white focus:ring-2 focus:ring-[#0ea5e9]/20"
-                      />
-                    </div>
-                  </div>
-                </div>
-              ))}
-
-              {videos.length === 0 && (
-                <p className="text-sm text-slate-400">
-                  No videos added yet. Click "Add Video" to get started.
-                </p>
-              )}
-            </>
-          ) : (
-            <>
-              <div className="flex items-center justify-between">
-                <h3 className="font-semibold text-[#1e293b]">Upload Videos</h3>
-                <button
-                  type="button"
-                  onClick={() => addPaidVideo("")}
-                  className="text-xs font-semibold text-[#0ea5e9] transition hover:text-sky-700"
-                >
-                  + Add Video
-                </button>
-              </div>
-
-              {paidVideos.map((video, idx) => (
-                <div
-                  key={idx}
-                  className="rounded-lg border border-slate-200 bg-slate-50 p-4"
-                >
-                  <div className="mb-3 flex items-center justify-between">
-                    <span className="text-xs font-semibold text-slate-600">
-                      Video {idx + 1}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => requestRemovePaidVideo(idx)}
-                      className="text-xs font-semibold text-red-500 transition hover:text-red-700"
-                    >
-                      Remove
-                    </button>
-                  </div>
-
-                  <div className="space-y-3">
-                    {video.url === "" ? (
-                      <div className="rounded-lg border border-slate-200 bg-white p-4">
-                        <R2Uploader
-                          bucketName="trading-lesson"
-                          accept=".mp4,.mov,.webm,.avi,.mkv"
-                          label="Video File"
-                          hint=".mp4, .mov, .webm, .avi, .mkv — max 500 MB"
-                          onUploaded={(url) => {
-                            const newVideos = [...paidVideos];
-                            newVideos[idx].url = url;
-                            setPaidVideos(newVideos);
-                          }}
-                        />
-                      </div>
-                    ) : (
-                      <R2Uploader
-                        bucketName="trading-lesson"
-                        accept=".mp4,.mov,.webm,.avi,.mkv"
-                        label="Video File"
-                        hint=".mp4, .mov, .webm, .avi, .mkv — max 500 MB"
-                        initialUrl={video.url}
-                        onUploaded={(url) => {
-                          const newVideos = [...paidVideos];
-                          newVideos[idx].url = url;
-                          setPaidVideos(newVideos);
-                        }}
-                      />
-                    )}
-
-                    <div>
-                      <label className="mb-1 block text-xs font-semibold text-slate-600">
-                        Video Title (English)
-                      </label>
-                      <input
-                        type="text"
-                        placeholder="Optional heading for this video"
-                        value={video.titles.en}
-                        onChange={(e) =>
-                          updatePaidVideo(idx, "titles", e.target.value, "en")
-                        }
-                        className="w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#0ea5e9] focus:bg-white focus:ring-2 focus:ring-[#0ea5e9]/20"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="mb-1 block text-xs font-semibold text-slate-600">
-                        Video Title (Khmer)
-                      </label>
-                      <input
-                        type="text"
-                        placeholder="ចំណងជើងវីដេអូ (ច្រើនឯក)"
-                        value={video.titles.km}
-                        onChange={(e) =>
-                          updatePaidVideo(idx, "titles", e.target.value, "km")
-                        }
-                        className="w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#0ea5e9] focus:bg-white focus:ring-2 focus:ring-[#0ea5e9]/20"
-                      />
-                    </div>
-                  </div>
-                </div>
-              ))}
-
-              {paidVideos.length === 0 && (
-                <p className="text-sm text-slate-400">
-                  No videos added yet. Click "Add Video" to get started.
-                </p>
-              )}
-            </>
-          )}
-        </div>
-
-        {/* Objectives Section */}
-        <div className="space-y-4 border-t border-slate-200 pt-5">
-          <h3 className="font-semibold text-[#1e293b]">Learning Objectives</h3>
-
-          <div>
-            <label className="mb-1.5 block text-xs font-semibold text-slate-600">
-              Objectives (English) <span className="text-red-500">*</span>
-            </label>
-            <textarea
-              name="objectives_en"
-              rows={3}
-              placeholder="• Objective 1&#10;• Objective 2&#10;• Objective 3"
-              defaultValue={(initialData?.lesson.objectives_en || []).join("\n")}
-              className="w-full resize-none rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#0ea5e9] focus:bg-white focus:ring-2 focus:ring-[#0ea5e9]/20"
-            />
-            <p className="mt-1 text-xs text-slate-400">
-              One objective per line
-            </p>
-          </div>
-
-          <div>
-            <label className="mb-1.5 block text-xs font-semibold text-slate-600">
-              Objectives (Khmer) <span className="text-red-500">*</span>
-            </label>
-            <textarea
-              name="objectives_km"
-              rows={3}
-              placeholder="• គោលបំណង ១&#10;• គោលបំណង ២&#10;• គោលបំណង ៣"
-              defaultValue={(initialData?.lesson.objectives_km || []).join("\n")}
-              className="w-full resize-none rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#0ea5e9] focus:bg-white focus:ring-2 focus:ring-[#0ea5e9]/20"
-            />
-          </div>
-        </div>
-
-        {/* Publish status */}
-        <div>
-          <span className="mb-1.5 block text-xs font-semibold text-slate-600">
-            Status <span className="text-red-500">*</span>
-          </span>
-          <div className="flex gap-3">
-            {(["Draft", "Published"] as const).map((s) => (
-              <label
-                key={s}
-                className="flex cursor-pointer items-center gap-2 rounded-lg border border-slate-200 px-4 py-2.5 text-sm transition-colors has-[:checked]:border-[#0ea5e9] has-[:checked]:bg-sky-50"
-              >
-                <input
-                  type="radio"
-                  name="status"
-                  value={s}
-                  defaultChecked={s === defaultStatus}
-                  className="accent-[#0ea5e9]"
-                />
-                {s}
+            <div>
+              <label className="mb-1 block text-xs font-semibold text-slate-600">
+                Video title (English)
               </label>
-            ))}
-          </div>
-          <p className="mt-1 text-xs text-slate-400">
-            Only <strong className="font-semibold text-slate-600">Published</strong> lessons appear on the public Education page.
-          </p>
-        </div>
-
-        {/* Thumbnail */}
-        <div className="space-y-3">
-          <label className="block text-xs font-semibold text-slate-600">
-            Thumbnail <span className="font-normal text-slate-400">(optional)</span>
-          </label>
-          <div className="flex gap-2">
-            {(["url", "upload"] as const).map((mode) => (
-              <button
-                key={mode}
-                type="button"
-                onClick={() => setThumbnailMode(mode)}
-                className={[
-                  "rounded-lg px-4 py-2 text-sm font-semibold transition",
-                  thumbnailMode === mode
-                    ? "bg-[#0ea5e9] text-white shadow-sm"
-                    : "border border-slate-200 text-slate-600 hover:border-[#0ea5e9] hover:text-[#0ea5e9]",
-                ].join(" ")}
-              >
-                {mode === "url" ? "Paste URL" : "Upload image"}
-              </button>
-            ))}
-          </div>
-
-          {thumbnailMode === "url" ? (
-            <input
-              type="url"
-              placeholder="https://example.com/thumbnail.jpg"
-              value={thumbnailUrl}
-              onChange={(e) => setThumbnailUrl(e.target.value)}
-              className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#0ea5e9] focus:bg-white focus:ring-2 focus:ring-[#0ea5e9]/20"
-            />
-          ) : (
-            <R2Uploader
-              bucketName="trading-tool"
-              accept="image/png,image/jpeg,image/webp,image/gif"
-              label="Thumbnail image"
-              hint="PNG, JPG, WebP, GIF — max 20 MB"
-              initialUrl={thumbnailUrl || undefined}
-              onUploaded={(url) => setThumbnailUrl(url)}
-            />
-          )}
-
-          {thumbnailUrl ? (
-            <div className="overflow-hidden rounded-lg border border-slate-200 bg-slate-50 p-2">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={thumbnailUrl}
-                alt="Thumbnail preview"
-                className="mx-auto max-h-40 w-full object-contain"
+              <input
+                type="text"
+                placeholder="Optional heading for this video"
+                value={video.titles.en}
+                onChange={(e) => updateVideo(idx, "titles", e.target.value, "en")}
+                className="w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#0ea5e9] focus:ring-2 focus:ring-[#0ea5e9]/20"
               />
             </div>
-          ) : null}
 
-          <p className="text-xs text-slate-400">
-            Used on course cards. If empty, the first YouTube video thumbnail is used when available.
+            <div>
+              <label className="mb-1 block text-xs font-semibold text-slate-600">
+                Video title (Khmer)
+              </label>
+              <input
+                type="text"
+                placeholder="ចំណងជើងវីដេអូ (ច្រើនឯក)"
+                value={video.titles.km}
+                onChange={(e) => updateVideo(idx, "titles", e.target.value, "km")}
+                className="w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#0ea5e9] focus:ring-2 focus:ring-[#0ea5e9]/20"
+              />
+            </div>
+          </div>
+        </div>
+      ))}
+
+      {videos.length === 0 ? (
+        <p className="text-sm text-slate-400">
+          No videos yet. Click &quot;Add video&quot; to add a YouTube link.
+        </p>
+      ) : null}
+    </>
+  );
+
+  const paidVideoSection = (
+    <>
+      <div className="flex items-center justify-between">
+        <h3 className="font-semibold text-[#1e293b]">Upload videos</h3>
+        <button
+          type="button"
+          onClick={() => addPaidVideo("")}
+          className="text-xs font-semibold text-[#0ea5e9] transition hover:text-sky-700"
+        >
+          + Add video
+        </button>
+      </div>
+
+      {paidVideos.map((video, idx) => (
+        <div key={idx} className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+          <div className="mb-3 flex items-center justify-between">
+            <span className="text-xs font-semibold text-slate-600">Video {idx + 1}</span>
+            <button
+              type="button"
+              onClick={() => requestRemovePaidVideo(idx)}
+              className="text-xs font-semibold text-red-500 transition hover:text-red-700"
+            >
+              Remove
+            </button>
+          </div>
+
+          <div className="space-y-3">
+            {video.url === "" ? (
+              <div className="rounded-lg border border-slate-200 bg-white p-4">
+                <R2Uploader
+                  bucketName="trading-lesson"
+                  accept=".mp4,.mov,.webm,.avi,.mkv"
+                  label="Video file"
+                  hint=".mp4, .mov, .webm, .avi, .mkv — max 500 MB"
+                  onUploaded={(url) => {
+                    const newVideos = [...paidVideos];
+                    newVideos[idx].url = url;
+                    setPaidVideos(newVideos);
+                  }}
+                />
+              </div>
+            ) : (
+              <R2Uploader
+                bucketName="trading-lesson"
+                accept=".mp4,.mov,.webm,.avi,.mkv"
+                label="Video file"
+                hint=".mp4, .mov, .webm, .avi, .mkv — max 500 MB"
+                initialUrl={video.url}
+                onUploaded={(url) => {
+                  const newVideos = [...paidVideos];
+                  newVideos[idx].url = url;
+                  setPaidVideos(newVideos);
+                }}
+              />
+            )}
+
+            <div>
+              <label className="mb-1 block text-xs font-semibold text-slate-600">
+                Video title (English)
+              </label>
+              <input
+                type="text"
+                placeholder="Optional heading for this video"
+                value={video.titles.en}
+                onChange={(e) => updatePaidVideo(idx, "titles", e.target.value, "en")}
+                className="w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#0ea5e9] focus:ring-2 focus:ring-[#0ea5e9]/20"
+              />
+            </div>
+
+            <div>
+              <label className="mb-1 block text-xs font-semibold text-slate-600">
+                Video title (Khmer)
+              </label>
+              <input
+                type="text"
+                placeholder="ចំណងជើងវីដេអូ (ច្រើនឯក)"
+                value={video.titles.km}
+                onChange={(e) => updatePaidVideo(idx, "titles", e.target.value, "km")}
+                className="w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#0ea5e9] focus:ring-2 focus:ring-[#0ea5e9]/20"
+              />
+            </div>
+          </div>
+        </div>
+      ))}
+
+      {paidVideos.length === 0 ? (
+        <p className="text-sm text-slate-400">
+          No videos yet. Click &quot;Add video&quot; to upload a file.
+        </p>
+      ) : null}
+    </>
+  );
+
+  return (
+    <>
+      <div className="w-full rounded-xl border border-slate-200 bg-white shadow-sm">
+        <div className="border-b border-slate-100 px-4 py-5 sm:px-6">
+          <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+            Step {step + 1} of {STEPS.length}
           </p>
+          <h2 className="mt-1 text-base font-bold text-[#1e293b]">{STEPS[step].title}</h2>
+          <p className="mt-0.5 text-sm text-slate-500">{STEPS[step].hint}</p>
+
+          <ol className="mt-5 flex flex-wrap gap-2" aria-label="Form progress">
+            {STEPS.map((s, i) => {
+              const done = i < step;
+              const active = i === step;
+              return (
+                <li key={s.title}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (i < step) goToStep(i);
+                      else if (i > step) {
+                        for (let j = step; j < i; j++) {
+                          if (!validateStep(j)) return;
+                        }
+                        goToStep(i);
+                      }
+                    }}
+                    disabled={i > step}
+                    className={[
+                      "flex items-center gap-2 rounded-full border px-3 py-1.5 text-left text-xs font-semibold transition",
+                      active
+                        ? "border-[#0ea5e9] bg-sky-50 text-[#0ea5e9]"
+                        : done
+                          ? "border-emerald-200 bg-emerald-50 text-emerald-800 hover:bg-emerald-100"
+                          : "border-slate-200 bg-slate-50 text-slate-400",
+                      i > step ? "cursor-not-allowed opacity-60" : "cursor-pointer",
+                    ].join(" ")}
+                    aria-current={active ? "step" : undefined}
+                  >
+                    <span
+                      className={[
+                        "flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px]",
+                        active
+                          ? "bg-[#0ea5e9] text-white"
+                          : done
+                            ? "bg-emerald-500 text-white"
+                            : "bg-slate-200 text-slate-500",
+                      ].join(" ")}
+                    >
+                      {done ? "✓" : i + 1}
+                    </span>
+                    <span className="hidden sm:inline">{s.title}</span>
+                  </button>
+                </li>
+              );
+            })}
+          </ol>
         </div>
 
-        {/* Submit button */}
-        <button
-          type="submit"
-          disabled={isSaving}
-          className="w-full rounded-lg bg-[#0ea5e9] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-sky-600 disabled:bg-slate-300 disabled:cursor-not-allowed"
-        >
-          {isSaving ? "Saving..." : (isEditing ? "Update Lesson" : "Create Lesson")}
-        </button>
-      </form>
-    </div>
-    {ConfirmDialogHost}
+        <form ref={formRef} className="p-4 sm:p-6" onSubmit={handleSubmit}>
+          {/* Step 1 — Basics */}
+          <div className={step === 0 ? "space-y-5" : "hidden"}>
+            <div>
+              <label className="mb-1.5 block text-xs font-semibold text-slate-600">
+                Lesson type <span className="text-red-500">*</span>
+              </label>
+              <div className="flex gap-3">
+                {(["free", "paid"] as const).map((type) => (
+                  <label
+                    key={type}
+                    className="flex cursor-pointer items-center gap-2 rounded-lg border border-slate-200 px-4 py-2.5 text-sm transition-colors has-[:checked]:border-[#0ea5e9] has-[:checked]:bg-sky-50"
+                  >
+                    <input
+                      type="radio"
+                      name="lessonType"
+                      value={type}
+                      checked={lessonType === type}
+                      onChange={(e) => setLessonType(e.target.value as LessonType)}
+                      className="accent-[#0ea5e9]"
+                    />
+                    {type === "free" ? "Free (YouTube)" : "Paid (Cloudflare)"}
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <label className="mb-1.5 block text-xs font-semibold text-slate-600">
+                Title (English) <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                name="title_en"
+                placeholder="e.g. Price Action Basics"
+                value={titleEn}
+                onChange={(e) => handleTitleEnChange(e.target.value)}
+                className={fieldClass}
+              />
+              <LocaleParityHint
+                enFilled={titleEn.trim().length > 0}
+                kmFilled={titleKm.trim().length > 0}
+              />
+            </div>
+
+            <div>
+              <div className="mb-1.5 flex flex-wrap items-center justify-between gap-2">
+                <label className="text-xs font-semibold text-slate-600">
+                  Slug <span className="text-red-500">*</span>
+                </label>
+                {slugTouched && titleEn.trim() ? (
+                  <button
+                    type="button"
+                    onClick={syncSlugFromTitle}
+                    className="text-xs font-semibold text-[#0ea5e9] transition hover:text-sky-700"
+                  >
+                    Regenerate from title
+                  </button>
+                ) : null}
+              </div>
+              <input
+                type="text"
+                name="slug"
+                placeholder="Generated when you enter the English title"
+                value={slug}
+                onChange={(e) => {
+                  setSlugTouched(true);
+                  setSlug(e.target.value);
+                }}
+                className={`${fieldClass} font-mono`}
+              />
+              <p className="mt-1 text-xs text-slate-400">
+                URL path for this lesson (e.g. /education/your-slug).
+              </p>
+            </div>
+
+            <div>
+              <label className="mb-1.5 block text-xs font-semibold text-slate-600">
+                Title (Khmer) <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                name="title_km"
+                placeholder="ឧ. មូលដ្ឋានគោលលេខ"
+                value={titleKm}
+                onChange={(e) => setTitleKm(e.target.value)}
+                className={fieldClass}
+              />
+            </div>
+
+            <div>
+              <label className="mb-1.5 block text-xs font-semibold text-slate-600">
+                Approximate duration (minutes) <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="number"
+                name="approximate_minutes"
+                min={1}
+                placeholder="45"
+                defaultValue={initialData?.lesson.approximate_minutes || ""}
+                className={fieldClass}
+              />
+            </div>
+          </div>
+
+          {/* Step 2 — Summary */}
+          <div className={step === 1 ? "space-y-5" : "hidden"}>
+            <div>
+              <label className="mb-1.5 block text-xs font-semibold text-slate-600">
+                Summary (English) <span className="text-red-500">*</span>
+              </label>
+              <textarea
+                rows={4}
+                name="summary_en"
+                placeholder="Brief overview of this lesson..."
+                value={summaryEn}
+                onChange={(e) => setSummaryEn(e.target.value)}
+                className={`${fieldClass} resize-y`}
+              />
+              <LocaleParityHint
+                enFilled={summaryEn.trim().length > 0}
+                kmFilled={summaryKm.trim().length > 0}
+                label="Khmer summary missing"
+              />
+            </div>
+
+            <div>
+              <label className="mb-1.5 block text-xs font-semibold text-slate-600">
+                Summary (Khmer) <span className="text-red-500">*</span>
+              </label>
+              <textarea
+                rows={4}
+                name="summary_km"
+                placeholder="ពិពណ៌នាសង្ខេប..."
+                value={summaryKm}
+                onChange={(e) => setSummaryKm(e.target.value)}
+                className={`${fieldClass} resize-y`}
+              />
+            </div>
+          </div>
+
+          {/* Step 3 — Videos */}
+          <div className={step === 2 ? "space-y-4" : "hidden"}>
+            <p className="text-xs text-slate-500">
+              {lessonType === "free"
+                ? "Add one or more YouTube videos. Learners watch them embedded on the lesson page."
+                : "Upload video files to Cloudflare R2. Each segment can have optional EN/KM titles."}
+            </p>
+            {lessonType === "free" ? freeVideoSection : paidVideoSection}
+          </div>
+
+          {/* Step 4 — Objectives */}
+          <div className={step === 3 ? "space-y-5" : "hidden"}>
+            <div>
+              <label className="mb-1.5 block text-xs font-semibold text-slate-600">
+                Objectives (English) <span className="text-red-500">*</span>
+              </label>
+              <textarea
+                name="objectives_en"
+                rows={4}
+                placeholder={"• Objective 1\n• Objective 2\n• Objective 3"}
+                defaultValue={(initialData?.lesson.objectives_en || []).join("\n")}
+                className={`${fieldClass} resize-y`}
+              />
+              <p className="mt-1 text-xs text-slate-400">One objective per line</p>
+            </div>
+
+            <div>
+              <label className="mb-1.5 block text-xs font-semibold text-slate-600">
+                Objectives (Khmer) <span className="text-red-500">*</span>
+              </label>
+              <textarea
+                name="objectives_km"
+                rows={4}
+                placeholder={"• គោលបំណង ១\n• គោលបំណង ២\n• គោលបំណង ៣"}
+                defaultValue={(initialData?.lesson.objectives_km || []).join("\n")}
+                className={`${fieldClass} resize-y`}
+              />
+            </div>
+          </div>
+
+          {/* Step 5 — Thumbnail & publish */}
+          <div className={step === 4 ? "space-y-5" : "hidden"}>
+            <div>
+              <span className="mb-1.5 block text-xs font-semibold text-slate-600">
+                Status <span className="text-red-500">*</span>
+              </span>
+              <div className="flex gap-3">
+                {(["Draft", "Published"] as const).map((s) => (
+                  <label
+                    key={s}
+                    className="flex cursor-pointer items-center gap-2 rounded-lg border border-slate-200 px-4 py-2.5 text-sm transition-colors has-[:checked]:border-[#0ea5e9] has-[:checked]:bg-sky-50"
+                  >
+                    <input
+                      type="radio"
+                      name="status"
+                      value={s}
+                      defaultChecked={s === defaultStatus}
+                      className="accent-[#0ea5e9]"
+                    />
+                    {s}
+                  </label>
+                ))}
+              </div>
+              <p className="mt-2 text-xs text-slate-400">
+                Only <strong className="font-semibold text-slate-600">Published</strong> lessons
+                appear on the public Education page.
+              </p>
+            </div>
+
+            <div className="space-y-3">
+              <label className="block text-xs font-semibold text-slate-600">
+                Thumbnail <span className="font-normal text-slate-400">(optional)</span>
+              </label>
+              <div className="flex gap-2">
+                {(["url", "upload"] as const).map((mode) => (
+                  <button
+                    key={mode}
+                    type="button"
+                    onClick={() => setThumbnailMode(mode)}
+                    className={[
+                      "rounded-lg px-4 py-2 text-sm font-semibold transition",
+                      thumbnailMode === mode
+                        ? "bg-[#0ea5e9] text-white shadow-sm"
+                        : "border border-slate-200 text-slate-600 hover:border-[#0ea5e9] hover:text-[#0ea5e9]",
+                    ].join(" ")}
+                  >
+                    {mode === "url" ? "Paste URL" : "Upload image"}
+                  </button>
+                ))}
+              </div>
+
+              {thumbnailMode === "url" ? (
+                <input
+                  type="url"
+                  placeholder="https://example.com/thumbnail.jpg"
+                  value={thumbnailUrl}
+                  onChange={(e) => setThumbnailUrl(e.target.value)}
+                  className={fieldClass}
+                />
+              ) : (
+                <R2Uploader
+                  bucketName="trading-tool"
+                  accept="image/png,image/jpeg,image/webp,image/gif"
+                  label="Thumbnail image"
+                  hint="PNG, JPG, WebP, GIF — max 20 MB"
+                  initialUrl={thumbnailUrl || undefined}
+                  onUploaded={(url) => setThumbnailUrl(url)}
+                />
+              )}
+
+              {thumbnailUrl ? (
+                <div className="overflow-hidden rounded-lg border border-slate-200 bg-slate-50 p-2">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={thumbnailUrl}
+                    alt="Thumbnail preview"
+                    className="mx-auto max-h-40 w-full object-contain"
+                  />
+                </div>
+              ) : null}
+
+              <p className="text-xs text-slate-400">
+                Used on course cards. If empty, the first YouTube thumbnail is used when available.
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-8 flex flex-col-reverse gap-3 border-t border-slate-100 pt-6 sm:flex-row sm:items-center sm:justify-between">
+            <button
+              type="button"
+              onClick={handleBack}
+              disabled={step === 0 || isSaving}
+              className="rounded-lg border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-600 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              Back
+            </button>
+
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+              {!isLastStep ? (
+                <button
+                  type="button"
+                  onClick={handleNext}
+                  className="rounded-lg bg-[#0ea5e9] px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-sky-600"
+                >
+                  Continue
+                </button>
+              ) : (
+                <button
+                  type="submit"
+                  disabled={isSaving}
+                  className="rounded-lg bg-[#0ea5e9] px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-sky-600 disabled:cursor-not-allowed disabled:bg-slate-300"
+                >
+                  {isSaving
+                    ? "Saving..."
+                    : isEditing
+                      ? "Save changes"
+                      : "Create lesson"}
+                </button>
+              )}
+            </div>
+          </div>
+        </form>
+      </div>
+      {ConfirmDialogHost}
     </>
   );
 }

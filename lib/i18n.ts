@@ -160,8 +160,18 @@ export type Dictionary = {
     ctaEducation: string;
   };
   footer: {
+    academyLabel: string;
+    description: string;
     tagline: string;
     rights: string;
+    sections: {
+      learn: string;
+      program: string;
+      account: string;
+    };
+    ctaTitle: string;
+    ctaBody: string;
+    ctaButton: string;
   };
 };
 
@@ -392,8 +402,19 @@ const en: Dictionary = {
     ctaEducation: "Browse lessons",
   },
   footer: {
+    academyLabel: "Trading Academy",
+    description:
+      "Structured video lessons on risk, execution, and repeatable trading processes—for serious beginners and intermediate traders.",
     tagline: "Education only—not financial advice.",
     rights: "Trading Machenic. All rights reserved.",
+    sections: {
+      learn: "Learn",
+      program: "Program",
+      account: "Account",
+    },
+    ctaTitle: "Start with the free intro class",
+    ctaBody: "Register to access lessons and track your progress through the curriculum.",
+    ctaButton: "Register now",
   },
 };
 
@@ -624,8 +645,19 @@ const km: Dictionary = {
     ctaEducation: "មើលមេរៀន",
   },
   footer: {
+    academyLabel: "ថ្នាលពាណិជ្ជកម្ម",
+    description:
+      "វីដេអូសិក្សាដែលមានរចនាសម្ព័ន្ធ អំពីហានិភ័យ ការប្រតិបត្តិ និងដំណើរការពាណិជ្ជកម្មដែលធ្វើម្តងហើយម្តងទៀត—សម្រាប់អ្នកចាប់ផ្តើម និងអ្នកជំនាញកំរិតមធ្យម។",
     tagline: "សម្រាប់តែការអប់រំ—មិនមែនជាដំបូន្មានហិរញ្ញវត្ថុ។",
     rights: "Trading Machenic។ រក្សាសិទ្ធិគ្រប់យ៉ាង។",
+    sections: {
+      learn: "សិក្សា",
+      program: "កម្មវិធី",
+      account: "គណនី",
+    },
+    ctaTitle: "ចាប់ផ្តើមដោយថ្នាក់ណែនាំឥតគិតថ្លៃ",
+    ctaBody: "ចុះឈ្មោះដើម្បីចូលប្រើមេរៀន និងតាមដានវឌ្ឍនភាពក្នុងកម្មវិធីសិក្សា។",
+    ctaButton: "ចុះឈ្មោះឥឡូវនេះ",
   },
 };
 

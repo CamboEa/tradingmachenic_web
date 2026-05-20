@@ -1,6 +1,9 @@
 @import "tailwindcss";
 
 :root {
+  --site-ticker-h: 3rem;
+  --site-header-h: 4.25rem;
+  --site-chrome-top: calc(var(--site-ticker-h) + var(--site-header-h));
   --background: #f8fafc;
   --foreground: #0f172a;
   --surface: #ffffff;

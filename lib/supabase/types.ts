@@ -83,6 +83,9 @@ export type Database = {
           key_features_km: string | null;
           usage_notes_en: string | null;
           usage_notes_km: string | null;
+          proof_of_testing_en: string | null;
+          proof_of_testing_km: string | null;
+          gallery: unknown;
           install_guide_url: string | null;
           file_url: string | null;
           image_url: string | null;

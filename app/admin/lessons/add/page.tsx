@@ -16,7 +16,7 @@ export default function AddLessonPage() {
         <div>
           <h1 className="text-2xl font-bold text-[#1e293b]">Add New Lesson</h1>
           <p className="mt-1 text-sm text-slate-500">
-            Create a new video lesson for your curriculum.
+            Follow the five steps to create a video lesson for your curriculum.
           </p>
         </div>
       </div>

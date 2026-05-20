@@ -29,8 +29,11 @@ export function HomeHeroSplit({ locale, dict }: { locale: Locale; dict: Dictiona
 
   return (
     <>
-      <section className="relative overflow-hidden bg-[var(--color-slate-brand)] text-white" aria-labelledby="home-hero-heading">
-        <div className="relative flex min-h-[min(92vh,44rem)] flex-col lg:min-h-[min(88vh,40rem)] lg:flex-row">
+      <section
+        className="relative flex h-[calc(100dvh-var(--site-chrome-top))] min-h-[calc(100dvh-var(--site-chrome-top))] flex-col overflow-hidden bg-[var(--color-slate-brand)] text-white"
+        aria-labelledby="home-hero-heading"
+      >
+        <div className="relative flex min-h-0 flex-1 flex-col lg:flex-row">
           {/* Left: copy + chart texture */}
           <div className="relative z-20 flex flex-1 flex-col justify-center px-5 py-14 sm:px-8 lg:w-[min(46%,32rem)] lg:flex-none lg:shrink-0 lg:py-20 xl:pl-12">
             <div
@@ -84,8 +87,8 @@ export function HomeHeroSplit({ locale, dict }: { locale: Locale; dict: Dictiona
           </div>
 
           {/* Right: photo + blend + tab */}
-          <div className="relative min-h-[18rem] flex-1 lg:min-h-0">
-            <div className="relative h-full min-h-[18rem] lg:absolute lg:inset-y-0 lg:left-0 lg:right-0 lg:min-h-full">
+          <div className="relative min-h-[14rem] flex-1 sm:min-h-[16rem] lg:min-h-0">
+            <div className="relative h-full min-h-[14rem] sm:min-h-[16rem] lg:absolute lg:inset-y-0 lg:left-0 lg:right-0 lg:min-h-full">
               <Image
                 src="/Images/hero.png"
                 alt={h.heroImageAlt}
@@ -100,18 +103,6 @@ export function HomeHeroSplit({ locale, dict }: { locale: Locale; dict: Dictiona
               />
               <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[color-mix(in_oklab,var(--color-slate-brand)_55%,transparent)] via-transparent to-transparent opacity-70 sm:opacity-50 lg:opacity-40" aria-hidden />
             </div>
-
-            <Link
-              href={`/${locale}/register`}
-              className={[
-                "absolute right-0 top-1/2 z-30 hidden -translate-y-1/2 items-center justify-center rounded-l-lg px-2.5 py-6 text-[11px] font-bold leading-tight text-white shadow-lg transition hover:brightness-105 lg:flex",
-                titleCaps ? "uppercase tracking-[0.18em]" : "",
-                "bg-[var(--color-teal)]",
-              ].join(" ")}
-              style={{ writingMode: "vertical-rl" }}
-            >
-              {h.heroSplitTab}
-            </Link>
           </div>
         </div>
 

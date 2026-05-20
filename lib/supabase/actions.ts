@@ -8,6 +8,11 @@ import { CURRICULUM_CACHE_TAG, LESSONS_CACHE_TAG } from "@/lib/cache-tags";
 import { defaultLocale, locales } from "@/lib/i18n";
 import type { CurriculumAccent } from "@/lib/curriculum";
 import type { Tool } from "@/lib/supabase/tools";
+import {
+  normalizeToolGallery,
+  parseToolGallery,
+  type ToolGalleryItem,
+} from "@/lib/supabase/tool-gallery";
 import type { Podcast } from "@/lib/supabase/podcasts";
 import { slugify } from "@/lib/slug";
 import { extractYouTubeVideoId, resolveLessonVideoEmbedUrl } from "@/lib/youtube";
@@ -358,6 +363,9 @@ type ToolFormData = {
   key_features_km?: string;
   usage_notes_en?: string;
   usage_notes_km?: string;
+  proof_of_testing_en?: string;
+  proof_of_testing_km?: string;
+  gallery?: ToolGalleryItem[];
   file_url: string;
   image_url?: string;
   install_guide_url?: string;
@@ -391,6 +399,9 @@ export async function createTool(formData: ToolFormData): Promise<{ error?: stri
       key_features_km: formData.key_features_km ?? null,
       usage_notes_en: formData.usage_notes_en ?? null,
       usage_notes_km: formData.usage_notes_km ?? null,
+      proof_of_testing_en: formData.proof_of_testing_en ?? null,
+      proof_of_testing_km: formData.proof_of_testing_km ?? null,
+      gallery: normalizeToolGallery(formData.gallery ?? []),
       file_url: formData.file_url,
       image_url: formData.image_url ?? null,
       install_guide_url: formData.install_guide_url ?? null,
@@ -414,7 +425,10 @@ export async function getToolForEdit(id: string): Promise<Tool | null> {
   const supabase = await createAdminClient();
   const { data, error } = await supabase.from("tools").select("*").eq("id", id).single();
   if (error) return null;
-  return data as Tool;
+  return {
+    ...(data as Tool),
+    gallery: parseToolGallery((data as { gallery?: unknown }).gallery),
+  };
 }
 
 export async function updateTool(id: string, formData: ToolFormData): Promise<{ error?: string; success?: boolean }> {
@@ -437,6 +451,9 @@ export async function updateTool(id: string, formData: ToolFormData): Promise<{ 
       key_features_km: formData.key_features_km ?? null,
       usage_notes_en: formData.usage_notes_en ?? null,
       usage_notes_km: formData.usage_notes_km ?? null,
+      proof_of_testing_en: formData.proof_of_testing_en ?? null,
+      proof_of_testing_km: formData.proof_of_testing_km ?? null,
+      gallery: normalizeToolGallery(formData.gallery ?? []),
       file_url: formData.file_url,
       image_url: formData.image_url ?? null,
       install_guide_url: formData.install_guide_url ?? null,

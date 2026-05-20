@@ -36,16 +36,6 @@ export default async function HomePage({
   return (
     <main className="flex-1">
       <HomeHeroSplit locale={locale} dict={dict} />
-
-      {continueLesson ? (
-        <ContinueLearningBanner
-          href={`/${locale}/education/${continueLesson.slug}`}
-          title={dict.home.continueLearningTitle}
-          lessonTitle={continueLesson.titles[locale]}
-          cta={dict.home.continueLearningCta}
-        />
-      ) : null}
-
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
         <section aria-labelledby="home-principles">
           <Reveal>
@@ -200,29 +190,6 @@ export default async function HomePage({
               </li>
             ))}
           </ul>
-        </section>
-
-        <section
-          className="mt-24 rounded-3xl border border-[color-mix(in_oklab,var(--color-gold)_38%,var(--color-bridge))] bg-[color-mix(in_oklab,var(--color-gold)_07%,var(--color-surface))] px-8 py-12 text-center lg:px-16 lg:py-16"
-          aria-labelledby="home-cta-band"
-        >
-          <Reveal>
-            <h2
-              id="home-cta-band"
-              className="text-2xl font-semibold tracking-tight text-[var(--color-ink)] sm:text-3xl"
-            >
-              {dict.home.ctaBandTitle}
-            </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-pretty text-[var(--color-ink-muted)]">
-              {dict.home.ctaBandBody}
-            </p>
-            <Link
-              href={`/${locale}/education`}
-              className="mt-10 inline-flex items-center justify-center rounded-xl bg-[var(--color-teal)] px-8 py-3.5 text-sm font-semibold text-white shadow-lg shadow-[color-mix(in_oklab,var(--color-teal)_28%,transparent)] transition hover:brightness-105"
-            >
-              {dict.home.ctaBandButton}
-            </Link>
-          </Reveal>
         </section>
       </div>
     </main>

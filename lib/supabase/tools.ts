@@ -1,5 +1,8 @@
 import { createClient } from "./server";
 import { createClient as createAdminClient } from "@supabase/supabase-js";
+import { parseToolGallery, type ToolGalleryItem } from "./tool-gallery";
+
+export type { ToolGalleryItem };
 
 export interface Tool {
   id: string;
@@ -19,10 +22,21 @@ export interface Tool {
   key_features_km: string | null;
   usage_notes_en: string | null;
   usage_notes_km: string | null;
+  proof_of_testing_en: string | null;
+  proof_of_testing_km: string | null;
+  gallery: ToolGalleryItem[];
   install_guide_url: string | null;
   file_url: string | null;
   image_url: string | null;
   status: "draft" | "published";
+}
+
+function normalizeToolRow(row: Record<string, unknown>): Tool {
+  const base = row as unknown as Tool;
+  return {
+    ...base,
+    gallery: parseToolGallery(row.gallery ?? base.gallery),
+  };
 }
 
 export async function getAllTools() {
@@ -60,7 +74,7 @@ export async function getAllTools() {
       return [];
     }
 
-    return (data || []) as Tool[];
+    return (data || []).map((row) => normalizeToolRow(row as Record<string, unknown>));
   } catch (err) {
     console.error("Exception fetching tools:", err instanceof Error ? err.message : err);
     return [];
@@ -77,7 +91,7 @@ export async function getPublishedToolById(id: string): Promise<Tool | null> {
       .eq("status", "published")
       .single();
     if (error) return null;
-    return data as Tool;
+    return normalizeToolRow(data as Record<string, unknown>);
   } catch {
     return null;
   }
@@ -102,7 +116,7 @@ export async function getPublishedTools() {
       return [];
     }
 
-    return (data || []) as Tool[];
+    return (data || []).map((row) => normalizeToolRow(row as Record<string, unknown>));
   } catch (err) {
     console.error("Exception fetching published tools:", err);
     return [];
