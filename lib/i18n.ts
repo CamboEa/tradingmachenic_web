@@ -48,6 +48,12 @@ export type Dictionary = {
     ctaBandButton: string;
     principlesTagline: string;
     lessonsNoun: string;
+    sectionMarkets: string;
+    marketsTagline: string;
+    marketsLead: string;
+    sectionHeatmap: string;
+    heatmapTagline: string;
+    heatmapLead: string;
     /** Split hero (home) */
     heroSplitHeadline: string;
     heroSplitSubhead: string;
@@ -146,6 +152,7 @@ export type Dictionary = {
   aboutPage: {
     title: string;
     eyebrow: string;
+    intro: string;
     whyEyebrow: string;
     whyTitle: string;
     whyParagraphs: string[];
@@ -274,6 +281,12 @@ const en: Dictionary = {
       "The education from Trading Machenic delivers serious learning value—risk, process, and mechanics explained without hype. It is built for traders who want a calm, repeatable path instead of chasing shortcuts.",
     continueLearningTitle: "Continue learning",
     continueLearningCta: "Resume lesson",
+    sectionMarkets: "Live Markets",
+    marketsTagline: "What you'll learn to read",
+    marketsLead: "Gold (XAU/USD) is at the core of our curriculum. Track real-time prices on the instruments our lessons are built around.",
+    sectionHeatmap: "Forex Strength Map",
+    heatmapTagline: "See which currencies are leading",
+    heatmapLead: "The heat map shows relative strength across major currency pairs — a key skill taught in depth in our curriculum.",
   },
   course: {
     title: "Trading fundamentals",
@@ -367,6 +380,7 @@ const en: Dictionary = {
   aboutPage: {
     title: "About",
     eyebrow: "Trading Machenic",
+    intro: "Meet the mentor and the philosophy behind structured, process-first trading education.",
     whyEyebrow: "Why we built this",
     whyTitle: "Fewer unnecessary losses, capital treated with care",
     whyParagraphs: [
@@ -517,6 +531,12 @@ const km: Dictionary = {
       "ការអប់រំពី Trading Machenic ផ្តល់តម្លៃសិក្សាពិតប្រាកដ—ពន្យល់ហានិភ័យ ដំណើរការ និងលក្ខណៈបច្ចេកទេសដោយគ្មានសំឡេងរន្ទះ។ សាងសម្រាប់អ្នកជួញដូរដែលចង់ផ្លូវស្ងប់ និងធ្វើម្តងហើយម្តងទៀត ជំនួសការរត់តាមផ្លូវកាត់។",
     continueLearningTitle: "បន្តសិក្សា",
     continueLearningCta: "បន្តមេរៀន",
+    sectionMarkets: "ទីផ្សារបន្តផ្ទាល់",
+    marketsTagline: "អ្វីដែលអ្នកនឹងរៀនអាន",
+    marketsLead: "មាស (XAU/USD) ស្ថិតនៅស្នូលនៃកម្មវិធីសិក្សារបស់យើង។ តាមដានតម្លៃជាក់ស្ដែងលើឧបករណ៍ដែលមេរៀនរបស់យើងបានបង្កើតឡើង។",
+    sectionHeatmap: "ផែនទីកម្តៅ Forex",
+    heatmapTagline: "មើលថារូបិយប័ណ្ណណាដែលនាំមុខ",
+    heatmapLead: "ផែនទីកម្តៅបង្ហាញភាពខ្លាំងប្រៀបធៀបនៅទូទាំងគូរូបិយប័ណ្ណសំខាន់ — ជំនាញដ៏សំខាន់ដែលបានបង្រៀននៅក្នុងកម្មវិធីសិក្សា។",
   },
   course: {
     title: "មូលដ្ឋានពាណិជ្ជកម្ម",
@@ -610,6 +630,7 @@ const km: Dictionary = {
   aboutPage: {
     title: "អំពីយើង",
     eyebrow: "Trading Machenic",
+    intro: "ស្គាល់អ្នកណែនាំ និងទស្សនវិជ្ជានៅពីក្រោយការអប់រំពាណិជ្ជកម្មដែលផ្តោតលើដំណើរការ។",
     whyEyebrow: "ហេតុអ្វីបានជាយើងបង្កើត",
     whyTitle: "កាត់បន្ថយការខាតដែលគេច្រើនជួប និងរក្សាដើមទុនឲ្យមានសុវត្ថិភាព",
     whyParagraphs: [

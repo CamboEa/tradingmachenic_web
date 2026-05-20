@@ -31,21 +31,26 @@ export default async function AboutPage({
   const a = dict.aboutPage;
 
   return (
-    <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
-      <Reveal variant="mount">
-        <div className="relative overflow-hidden rounded-[2rem] border border-white/80 bg-white/78 px-6 py-10 shadow-[0_24px_70px_-42px_rgba(15,23,42,0.45)] backdrop-blur sm:px-8">
-          <div className="absolute right-0 top-0 h-40 w-40 rounded-full bg-[color-mix(in_oklab,var(--color-gold)_16%,transparent)] blur-3xl" aria-hidden />
-          <div className="relative">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-gold)]">
+    <div className="flex flex-col">
+      <section className="relative overflow-hidden bg-[#1e293b] px-4 py-16 sm:px-6 lg:px-8">
+        <div
+          className="absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,rgba(212,175,55,0.18),transparent_24rem),radial-gradient(circle_at_86%_10%,rgba(14,165,233,0.2),transparent_26rem)]"
+          aria-hidden
+        />
+        <div className="relative mx-auto max-w-7xl">
+          <p className="text-xs font-bold uppercase tracking-[0.25em] text-[#d4af37]">
             {a.eyebrow}
           </p>
-          <h1 className="mt-3 max-w-3xl text-3xl font-semibold tracking-[-0.025em] text-[var(--color-ink)] sm:text-5xl">
+          <h1 className="mt-3 max-w-2xl text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl">
             {a.title}
           </h1>
-          </div>
+          <p className="mt-4 max-w-xl text-base leading-7 text-slate-300">
+            {a.intro}
+          </p>
         </div>
-      </Reveal>
+      </section>
 
+      <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
       <Reveal delayMs={90}>
         <section
         aria-labelledby="about-why-heading"
@@ -143,5 +148,6 @@ export default async function AboutPage({
         </Reveal>
       </div>
     </main>
+    </div>
   );
 }

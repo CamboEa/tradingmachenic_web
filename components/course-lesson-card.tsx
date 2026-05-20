@@ -5,16 +5,6 @@ import type { Lesson } from "@/lib/course";
 import { getLessonThumbnailSrc, lessonVideoCount } from "@/lib/course";
 import type { Dictionary, Locale } from "@/lib/i18n";
 
-function formatLessonProgress(
-  template: string,
-  currentOneBased: number,
-  total: number,
-): string {
-  const c = String(currentOneBased).padStart(2, "0");
-  const t = String(total).padStart(2, "0");
-  return template.replace("{current}", c).replace("{total}", t);
-}
-
 export function CourseLessonCard({
   lesson,
   locale,
@@ -33,86 +23,123 @@ export function CourseLessonCard({
   const title = lesson.titles[locale];
   const summary = lesson.summaries[locale];
   const previewObjectives = lesson.objectives[locale].slice(0, 2);
-  const progressLabel = formatLessonProgress(
-    dict.course.lessonProgress,
-    index + 1,
-    total,
-  );
-  const videosLabel = dict.course.videosInLesson.replace(
-    "{count}",
-    String(lessonVideoCount(lesson)),
-  );
+  const videoCount = lessonVideoCount(lesson);
 
   return (
-    <article className="flex h-full flex-col overflow-hidden rounded-[1.65rem] border border-white/80 bg-white/88 shadow-sm shadow-slate-900/5 backdrop-blur transition-[box-shadow,transform,border-color] duration-300 hover:-translate-y-1 hover:border-[color-mix(in_oklab,var(--color-teal)_35%,var(--color-bridge))] hover:shadow-2xl hover:shadow-slate-900/10">
-      <Link href={href} className="group flex flex-1 flex-col outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-teal)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)]">
-        <div className="relative aspect-[16/10] overflow-hidden bg-[color-mix(in_oklab,var(--color-bridge)_35%,var(--color-surface))]">
+    <article className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-[0_2px_12px_-4px_rgba(15,23,42,0.08)] transition-all duration-300 hover:-translate-y-1.5 hover:border-[color-mix(in_oklab,var(--color-teal)_30%,var(--color-bridge))] hover:shadow-[0_16px_40px_-12px_rgba(15,23,42,0.16)]">
+      {/* Gold top accent */}
+      <div
+        className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-[var(--color-gold)] via-[var(--color-gold)]/70 to-transparent"
+        aria-hidden
+      />
+
+      <Link
+        href={href}
+        className="flex flex-1 flex-col outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-teal)] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+      >
+        {/* Thumbnail */}
+        <div className="relative aspect-video overflow-hidden bg-slate-100">
           {thumbSrc ? (
             <Image
               src={thumbSrc}
               alt=""
               fill
               sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
-              className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+              className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
               priority={index === 0}
             />
-          ) : null}
+          ) : (
+            <div className="absolute inset-0 bg-gradient-to-br from-slate-100 to-slate-200" />
+          )}
+
+          {/* Dark gradient overlay */}
           <div
-            className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[color-mix(in_oklab,var(--color-ink)_55%,transparent)] via-transparent to-transparent"
+            className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0f172a]/70 via-[#0f172a]/10 to-transparent"
             aria-hidden
           />
-          <div className="absolute left-0 top-0 h-full w-1 bg-[var(--color-gold)]" aria-hidden />
-          <span className="absolute right-3 top-3 rounded-md bg-[color-mix(in_oklab,var(--color-teal)_88%,transparent)] px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-white backdrop-blur-sm">
-            {videosLabel}
-          </span>
-          <div className="absolute bottom-3 left-3 right-3 flex flex-wrap items-end justify-between gap-2">
-            <span className="rounded-md bg-[color-mix(in_oklab,var(--color-surface)_92%,transparent)] px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-[var(--color-ink)] backdrop-blur-sm">
-              {progressLabel}
+
+          {/* Lesson number — bottom left */}
+          <div className="absolute bottom-3 left-4 flex items-end gap-1.5">
+            <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/55">
+              {dict.course.lessonProgress.split("{current}")[0].trim() || "Lesson"}
             </span>
-            <span className="rounded-md bg-[color-mix(in_oklab,var(--color-ink)_72%,transparent)] px-2.5 py-1 text-[11px] font-semibold tabular-nums text-white backdrop-blur-sm">
-              {lesson.approximateMinutes} min
+            <span className="font-black leading-none text-white tabular-nums" style={{ fontSize: "1.75rem" }}>
+              {String(index + 1).padStart(2, "0")}
             </span>
           </div>
+
+          {/* Badges — top right */}
+          <div className="absolute right-3 top-3 flex items-center gap-1.5">
+            {videoCount > 0 && (
+              <span className="flex items-center gap-1 rounded-md bg-black/50 px-2 py-1 text-[10px] font-semibold text-white backdrop-blur-sm">
+                <svg width="8" height="9" viewBox="0 0 8 9" fill="currentColor" aria-hidden>
+                  <polygon points="0,0.5 8,4.5 0,8.5" />
+                </svg>
+                {videoCount}
+              </span>
+            )}
+            {lesson.type && (
+              <span
+                className={[
+                  "rounded-md px-2 py-1 text-[10px] font-bold uppercase tracking-wider backdrop-blur-sm",
+                  lesson.type === "free"
+                    ? "bg-[var(--color-teal)]/85 text-white"
+                    : "bg-[var(--color-gold)]/90 text-[#0f172a]",
+                ].join(" ")}
+              >
+                {lesson.type === "free" ? dict.course.filterFree : dict.course.filterPaid}
+              </span>
+            )}
+          </div>
+
+          {/* Duration — bottom right */}
+          <span className="absolute bottom-3 right-3 rounded-md bg-black/50 px-2 py-1 text-[10px] font-semibold tabular-nums text-white backdrop-blur-sm">
+            {lesson.approximateMinutes} min
+          </span>
         </div>
 
-        <div className="flex flex-1 flex-col border-t border-[color-mix(in_oklab,var(--color-bridge)_55%,transparent)] p-5 sm:p-6">
-          <h3 className="text-lg font-semibold leading-snug tracking-tight text-[var(--color-ink)] transition-colors group-hover:text-[color-mix(in_oklab,var(--color-teal)_78%,var(--color-ink))]">
+        {/* Card body */}
+        <div className="flex flex-1 flex-col p-5 sm:p-6">
+          <h3 className="text-[1.0625rem] font-semibold leading-snug tracking-tight text-[var(--color-ink)] transition-colors duration-200 group-hover:text-[var(--color-teal)]">
             {title}
           </h3>
-          <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-[var(--color-ink-muted)]">
+          <p className="mt-2.5 line-clamp-2 text-sm leading-relaxed text-[var(--color-ink-muted)]">
             {summary}
           </p>
 
-          <div className="mt-5 flex-1 border-t border-[color-mix(in_oklab,var(--color-bridge)_45%,transparent)] pt-5">
-            <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--color-gold)]">
-              {dict.course.keyOutcomes}
-            </p>
-            <ul className="mt-3 space-y-2">
-              {previewObjectives.map((item) => (
-                <li
-                  key={item}
-                  className="flex gap-2 text-sm leading-snug text-[var(--color-ink-muted)]"
-                >
-                  <span
-                    className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[var(--color-gold)]"
-                    aria-hidden
-                  />
-                  <span className="line-clamp-2">{item}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
+          {/* Key outcomes */}
+          {previewObjectives.length > 0 && (
+            <div className="mt-4 flex-1 rounded-xl bg-slate-50/80 px-4 py-3.5 ring-1 ring-slate-100">
+              <p className="mb-2.5 text-[10px] font-bold uppercase tracking-[0.16em] text-[var(--color-gold)]">
+                {dict.course.keyOutcomes}
+              </p>
+              <ul className="space-y-2">
+                {previewObjectives.map((item) => (
+                  <li
+                    key={item}
+                    className="flex gap-2.5 text-xs leading-snug text-[var(--color-ink-muted)]"
+                  >
+                    <span
+                      className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--color-teal)]"
+                      aria-hidden
+                    />
+                    <span className="line-clamp-2">{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
-          <div className="mt-6 flex items-center justify-between gap-3 border-t border-[color-mix(in_oklab,var(--color-bridge)_45%,transparent)] pt-5">
-            <span className="text-xs font-medium text-[var(--color-ink-soft)]">
-              {dict.course.durationLabel}{" "}
-              <span className="tabular-nums text-[var(--color-ink-muted)]">
-                {lesson.approximateMinutes} min
-              </span>
+          {/* Footer */}
+          <div className="mt-5 flex items-center justify-between border-t border-slate-100 pt-4">
+            <span className="text-xs font-medium tabular-nums text-[var(--color-ink-soft)]">
+              {String(index + 1).padStart(2, "0")}
+              <span className="mx-1 opacity-40">/</span>
+              {String(total).padStart(2, "0")}
             </span>
-            <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--color-teal)] transition group-hover:gap-2">
+            <span className="inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-semibold text-[var(--color-teal)] ring-1 ring-[color-mix(in_oklab,var(--color-teal)_30%,transparent)] transition-all duration-200 group-hover:bg-[var(--color-teal)] group-hover:text-white group-hover:ring-transparent">
               {dict.course.openLesson}
-              <span aria-hidden className="transition-transform group-hover:translate-x-0.5">
+              <span aria-hidden className="transition-transform duration-200 group-hover:translate-x-0.5">
                 →
               </span>
             </span>
