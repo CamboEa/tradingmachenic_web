@@ -131,10 +131,12 @@ function CenterNav({
   locale,
   dict,
   pathname,
+  scrolled,
 }: {
   locale: Locale;
   dict: Dictionary;
   pathname: string;
+  scrolled: boolean;
 }) {
   const items: NavItem[] = [
     { suffix: "", label: dict.nav.home, href: `/${locale}` },
@@ -185,7 +187,12 @@ function CenterNav({
 
   return (
     <nav
-      className="flex flex-wrap items-center justify-center gap-1 sm:inline-flex sm:rounded-full sm:border sm:border-slate-200/90 sm:bg-white/82 sm:px-1 sm:py-1 sm:shadow-sm sm:shadow-slate-900/5 sm:backdrop-blur-md"
+      className={[
+        "flex flex-wrap items-center justify-center gap-1 sm:inline-flex sm:rounded-full sm:px-1 sm:py-1 sm:transition-[background-color,border-color,box-shadow,backdrop-filter] sm:duration-300",
+        scrolled
+          ? "sm:border sm:border-slate-200/90 sm:bg-white/82 sm:shadow-sm sm:shadow-slate-900/5 sm:backdrop-blur-md"
+          : "sm:border sm:border-transparent sm:bg-transparent sm:shadow-none",
+      ].join(" ")}
       aria-label="Primary"
     >
       {primary.map(({ suffix, label, href }) => {
@@ -272,9 +279,17 @@ export function SiteHeader({
 }) {
   const pathname = usePathname() ?? `/${locale}`;
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     setMobileNavOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 12);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, [pathname]);
 
   const brand = (
@@ -294,8 +309,14 @@ export function SiteHeader({
     </Link>
   );
 
+  const headerSurface = scrolled
+    ? "border-b border-white/60 bg-[#f8fafc]/82 shadow-[0_8px_30px_-26px_rgba(15,23,42,0.45)] backdrop-blur-xl supports-backdrop-filter:bg-[#f8fafc]/76"
+    : "border-b border-transparent bg-transparent shadow-none backdrop-blur-none";
+
   return (
-    <header className="sticky top-0 z-40 border-b border-white/60 bg-[#f8fafc]/82 shadow-[0_8px_30px_-26px_rgba(15,23,42,0.45)] backdrop-blur-xl supports-backdrop-filter:bg-[#f8fafc]/76">
+    <header
+      className={`sticky top-0 z-40 transition-[background-color,border-color,box-shadow,backdrop-filter] duration-300 ${headerSurface}`}
+    >
       <div className="mx-auto max-w-7xl px-4 py-3.5 lg:px-8">
         <div className="flex flex-col gap-3 sm:hidden">
           <div className="flex items-start justify-between gap-3">
@@ -333,15 +354,30 @@ export function SiteHeader({
             </div>
           </div>
           {mobileNavOpen ? (
-            <div id="mobile-site-nav" className="border-t border-slate-200/70 pt-3">
-              <CenterNav key={pathname} locale={locale} dict={dict} pathname={pathname} />
+            <div
+              id="mobile-site-nav"
+              className={`border-t pt-3 ${scrolled ? "border-slate-200/70" : "border-slate-200/40"}`}
+            >
+              <CenterNav
+                key={pathname}
+                locale={locale}
+                dict={dict}
+                pathname={pathname}
+                scrolled={scrolled}
+              />
             </div>
           ) : null}
         </div>
 
         <div className="hidden sm:grid sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:items-center sm:gap-x-6">
           <div className="flex min-w-0 justify-start">{brand}</div>
-          <CenterNav key={pathname} locale={locale} dict={dict} pathname={pathname} />
+          <CenterNav
+            key={pathname}
+            locale={locale}
+            dict={dict}
+            pathname={pathname}
+            scrolled={scrolled}
+          />
           <div className="flex min-w-0 justify-end">
             <AuthLanguageCluster
               locale={locale}
