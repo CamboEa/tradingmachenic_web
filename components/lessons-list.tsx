@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { toast } from "react-toastify";
+import { useConfirm } from "@/components/confirm-dialog";
 import type { Lesson } from "@/lib/course";
 import { deleteLesson } from "@/lib/supabase/actions";
 
@@ -16,34 +17,32 @@ export function LessonsList({ lessons }: LessonsListProps) {
   const [filter, setFilter] = useState<FilterType>("all");
   const [deleting, setDeleting] = useState<string | null>(null);
   const [expandedLesson, setExpandedLesson] = useState<string | null>(null);
+  const { confirm, ConfirmDialogHost } = useConfirm();
 
   const filteredLessons = lessons.filter((lesson) => {
     if (filter === "all") return true;
     return lesson.type === filter;
   });
 
-  async function handleDelete(slug: string) {
-    const toastId = toast.loading("Deleting lesson...");
-    setDeleting(slug);
-    
-    const result = await deleteLesson(slug);
-    
-    if (result.error) {
-      toast.update(toastId, {
-        render: `Error: ${result.error}`,
-        type: "error",
-        isLoading: false,
-        autoClose: 4000,
-      });
-    } else {
-      toast.update(toastId, {
-        render: "Lesson deleted successfully!",
-        type: "success",
-        isLoading: false,
-        autoClose: 4000,
-      });
-    }
-    
+  async function handleDeleteClick(lesson: Lesson) {
+    await confirm({
+      title: "Delete this lesson?",
+      description: `"${lesson.titles.en}" and all of its videos will be permanently removed. This cannot be undone.`,
+      confirmLabel: "Delete lesson",
+      cancelLabel: "Keep lesson",
+      variant: "danger",
+      onConfirm: async () => {
+        setDeleting(lesson.slug);
+        const result = await deleteLesson(lesson.slug);
+        if (result.error) {
+          toast.error(result.error);
+          setDeleting(null);
+          throw new Error(result.error);
+        }
+        toast.success("Lesson deleted successfully!");
+        window.location.reload();
+      },
+    });
     setDeleting(null);
   }
 
@@ -52,6 +51,7 @@ export function LessonsList({ lessons }: LessonsListProps) {
   }
 
   return (
+    <>
     <div className="space-y-5">
       {/* Filter buttons */}
       <div className="flex gap-2">
@@ -217,7 +217,7 @@ export function LessonsList({ lessons }: LessonsListProps) {
                     </Link>
                     <button
                       type="button"
-                      onClick={() => handleDelete(lesson.slug)}
+                      onClick={() => handleDeleteClick(lesson)}
                       disabled={deleting === lesson.slug}
                       className="flex-1 rounded-md border border-slate-200 px-3 py-2 text-xs font-medium text-slate-400 transition-colors hover:border-red-300 hover:text-red-500 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
@@ -231,5 +231,7 @@ export function LessonsList({ lessons }: LessonsListProps) {
         </div>
       )}
     </div>
+    {ConfirmDialogHost}
+    </>
   );
 }

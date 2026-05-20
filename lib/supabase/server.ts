@@ -1,7 +1,9 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import { cache } from "react";
 
 import type { Database } from "./types";
+import type { User } from "@supabase/supabase-js";
 
 export async function createClient() {
   const cookieStore = await cookies();
@@ -27,6 +29,15 @@ export async function createClient() {
     },
   );
 }
+
+/** Deduped per-request auth read (layout + pages share one getUser call). */
+export const getSessionUser = cache(async (): Promise<User | null> => {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  return user;
+});
 
 /** Use the service role key for admin operations that bypass RLS. */
 export async function createAdminClient() {

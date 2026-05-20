@@ -1,16 +1,17 @@
+import { unstable_cache } from "next/cache";
+import { createClient } from "@supabase/supabase-js";
+
+import { CURRICULUM_CACHE_TAG } from "@/lib/cache-tags";
 import type { CurriculumPhaseWithWeeks } from "@/lib/curriculum";
 
-import { createAdminClient, createClient } from "./server";
+import { createAdminClient } from "./server";
 
-function splitActivities(raw: string): string[] {
-  return raw
-    .split("\n")
-    .map((s) => s.trim())
-    .filter(Boolean);
-}
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+);
 
-export async function getCurriculum(): Promise<CurriculumPhaseWithWeeks[]> {
-  const supabase = await createClient();
+async function fetchCurriculum(): Promise<CurriculumPhaseWithWeeks[]> {
   const { data: phases, error: pErr } = await supabase
     .from("curriculum_phases")
     .select("*")
@@ -49,6 +50,30 @@ export async function getCurriculum(): Promise<CurriculumPhaseWithWeeks[]> {
       },
     })),
   }));
+}
+
+function splitActivities(raw: string): string[] {
+  return raw
+    .split("\n")
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
+
+function toCacheable<T>(value: T): T {
+  return JSON.parse(JSON.stringify(value)) as T;
+}
+
+const getCachedCurriculum = unstable_cache(
+  async () => toCacheable(await fetchCurriculum()),
+  ["curriculum-phases"],
+  {
+    revalidate: 60,
+    tags: [CURRICULUM_CACHE_TAG],
+  },
+);
+
+export async function getCurriculum(): Promise<CurriculumPhaseWithWeeks[]> {
+  return getCachedCurriculum();
 }
 
 export async function getCurriculumPhaseForEdit(id: string) {

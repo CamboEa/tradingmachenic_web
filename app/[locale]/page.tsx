@@ -6,7 +6,7 @@ import { HomeHeroSplit } from "@/components/home-hero-split";
 import { Reveal } from "@/components/reveal";
 import { getContinueLessonSlug } from "@/lib/supabase/lesson-progress";
 import { getAllLessons } from "@/lib/supabase/lessons";
-import { createClient } from "@/lib/supabase/server";
+import { getSessionUser } from "@/lib/supabase/server";
 import { getDictionary, isLocale, type Locale } from "@/lib/i18n";
 
 export default async function HomePage({
@@ -17,15 +17,14 @@ export default async function HomePage({
   const { locale: raw } = await params;
   if (!isLocale(raw)) notFound();
   const locale = raw as Locale;
-  const dict = await getDictionary(locale);
-  const lessons = await getAllLessons();
+  const [dict, lessons] = await Promise.all([
+    getDictionary(locale),
+    getAllLessons(),
+  ]);
   const lessonCount = lessons.length;
   const orderedSlugs = lessons.map((l) => l.slug);
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getSessionUser();
   const continueSlug = user ? await getContinueLessonSlug(user.id, orderedSlugs) : null;
   const continueLesson = continueSlug ? lessons.find((l) => l.slug === continueSlug) : null;
 

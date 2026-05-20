@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { SiteHeader } from "@/components/site-header";
 import { TradingViewTickerTape } from "@/components/tradingview-ticker-tape";
 import { getDictionary, isLocale, type Locale } from "@/lib/i18n";
-import { createClient } from "@/lib/supabase/server";
+import { getSessionUser } from "@/lib/supabase/server";
 
 export async function generateStaticParams() {
   return [{ locale: "km" }, { locale: "en" }];
@@ -43,8 +43,7 @@ export default async function LocaleLayout({
   const locale = raw as Locale;
   const dict = await getDictionary(locale);
 
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const user = await getSessionUser();
 
   return (
     <div className="flex flex-1 flex-col">

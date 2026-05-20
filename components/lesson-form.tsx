@@ -3,9 +3,11 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { createLesson, updateLesson } from "@/lib/supabase/actions";
+import { useConfirm } from "@/components/confirm-dialog";
 import { LocaleParityHint } from "@/components/locale-parity-hint";
 import { R2Uploader } from "@/components/r2-uploader";
 import { YoutubeUrlPreview } from "@/components/youtube-url-preview";
+import { slugify } from "@/lib/slug";
 import { extractYouTubeVideoId, resolveLessonVideoEmbedUrl } from "@/lib/youtube";
 
 type LessonType = "free" | "paid";
@@ -90,9 +92,29 @@ export function LessonForm({ initialData, isEditing = false }: LessonFormProps) 
   );
   const [titleEn, setTitleEn] = useState(initialData?.lesson.title_en ?? "");
   const [titleKm, setTitleKm] = useState(initialData?.lesson.title_km ?? "");
+  const [slug, setSlug] = useState(initialData?.lesson.slug ?? "");
+  const [slugTouched, setSlugTouched] = useState(!!initialData?.lesson.slug);
   const [summaryEn, setSummaryEn] = useState(initialData?.lesson.summary_en ?? "");
   const [summaryKm, setSummaryKm] = useState(initialData?.lesson.summary_km ?? "");
   const [isSaving, setIsSaving] = useState(false);
+  const { confirm, ConfirmDialogHost } = useConfirm();
+
+  const originalSlug = initialData?.lesson.slug ?? "";
+
+  function handleTitleEnChange(value: string) {
+    setTitleEn(value);
+    if (!slugTouched) {
+      setSlug(slugify(value));
+    }
+  }
+
+  function syncSlugFromTitle() {
+    const next = slugify(titleEn);
+    if (next) {
+      setSlug(next);
+      setSlugTouched(false);
+    }
+  }
 
   const defaultStatus = isEditing
     ? initialData?.lesson.status === "published"
@@ -132,9 +154,9 @@ export function LessonForm({ initialData, isEditing = false }: LessonFormProps) 
     const form = e.currentTarget;
     
     try {
-      const slug = (form.querySelector('input[name="slug"]') as HTMLInputElement)?.value;
-      const title_en = (form.querySelector('input[name="title_en"]') as HTMLInputElement)?.value;
-      const title_km = (form.querySelector('input[name="title_km"]') as HTMLInputElement)?.value;
+      const normalizedSlug = slugify(slug);
+      const title_en = titleEn.trim();
+      const title_km = titleKm.trim();
       const summary_en = (form.querySelector('textarea[name="summary_en"]') as HTMLTextAreaElement)?.value;
       const summary_km = (form.querySelector('textarea[name="summary_km"]') as HTMLTextAreaElement)?.value;
       const approximate_minutes = parseInt((form.querySelector('input[name="approximate_minutes"]') as HTMLInputElement)?.value || "0");
@@ -147,8 +169,8 @@ export function LessonForm({ initialData, isEditing = false }: LessonFormProps) 
       const statusRaw = (form.querySelector('input[name="status"]:checked') as HTMLInputElement)?.value;
       const status = statusRaw === "Published" ? "published" : "draft";
 
-      if (!slug || !title_en || !title_km || !summary_en || !summary_km) {
-        toast.error("Please fill in all required fields");
+      if (!normalizedSlug || !title_en || !title_km || !summary_en || !summary_km) {
+        toast.error("Please fill in all required fields (English title generates the slug)");
         setIsSaving(false);
         return;
       }
@@ -164,7 +186,8 @@ export function LessonForm({ initialData, isEditing = false }: LessonFormProps) 
       const thumbnail_url = thumbnailUrl.trim() || null;
 
       if (isEditing && initialData) {
-        const result = await updateLesson(slug, {
+        const result = await updateLesson(originalSlug, {
+          slug: normalizedSlug,
           title_en,
           title_km,
           summary_en,
@@ -182,12 +205,18 @@ export function LessonForm({ initialData, isEditing = false }: LessonFormProps) 
           toast.error(result.error);
         } else {
           toast.success("Lesson updated successfully!");
-          // Refresh page after a short delay
-          setTimeout(() => window.location.reload(), 1500);
+          const nextSlug = result.slug ?? normalizedSlug;
+          setTimeout(() => {
+            if (nextSlug !== originalSlug) {
+              window.location.href = `/admin/lessons/edit/${encodeURIComponent(nextSlug)}`;
+            } else {
+              window.location.reload();
+            }
+          }, 800);
         }
       } else {
         const result = await createLesson({
-          slug,
+          slug: normalizedSlug,
           title_en,
           title_km,
           summary_en,
@@ -223,9 +252,19 @@ export function LessonForm({ initialData, isEditing = false }: LessonFormProps) 
     setVideos([...videos, { embedUrl: "", titles: { en: "", km: "" } }]);
   };
 
-  const removeVideo = (index: number) => {
-    setVideos(videos.filter((_, i) => i !== index));
-  };
+  async function requestRemoveVideo(index: number) {
+    const label = videos[index]?.titles.en?.trim() || `Video ${index + 1}`;
+    await confirm({
+      title: "Remove this video?",
+      description: `"${label}" will be removed from this lesson. Save the lesson to apply the change.`,
+      confirmLabel: "Remove video",
+      cancelLabel: "Keep video",
+      variant: "danger",
+      onConfirm: () => {
+        setVideos(videos.filter((_, i) => i !== index));
+      },
+    });
+  }
 
   const updateVideo = (
     index: number,
@@ -246,9 +285,22 @@ export function LessonForm({ initialData, isEditing = false }: LessonFormProps) 
     setPaidVideos([...paidVideos, { url, titles: { en: "", km: "" } }]);
   };
 
-  const removePaidVideo = (index: number) => {
-    setPaidVideos(paidVideos.filter((_, i) => i !== index));
-  };
+  async function requestRemovePaidVideo(index: number) {
+    const label = paidVideos[index]?.titles.en?.trim() || `Video ${index + 1}`;
+    const hasUpload = Boolean(paidVideos[index]?.url?.trim());
+    await confirm({
+      title: "Remove this video?",
+      description: hasUpload
+        ? `"${label}" and its uploaded file reference will be removed from this lesson. Save to apply.`
+        : `"${label}" will be removed from this lesson.`,
+      confirmLabel: "Remove video",
+      cancelLabel: "Keep video",
+      variant: "danger",
+      onConfirm: () => {
+        setPaidVideos(paidVideos.filter((_, i) => i !== index));
+      },
+    });
+  }
 
   const updatePaidVideo = (
     index: number,
@@ -264,6 +316,7 @@ export function LessonForm({ initialData, isEditing = false }: LessonFormProps) 
   };
 
   return (
+    <>
     <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
       <h2 className="mb-6 text-base font-bold text-[#1e293b]">
         Lesson Details
@@ -295,25 +348,7 @@ export function LessonForm({ initialData, isEditing = false }: LessonFormProps) 
           </div>
         </div>
 
-        {/* Slug */}
-        <div>
-          <label className="mb-1.5 block text-xs font-semibold text-slate-600">
-            Slug <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="text"
-            name="slug"
-            placeholder="e.g. price-action-basics"
-            defaultValue={initialData?.lesson.slug || ""}
-            disabled={isEditing}
-            className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#0ea5e9] focus:bg-white focus:ring-2 focus:ring-[#0ea5e9]/20 disabled:bg-slate-100 disabled:text-slate-400 disabled:cursor-not-allowed"
-          />
-          <p className="mt-1 text-xs text-slate-400">
-            Unique identifier for this lesson (no spaces, use hyphens){isEditing && " — Cannot be changed"}
-          </p>
-        </div>
-
-        {/* Title EN */}
+        {/* Title EN — fill first; slug auto-generates below */}
         <div>
           <label className="mb-1.5 block text-xs font-semibold text-slate-600">
             Title (English) <span className="text-red-500">*</span>
@@ -323,13 +358,45 @@ export function LessonForm({ initialData, isEditing = false }: LessonFormProps) 
             name="title_en"
             placeholder="e.g. Price Action Basics"
             value={titleEn}
-            onChange={(e) => setTitleEn(e.target.value)}
+            onChange={(e) => handleTitleEnChange(e.target.value)}
             className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#0ea5e9] focus:bg-white focus:ring-2 focus:ring-[#0ea5e9]/20"
           />
           <LocaleParityHint
             enFilled={titleEn.trim().length > 0}
             kmFilled={titleKm.trim().length > 0}
           />
+        </div>
+
+        {/* Slug */}
+        <div>
+          <div className="mb-1.5 flex flex-wrap items-center justify-between gap-2">
+            <label className="text-xs font-semibold text-slate-600">
+              Slug <span className="text-red-500">*</span>
+            </label>
+            {slugTouched && titleEn.trim() ? (
+              <button
+                type="button"
+                onClick={syncSlugFromTitle}
+                className="text-xs font-semibold text-[#0ea5e9] transition hover:text-sky-700"
+              >
+                Regenerate from title
+              </button>
+            ) : null}
+          </div>
+          <input
+            type="text"
+            name="slug"
+            placeholder="Generated when you enter the English title"
+            value={slug}
+            onChange={(e) => {
+              setSlugTouched(true);
+              setSlug(e.target.value);
+            }}
+            className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 font-mono text-sm text-slate-800 outline-none transition focus:border-[#0ea5e9] focus:bg-white focus:ring-2 focus:ring-[#0ea5e9]/20"
+          />
+          <p className="mt-1 text-xs text-slate-400">
+            URL path for this lesson (e.g. /education/your-slug). Auto-filled from the English title; edit anytime.
+          </p>
         </div>
 
         {/* Title KM */}
@@ -423,7 +490,7 @@ export function LessonForm({ initialData, isEditing = false }: LessonFormProps) 
                     </span>
                     <button
                       type="button"
-                      onClick={() => removeVideo(idx)}
+                      onClick={() => requestRemoveVideo(idx)}
                       className="text-xs font-semibold text-red-500 transition hover:text-red-700"
                     >
                       Remove
@@ -510,7 +577,7 @@ export function LessonForm({ initialData, isEditing = false }: LessonFormProps) 
                     </span>
                     <button
                       type="button"
-                      onClick={() => removePaidVideo(idx)}
+                      onClick={() => requestRemovePaidVideo(idx)}
                       className="text-xs font-semibold text-red-500 transition hover:text-red-700"
                     >
                       Remove
@@ -718,5 +785,7 @@ export function LessonForm({ initialData, isEditing = false }: LessonFormProps) 
         </button>
       </form>
     </div>
+    {ConfirmDialogHost}
+    </>
   );
 }

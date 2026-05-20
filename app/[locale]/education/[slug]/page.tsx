@@ -6,7 +6,7 @@ import { MarkLessonComplete } from "@/components/mark-lesson-complete";
 import { RelatedLessons } from "@/components/related-lessons";
 import { getAllLessons, getLessonBySlug } from "@/lib/supabase/lessons";
 import { getCompletedLessonSlugs } from "@/lib/supabase/lesson-progress";
-import { createClient } from "@/lib/supabase/server";
+import { getSessionUser } from "@/lib/supabase/server";
 import { getDictionary, isLocale, type Locale } from "@/lib/i18n";
 import { isDirectVideoFileUrl } from "@/lib/video";
 
@@ -45,19 +45,18 @@ export default async function LessonPage({
   const { locale: raw, slug } = await params;
   if (!isLocale(raw)) notFound();
   const locale = raw as Locale;
-  const dict = await getDictionary(locale);
+  const [dict, allLessons] = await Promise.all([
+    getDictionary(locale),
+    getAllLessons(),
+  ]);
 
-  const allLessons = await getAllLessons();
   const lesson = allLessons.find((l) => l.slug === slug);
   if (!lesson) notFound();
 
   const index = allLessons.findIndex((l) => l.slug === slug);
   const related = allLessons.filter((_, i) => i > index).slice(0, 3);
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getSessionUser();
   const completedSlugs = user ? await getCompletedLessonSlugs(user.id) : [];
   const isCompleted = completedSlugs.includes(slug);
 

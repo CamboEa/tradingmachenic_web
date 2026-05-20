@@ -13,8 +13,10 @@ export default async function EducationPage({
   const { locale: raw } = await params;
   if (!isLocale(raw)) notFound();
   const locale = raw as Locale;
-  const dict = await getDictionary(locale);
-  const lessons = await getAllLessons();
+  const [dict, lessons] = await Promise.all([
+    getDictionary(locale),
+    getAllLessons(),
+  ]);
 
   return (
     <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-12 sm:px-6 lg:px-8 lg:py-16">

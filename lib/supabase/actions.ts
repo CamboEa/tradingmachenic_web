@@ -1,12 +1,15 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
+
+import { CURRICULUM_CACHE_TAG, LESSONS_CACHE_TAG } from "@/lib/cache-tags";
 
 import { defaultLocale, locales } from "@/lib/i18n";
 import type { CurriculumAccent } from "@/lib/curriculum";
 import type { Tool } from "@/lib/supabase/tools";
 import type { Podcast } from "@/lib/supabase/podcasts";
+import { slugify } from "@/lib/slug";
 import { extractYouTubeVideoId, resolveLessonVideoEmbedUrl } from "@/lib/youtube";
 
 import { createClient, createAdminClient } from "./server";
@@ -104,7 +107,7 @@ export async function markLessonComplete(
 }
 
 export async function deleteLesson(slug: string): Promise<{ error?: string }> {
-  const supabase = await createClient();
+  const supabase = await createAdminClient();
 
   const { error } = await supabase
     .from("lessons")
@@ -116,28 +119,48 @@ export async function deleteLesson(slug: string): Promise<{ error?: string }> {
   }
 
   revalidatePath("/admin/lessons");
+  revalidateTag(LESSONS_CACHE_TAG, "max");
   return {};
 }
 
 export async function getLessonForEdit(slug: string) {
-  const supabase = await createClient();
+  const decodedSlug = decodeURIComponent(slug);
+  const supabase = await createAdminClient();
 
   const { data, error } = await supabase
     .from("lessons")
     .select("*")
-    .eq("slug", slug)
-    .single();
+    .eq("slug", decodedSlug)
+    .maybeSingle();
 
   if (error) {
-    console.error("Error fetching lesson:", error);
+    console.error(
+      "Error fetching lesson:",
+      error.message,
+      error.code,
+      error.details,
+    );
     return null;
   }
 
-  const { data: videos } = await supabase
+  if (!data) {
+    return null;
+  }
+
+  const { data: videos, error: videosError } = await supabase
     .from("lesson_videos")
     .select("*")
     .eq("lesson_id", data.id)
     .order("sort_order", { ascending: true });
+
+  if (videosError) {
+    console.error(
+      "Error fetching lesson videos:",
+      videosError.message,
+      videosError.code,
+    );
+    return null;
+  }
 
   return { lesson: data, videos: videos || [] };
 }
@@ -160,8 +183,12 @@ export async function createLesson(formData: {
     title_en: string;
     title_km: string;
   }>;
-}): Promise<{ error?: string; success?: boolean }> {
+}): Promise<{ error?: string; success?: boolean; slug?: string }> {
   const supabase = await createAdminClient();
+  const slug = slugify(formData.slug);
+  if (!slug) {
+    return { error: "Slug is required (add an English title or enter a slug)." };
+  }
 
   try {
     // Create lesson
@@ -169,7 +196,7 @@ export async function createLesson(formData: {
       .from("lessons")
       .insert([
         {
-          slug: formData.slug,
+          slug,
           title_en: formData.title_en,
           title_km: formData.title_km,
           summary_en: formData.summary_en,
@@ -207,19 +234,21 @@ export async function createLesson(formData: {
     }
 
     revalidatePath("/admin/lessons");
+    revalidateTag(LESSONS_CACHE_TAG, "max");
     for (const loc of locales) {
       revalidatePath(`/${loc}/education`);
-      revalidatePath(`/${loc}/education/${formData.slug}`);
+      revalidatePath(`/${loc}/education/${slug}`);
     }
-    return { success: true };
+    return { success: true, slug };
   } catch (err) {
     return { error: err instanceof Error ? err.message : "Failed to create lesson" };
   }
 }
 
 export async function updateLesson(
-  slug: string,
+  originalSlug: string,
   formData: {
+    slug: string;
     title_en: string;
     title_km: string;
     summary_en: string;
@@ -238,15 +267,20 @@ export async function updateLesson(
       title_km: string;
     }>;
   }
-): Promise<{ error?: string; success?: boolean }> {
+): Promise<{ error?: string; success?: boolean; slug?: string }> {
   const supabase = await createAdminClient();
+  const decodedOriginal = decodeURIComponent(originalSlug);
+  const newSlug = slugify(formData.slug);
+  if (!newSlug) {
+    return { error: "Slug is required (add an English title or enter a slug)." };
+  }
 
   try {
     // Get lesson by slug
     const { data: lesson, error: fetchError } = await supabase
       .from("lessons")
       .select("id")
-      .eq("slug", slug)
+      .eq("slug", decodedOriginal)
       .single();
 
     if (fetchError) {
@@ -257,6 +291,7 @@ export async function updateLesson(
     const { error: lessonError } = await supabase
       .from("lessons")
       .update({
+        slug: newSlug,
         title_en: formData.title_en,
         title_km: formData.title_km,
         summary_en: formData.summary_en,
@@ -295,11 +330,13 @@ export async function updateLesson(
     }
 
     revalidatePath("/admin/lessons");
+    revalidateTag(LESSONS_CACHE_TAG, "max");
     for (const loc of locales) {
       revalidatePath(`/${loc}/education`);
-      revalidatePath(`/${loc}/education/${slug}`);
+      revalidatePath(`/${loc}/education/${decodedOriginal}`);
+      revalidatePath(`/${loc}/education/${newSlug}`);
     }
-    return { success: true };
+    return { success: true, slug: newSlug };
   } catch (err) {
     return { error: err instanceof Error ? err.message : "Failed to update lesson" };
   }
@@ -516,6 +553,7 @@ export async function deletePodcast(id: string): Promise<{ error?: string }> {
 }
 
 function revalidateCurriculumPaths() {
+  revalidateTag(CURRICULUM_CACHE_TAG, "max");
   for (const loc of locales) {
     revalidatePath(`/${loc}/curriculum`);
   }

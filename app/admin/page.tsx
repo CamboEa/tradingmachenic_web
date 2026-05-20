@@ -37,8 +37,10 @@ function StatCard({
 }
 
 export default async function AdminDashboard() {
-  const lessons = await getAllLessonsForAdmin();
-  const curriculum = await getCurriculum();
+  const [lessons, curriculum] = await Promise.all([
+    getAllLessonsForAdmin(),
+    getCurriculum(),
+  ]);
   const sorted = [...curriculum].sort((a, b) => a.sort_order - b.sort_order);
   const phase0 = sorted[0];
   const phase1 = sorted[1];

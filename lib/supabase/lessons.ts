@@ -1,10 +1,13 @@
+import { unstable_cache } from "next/cache";
+
 import type { Lesson } from "@/lib/course";
+import { LESSONS_CACHE_TAG } from "@/lib/cache-tags";
 import { resolveLessonVideoEmbedUrl } from "@/lib/youtube";
 import { createClient, createClient as createAdminClient } from "@supabase/supabase-js";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
 );
 
 function adminSupabase() {
@@ -41,120 +44,25 @@ type LessonVideoRow = {
   sort_order: number;
 };
 
-/**
- * Fetch all published lessons from Supabase with their videos
- */
-export async function getAllLessons(): Promise<Lesson[]> {
-  const { data: lessonRows, error: lessonError } = await supabase
-    .from("lessons")
-    .select("*")
-    .eq("status", "published")
-    .order("created_at", { ascending: true });
+type LessonRowWithVideos = LessonRow & {
+  lesson_videos: LessonVideoRow[] | null;
+};
 
-  if (lessonError) {
-    console.error("Error fetching lessons:", lessonError);
-    return [];
-  }
+const LESSON_WITH_VIDEOS_SELECT =
+  "*, lesson_videos(id, embed_url, title_en, title_km, sort_order)";
 
-  const lessons: Lesson[] = [];
-
-  for (const row of lessonRows as LessonRow[]) {
-    const { data: videos, error: videoError } = await supabase
-      .from("lesson_videos")
-      .select("*")
-      .eq("lesson_id", row.id)
-      .order("sort_order", { ascending: true });
-
-    if (videoError) {
-      console.error(`Error fetching videos for lesson ${row.slug}:`, videoError);
-      continue;
-    }
-
-    lessons.push(transformLessonRow(row, videos as LessonVideoRow[]));
-  }
-
-  return lessons;
+/** Next 16 cache entries must be plain serializable data. */
+function toCacheable<T>(value: T): T {
+  return JSON.parse(JSON.stringify(value)) as T;
 }
 
-/**
- * Fetch all lessons for admin (draft + published).
- */
-export async function getAllLessonsForAdmin(): Promise<Lesson[]> {
-  const client = adminSupabase();
-  if (!client) {
-    console.error("Missing Supabase admin credentials for lessons");
-    return [];
-  }
-
-  const { data: lessonRows, error: lessonError } = await client
-    .from("lessons")
-    .select("*")
-    .order("created_at", { ascending: true });
-
-  if (lessonError) {
-    console.error("Error fetching admin lessons:", lessonError);
-    return [];
-  }
-
-  const lessons: Lesson[] = [];
-
-  for (const row of (lessonRows || []) as LessonRow[]) {
-    const { data: videos, error: videoError } = await client
-      .from("lesson_videos")
-      .select("*")
-      .eq("lesson_id", row.id)
-      .order("sort_order", { ascending: true });
-
-    if (videoError) {
-      console.error(`Error fetching videos for lesson ${row.slug}:`, videoError);
-      continue;
-    }
-
-    lessons.push(transformLessonRow(row, (videos || []) as LessonVideoRow[]));
-  }
-
-  return lessons;
+function sortVideos(videos: LessonVideoRow[] | null | undefined): LessonVideoRow[] {
+  return [...(videos ?? [])].sort((a, b) => a.sort_order - b.sort_order);
 }
 
-/**
- * Fetch a single lesson by slug with its videos
- */
-export async function getLessonBySlug(slug: string): Promise<Lesson | null> {
-  const { data: lessonRow, error: lessonError } = await supabase
-    .from("lessons")
-    .select("*")
-    .eq("slug", slug)
-    .eq("status", "published")
-    .single();
-
-  if (lessonError || !lessonRow) {
-    console.error("Error fetching lesson:", lessonError);
-    return null;
-  }
-
-  const { data: videos, error: videoError } = await supabase
-    .from("lesson_videos")
-    .select("*")
-    .eq("lesson_id", (lessonRow as LessonRow).id)
-    .order("sort_order", { ascending: true });
-
-  if (videoError) {
-    console.error(
-      `Error fetching videos for lesson ${slug}:`,
-      videoError
-    );
-    return null;
-  }
-
-  return transformLessonRow(lessonRow as LessonRow, videos as LessonVideoRow[]);
-}
-
-/**
- * Transform database lesson row to frontend Lesson type
- */
 function transformLessonRow(
   row: LessonRow,
-  videos: LessonVideoRow[]
+  videos: LessonVideoRow[],
 ): Lesson {
   return {
     slug: row.slug,
@@ -182,4 +90,71 @@ function transformLessonRow(
       },
     })),
   };
+}
+
+function rowsToLessons(rows: LessonRowWithVideos[]): Lesson[] {
+  return rows.map((row) => {
+    const { lesson_videos, ...lessonRow } = row;
+    return transformLessonRow(lessonRow, sortVideos(lesson_videos));
+  });
+}
+
+async function fetchPublishedLessons(): Promise<Lesson[]> {
+  const { data, error } = await supabase
+    .from("lessons")
+    .select(LESSON_WITH_VIDEOS_SELECT)
+    .eq("status", "published")
+    .order("created_at", { ascending: true });
+
+  if (error) {
+    console.error("Error fetching lessons:", error);
+    return [];
+  }
+
+  return rowsToLessons((data ?? []) as LessonRowWithVideos[]);
+}
+
+async function fetchAdminLessons(): Promise<Lesson[]> {
+  const client = adminSupabase();
+  if (!client) {
+    console.error("Missing Supabase admin credentials for lessons");
+    return [];
+  }
+
+  const { data, error } = await client
+    .from("lessons")
+    .select(LESSON_WITH_VIDEOS_SELECT)
+    .order("created_at", { ascending: true });
+
+  if (error) {
+    console.error("Error fetching admin lessons:", error);
+    return [];
+  }
+
+  return rowsToLessons((data ?? []) as LessonRowWithVideos[]);
+}
+
+const getCachedPublishedLessons = unstable_cache(
+  async () => toCacheable(await fetchPublishedLessons()),
+  ["published-lessons"],
+  {
+    revalidate: 60,
+    tags: [LESSONS_CACHE_TAG],
+  },
+);
+
+/** Published lessons + videos (cached, single joined query). */
+export async function getAllLessons(): Promise<Lesson[]> {
+  return getCachedPublishedLessons();
+}
+
+/** All lessons for admin (joined query, not cached). */
+export async function getAllLessonsForAdmin(): Promise<Lesson[]> {
+  return fetchAdminLessons();
+}
+
+/** Single published lesson — uses the shared lessons cache. */
+export async function getLessonBySlug(slug: string): Promise<Lesson | null> {
+  const lessons = await getAllLessons();
+  return lessons.find((lesson) => lesson.slug === slug) ?? null;
 }
