@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 
 import { getDictionary, isLocale, type Locale } from "@/lib/i18n";
 import { getPublishedPodcastById } from "@/lib/supabase/podcasts";
-import { extractYouTubeVideoId, youtubeEmbedSrc, youtubeWatchUrl } from "@/lib/youtube";
+import { extractYouTubeVideoId, youtubeEmbedSrc, youtubeThumbnailUrl } from "@/lib/youtube";
 
 export const dynamic = "force-dynamic";
 
@@ -42,50 +42,89 @@ export default async function PodcastEpisodePage({
   if (!vid) notFound();
 
   const embedSrc = youtubeEmbedSrc(vid);
-  const watchHref = youtubeWatchUrl(vid);
+  const thumb = youtubeThumbnailUrl(vid);
 
   return (
-    <div className="flex flex-col">
-      <section className="border-b border-slate-200/80 bg-white/90 px-4 py-8 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-4xl">
+    <div className="min-h-screen bg-[#F8FAFC]">
+
+      {/* Gold top accent line */}
+      <div
+        className="h-0.75"
+        style={{
+          background: "linear-gradient(to right, #d4af37 0%, rgba(212,175,55,0.4) 60%, transparent 100%)",
+        }}
+      />
+
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+
+        {/* ── Back nav ─────────────────────────────────────────── */}
+        <div className="py-7">
           <Link
             href={`/${locale}/podcast`}
-            className="text-sm font-semibold text-[#0ea5e9] transition hover:text-sky-700"
+            className="group inline-flex items-center gap-2 text-sm font-semibold text-[#0ea5e9] transition-colors hover:text-sky-700"
           >
-            ← {t.backToList}
-          </Link>
-          <p className="mt-4 text-xs font-bold uppercase tracking-[0.2em] text-[#d4af37]">{t.episodeEyebrow}</p>
-          <h1 className="mt-2 text-3xl font-bold tracking-tight text-[#1e293b] sm:text-4xl">{title}</h1>
-          {description ? (
-            <p className="mt-4 text-base leading-relaxed text-slate-600">{description}</p>
-          ) : null}
-          <p className="mt-4">
-            <a
-              href={watchHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-xl bg-[#0ea5e9] px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-sky-600"
+            <svg
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="h-3.5 w-3.5 transition-transform group-hover:-translate-x-0.5"
+              aria-hidden
             >
-              {t.watchOnYouTube}
-              <span aria-hidden>↗</span>
-            </a>
-          </p>
+              <path d="M10 3L5 8l5 5" />
+            </svg>
+            {t.backToList}
+          </Link>
         </div>
-      </section>
 
-      <main className="mx-auto w-full max-w-4xl flex-1 px-4 py-10 sm:px-6 lg:px-8">
-        <div className="overflow-hidden rounded-3xl border border-slate-900/10 bg-black shadow-2xl shadow-slate-900/18">
-          <div className="aspect-video w-full">
-            <iframe
-              title={title}
-              src={embedSrc}
-              className="h-full w-full"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowFullScreen
-            />
+        {/* ── Header: title left, thumbnail right ──────────────── */}
+        <div className="grid items-center gap-10 pb-10 lg:grid-cols-[1fr_400px]">
+
+          {/* Left — text */}
+          <div>
+            <div className="mb-4 flex items-center gap-3">
+              <span className="h-px w-8 bg-[#d4af37]" aria-hidden />
+              <p className="text-[10px] font-bold uppercase tracking-[0.35em] text-[#d4af37]">
+                {t.episodeEyebrow}
+              </p>
+            </div>
+
+            <h1 className="text-4xl font-black leading-[1.08] tracking-tight text-[#1e293b] sm:text-5xl lg:text-[3.5rem]">
+              {title}
+            </h1>
+
+            {description ? (
+              <p className="mt-5 max-w-xl text-base leading-7 text-slate-500 sm:text-lg">
+                {description}
+              </p>
+            ) : null}
+          </div>
+
+          {/* Right — thumbnail card */}
+        </div>
+
+        {/* ── Divider ──────────────────────────────────────────── */}
+        <div className="h-px bg-slate-200" aria-hidden />
+
+        {/* ── Player ───────────────────────────────────────────── */}
+        <div className="py-10">
+          <div className="overflow-hidden rounded-2xl bg-black shadow-[0_24px_64px_-12px_rgba(30,41,59,0.35)] ring-1 ring-slate-900/10">
+            <div className="aspect-video w-full">
+              <iframe
+                title={title}
+                src={embedSrc}
+                className="h-full w-full"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+                style={{ display: "block" }}
+              />
+            </div>
           </div>
         </div>
-      </main>
+
+      </div>
     </div>
   );
 }

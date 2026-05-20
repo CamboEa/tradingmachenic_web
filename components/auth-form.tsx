@@ -6,112 +6,112 @@ import { toast } from "react-toastify";
 import { signIn, signUp, type AuthState } from "@/lib/supabase/actions";
 
 interface AuthFormProps {
-  mode: "login" | "register";
-  emailLabel: string;
-  passwordLabel: string;
-  submitLabel: string;
-  locale: string;
-  redirectTo?: string;
+ mode: "login" | "register";
+ emailLabel: string;
+ passwordLabel: string;
+ submitLabel: string;
+ locale: string;
+ redirectTo?: string;
 }
 
 export function AuthForm({
-  mode,
-  emailLabel,
-  passwordLabel,
-  submitLabel,
-  locale,
-  redirectTo,
+ mode,
+ emailLabel,
+ passwordLabel,
+ submitLabel,
+ locale,
+ redirectTo,
 }: AuthFormProps) {
-  const action = mode === "login" ? signIn : signUp;
-  const [state, formAction, isPending] = useActionState<AuthState, FormData>(
-    action,
-    undefined,
-  );
+ const action = mode === "login" ? signIn : signUp;
+ const [state, formAction, isPending] = useActionState<AuthState, FormData>(
+ action,
+ undefined,
+ );
 
-  const idEmail = `${mode}-email`;
-  const idPassword = `${mode}-password`;
+ const idEmail = `${mode}-email`;
+ const idPassword = `${mode}-password`;
 
-  // signUp returns null on success (email confirmation sent)
-  const showConfirmation = mode === "register" && state === null && !isPending;
+ // signUp returns null on success (email confirmation sent)
+ const showConfirmation = mode === "register" && state === null && !isPending;
 
-  // Show toast on sign in/up
-  useEffect(() => {
-    if (isPending) return;
-    
-    if (state?.error) {
-      toast.error(state.error);
-    } else if (mode === "register" && state === null && !isPending) {
-      toast.success("Check your email to confirm your account!");
-    }
-  }, [state, isPending, mode]);
+ // Show toast on sign in/up
+ useEffect(() => {
+ if (isPending) return;
+ 
+ if (state?.error) {
+ toast.error(state.error);
+ } else if (mode === "register" && state === null && !isPending) {
+ toast.success("Check your email to confirm your account!");
+ }
+ }, [state, isPending, mode]);
 
-  if (showConfirmation) {
-    return (
-      <div className="mt-8 rounded-xl border border-[color-mix(in_oklab,var(--color-teal)_35%,var(--color-bridge))] bg-[color-mix(in_oklab,var(--color-teal)_06%,var(--color-surface))] px-5 py-6">
-        <p className="font-semibold text-[var(--color-ink)]">
-          Check your email
-        </p>
-        <p className="mt-2 text-sm leading-relaxed text-[var(--color-ink-muted)]">
-          We sent a confirmation link to your email address. Click it to
-          activate your account.
-        </p>
-      </div>
-    );
-  }
+ if (showConfirmation) {
+ return (
+ <div className="mt-8 rounded-xl border border-[color-mix(in_oklab,var(--color-teal)_35%,var(--color-bridge))] bg-[color-mix(in_oklab,var(--color-teal)_06%,var(--color-surface))] px-5 py-6">
+ <p className="font-semibold text-[var(--color-ink)]">
+ Check your email
+ </p>
+ <p className="mt-2 text-sm leading-relaxed text-[var(--color-ink-muted)]">
+ We sent a confirmation link to your email address. Click it to
+ activate your account.
+ </p>
+ </div>
+ );
+ }
 
-  return (
-    <form action={formAction} className="mt-8 space-y-5" noValidate>
-      {/* Hidden fields */}
-      <input type="hidden" name="locale" value={locale} />
-      {redirectTo && (
-        <input type="hidden" name="redirectTo" value={redirectTo} />
-      )}
+ return (
+ <form action={formAction} className="mt-8 space-y-5" noValidate>
+ {/* Hidden fields */}
+ <input type="hidden" name="locale" value={locale} />
+ {redirectTo && (
+ <input type="hidden" name="redirectTo" value={redirectTo} />
+ )}
 
-      {/* Email */}
-      <div>
-        <label
-          htmlFor={idEmail}
-          className="block text-sm font-medium text-[var(--color-ink)]"
-        >
-          {emailLabel}
-        </label>
-        <input
-          id={idEmail}
-          name="email"
-          type="email"
-          autoComplete="email"
-          required
-          disabled={isPending}
-          className="mt-2 w-full rounded-xl border border-[color-mix(in_oklab,var(--color-bridge)_65%,transparent)] bg-white/90 px-4 py-3 text-[var(--color-ink)] shadow-sm shadow-slate-900/5 outline-none transition focus:border-[var(--color-teal)] focus:ring-2 focus:ring-[color-mix(in_oklab,var(--color-teal)_22%,transparent)] disabled:opacity-60"
-        />
-      </div>
+ {/* Email */}
+ <div>
+ <label
+ htmlFor={idEmail}
+ className="block text-sm font-medium text-[var(--color-ink)]"
+ >
+ {emailLabel}
+ </label>
+ <input
+ id={idEmail}
+ name="email"
+ type="email"
+ autoComplete="email"
+ required
+ disabled={isPending}
+ className="mt-2 w-full rounded-xl border border-[color-mix(in_oklab,var(--color-bridge)_65%,transparent)] bg-white/90 px-4 py-3 text-[var(--color-ink)] outline-none transition focus:border-[var(--color-teal)] focus:ring-2 focus:ring-[color-mix(in_oklab,var(--color-teal)_22%,transparent)] disabled:opacity-60"
+ />
+ </div>
 
-      {/* Password */}
-      <div>
-        <label
-          htmlFor={idPassword}
-          className="block text-sm font-medium text-[var(--color-ink)]"
-        >
-          {passwordLabel}
-        </label>
-        <input
-          id={idPassword}
-          name="password"
-          type="password"
-          autoComplete={mode === "login" ? "current-password" : "new-password"}
-          required
-          disabled={isPending}
-          className="mt-2 w-full rounded-xl border border-[color-mix(in_oklab,var(--color-bridge)_65%,transparent)] bg-white/90 px-4 py-3 text-[var(--color-ink)] shadow-sm shadow-slate-900/5 outline-none transition focus:border-[var(--color-teal)] focus:ring-2 focus:ring-[color-mix(in_oklab,var(--color-teal)_22%,transparent)] disabled:opacity-60"
-        />
-      </div>
+ {/* Password */}
+ <div>
+ <label
+ htmlFor={idPassword}
+ className="block text-sm font-medium text-[var(--color-ink)]"
+ >
+ {passwordLabel}
+ </label>
+ <input
+ id={idPassword}
+ name="password"
+ type="password"
+ autoComplete={mode === "login" ? "current-password" : "new-password"}
+ required
+ disabled={isPending}
+ className="mt-2 w-full rounded-xl border border-[color-mix(in_oklab,var(--color-bridge)_65%,transparent)] bg-white/90 px-4 py-3 text-[var(--color-ink)] outline-none transition focus:border-[var(--color-teal)] focus:ring-2 focus:ring-[color-mix(in_oklab,var(--color-teal)_22%,transparent)] disabled:opacity-60"
+ />
+ </div>
 
-      <button
-        type="submit"
-        disabled={isPending}
-        className="w-full rounded-xl bg-[var(--color-teal)] px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-[color-mix(in_oklab,var(--color-teal)_24%,transparent)] transition hover:-translate-y-0.5 hover:brightness-105 disabled:translate-y-0 disabled:opacity-60 sm:w-auto sm:min-w-[140px]"
-      >
-        {isPending ? "Please wait…" : submitLabel}
-      </button>
-    </form>
-  );
+ <button
+ type="submit"
+ disabled={isPending}
+ className="w-full rounded-xl bg-[var(--color-teal)] px-4 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:brightness-105 disabled:translate-y-0 disabled:opacity-60 sm:w-auto sm:min-w-[140px]"
+ >
+ {isPending ? "Please wait…" : submitLabel}
+ </button>
+ </form>
+ );
 }

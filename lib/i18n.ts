@@ -64,8 +64,6 @@ export type Dictionary = {
     socialStudentsTitle: string;
     socialExpertTitle: string;
     socialExpertQuote: string;
-    continueLearningTitle: string;
-    continueLearningCta: string;
   };
   course: {
     title: string;
@@ -93,9 +91,6 @@ export type Dictionary = {
     filterPaid: string;
     noLessonsMatch: string;
     relatedLessons: string;
-    markComplete: string;
-    lessonCompleted: string;
-    signInToTrackProgress: string;
     paidVideoHint: string;
   };
   curriculumPage: {
@@ -279,8 +274,6 @@ const en: Dictionary = {
     socialExpertTitle: "Insights from your mentor",
     socialExpertQuote:
       "The education from Trading Machenic delivers serious learning value—risk, process, and mechanics explained without hype. It is built for traders who want a calm, repeatable path instead of chasing shortcuts.",
-    continueLearningTitle: "Continue learning",
-    continueLearningCta: "Resume lesson",
     sectionMarkets: "Live Markets",
     marketsTagline: "What you'll learn to read",
     marketsLead: "Gold (XAU/USD) is at the core of our curriculum. Track real-time prices on the instruments our lessons are built around.",
@@ -312,9 +305,6 @@ const en: Dictionary = {
     filterPaid: "Paid",
     noLessonsMatch: "No lessons match your search.",
     relatedLessons: "Continue with",
-    markComplete: "Mark lesson complete",
-    lessonCompleted: "You completed this lesson",
-    signInToTrackProgress: "Sign in to save your progress",
     paidVideoHint: "Hosted lesson video — use the controls to play, pause, and adjust volume.",
   },
   curriculumPage: {
@@ -529,8 +519,6 @@ const km: Dictionary = {
     socialExpertTitle: "យល់ដឹងពីអ្នកណែនាំ",
     socialExpertQuote:
       "ការអប់រំពី Trading Machenic ផ្តល់តម្លៃសិក្សាពិតប្រាកដ—ពន្យល់ហានិភ័យ ដំណើរការ និងលក្ខណៈបច្ចេកទេសដោយគ្មានសំឡេងរន្ទះ។ សាងសម្រាប់អ្នកជួញដូរដែលចង់ផ្លូវស្ងប់ និងធ្វើម្តងហើយម្តងទៀត ជំនួសការរត់តាមផ្លូវកាត់។",
-    continueLearningTitle: "បន្តសិក្សា",
-    continueLearningCta: "បន្តមេរៀន",
     sectionMarkets: "ទីផ្សារបន្តផ្ទាល់",
     marketsTagline: "អ្វីដែលអ្នកនឹងរៀនអាន",
     marketsLead: "មាស (XAU/USD) ស្ថិតនៅស្នូលនៃកម្មវិធីសិក្សារបស់យើង។ តាមដានតម្លៃជាក់ស្ដែងលើឧបករណ៍ដែលមេរៀនរបស់យើងបានបង្កើតឡើង។",
@@ -562,9 +550,6 @@ const km: Dictionary = {
     filterPaid: "បង់ប្រាក់",
     noLessonsMatch: "រកមិនឃើញមេរៀនដែលត្រូវគ្នា។",
     relatedLessons: "បន្តជាមួយ",
-    markComplete: "សម្គាល់ថាបានបញ្ចប់មេរៀន",
-    lessonCompleted: "អ្នកបានបញ្ចប់មេរៀននេះ",
-    signInToTrackProgress: "ចូលគណនីដើម្បីរក្សាវឌ្ឍនភាព",
     paidVideoHint: "វីដេអូមេរៀន — ប្រើប៊ូតុងគ្រប់គ្រងដើម្បីលេង ផ្អាក និងកែកម្រិតសំឡេង។",
   },
   curriculumPage: {

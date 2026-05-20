@@ -157,20 +157,6 @@ export type Database = {
           }
         ];
       };
-      lesson_progress: {
-        Row: {
-          user_id: string;
-          lesson_slug: string;
-          completed_at: string;
-        };
-        Insert: {
-          user_id: string;
-          lesson_slug: string;
-          completed_at?: string;
-        };
-        Update: Partial<Database["public"]["Tables"]["lesson_progress"]["Insert"]>;
-        Relationships: [];
-      };
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;

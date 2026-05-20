@@ -46,12 +46,6 @@ export function EducationLessonGrid({
 
   return (
     <>
-      {/* Stats row */}
-      <div className="mt-10 flex flex-wrap gap-3">
-        <StatPill value={lessons.length} label={dict.course.filterAll.toLowerCase()} />
-        <StatPill value={`${totalHours}h`} label="total content" />
-        <StatPill value={freeCount} label={dict.course.filterFree.toLowerCase()} />
-      </div>
 
       {/* Search + filters */}
       <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
