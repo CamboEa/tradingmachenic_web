@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { PodcastForm } from "@/components/podcast-form";
+import { PodcastForm } from "@/components/podcast/podcast-form";
 import { getPodcastForEdit } from "@/lib/supabase/actions";
 
 export const metadata = { title: "Edit podcast episode" };

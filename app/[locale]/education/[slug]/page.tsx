@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { LessonPlayer } from "@/components/lesson-player";
-import { RelatedLessons } from "@/components/related-lessons";
+import { LessonPlayer } from "@/components/education/lesson-player";
+import { RelatedLessons } from "@/components/education/related-lessons";
 import { getAllLessons, getLessonBySlug } from "@/lib/supabase/lessons";
 import { getDictionary, isLocale, type Locale } from "@/lib/i18n";
 import { isDirectVideoFileUrl } from "@/lib/video";

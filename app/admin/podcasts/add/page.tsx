@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { PodcastForm } from "@/components/podcast-form";
+import { PodcastForm } from "@/components/podcast/podcast-form";
 
 export const metadata = { title: "Add podcast episode" };
 

@@ -111,6 +111,27 @@ export type Database = {
         Update: Partial<Database["public"]["Tables"]["podcasts"]["Insert"]>;
         Relationships: [];
       };
+      blog_posts: {
+        Row: {
+          id: string;
+          created_at: string;
+          updated_at: string;
+          slug: string;
+          title_en: string;
+          title_km: string;
+          excerpt_en: string | null;
+          excerpt_km: string | null;
+          body_en: string;
+          body_km: string;
+          featured_image_url: string | null;
+          published_at: string;
+          status: PodcastStatus;
+          videos: unknown;
+        };
+        Insert: Omit<Database["public"]["Tables"]["blog_posts"]["Row"], "id" | "created_at">;
+        Update: Partial<Database["public"]["Tables"]["blog_posts"]["Insert"]>;
+        Relationships: [];
+      };
       lessons: {
         Row: {
           id: string;

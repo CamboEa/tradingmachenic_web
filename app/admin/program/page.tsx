@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { DeleteCurriculumModuleButton } from "@/components/delete-curriculum-module-button";
-import { DeleteCurriculumPhaseButton } from "@/components/delete-curriculum-phase-button";
+import { DeleteCurriculumModuleButton } from "@/components/curriculum/delete-curriculum-module-button";
+import { DeleteCurriculumPhaseButton } from "@/components/curriculum/delete-curriculum-phase-button";
 import { getCurriculum } from "@/lib/supabase/curriculum-data";
 
 export const metadata = { title: "Program Management" };

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ToolsForm } from "@/components/tools-form";
+import { ToolsForm } from "@/components/tools/tools-form";
 
 export const metadata = { title: "Add Tool" };
 

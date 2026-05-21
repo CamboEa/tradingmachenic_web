@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { getAllLessonsForAdmin } from "@/lib/supabase/lessons";
-import { LessonsList } from "@/components/lessons-list";
+import { LessonsList } from "@/components/education/lessons-list";
 
 export const metadata = { title: "Lessons" };
 

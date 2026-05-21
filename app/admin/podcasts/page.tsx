@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { DeletePodcastButton } from "@/components/delete-podcast-button";
+import { DeletePodcastButton } from "@/components/podcast/delete-podcast-button";
 import { extractYouTubeVideoId, youtubeThumbnailUrl } from "@/lib/youtube";
 import { getAllPodcasts } from "@/lib/supabase/podcasts";
 

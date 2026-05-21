@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CurriculumPhaseForm } from "@/components/curriculum-phase-form";
+import { CurriculumPhaseForm } from "@/components/curriculum/curriculum-phase-form";
 
 export const metadata = { title: "New curriculum phase" };
 

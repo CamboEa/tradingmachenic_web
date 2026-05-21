@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import { SiteFooter } from "@/components/site-footer";
-import { SiteHeader } from "@/components/site-header";
-import { TradingViewTickerTape } from "@/components/tradingview-ticker-tape";
+import { SiteFooter } from "@/components/layout/site-footer";
+import { SiteHeader } from "@/components/layout/site-header";
+import { TradingViewTickerTape } from "@/components/tradingview/tradingview-ticker-tape";
 import { getDictionary, isLocale, type Locale } from "@/lib/i18n";
 import { getSessionUser } from "@/lib/supabase/server";
 

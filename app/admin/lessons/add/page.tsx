@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { LessonForm } from "@/components/lesson-form";
+import { LessonForm } from "@/components/education/lesson-form";
 
 export const metadata = { title: "Add Lesson" };
 

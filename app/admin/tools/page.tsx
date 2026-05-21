@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { getAllTools } from "@/lib/supabase/tools";
-import { DeleteToolButton } from "@/components/delete-tool-button";
+import { DeleteToolButton } from "@/components/tools/delete-tool-button";
 
 export const metadata = { title: "Tools" };
 

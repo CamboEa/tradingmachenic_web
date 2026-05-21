@@ -14,6 +14,12 @@ import {
   type ToolGalleryItem,
 } from "@/lib/supabase/tool-gallery";
 import type { Podcast } from "@/lib/supabase/podcasts";
+import type { BlogPost } from "@/lib/supabase/blog";
+import {
+  parseBlogVideos,
+  serializeBlogVideosForDb,
+  type BlogVideoItem,
+} from "@/lib/supabase/blog-videos";
 import { slugify } from "@/lib/slug";
 import { extractYouTubeVideoId, resolveLessonVideoEmbedUrl } from "@/lib/youtube";
 
@@ -534,6 +540,123 @@ export async function deletePodcast(id: string): Promise<{ error?: string }> {
   if (error) return { error: error.message };
   revalidatePath("/admin/podcasts");
   revalidatePodcastPaths(id);
+  return {};
+}
+
+type BlogFormData = {
+  slug: string;
+  title_en: string;
+  title_km: string;
+  excerpt_en?: string;
+  excerpt_km?: string;
+  body_en: string;
+  body_km: string;
+  featured_image_url?: string;
+  published_at: string;
+  status: "draft" | "published";
+  videos?: BlogVideoItem[];
+};
+
+function revalidateBlogPaths(slug?: string) {
+  for (const loc of locales) {
+    revalidatePath(`/${loc}/blog`);
+    if (slug) revalidatePath(`/${loc}/blog/${slug}`);
+  }
+}
+
+export async function getBlogForEdit(id: string): Promise<BlogPost | null> {
+  const supabase = await createAdminClient();
+  const { data, error } = await supabase.from("blog_posts").select("*").eq("id", id).single();
+  if (error) return null;
+  const row = data as Record<string, unknown>;
+  return { ...(row as unknown as Omit<BlogPost, "videos">), videos: parseBlogVideos(row.videos) };
+}
+
+export async function createBlogPost(
+  formData: BlogFormData,
+): Promise<{ error?: string; success?: boolean; slug?: string }> {
+  const normalizedSlug = slugify(formData.slug);
+  if (!normalizedSlug) return { error: "Slug is required" };
+
+  const supabase = await createAdminClient();
+  try {
+    const row = {
+      slug: normalizedSlug,
+      title_en: formData.title_en.trim(),
+      title_km: formData.title_km.trim(),
+      excerpt_en: formData.excerpt_en?.trim() || null,
+      excerpt_km: formData.excerpt_km?.trim() || null,
+      body_en: formData.body_en.trim(),
+      body_km: formData.body_km.trim(),
+      featured_image_url: formData.featured_image_url?.trim() || null,
+      published_at: formData.published_at,
+      status: formData.status,
+      videos: serializeBlogVideosForDb(formData.videos ?? []),
+      updated_at: new Date().toISOString(),
+    };
+
+    const { data, error } = await supabase.from("blog_posts").insert([row]).select("slug").single();
+    if (error) {
+      if (error.code === "23505") return { error: "A post with this slug already exists" };
+      return { error: error.message };
+    }
+
+    revalidatePath("/admin/blog");
+    revalidateBlogPaths(data?.slug);
+    return { success: true, slug: data?.slug };
+  } catch (err) {
+    return { error: err instanceof Error ? err.message : "Failed to create post" };
+  }
+}
+
+export async function updateBlogPost(
+  id: string,
+  originalSlug: string,
+  formData: BlogFormData,
+): Promise<{ error?: string; success?: boolean; slug?: string }> {
+  const normalizedSlug = slugify(formData.slug);
+  if (!normalizedSlug) return { error: "Slug is required" };
+
+  const supabase = await createAdminClient();
+  try {
+    const { error } = await supabase
+      .from("blog_posts")
+      .update({
+        slug: normalizedSlug,
+        title_en: formData.title_en.trim(),
+        title_km: formData.title_km.trim(),
+        excerpt_en: formData.excerpt_en?.trim() || null,
+        excerpt_km: formData.excerpt_km?.trim() || null,
+        body_en: formData.body_en.trim(),
+        body_km: formData.body_km.trim(),
+        featured_image_url: formData.featured_image_url?.trim() || null,
+        published_at: formData.published_at,
+        status: formData.status,
+        videos: serializeBlogVideosForDb(formData.videos ?? []),
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", id);
+
+    if (error) {
+      if (error.code === "23505") return { error: "A post with this slug already exists" };
+      return { error: error.message };
+    }
+
+    revalidatePath("/admin/blog");
+    revalidateBlogPaths(originalSlug);
+    revalidateBlogPaths(normalizedSlug);
+    return { success: true, slug: normalizedSlug };
+  } catch (err) {
+    return { error: err instanceof Error ? err.message : "Failed to update post" };
+  }
+}
+
+export async function deleteBlogPost(id: string, slug: string): Promise<{ error?: string }> {
+  const supabase = await createAdminClient();
+  const { error } = await supabase.from("blog_posts").delete().eq("id", id);
+  if (error) return { error: error.message };
+  revalidatePath("/admin/blog");
+  revalidateBlogPaths(slug);
   return {};
 }
 

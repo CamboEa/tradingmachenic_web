@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Noto_Sans_Khmer } from "next/font/google";
 
-import { HtmlLang } from "@/components/html-lang";
-import { ToastProvider } from "@/components/toast-provider";
+import { HtmlLang } from "@/components/layout/html-lang";
+import { ToastProvider } from "@/components/shared/toast-provider";
 
 import "./globals.css";
 

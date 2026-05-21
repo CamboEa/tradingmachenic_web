@@ -120,6 +120,127 @@ select {
   animation: hero-ambient 14s ease-in-out infinite;
 }
 
+/* ── Hero entrance (above-the-fold, play on mount) ── */
+@keyframes hero-enter-up {
+  from { opacity: 0; transform: translateY(1.25rem); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes hero-enter-left {
+  from { opacity: 0; transform: translateX(-0.875rem); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes hero-photo-reveal {
+  from { opacity: 0; transform: scale(1.04); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.hero-enter-badge {
+  animation: hero-enter-left 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: 0.05s;
+}
+.hero-enter-headline {
+  animation: hero-enter-up 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: 0.18s;
+}
+.hero-enter-subhead {
+  animation: hero-enter-up 0.72s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: 0.34s;
+}
+.hero-enter-ctas {
+  animation: hero-enter-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: 0.5s;
+}
+.hero-enter-photo {
+  animation: hero-photo-reveal 1.1s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: 0.1s;
+}
+
+/* ── Directional reveal variants ── */
+@keyframes reveal-left {
+  from { opacity: 0; transform: translateX(-1.75rem); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes reveal-right {
+  from { opacity: 0; transform: translateX(1.75rem); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes reveal-scale {
+  from { opacity: 0; transform: scale(0.93); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes reveal-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.reveal--left  { transform: translateX(-1.75rem); }
+.reveal--right { transform: translateX(1.75rem); }
+.reveal--scale { transform: scale(0.93); }
+.reveal--fade  { transform: none; }
+
+.reveal--left.reveal-visible  { animation-name: reveal-left; }
+.reveal--right.reveal-visible { animation-name: reveal-right; }
+.reveal--scale.reveal-visible { animation-name: reveal-scale; }
+.reveal--fade.reveal-visible  { animation-name: reveal-fade; }
+
+/* ── Shimmer sweep on gold accent bar (fires once on reveal) ── */
+@keyframes shimmer-sweep {
+  from { transform: translateX(-100%); }
+  to   { transform: translateX(250%); }
+}
+
+.shimmer-bar {
+  position: relative;
+  overflow: hidden;
+}
+.shimmer-bar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.65) 50%, transparent 100%);
+  transform: translateX(-100%);
+}
+.reveal-visible .shimmer-bar::after {
+  animation: shimmer-sweep 0.7s ease-out forwards;
+  animation-delay: 0.6s;
+}
+
+/* ── Connector line draw left → right ── */
+@keyframes line-draw {
+  from { transform: scaleX(0); opacity: 0.2; }
+  to   { transform: scaleX(1); opacity: 1; }
+}
+
+.connector-line {
+  transform-origin: left center;
+  transform: scaleX(0);
+  opacity: 0;
+}
+.connector-line-visible {
+  animation: line-draw 1.1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* ── CTA badge subtle float ── */
+@keyframes float-badge {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-2.5px); }
+}
+
+.float-badge {
+  display: inline-block;
+  animation: float-badge 3.5s ease-in-out infinite;
+}
+
+/* ── CTA radial glow pulse ── */
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.8; }
+  50%       { opacity: 1; }
+}
+
+.cta-glow {
+  animation: glow-pulse 6s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .reveal {
     opacity: 1;
@@ -134,5 +255,45 @@ select {
     animation: none;
     opacity: 0.35;
     transform: none;
+  }
+
+  .reveal--left,
+  .reveal--right,
+  .reveal--scale,
+  .reveal--fade {
+    opacity: 1;
+    transform: none;
+  }
+
+  .reveal--left.reveal-visible,
+  .reveal--right.reveal-visible,
+  .reveal--scale.reveal-visible,
+  .reveal--fade.reveal-visible {
+    animation: none;
+  }
+
+  .hero-enter-badge,
+  .hero-enter-headline,
+  .hero-enter-subhead,
+  .hero-enter-ctas,
+  .hero-enter-photo {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .shimmer-bar::after,
+  .float-badge,
+  .cta-glow {
+    animation: none;
+  }
+
+  .connector-line {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+
+  .connector-line-visible {
+    animation: none;
   }
 }

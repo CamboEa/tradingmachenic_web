@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { AuthForm } from "@/components/auth-form";
-import { SiteLogo } from "@/components/site-logo";
+import { AuthForm } from "@/components/auth/auth-form";
+import { SiteLogo } from "@/components/shared/site-logo";
 import { getDictionary, isLocale, type Locale } from "@/lib/i18n";
 
 export default async function LoginPage({

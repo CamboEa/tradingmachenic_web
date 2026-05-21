@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { CurriculumPhaseForm } from "@/components/curriculum-phase-form";
+import { CurriculumPhaseForm } from "@/components/curriculum/curriculum-phase-form";
 import { getCurriculumPhaseForEdit } from "@/lib/supabase/curriculum-data";
 
 export const metadata = { title: "Edit curriculum phase" };

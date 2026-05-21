@@ -1,10 +1,12 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { HomeHeroSplit } from "@/components/home-hero-split";
-import { Reveal } from "@/components/reveal";
-import { TradingViewForexHeatmap } from "@/components/tradingview-forex-heatmap";
-import { TradingViewSymbolOverview } from "@/components/tradingview-symbol-overview";
+import { ConnectorLine } from "@/components/shared/connector-line";
+import { CountUp } from "@/components/shared/count-up";
+import { HomeHeroSplit } from "@/components/marketing/home-hero-split";
+import { Reveal } from "@/components/shared/reveal";
+import { TradingViewForexHeatmap } from "@/components/tradingview/tradingview-forex-heatmap";
+import { TradingViewSymbolOverview } from "@/components/tradingview/tradingview-symbol-overview";
 import { getAllLessons } from "@/lib/supabase/lessons";
 import { getDictionary, isLocale, type Locale } from "@/lib/i18n";
 
@@ -35,7 +37,7 @@ export default async function HomePage({
 
         {/* ── Principles ── */}
         <section aria-labelledby="home-principles">
-          <Reveal>
+          <Reveal effect="left">
             <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
               <div>
                 <h2
@@ -57,7 +59,7 @@ export default async function HomePage({
                   <span className="text-5xl font-semibold tabular-nums text-[color-mix(in_oklab,var(--color-bridge)_95%,var(--color-gold))] transition group-hover:text-[color-mix(in_oklab,var(--color-gold)_55%,var(--color-bridge))]">
                     {String(i + 1).padStart(2, "0")}
                   </span>
-                  <div className="mt-4 h-1 w-12 rounded-full bg-(--color-gold)" />
+                  <div className="shimmer-bar mt-4 h-1 w-12 rounded-full bg-(--color-gold)" />
                   <h3 className="mt-5 text-lg font-semibold text-(--color-ink)">{pillar.title}</h3>
                   <p className="mt-3 text-sm leading-relaxed text-(--color-ink-muted)">{pillar.body}</p>
                 </article>
@@ -68,7 +70,7 @@ export default async function HomePage({
 
         {/* ── How it works ── */}
         <section className="mt-24" aria-labelledby="home-how">
-          <Reveal>
+          <Reveal effect="fade">
             <h2
               id="home-how"
               className="text-center text-xs font-semibold uppercase tracking-[0.2em] text-(--color-gold)"
@@ -77,10 +79,7 @@ export default async function HomePage({
             </h2>
           </Reveal>
           <div className="relative mt-12 lg:mt-16">
-            <div
-              className="pointer-events-none absolute left-[12.5%] right-[12.5%] top-9 hidden h-px bg-[linear-gradient(90deg,transparent,color-mix(in_oklab,var(--color-bridge)_85%,transparent)_15%,color-mix(in_oklab,var(--color-gold)_45%,var(--color-bridge))_50%,color-mix(in_oklab,var(--color-bridge)_85%,transparent)_85%,transparent)] lg:block"
-              aria-hidden
-            />
+            <ConnectorLine className="pointer-events-none absolute left-[12.5%] right-[12.5%] top-9 hidden h-px bg-[linear-gradient(90deg,transparent,color-mix(in_oklab,var(--color-bridge)_85%,transparent)_15%,color-mix(in_oklab,var(--color-gold)_45%,var(--color-bridge))_50%,color-mix(in_oklab,var(--color-bridge)_85%,transparent)_85%,transparent)] lg:block" />
             <ol className="grid gap-10 lg:grid-cols-3 lg:gap-6">
               {dict.home.howSteps.map((step, i) => (
                 <li key={step.title} className="relative flex flex-col items-center">
@@ -99,7 +98,7 @@ export default async function HomePage({
 
         {/* ── Live Markets (Symbol Overview) ── */}
         <section className="mt-24" aria-labelledby="home-markets">
-          <Reveal>
+          <Reveal effect="left">
             <div className="mb-8">
               <h2
                 id="home-markets"
@@ -126,7 +125,7 @@ export default async function HomePage({
           aria-labelledby="home-learn"
         >
           <div className="grid gap-10 p-8 lg:grid-cols-2 lg:gap-16 lg:p-12">
-            <Reveal>
+            <Reveal effect="left">
               <div>
                 <h2
                   id="home-learn"
@@ -150,14 +149,14 @@ export default async function HomePage({
                 </ul>
               </div>
             </Reveal>
-            <Reveal delayMs={110}>
+            <Reveal effect="right" delayMs={110}>
               <div className="flex h-full flex-col justify-between gap-8 rounded-2xl bg-[color-mix(in_oklab,var(--color-teal)_07%,var(--color-surface))] p-8 ring-1 ring-[color-mix(in_oklab,var(--color-teal)_18%,var(--color-bridge))]">
                 <div>
                   <p className="text-sm font-medium text-(--color-ink-soft)">
                     {dict.course.lessonsSummary.replace("{count}", String(lessonCount))}
                   </p>
                   <p className="mt-4 text-3xl font-semibold tabular-nums text-(--color-ink)">
-                    {lessonCount}
+                    <CountUp end={lessonCount} />
                     <span className="ml-2 text-lg font-normal text-(--color-ink-muted)">
                       {dict.home.lessonsNoun}
                     </span>
@@ -177,7 +176,7 @@ export default async function HomePage({
 
         {/* ── Forex Heatmap ── */}
         <section className="mt-24" aria-labelledby="home-heatmap">
-          <Reveal>
+          <Reveal effect="left">
             <div className="mb-8">
               <h2
                 id="home-heatmap"
@@ -200,7 +199,7 @@ export default async function HomePage({
 
         {/* ── Professional standards ── */}
         <section className="mt-24" aria-labelledby="home-approach">
-          <Reveal>
+          <Reveal effect="left">
             <div>
               <h2
                 id="home-approach"
@@ -216,7 +215,7 @@ export default async function HomePage({
           <ul className="mt-10 grid gap-4 sm:grid-cols-3">
             {dict.home.approachItems.map((item, i) => (
               <li key={item} className="min-h-0">
-                <Reveal className="h-full" delayMs={i * 75}>
+                <Reveal className="h-full" effect="scale" delayMs={i * 75}>
                   <div className="h-full rounded-2xl border border-[color-mix(in_oklab,var(--color-bridge)_55%,transparent)] bg-[color-mix(in_oklab,var(--color-surface)_98%,var(--color-background))] p-6 text-sm leading-relaxed text-(--color-ink-muted)">
                     {item}
                   </div>
@@ -234,11 +233,11 @@ export default async function HomePage({
         aria-labelledby="home-cta"
       >
         <div
-          className="absolute inset-0 bg-[radial-gradient(circle_at_18%_50%,rgba(212,175,55,0.18),transparent_22rem),radial-gradient(circle_at_82%_40%,rgba(14,165,233,0.18),transparent_24rem)]"
+          className="cta-glow absolute inset-0 bg-[radial-gradient(circle_at_18%_50%,rgba(212,175,55,0.18),transparent_22rem),radial-gradient(circle_at_82%_40%,rgba(14,165,233,0.18),transparent_24rem)]"
           aria-hidden
         />
         <div className="relative mx-auto max-w-3xl text-center">
-          <p className="text-xs font-bold uppercase tracking-[0.25em] text-[#d4af37]">
+          <p className="float-badge text-xs font-bold uppercase tracking-[0.25em] text-[#d4af37]">
             Trading Machenic
           </p>
           <h2

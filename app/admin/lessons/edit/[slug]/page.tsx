@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getLessonForEdit } from "@/lib/supabase/actions";
-import { LessonForm } from "@/components/lesson-form";
+import { LessonForm } from "@/components/education/lesson-form";
 
 export const metadata = { title: "Edit Lesson" };
 

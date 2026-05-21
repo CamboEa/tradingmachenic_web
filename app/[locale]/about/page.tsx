@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { Reveal } from "@/components/reveal";
+import { Reveal } from "@/components/shared/reveal";
 import { getDictionary, isLocale, type Locale } from "@/lib/i18n";
 
 export async function generateMetadata({

@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 
-import { EducationLessonGrid } from "@/components/education-lesson-grid";
+import { EducationLessonGrid } from "@/components/education/education-lesson-grid";
 import { getAllLessons } from "@/lib/supabase/lessons";
 import { getDictionary, isLocale, type Locale } from "@/lib/i18n";
 

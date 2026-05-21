@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getToolForEdit } from "@/lib/supabase/actions";
-import { ToolsForm } from "@/components/tools-form";
+import { ToolsForm } from "@/components/tools/tools-form";
 
 export const metadata = { title: "Edit Tool" };
 

@@ -14,6 +14,7 @@ export type Dictionary = {
     curriculum: string;
     tools: string;
     podcast: string;
+    blog: string;
     about: string;
     /** Primary nav overflow — opens menu with extra links */
     more: string;
@@ -126,6 +127,17 @@ export type Dictionary = {
     watchOnYouTube: string;
     episodeEyebrow: string;
   };
+  blogPage: {
+    eyebrow: string;
+    title: string;
+    intro: string;
+    emptyTitle: string;
+    emptyBody: string;
+    readArticle: string;
+    backToList: string;
+    articleEyebrow: string;
+    videoHeading: string;
+  };
   registerPage: {
     title: string;
     intro: string;
@@ -189,6 +201,7 @@ const en: Dictionary = {
     curriculum: "Curriculum",
     tools: "Tools",
     podcast: "Podcast",
+    blog: "Blog",
     about: "About",
     more: "More",
     register: "Register",
@@ -347,6 +360,19 @@ const en: Dictionary = {
     watchOnYouTube: "Watch on YouTube",
     episodeEyebrow: "Episode",
   },
+  blogPage: {
+    eyebrow: "Market insights",
+    title: "Lesson blog & daily market dose",
+    intro:
+      "Structured articles on macro moves, risk, and mechanics—written for serious traders, in English and Khmer.",
+    emptyTitle: "Articles coming soon",
+    emptyBody:
+      "When the team publishes market updates from the admin panel, they will appear here.",
+    readArticle: "Read article",
+    backToList: "All articles",
+    articleEyebrow: "Market update",
+    videoHeading: "Video",
+  },
   registerPage: {
     title: "Create an account",
     intro:
@@ -434,6 +460,7 @@ const km: Dictionary = {
     curriculum: "កម្មវិធីសិក្សា",
     tools: "ឧបករណ៍",
     podcast: "ប៉ូដ្យាកាស",
+    blog: "ប្លុក",
     about: "អំពី",
     more: "ច្រើនទៀត",
     register: "ចុះឈ្មោះ",
@@ -591,6 +618,18 @@ const km: Dictionary = {
     backToList: "វគ្គទាំងអស់",
     watchOnYouTube: "មើលនៅ YouTube",
     episodeEyebrow: "វគ្គ",
+  },
+  blogPage: {
+    eyebrow: "យល់ដឹងទីផ្សារ",
+    title: "ប្លុកមេរៀន និងព័ត៌មានទីផ្សារប្រចាំថ្ងៃ",
+    intro:
+      "អត្ថបទដែលមានរចនាសម្ព័ន្ធ អំពីចលនាម៉ាក្រូ ហានិភ័យ និងលក្ខណៈបច្ចេកទេស—សម្រាប់អ្នកជំនាញពិតប្រាកដ ជាភាសាអង់គ្លេស និងខ្មែរ។",
+    emptyTitle: "អត្ថបទនឹងមកដល់ឆាប់ៗ",
+    emptyBody: "នៅពេលអត្ថបទត្រូវបានផ្សាយពីផ្ទាំងគ្រប់គ្រង ពួកវានឹងបង្ហាញនៅទីនេះ។",
+    readArticle: "អានអត្ថបទ",
+    backToList: "អត្ថបទទាំងអស់",
+    articleEyebrow: "ព័ត៌មានទីផ្សារ",
+    videoHeading: "វីដេអូ",
   },
   registerPage: {
     title: "បង្កើតគណនី",

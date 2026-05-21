@@ -1,7 +1,7 @@
 import { Fragment } from "react";
 import { notFound } from "next/navigation";
 
-import { Reveal } from "@/components/reveal";
+import { Reveal } from "@/components/shared/reveal";
 import type { CurriculumAccent, CurriculumWeek } from "@/lib/curriculum";
 import { getDictionary, isLocale, type Locale } from "@/lib/i18n";
 import { getCurriculum } from "@/lib/supabase/curriculum-data";
