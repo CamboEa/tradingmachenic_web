@@ -25,84 +25,239 @@ export default async function BlogIndexPage({
   const dict = await getDictionary(locale);
   const t = dict.blogPage;
   const posts = await getPublishedBlogPosts();
+  const [featured, ...rest] = posts;
+  const latest = rest.slice(0, 4);
+  const more = rest.slice(4);
+  const hasLatest = latest.length > 0;
 
   return (
-    <div className="flex flex-col">
-      <section className="relative overflow-hidden bg-[#1e293b] px-4 py-16 sm:px-6 lg:px-8">
-        <div
-          className="absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,rgba(212,175,55,0.18),transparent_24rem),radial-gradient(circle_at_86%_10%,rgba(14,165,233,0.2),transparent_26rem)]"
-          aria-hidden
-        />
-        <div className="relative mx-auto max-w-7xl">
-          <p className="text-xs font-bold uppercase tracking-[0.25em] text-[#d4af37]">{t.eyebrow}</p>
-          <h1 className="mt-3 max-w-3xl text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl">
-            {t.title}
-          </h1>
-          <p className="mt-4 max-w-2xl text-base leading-7 text-slate-300">{t.intro}</p>
-        </div>
-      </section>
-
-      <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#F8FAFC] text-[#0f172a]">
+      <main className="mx-auto w-full max-w-7xl flex-1 px-4 pb-16 pt-10 sm:px-6 lg:px-8">
         {posts.length === 0 ? (
-          <div className="rounded-2xl border border-[#d4af37]/25 bg-[#d4af37]/5 px-8 py-14 text-center">
+          <div className="rounded-none border border-[#d4af37]/25 bg-[#d4af37]/5 px-8 py-14 text-center">
             <p className="text-xl font-bold text-[#1e293b]">{t.emptyTitle}</p>
             <p className="mx-auto mt-3 max-w-lg text-slate-500">{t.emptyBody}</p>
           </div>
         ) : (
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {posts.map((post) => {
-              const title = locale === "km" ? post.title_km : post.title_en;
-              const excerpt = locale === "km" ? post.excerpt_km : post.excerpt_en;
+          <div>
+            <div className="mb-8 flex flex-col gap-3 border-b border-slate-200 pb-4">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-400">
+                {t.eyebrow}
+              </p>
+              <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+                <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+                  {t.title}
+                </h1>
+                <p className="max-w-xl text-sm leading-relaxed text-slate-500">{t.intro}</p>
+              </div>
+            </div>
 
-              return (
+            <div className="grid gap-8 lg:grid-cols-12">
+              {featured ? (
                 <Link
-                  key={post.id}
-                  href={`/${locale}/blog/${post.slug}`}
-                  className="group relative flex flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm transition hover:-translate-y-1 hover:border-[color-mix(in_oklab,#0ea5e9_28%,#cbd5e1)] hover:shadow-md"
+                  href={`/${locale}/blog/${featured.slug}`}
+                  className={[
+                    "group relative overflow-hidden rounded-none border border-slate-200/80 bg-white shadow-sm transition",
+                    "hover:-translate-y-1 hover:border-[color-mix(in_oklab,#0ea5e9_30%,#cbd5e1)] hover:shadow-lg",
+                    "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0ea5e9] focus-visible:outline-solid",
+                    hasLatest ? "lg:col-span-8" : "lg:col-span-12",
+                  ].join(" ")}
+                  aria-label={locale === "km" ? featured.title_km : featured.title_en}
                 >
-                  <div
-                    className="pointer-events-none absolute inset-x-0 top-0 z-10 h-0.75 bg-linear-to-r from-[#d4af37] via-[#d4af37]/60 to-transparent"
-                    aria-hidden
-                  />
-                  <div className="relative aspect-[16/10] overflow-hidden bg-slate-100">
-                    {post.featured_image_url ? (
+                  <div className="relative aspect-video overflow-hidden bg-slate-100">
+                    {featured.featured_image_url ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
-                        src={post.featured_image_url}
-                        alt=""
+                        src={featured.featured_image_url}
+                        alt={locale === "km" ? featured.title_km : featured.title_en}
+                        loading="lazy"
                         className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
                       />
                     ) : (
-                      <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-slate-100 via-white to-sky-50 text-4xl text-slate-300">
-                        📰
+                      <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-slate-100 via-white to-sky-50">
+                        <svg
+                          viewBox="0 0 64 64"
+                          className="h-14 w-14 text-slate-300"
+                          aria-hidden
+                          fill="none"
+                        >
+                          <rect x="10" y="12" width="44" height="40" rx="8" stroke="currentColor" strokeWidth="2" />
+                          <path
+                            d="M18 42l10-12 9 7 9-13"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                          <circle cx="28" cy="30" r="2.5" fill="currentColor" />
+                          <circle cx="37" cy="37" r="2.5" fill="currentColor" />
+                          <circle cx="46" cy="24" r="2.5" fill="currentColor" />
+                        </svg>
                       </div>
                     )}
                   </div>
-                  <div className="flex flex-1 flex-col p-6">
+                  <div className="flex flex-col p-6 sm:p-7">
                     <time
-                      dateTime={post.published_at}
-                      className="text-xs font-semibold uppercase tracking-wider text-[#0ea5e9]"
+                      dateTime={featured.published_at}
+                      className="text-[11px] font-semibold uppercase tracking-[0.25em] text-slate-400"
                     >
-                      {formatArticleDate(post.published_at, locale)}
+                      {formatArticleDate(featured.published_at, locale)}
                     </time>
-                    <h2 className="mt-3 text-lg font-bold leading-snug text-[#1e293b] transition group-hover:text-[#0ea5e9]">
-                      {title}
+                    <h2 className="mt-3 text-xl font-bold leading-snug text-slate-900 transition group-hover:text-[#0ea5e9] sm:text-2xl">
+                      {locale === "km" ? featured.title_km : featured.title_en}
                     </h2>
-                    {excerpt ? (
-                      <p className="mt-2 line-clamp-3 flex-1 text-sm leading-relaxed text-slate-500">
-                        {excerpt}
+                    {(locale === "km" ? featured.excerpt_km : featured.excerpt_en) ? (
+                      <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-slate-500">
+                        {locale === "km" ? featured.excerpt_km : featured.excerpt_en}
                       </p>
                     ) : null}
-                    <span className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-[#0ea5e9]">
+                    <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-[#0ea5e9]">
                       {t.readArticle}
-                      <span aria-hidden className="transition group-hover:translate-x-0.5">
-                        →
-                      </span>
+                      <svg
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                        className="h-4 w-4 transition group-hover:translate-x-0.5"
+                        aria-hidden
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M4 10a.75.75 0 0 1 .75-.75h7.69l-2.22-2.22a.75.75 0 1 1 1.06-1.06l3.5 3.5a.75.75 0 0 1 0 1.06l-3.5 3.5a.75.75 0 1 1-1.06-1.06l2.22-2.22H4.75A.75.75 0 0 1 4 10Z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
                     </span>
                   </div>
                 </Link>
-              );
-            })}
+              ) : null}
+
+              {hasLatest ? (
+                <aside className="lg:col-span-4">
+                  <div className="flex items-center justify-between border-b border-slate-200 pb-2">
+                    <p className="text-xs font-semibold uppercase tracking-[0.25em] text-slate-400">
+                      Latest
+                    </p>
+                  </div>
+                  <ul className="mt-4 space-y-4">
+                    {latest.map((post) => {
+                      const title = locale === "km" ? post.title_km : post.title_en;
+                      const excerpt = locale === "km" ? post.excerpt_km : post.excerpt_en;
+                      return (
+                        <li key={post.id} className="border-b border-slate-100 pb-4 last:border-b-0 last:pb-0">
+                          <Link
+                            href={`/${locale}/blog/${post.slug}`}
+                            className="group block"
+                            aria-label={title}
+                          >
+                            <time
+                              dateTime={post.published_at}
+                              className="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-400"
+                            >
+                              {formatArticleDate(post.published_at, locale)}
+                            </time>
+                            <p className="mt-2 line-clamp-2 text-sm font-semibold text-slate-900 transition group-hover:text-[#0ea5e9]">
+                              {title}
+                            </p>
+                            {excerpt ? (
+                              <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-slate-500">
+                                {excerpt}
+                              </p>
+                            ) : null}
+                          </Link>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </aside>
+              ) : null}
+            </div>
+
+            {more.length > 0 ? (
+              <section className="mt-12">
+                <div className="flex items-center justify-between border-b border-slate-200 pb-2">
+                  <p className="text-xs font-semibold uppercase tracking-[0.25em] text-slate-400">
+                    More stories
+                  </p>
+                </div>
+                <div className="mt-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                  {more.map((post) => {
+                    const title = locale === "km" ? post.title_km : post.title_en;
+                    const excerpt = locale === "km" ? post.excerpt_km : post.excerpt_en;
+                    return (
+                      <Link
+                        key={post.id}
+                        href={`/${locale}/blog/${post.slug}`}
+                        className="group flex h-full flex-col overflow-hidden rounded-none border border-slate-200/80 bg-white transition hover:-translate-y-1 hover:border-[color-mix(in_oklab,#0ea5e9_30%,#cbd5e1)] hover:shadow-md"
+                        aria-label={title}
+                      >
+                        <div className="relative aspect-16/10 overflow-hidden bg-slate-100">
+                          {post.featured_image_url ? (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img
+                              src={post.featured_image_url}
+                              alt={title}
+                              loading="lazy"
+                              className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
+                            />
+                          ) : (
+                            <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-slate-100 via-white to-sky-50">
+                              <svg
+                                viewBox="0 0 64 64"
+                                className="h-12 w-12 text-slate-300"
+                                aria-hidden
+                                fill="none"
+                              >
+                                <rect x="10" y="12" width="44" height="40" rx="8" stroke="currentColor" strokeWidth="2" />
+                                <path
+                                  d="M18 42l10-12 9 7 9-13"
+                                  stroke="currentColor"
+                                  strokeWidth="2"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                />
+                                <circle cx="28" cy="30" r="2.5" fill="currentColor" />
+                                <circle cx="37" cy="37" r="2.5" fill="currentColor" />
+                                <circle cx="46" cy="24" r="2.5" fill="currentColor" />
+                              </svg>
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex flex-1 flex-col p-5">
+                          <time
+                            dateTime={post.published_at}
+                            className="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-400"
+                          >
+                            {formatArticleDate(post.published_at, locale)}
+                          </time>
+                          <h3 className="mt-3 text-base font-semibold leading-snug text-slate-900 transition group-hover:text-[#0ea5e9]">
+                            {title}
+                          </h3>
+                          {excerpt ? (
+                            <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-slate-500">
+                              {excerpt}
+                            </p>
+                          ) : null}
+                          <span className="mt-4 inline-flex items-center gap-2 text-xs font-semibold text-[#0ea5e9]">
+                            {t.readArticle}
+                            <svg
+                              viewBox="0 0 20 20"
+                              fill="currentColor"
+                              className="h-3.5 w-3.5 transition group-hover:translate-x-0.5"
+                              aria-hidden
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M4 10a.75.75 0 0 1 .75-.75h7.69l-2.22-2.22a.75.75 0 1 1 1.06-1.06l3.5 3.5a.75.75 0 0 1 0 1.06l-3.5 3.5a.75.75 0 1 1-1.06-1.06l2.22-2.22H4.75A.75.75 0 0 1 4 10Z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                          </span>
+                        </div>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </section>
+            ) : null}
           </div>
         )}
       </main>

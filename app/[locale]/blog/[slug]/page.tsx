@@ -49,51 +49,45 @@ export default async function BlogArticlePage({
   const title = locale === "km" ? post.title_km : post.title_en;
   const excerpt = locale === "km" ? post.excerpt_km : post.excerpt_en;
   const body = locale === "km" ? post.body_km : post.body_en;
+  const hasVideos = post.videos.length > 0;
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC]">
-      <div
-        className="h-0.75"
-        style={{
-          background:
-            "linear-gradient(to right, #d4af37 0%, rgba(212,175,55,0.45) 55%, transparent 100%)",
-        }}
-        aria-hidden
-      />
-
-      <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-        <nav className="py-7">
-          <Link
-            href={`/${locale}/blog`}
-            className="group inline-flex items-center gap-2 text-sm font-semibold text-[#0ea5e9] hover:text-sky-700"
-          >
-            <svg
-              viewBox="0 0 16 16"
-              fill="currentColor"
-              className="h-4 w-4 transition group-hover:-translate-x-0.5"
-              aria-hidden
+    <div className="min-h-screen bg-[#F8FAFC] text-[#0f172a]">
+      <main className="mx-auto max-w-5xl px-4 pb-16 pt-10 sm:px-6 lg:px-8">
+        <div className="border-b border-slate-200 pb-4">
+          <nav className="flex items-center justify-between gap-4">
+            <Link
+              href={`/${locale}/blog`}
+              className="group inline-flex items-center gap-2 text-sm font-semibold text-slate-600 transition hover:text-[#0ea5e9]"
             >
-              <path
-                fillRule="evenodd"
-                d="M14 8a.75.75 0 0 1-.75.75H4.56l3.22 3.22a.75.75 0 1 1-1.06 1.06l-4.5-4.5a.75.75 0 0 1 0-1.06l4.5-4.5a.75.75 0 0 1 1.06 1.06L4.56 7.25h8.69A.75.75 0 0 1 14 8Z"
-                clipRule="evenodd"
-              />
-            </svg>
-            {t.backToList}
-          </Link>
-        </nav>
+              <svg
+                viewBox="0 0 16 16"
+                fill="currentColor"
+                className="h-4 w-4 transition group-hover:-translate-x-0.5"
+                aria-hidden
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M14 8a.75.75 0 0 1-.75.75H4.56l3.22 3.22a.75.75 0 1 1-1.06 1.06l-4.5-4.5a.75.75 0 0 1 0-1.06l4.5-4.5a.75.75 0 0 1 1.06 1.06L4.56 7.25h8.69A.75.75 0 0 1 14 8Z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              {t.backToList}
+            </Link>
+            <time
+              dateTime={post.published_at}
+              className="text-[11px] font-semibold uppercase tracking-[0.28em] text-slate-400"
+            >
+              {formatArticleDate(post.published_at, locale)}
+            </time>
+          </nav>
+        </div>
 
-        <header className="pb-8">
-          <p className="text-xs font-bold uppercase tracking-[0.28em] text-[#d4af37]">
+        <header className="border-b border-slate-200 pb-8 pt-6">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.35em] text-[#d4af37]">
             {t.articleEyebrow}
           </p>
-          <time
-            dateTime={post.published_at}
-            className="mt-3 block text-sm font-medium text-slate-500"
-          >
-            {formatArticleDate(post.published_at, locale)}
-          </time>
-          <h1 className="mt-4 text-3xl font-black leading-[1.12] tracking-tight text-[#1e293b] sm:text-4xl lg:text-[2.75rem]">
+          <h1 className="mt-4 text-3xl font-black leading-[1.12] tracking-tight text-slate-900 sm:text-4xl lg:text-[2.6rem]">
             {title}
           </h1>
           {excerpt ? (
@@ -102,38 +96,55 @@ export default async function BlogArticlePage({
         </header>
 
         {post.featured_image_url ? (
-          <div className="mb-10 overflow-hidden rounded-2xl border border-slate-200/80 shadow-lg shadow-slate-900/8">
+          <div className="mt-8 border border-slate-200 bg-slate-100">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={post.featured_image_url}
-              alt=""
-              className="aspect-[16/9] w-full object-cover"
+              alt={title}
+              loading="lazy"
+              className="aspect-video w-full object-cover"
             />
           </div>
         ) : null}
 
-        {post.videos.length > 0 ? (
-          <BlogVideoPlayer
-            videos={post.videos}
-            locale={locale}
-            articleTitle={title}
-            videoHeading={t.videoHeading}
-          />
-        ) : null}
+        <div className="mt-10">
+          {hasVideos ? (
+            <div className="border-y border-slate-200 py-8">
+              <BlogVideoPlayer
+                videos={post.videos}
+                locale={locale}
+                articleTitle={title}
+                videoHeading={t.videoHeading}
+              />
+            </div>
+          ) : null}
 
-        <div className="rounded-2xl border border-white/90 bg-white/95 px-6 py-8 shadow-sm shadow-slate-900/5 sm:px-10 sm:py-10">
-          <BlogArticleBody content={body} />
+          <div className={hasVideos ? "pt-10" : "pt-2"}>
+            <BlogArticleBody content={body} />
+          </div>
         </div>
 
-        <div className="py-14">
+        <div className="mt-12 flex justify-center border-t border-slate-200 pt-8">
           <Link
             href={`/${locale}/blog`}
-            className="inline-flex items-center gap-2 rounded-xl bg-[#0ea5e9] px-6 py-3 text-sm font-bold text-white shadow-md shadow-sky-900/15 transition hover:bg-sky-600"
+            className="inline-flex items-center gap-2 rounded-none border border-slate-200 bg-white px-6 py-3 text-sm font-bold text-slate-700 transition hover:border-[#0ea5e9] hover:text-[#0ea5e9]"
           >
             {t.backToList}
+            <svg
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              className="h-4 w-4"
+              aria-hidden
+            >
+              <path
+                fillRule="evenodd"
+                d="M4 10a.75.75 0 0 1 .75-.75h7.69l-2.22-2.22a.75.75 0 1 1 1.06-1.06l3.5 3.5a.75.75 0 0 1 0 1.06l-3.5 3.5a.75.75 0 1 1-1.06-1.06l2.22-2.22H4.75A.75.75 0 0 1 4 10Z"
+                clipRule="evenodd"
+              />
+            </svg>
           </Link>
         </div>
-      </div>
+      </main>
     </div>
   );
 }

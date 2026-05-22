@@ -114,7 +114,7 @@ export default async function HomePage({
               </p>
             </div>
           </Reveal>
-          <div className="overflow-hidden rounded-3xl border border-[color-mix(in_oklab,var(--color-bridge)_55%,transparent)] bg-white shadow-[0_20px_50px_-24px_color-mix(in_oklab,var(--color-ink)_12%,transparent)]">
+          <div className="overflow-hidden rounded-none border border-[color-mix(in_oklab,var(--color-bridge)_55%,transparent)] bg-white shadow-[0_20px_50px_-24px_color-mix(in_oklab,var(--color-ink)_12%,transparent)]">
             <TradingViewSymbolOverview />
           </div>
         </section>
@@ -192,7 +192,7 @@ export default async function HomePage({
               </p>
             </div>
           </Reveal>
-          <div className="overflow-hidden rounded-3xl border border-[color-mix(in_oklab,var(--color-bridge)_55%,transparent)] bg-white shadow-[0_20px_50px_-24px_color-mix(in_oklab,var(--color-ink)_12%,transparent)]">
+          <div className="overflow-hidden border border-[color-mix(in_oklab,var(--color-bridge)_55%,transparent)] bg-white shadow-[0_20px_50px_-24px_color-mix(in_oklab,var(--color-ink)_12%,transparent)]">
             <TradingViewForexHeatmap />
           </div>
         </section>
