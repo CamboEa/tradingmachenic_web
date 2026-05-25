@@ -58,8 +58,8 @@ export default async function BlogArticlePage({
   const hasVideos = post.videos.length > 0;
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] text-[#0f172a]">
-      <main className="mx-auto max-w-5xl px-4 pb-16 pt-10 sm:px-6 lg:px-8">
+    <div className="flex flex-col">
+      <main className="mx-auto w-full max-w-5xl flex-1 px-4 pb-16 pt-10 sm:px-6 lg:px-8">
         <div className="border-b border-slate-200 pb-4">
           <nav className="flex items-center justify-between gap-4">
             <Link
@@ -90,7 +90,7 @@ export default async function BlogArticlePage({
         </div>
 
         <header className="border-b border-slate-200 pb-8 pt-6">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.35em] text-[#d4af37]">
+          <p className="text-xs font-bold uppercase tracking-[0.25em] text-gold">
             {t.articleEyebrow}
           </p>
           <h1 className="mt-4 text-3xl font-black leading-[1.12] tracking-tight text-slate-900 sm:text-4xl lg:text-[2.6rem]">

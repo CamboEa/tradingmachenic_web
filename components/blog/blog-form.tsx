@@ -10,6 +10,7 @@ import { LocaleParityHint } from "@/components/shared/locale-parity-hint";
 import { R2Uploader } from "@/components/shared/r2-uploader";
 import type { BlogPost } from "@/lib/supabase/blog";
 import type { BlogVideoItem } from "@/lib/supabase/blog-videos";
+import { FIELD_CLASS } from "@/lib/ui/styles";
 import { slugify } from "@/lib/slug";
 
 const STEPS = [
@@ -24,8 +25,7 @@ const KHMER_STEP = {
   hint: "Optional translation — add when ready",
 } as const;
 
-const fieldClass =
-  "w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#0ea5e9] focus:bg-white focus:ring-2 focus:ring-[#0ea5e9]/20";
+const fieldClass = FIELD_CLASS;
 
 function toDatetimeLocalValue(iso: string | undefined): string {
   if (!iso) {
@@ -186,7 +186,7 @@ export function BlogForm({ post }: { post?: BlogPost }) {
   }
 
   return (
-    <div className="w-full rounded-xl border border-slate-200 bg-white shadow-sm">
+    <div className="w-full rounded-2xl border border-slate-200/90 bg-white shadow-sm shadow-slate-900/5">
       <div className="border-b border-slate-100 px-4 py-5 sm:px-6">
         <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
           Step {step + 1} of {steps.length}

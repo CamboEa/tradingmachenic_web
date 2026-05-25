@@ -26,7 +26,7 @@ export function CourseLessonCard({
   const videoCount = lessonVideoCount(lesson);
 
   return (
-    <article className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-[0_2px_12px_-4px_rgba(15,23,42,0.08)] transition-all duration-300 hover:-translate-y-1.5 hover:border-[color-mix(in_oklab,var(--color-teal)_30%,var(--color-bridge))] hover:shadow-[0_16px_40px_-12px_rgba(15,23,42,0.16)]">
+    <article className="ui-content-card group relative flex h-full flex-col overflow-hidden">
       {/* Gold top accent */}
       <div
         className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-[var(--color-gold)] via-[var(--color-gold)]/70 to-transparent"

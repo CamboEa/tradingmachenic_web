@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { EmptyState, PublicPageHero, PublicPageMain } from "@/components/ui";
 import { getDictionary, isLocale, type Locale } from "@/lib/i18n";
 import { getPublishedPodcasts } from "@/lib/supabase/podcasts";
 import { extractYouTubeVideoId, youtubeThumbnailUrl } from "@/lib/youtube";
@@ -26,7 +27,7 @@ function EpisodeCard({
  return (
  <Link
  href={`/${locale}/podcast/${episode.id}`}
- className="group relative flex flex-col overflow-hidden rounded-2xl border border-slate-200/70 bg-white transition-all duration-300 hover:-translate-y-1.5 hover:border-[color-mix(in_oklab,#0ea5e9_30%,#cbd5e1)]"
+ className="ui-content-card group relative flex flex-col overflow-hidden"
  aria-label={title}
  >
  {/* Gold top accent */}
@@ -100,26 +101,10 @@ export default async function PodcastIndexPage({ params }: { params: Promise<{ l
 
  return (
  <div className="flex flex-col">
- <section className="relative overflow-hidden bg-[#1e293b] px-4 py-16 sm:px-6 lg:px-8">
- <div
- className="absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,rgba(212,175,55,0.18),transparent_24rem),radial-gradient(circle_at_86%_10%,rgba(14,165,233,0.2),transparent_26rem)]"
- aria-hidden
- />
- <div className="relative mx-auto max-w-7xl">
- <p className="text-xs font-bold uppercase tracking-[0.25em] text-[#d4af37]">{t.eyebrow}</p>
- <h1 className="mt-3 max-w-2xl text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl">
- {t.title}
- </h1>
- <p className="mt-4 max-w-xl text-base leading-7 text-slate-300">{t.intro}</p>
- </div>
- </section>
-
- <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-10 sm:px-6 lg:px-8">
+ <PublicPageHero eyebrow={t.eyebrow} title={t.title} description={t.intro} />
+ <PublicPageMain>
  {episodes.length === 0 ? (
- <div className="mt-4 rounded-2xl border border-[#d4af37]/30 bg-[#d4af37]/5 px-8 py-14 text-center">
- <p className="text-2xl font-bold text-[#1e293b]">{t.emptyTitle}</p>
- <p className="mx-auto mt-3 max-w-lg text-base leading-relaxed text-slate-500">{t.emptyBody}</p>
- </div>
+ <EmptyState title={t.emptyTitle} description={t.emptyBody} className="mt-4" />
  ) : (
  <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
  {episodes.map((ep, i) => (
@@ -127,7 +112,7 @@ export default async function PodcastIndexPage({ params }: { params: Promise<{ l
  ))}
  </div>
  )}
- </main>
+ </PublicPageMain>
  </div>
  );
 }

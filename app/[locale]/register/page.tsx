@@ -2,7 +2,11 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { AuthForm } from "@/components/auth/auth-form";
+import { Panel } from "@/components/ui/card";
+import { Eyebrow } from "@/components/ui/eyebrow";
 import { SiteLogo } from "@/components/shared/site-logo";
+import { cn } from "@/lib/ui/cn";
+import { ui } from "@/lib/ui/styles";
 import { getDictionary, isLocale, type Locale } from "@/lib/i18n";
 
 export default async function RegisterPage({
@@ -17,14 +21,12 @@ export default async function RegisterPage({
 
  return (
  <main className="mx-auto flex w-full max-w-md flex-1 items-center px-4 py-12 sm:px-6 lg:px-8 lg:py-20">
- <section className="w-full rounded-[2rem] border border-white/80 bg-white/82 p-6 backdrop-blur sm:p-8">
+ <Panel className="w-full">
  <div className="flex flex-col items-center gap-3 text-center sm:flex-row sm:text-left">
  <SiteLogo size="lg" />
- <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-gold)]">
- Trading Machenic
- </p>
+ <Eyebrow variant="admin">Trading Machenic</Eyebrow>
  </div>
- <h1 className="mt-3 text-3xl font-semibold tracking-tight text-(--color-ink)">
+ <h1 className={cn("mt-3", ui.pageTitle)}>
  {dict.registerPage.title}
  </h1>
  <AuthForm
@@ -43,7 +45,7 @@ export default async function RegisterPage({
  {dict.registerPage.switchLink}
  </Link>
  </p>
- </section>
+ </Panel>
  </main>
  );
 }

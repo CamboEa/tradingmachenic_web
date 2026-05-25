@@ -2,6 +2,7 @@ import { Fragment } from "react";
 import { notFound } from "next/navigation";
 
 import { Reveal } from "@/components/shared/reveal";
+import { PublicPageHero, PublicPageMain } from "@/components/ui";
 import type { CurriculumAccent, CurriculumWeek } from "@/lib/curriculum";
 import { getDictionary, isLocale, type Locale } from "@/lib/i18n";
 import { getCurriculum } from "@/lib/supabase/curriculum-data";
@@ -127,25 +128,8 @@ export default async function CurriculumPage({
 
   return (
     <div className="flex flex-col">
-      <section className="relative overflow-hidden bg-[#1e293b] px-4 py-16 sm:px-6 lg:px-8">
-        <div
-          className="absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,rgba(212,175,55,0.18),transparent_24rem),radial-gradient(circle_at_86%_10%,rgba(14,165,233,0.2),transparent_26rem)]"
-          aria-hidden
-        />
-        <div className="relative mx-auto max-w-7xl">
-          <p className="text-xs font-bold uppercase tracking-[0.25em] text-[#d4af37]">
-            {cp.eyebrow}
-          </p>
-          <h1 className="mt-3 max-w-2xl text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl">
-            {cp.title}
-          </h1>
-          <p className="mt-4 max-w-xl text-base leading-7 text-slate-300">
-            {cp.intro}
-          </p>
-        </div>
-      </section>
-
-    <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-10 sm:px-6 lg:px-8">
+      <PublicPageHero eyebrow={cp.eyebrow} title={cp.title} description={cp.intro} />
+      <PublicPageMain className="max-w-6xl">
       {curriculum.length === 0 ? (
         <p className="mt-16 text-center text-sm text-(--color-ink-muted)">
           {locale === "km" ? "មិនទាន់មានកម្មវិធីសិក្សា។" : "Curriculum content is not available yet."}
@@ -253,7 +237,7 @@ export default async function CurriculumPage({
           );
         })
       )}
-    </main>
+    </PublicPageMain>
     </div>
   );
 }

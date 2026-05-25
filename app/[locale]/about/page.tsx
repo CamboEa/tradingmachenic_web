@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { Reveal } from "@/components/shared/reveal";
+import { PublicPageHero, PublicPageMain } from "@/components/ui";
 import { getDictionary, isLocale, type Locale } from "@/lib/i18n";
 
 export async function generateMetadata({
@@ -32,25 +33,8 @@ export default async function AboutPage({
 
   return (
     <div className="flex flex-col">
-      <section className="relative overflow-hidden bg-[#1e293b] px-4 py-16 sm:px-6 lg:px-8">
-        <div
-          className="absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,rgba(212,175,55,0.18),transparent_24rem),radial-gradient(circle_at_86%_10%,rgba(14,165,233,0.2),transparent_26rem)]"
-          aria-hidden
-        />
-        <div className="relative mx-auto max-w-7xl">
-          <p className="text-xs font-bold uppercase tracking-[0.25em] text-[#d4af37]">
-            {a.eyebrow}
-          </p>
-          <h1 className="mt-3 max-w-2xl text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl">
-            {a.title}
-          </h1>
-          <p className="mt-4 max-w-xl text-base leading-7 text-slate-300">
-            {a.intro}
-          </p>
-        </div>
-      </section>
-
-      <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
+      <PublicPageHero eyebrow={a.eyebrow} title={a.title} description={a.intro} />
+      <PublicPageMain className="py-12 lg:py-16">
       <Reveal delayMs={90}>
         <section
         aria-labelledby="about-why-heading"
@@ -147,7 +131,7 @@ export default async function AboutPage({
         </div>
         </Reveal>
       </div>
-    </main>
+    </PublicPageMain>
     </div>
   );
 }

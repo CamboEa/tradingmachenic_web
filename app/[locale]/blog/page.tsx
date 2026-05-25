@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { EmptyState, PublicPageHero, PublicPageMain } from "@/components/ui";
 import { getDictionary, isLocale, type Locale } from "@/lib/i18n";
 import {
   blogLocalizedExcerpt,
@@ -35,34 +36,19 @@ export default async function BlogIndexPage({
   const hasLatest = latest.length > 0;
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] text-[#0f172a]">
-      <main className="mx-auto w-full max-w-7xl flex-1 px-4 pb-16 pt-10 sm:px-6 lg:px-8">
+    <div className="flex flex-col">
+      <PublicPageHero eyebrow={t.eyebrow} title={t.title} description={t.intro} />
+      <PublicPageMain className="pb-16">
         {posts.length === 0 ? (
-          <div className="rounded-none border border-[#d4af37]/25 bg-[#d4af37]/5 px-8 py-14 text-center">
-            <p className="text-xl font-bold text-[#1e293b]">{t.emptyTitle}</p>
-            <p className="mx-auto mt-3 max-w-lg text-slate-500">{t.emptyBody}</p>
-          </div>
+          <EmptyState title={t.emptyTitle} description={t.emptyBody} />
         ) : (
           <div>
-            <div className="mb-8 flex flex-col gap-3 border-b border-slate-200 pb-4">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-400">
-                {t.eyebrow}
-              </p>
-              <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
-                <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
-                  {t.title}
-                </h1>
-                <p className="max-w-xl text-sm leading-relaxed text-slate-500">{t.intro}</p>
-              </div>
-            </div>
-
             <div className="grid gap-8 lg:grid-cols-12">
               {featured ? (
                 <Link
                   href={`/${locale}/blog/${featured.slug}`}
                   className={[
-                    "group relative overflow-hidden rounded-none border border-slate-200/80 bg-white shadow-sm transition",
-                    "hover:-translate-y-1 hover:border-[color-mix(in_oklab,#0ea5e9_30%,#cbd5e1)] hover:shadow-lg",
+                    "group ui-content-card relative overflow-hidden",
                     "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0ea5e9] focus-visible:outline-solid",
                     hasLatest ? "lg:col-span-8" : "lg:col-span-12",
                   ].join(" ")}
@@ -190,7 +176,7 @@ export default async function BlogIndexPage({
                       <Link
                         key={post.id}
                         href={`/${locale}/blog/${post.slug}`}
-                        className="group flex h-full flex-col overflow-hidden rounded-none border border-slate-200/80 bg-white transition hover:-translate-y-1 hover:border-[color-mix(in_oklab,#0ea5e9_30%,#cbd5e1)] hover:shadow-md"
+                        className="group ui-content-card flex h-full flex-col overflow-hidden"
                         aria-label={title}
                       >
                         <div className="relative aspect-16/10 overflow-hidden bg-slate-100">
@@ -264,7 +250,7 @@ export default async function BlogIndexPage({
             ) : null}
           </div>
         )}
-      </main>
+      </PublicPageMain>
     </div>
   );
 }
