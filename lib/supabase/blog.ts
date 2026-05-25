@@ -1,5 +1,6 @@
 import { createClient } from "./server";
 import { createClient as createAdminClient } from "@supabase/supabase-js";
+import type { Locale } from "@/lib/i18n";
 import { parseBlogVideos, type BlogVideoItem } from "./blog-videos";
 
 export type BlogStatus = "draft" | "published";
@@ -19,6 +20,35 @@ export interface BlogPost {
   published_at: string;
   status: BlogStatus;
   videos: BlogVideoItem[];
+}
+
+export function blogHasKhmerTranslation(post: Pick<BlogPost, "title_km" | "body_km">): boolean {
+  return post.title_km.trim().length > 0 && post.body_km.trim().length > 0;
+}
+
+export function blogLocalizedTitle(post: BlogPost, locale: Locale): string {
+  if (locale === "km") {
+    const km = post.title_km.trim();
+    if (km) return km;
+  }
+  return post.title_en;
+}
+
+export function blogLocalizedExcerpt(post: BlogPost, locale: Locale): string | null {
+  if (locale === "km") {
+    const km = post.excerpt_km?.trim();
+    if (km) return km;
+    return post.excerpt_en?.trim() || null;
+  }
+  return post.excerpt_en?.trim() || null;
+}
+
+export function blogLocalizedBody(post: BlogPost, locale: Locale): string {
+  if (locale === "km") {
+    const km = post.body_km.trim();
+    if (km) return km;
+  }
+  return post.body_en;
 }
 
 function mapBlogRow(row: Record<string, unknown>): BlogPost {

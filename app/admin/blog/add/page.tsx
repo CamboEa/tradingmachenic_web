@@ -17,7 +17,8 @@ export default function AddBlogPage() {
         <div>
           <h1 className="text-2xl font-bold text-[#1e293b]">New article</h1>
           <p className="mt-1 text-sm text-slate-500">
-            Follow the three steps to publish a market insight article.
+            Write the article in English first. You can add the Khmer translation later when you
+            edit the post.
           </p>
         </div>
       </div>

@@ -1,4 +1,5 @@
-import { parseBlogBody, splitBoldSegments, type BlogBlock } from "@/lib/blog-content";
+import { isBlogHtmlContent, parseBlogBody, splitBoldSegments, type BlogBlock } from "@/lib/blog-content";
+import { sanitizeBlogHtml } from "@/lib/blog-content-sanitize";
 
 function InlineText({ text }: { text: string }) {
   const segments = splitBoldSegments(text);
@@ -52,7 +53,25 @@ function BlockView({ block }: { block: BlogBlock }) {
   }
 }
 
+function BlogArticleHtml({ content }: { content: string }) {
+  const safe = sanitizeBlogHtml(content);
+  if (!safe.trim()) return null;
+
+  return (
+    <article
+      className="blog-article-body blog-article-html"
+      dangerouslySetInnerHTML={{ __html: safe }}
+    />
+  );
+}
+
 export function BlogArticleBody({ content }: { content: string }) {
+  if (!content.trim()) return null;
+
+  if (isBlogHtmlContent(content)) {
+    return <BlogArticleHtml content={content} />;
+  }
+
   const blocks = parseBlogBody(content);
   if (blocks.length === 0) return null;
 

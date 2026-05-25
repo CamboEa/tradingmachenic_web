@@ -20,6 +20,7 @@ import {
   serializeBlogVideosForDb,
   type BlogVideoItem,
 } from "@/lib/supabase/blog-videos";
+import { isBlogBodyEmpty } from "@/lib/blog-content";
 import { slugify } from "@/lib/slug";
 import { extractYouTubeVideoId, resolveLessonVideoEmbedUrl } from "@/lib/youtube";
 
@@ -577,6 +578,8 @@ export async function createBlogPost(
 ): Promise<{ error?: string; success?: boolean; slug?: string }> {
   const normalizedSlug = slugify(formData.slug);
   if (!normalizedSlug) return { error: "Slug is required" };
+  if (!formData.title_en.trim()) return { error: "English title is required" };
+  if (isBlogBodyEmpty(formData.body_en)) return { error: "English article body is required" };
 
   const supabase = await createAdminClient();
   try {
@@ -616,6 +619,8 @@ export async function updateBlogPost(
 ): Promise<{ error?: string; success?: boolean; slug?: string }> {
   const normalizedSlug = slugify(formData.slug);
   if (!normalizedSlug) return { error: "Slug is required" };
+  if (!formData.title_en.trim()) return { error: "English title is required" };
+  if (isBlogBodyEmpty(formData.body_en)) return { error: "English article body is required" };
 
   const supabase = await createAdminClient();
   try {

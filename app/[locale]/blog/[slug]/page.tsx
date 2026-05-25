@@ -5,7 +5,12 @@ import type { Metadata } from "next";
 import { BlogArticleBody } from "@/components/blog/blog-article-body";
 import { BlogVideoPlayer } from "@/components/blog/blog-video-player";
 import { getDictionary, isLocale, type Locale } from "@/lib/i18n";
-import { getPublishedBlogBySlug } from "@/lib/supabase/blog";
+import {
+  blogLocalizedBody,
+  blogLocalizedExcerpt,
+  blogLocalizedTitle,
+  getPublishedBlogBySlug,
+} from "@/lib/supabase/blog";
 
 export const dynamic = "force-dynamic";
 
@@ -28,8 +33,9 @@ export async function generateMetadata({
   const locale = raw as Locale;
   const post = await getPublishedBlogBySlug(slug);
   if (!post) return { title: "Blog" };
-  const title = locale === "km" ? post.title_km : post.title_en;
-  return { title, description: locale === "km" ? post.excerpt_km ?? undefined : post.excerpt_en ?? undefined };
+  const title = blogLocalizedTitle(post, locale);
+  const excerpt = blogLocalizedExcerpt(post, locale);
+  return { title, description: excerpt ?? undefined };
 }
 
 export default async function BlogArticlePage({
@@ -46,9 +52,9 @@ export default async function BlogArticlePage({
   const post = await getPublishedBlogBySlug(slug);
   if (!post) notFound();
 
-  const title = locale === "km" ? post.title_km : post.title_en;
-  const excerpt = locale === "km" ? post.excerpt_km : post.excerpt_en;
-  const body = locale === "km" ? post.body_km : post.body_en;
+  const title = blogLocalizedTitle(post, locale);
+  const excerpt = blogLocalizedExcerpt(post, locale);
+  const body = blogLocalizedBody(post, locale);
   const hasVideos = post.videos.length > 0;
 
   return (

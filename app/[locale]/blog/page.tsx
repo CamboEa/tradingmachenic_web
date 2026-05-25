@@ -2,7 +2,11 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { getDictionary, isLocale, type Locale } from "@/lib/i18n";
-import { getPublishedBlogPosts } from "@/lib/supabase/blog";
+import {
+  blogLocalizedExcerpt,
+  blogLocalizedTitle,
+  getPublishedBlogPosts,
+} from "@/lib/supabase/blog";
 
 export const dynamic = "force-dynamic";
 
@@ -62,14 +66,14 @@ export default async function BlogIndexPage({
                     "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0ea5e9] focus-visible:outline-solid",
                     hasLatest ? "lg:col-span-8" : "lg:col-span-12",
                   ].join(" ")}
-                  aria-label={locale === "km" ? featured.title_km : featured.title_en}
+                  aria-label={blogLocalizedTitle(featured, locale)}
                 >
                   <div className="relative aspect-video overflow-hidden bg-slate-100">
                     {featured.featured_image_url ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
                         src={featured.featured_image_url}
-                        alt={locale === "km" ? featured.title_km : featured.title_en}
+                        alt={blogLocalizedTitle(featured, locale)}
                         loading="lazy"
                         className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
                       />
@@ -104,11 +108,11 @@ export default async function BlogIndexPage({
                       {formatArticleDate(featured.published_at, locale)}
                     </time>
                     <h2 className="mt-3 text-xl font-bold leading-snug text-slate-900 transition group-hover:text-[#0ea5e9] sm:text-2xl">
-                      {locale === "km" ? featured.title_km : featured.title_en}
+                      {blogLocalizedTitle(featured, locale)}
                     </h2>
-                    {(locale === "km" ? featured.excerpt_km : featured.excerpt_en) ? (
+                    {blogLocalizedExcerpt(featured, locale) ? (
                       <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-slate-500">
-                        {locale === "km" ? featured.excerpt_km : featured.excerpt_en}
+                        {blogLocalizedExcerpt(featured, locale)}
                       </p>
                     ) : null}
                     <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-[#0ea5e9]">
@@ -139,8 +143,8 @@ export default async function BlogIndexPage({
                   </div>
                   <ul className="mt-4 space-y-4">
                     {latest.map((post) => {
-                      const title = locale === "km" ? post.title_km : post.title_en;
-                      const excerpt = locale === "km" ? post.excerpt_km : post.excerpt_en;
+                      const title = blogLocalizedTitle(post, locale);
+                      const excerpt = blogLocalizedExcerpt(post, locale);
                       return (
                         <li key={post.id} className="border-b border-slate-100 pb-4 last:border-b-0 last:pb-0">
                           <Link
@@ -180,8 +184,8 @@ export default async function BlogIndexPage({
                 </div>
                 <div className="mt-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                   {more.map((post) => {
-                    const title = locale === "km" ? post.title_km : post.title_en;
-                    const excerpt = locale === "km" ? post.excerpt_km : post.excerpt_en;
+                    const title = blogLocalizedTitle(post, locale);
+                    const excerpt = blogLocalizedExcerpt(post, locale);
                     return (
                       <Link
                         key={post.id}

@@ -61,7 +61,7 @@ export function BlogVideoPlayer({
   const active = videos[activeIndex];
   const total = videos.length;
   const activeTitle =
-    (locale === "km" ? active.title_km : active.title_en) ||
+    (locale === "km" ? active.title_km?.trim() || active.title_en : active.title_en) ||
     `${videoHeading} ${activeIndex + 1}`;
 
   const rawUrl = active.url;
@@ -90,7 +90,7 @@ export function BlogVideoPlayer({
             <ul className="space-y-2">
               {videos.map((video, index) => {
                 const title =
-                  (locale === "km" ? video.title_km : video.title_en) ||
+                  (locale === "km" ? video.title_km?.trim() || video.title_en : video.title_en) ||
                   `${videoHeading} ${index + 1}`;
                 const isActive = index === activeIndex;
                 return (

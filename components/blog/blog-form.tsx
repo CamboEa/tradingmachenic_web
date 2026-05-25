@@ -2,24 +2,30 @@
 
 import { useRef, useState } from "react";
 import { toast } from "react-toastify";
+import { BlogRichTextEditor } from "@/components/blog/blog-rich-text-editor";
 import { BlogVideoEditor, validateBlogVideos } from "@/components/blog/blog-video-editor";
+import { isBlogBodyEmpty } from "@/lib/blog-content";
 import { createBlogPost, updateBlogPost } from "@/lib/supabase/actions";
+import { LocaleParityHint } from "@/components/shared/locale-parity-hint";
 import { R2Uploader } from "@/components/shared/r2-uploader";
 import type { BlogPost } from "@/lib/supabase/blog";
 import type { BlogVideoItem } from "@/lib/supabase/blog-videos";
 import { slugify } from "@/lib/slug";
 
 const STEPS = [
-  { title: "Basics", hint: "Title, slug, excerpt, and publish date" },
-  { title: "Article", hint: "Full article in English and Khmer" },
+  { title: "Basics", hint: "English title, slug, excerpt, and publish date" },
+  { title: "Article", hint: "Write your article with the document editor" },
   { title: "Videos", hint: "Optional YouTube or uploaded clips" },
   { title: "Cover & publish", hint: "Featured image and visibility" },
 ] as const;
 
+const KHMER_STEP = {
+  title: "Khmer",
+  hint: "Optional translation — add when ready",
+} as const;
+
 const fieldClass =
   "w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#0ea5e9] focus:bg-white focus:ring-2 focus:ring-[#0ea5e9]/20";
-
-const CONTENT_HINT = `Use ## for section headings, ### for subheadings, and - for bullet lists. Wrap emphasis in **double asterisks**.`;
 
 function toDatetimeLocalValue(iso: string | undefined): string {
   if (!iso) {
@@ -38,9 +44,25 @@ function readFormString(form: HTMLFormElement, name: string): string {
   return typeof raw === "string" ? raw.trim() : "";
 }
 
+function KhmerSectionHeader() {
+  return (
+    <div className="rounded-lg border border-amber-200/80 bg-amber-50/60 px-4 py-3">
+      <p className="text-xs font-semibold text-amber-900">Khmer translation</p>
+      <p className="mt-0.5 text-xs text-amber-800/90">
+        Optional. Leave blank to publish in English only; the Khmer site will show the English
+        version until you add a translation.
+      </p>
+    </div>
+  );
+}
+
 export function BlogForm({ post }: { post?: BlogPost }) {
   const isEdit = !!post;
   const formRef = useRef<HTMLFormElement>(null);
+
+  const steps = isEdit
+    ? ([...STEPS.slice(0, 2), KHMER_STEP, ...STEPS.slice(2)] as const)
+    : STEPS;
 
   const [step, setStep] = useState(0);
   const [titleEn, setTitleEn] = useState(post?.title_en ?? "");
@@ -49,10 +71,15 @@ export function BlogForm({ post }: { post?: BlogPost }) {
   const [slugTouched, setSlugTouched] = useState(!!post?.slug);
   const [featuredUrl, setFeaturedUrl] = useState(post?.featured_image_url ?? "");
   const [videos, setVideos] = useState<BlogVideoItem[]>(post?.videos ?? []);
+  const [bodyEn, setBodyEn] = useState(post?.body_en ?? "");
+  const [bodyKm, setBodyKm] = useState(post?.body_km ?? "");
   const [isSaving, setIsSaving] = useState(false);
 
-  const isLastStep = step === STEPS.length - 1;
+  const isLastStep = step === steps.length - 1;
   const defaultStatus = post?.status === "published" ? "Published" : "Draft";
+  const khmerStepIndex = isEdit ? 2 : -1;
+  const videosStepIndex = isEdit ? 3 : 2;
+  const publishStepIndex = isEdit ? 4 : 3;
 
   function goToStep(next: number) {
     setStep(next);
@@ -69,8 +96,8 @@ export function BlogForm({ post }: { post?: BlogPost }) {
     if (!form) return false;
 
     if (index === 0) {
-      if (!titleEn.trim() || !titleKm.trim() || !slugify(slug)) {
-        toast.error("Title (EN/KM) and slug are required");
+      if (!titleEn.trim() || !slugify(slug)) {
+        toast.error("English title and slug are required");
         return false;
       }
       const publishedAt = readFormString(form, "published_at");
@@ -81,15 +108,17 @@ export function BlogForm({ post }: { post?: BlogPost }) {
     }
 
     if (index === 1) {
-      const body_en = readFormString(form, "body_en");
-      const body_km = readFormString(form, "body_km");
-      if (!body_en || !body_km) {
-        toast.error("Article body is required in both English and Khmer");
+      if (isBlogBodyEmpty(bodyEn)) {
+        toast.error("English article body is required");
         return false;
       }
     }
 
-    if (index === 2) {
+    if (isEdit && index === khmerStepIndex) {
+      return true;
+    }
+
+    if (index === videosStepIndex) {
       const videoError = validateBlogVideos(videos);
       if (videoError) {
         toast.error(videoError);
@@ -102,7 +131,7 @@ export function BlogForm({ post }: { post?: BlogPost }) {
 
   function handleNext() {
     if (!validateStep(step)) return;
-    if (step < STEPS.length - 1) goToStep(step + 1);
+    if (step < steps.length - 1) goToStep(step + 1);
   }
 
   function handleBack() {
@@ -125,8 +154,8 @@ export function BlogForm({ post }: { post?: BlogPost }) {
       title_km: titleKm.trim(),
       excerpt_en: readFormString(form, "excerpt_en") || undefined,
       excerpt_km: readFormString(form, "excerpt_km") || undefined,
-      body_en: readFormString(form, "body_en"),
-      body_km: readFormString(form, "body_km"),
+      body_en: bodyEn.trim(),
+      body_km: bodyKm.trim(),
       featured_image_url: featuredUrl.trim() || undefined,
       published_at: new Date(readFormString(form, "published_at")).toISOString(),
       status: (readFormString(form, "status") === "Published" ? "published" : "draft") as
@@ -160,13 +189,18 @@ export function BlogForm({ post }: { post?: BlogPost }) {
     <div className="w-full rounded-xl border border-slate-200 bg-white shadow-sm">
       <div className="border-b border-slate-100 px-4 py-5 sm:px-6">
         <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-          Step {step + 1} of {STEPS.length}
+          Step {step + 1} of {steps.length}
         </p>
-        <h2 className="mt-1 text-base font-bold text-[#1e293b]">{STEPS[step].title}</h2>
-        <p className="mt-0.5 text-sm text-slate-500">{STEPS[step].hint}</p>
+        <h2 className="mt-1 text-base font-bold text-[#1e293b]">{steps[step].title}</h2>
+        <p className="mt-0.5 text-sm text-slate-500">{steps[step].hint}</p>
+        {!isEdit ? (
+          <p className="mt-2 text-xs text-slate-500">
+            Write in English first. Open this article later to add the Khmer translation.
+          </p>
+        ) : null}
 
         <ol className="mt-5 flex flex-wrap gap-2" aria-label="Form progress">
-          {STEPS.map((s, i) => {
+          {steps.map((s, i) => {
             const done = i < step;
             const active = i === step;
             return (
@@ -261,40 +295,15 @@ export function BlogForm({ post }: { post?: BlogPost }) {
 
           <div>
             <label className="mb-1.5 block text-xs font-semibold text-slate-600">
-              Title (Khmer) <span className="text-red-500">*</span>
+              Excerpt (English)
             </label>
-            <input
-              type="text"
-              value={titleKm}
-              onChange={(e) => setTitleKm(e.target.value)}
-              className={fieldClass}
+            <textarea
+              name="excerpt_en"
+              rows={3}
+              defaultValue={post?.excerpt_en ?? ""}
+              placeholder="Short summary for the listing page…"
+              className={`${fieldClass} resize-y`}
             />
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div>
-              <label className="mb-1.5 block text-xs font-semibold text-slate-600">
-                Excerpt (English)
-              </label>
-              <textarea
-                name="excerpt_en"
-                rows={3}
-                defaultValue={post?.excerpt_en ?? ""}
-                placeholder="Short summary for the listing page…"
-                className={`${fieldClass} resize-y`}
-              />
-            </div>
-            <div>
-              <label className="mb-1.5 block text-xs font-semibold text-slate-600">
-                Excerpt (Khmer)
-              </label>
-              <textarea
-                name="excerpt_km"
-                rows={3}
-                defaultValue={post?.excerpt_km ?? ""}
-                className={`${fieldClass} resize-y`}
-              />
-            </div>
           </div>
 
           <div>
@@ -312,34 +321,71 @@ export function BlogForm({ post }: { post?: BlogPost }) {
 
         <div className={step === 1 ? "space-y-5" : "hidden"}>
           <p className="rounded-lg border border-slate-100 bg-slate-50 px-3 py-2 text-xs text-slate-500">
-            {CONTENT_HINT}
+            Write like a document—use the toolbar for headings, bold, lists, and quotes. Your
+            formatting is saved automatically.
           </p>
           <div>
             <label className="mb-1.5 block text-xs font-semibold text-slate-600">
               Article (English) <span className="text-red-500">*</span>
             </label>
-            <textarea
-              name="body_en"
-              rows={16}
-              defaultValue={post?.body_en ?? ""}
-              placeholder={"## Section title\n\nParagraph text…\n\n- Bullet point"}
-              className={`${fieldClass} resize-y font-mono text-xs leading-relaxed`}
+            <BlogRichTextEditor
+              value={bodyEn}
+              onChange={setBodyEn}
+              placeholder="Start writing your article…"
             />
-          </div>
-          <div>
-            <label className="mb-1.5 block text-xs font-semibold text-slate-600">
-              Article (Khmer) <span className="text-red-500">*</span>
-            </label>
-            <textarea
-              name="body_km"
-              rows={16}
-              defaultValue={post?.body_km ?? ""}
-              className={`${fieldClass} resize-y font-mono text-xs leading-relaxed`}
-            />
+            <input type="hidden" name="body_en" value={bodyEn} readOnly />
           </div>
         </div>
 
-        <div className={step === 2 ? "space-y-5" : "hidden"}>
+        {isEdit ? (
+          <div className={step === khmerStepIndex ? "space-y-5" : "hidden"}>
+            <KhmerSectionHeader />
+            <div>
+              <label className="mb-1.5 block text-xs font-semibold text-slate-600">
+                Title (Khmer)
+              </label>
+              <input
+                type="text"
+                value={titleKm}
+                onChange={(e) => setTitleKm(e.target.value)}
+                className={fieldClass}
+              />
+              <LocaleParityHint
+                enFilled={titleEn.trim().length > 0}
+                kmFilled={titleKm.trim().length > 0}
+              />
+            </div>
+            <div>
+              <label className="mb-1.5 block text-xs font-semibold text-slate-600">
+                Excerpt (Khmer)
+              </label>
+              <textarea
+                name="excerpt_km"
+                rows={3}
+                defaultValue={post?.excerpt_km ?? ""}
+                className={`${fieldClass} resize-y`}
+              />
+            </div>
+            <div>
+              <label className="mb-1.5 block text-xs font-semibold text-slate-600">
+                Article (Khmer)
+              </label>
+              <BlogRichTextEditor
+                value={bodyKm}
+                onChange={setBodyKm}
+                placeholder="បន្ថែមអត្ថបទជាភាសាខ្មែរ…"
+              />
+              <input type="hidden" name="body_km" value={bodyKm} readOnly />
+              <LocaleParityHint
+                enFilled={!isBlogBodyEmpty(bodyEn)}
+                kmFilled={!isBlogBodyEmpty(bodyKm)}
+                label="Khmer article body missing"
+              />
+            </div>
+          </div>
+        ) : null}
+
+        <div className={step === videosStepIndex ? "space-y-5" : "hidden"}>
           <BlogVideoEditor
             key={post?.id ?? "new"}
             initialItems={post?.videos ?? []}
@@ -347,7 +393,7 @@ export function BlogForm({ post }: { post?: BlogPost }) {
           />
         </div>
 
-        <div className={step === 3 ? "space-y-5" : "hidden"}>
+        <div className={step === publishStepIndex ? "space-y-5" : "hidden"}>
           <R2Uploader
             bucketName="trading-tool"
             accept="image/png,image/jpeg,image/webp"
@@ -382,6 +428,7 @@ export function BlogForm({ post }: { post?: BlogPost }) {
             </div>
             <p className="mt-2 text-xs text-slate-500">
               Published articles appear on the public blog at /blog.
+              {!isEdit ? " Add Khmer later by editing the article." : null}
             </p>
           </div>
         </div>
@@ -409,7 +456,7 @@ export function BlogForm({ post }: { post?: BlogPost }) {
               disabled={isSaving}
               className="rounded-lg bg-[#0ea5e9] px-6 py-2.5 text-sm font-semibold text-white hover:bg-sky-600 disabled:bg-slate-300"
             >
-              {isSaving ? "Saving…" : isEdit ? "Save changes" : "Publish article"}
+              {isSaving ? "Saving…" : isEdit ? "Save changes" : "Save article"}
             </button>
           )}
         </div>

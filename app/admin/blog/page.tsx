@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import { DeleteBlogButton } from "@/components/blog/delete-blog-button";
-import { getAllBlogPosts } from "@/lib/supabase/blog";
+import { blogHasKhmerTranslation, getAllBlogPosts } from "@/lib/supabase/blog";
 
 export const metadata = { title: "Blog" };
 
@@ -22,7 +22,8 @@ export default async function AdminBlogPage() {
         <div>
           <h1 className="text-2xl font-bold text-[#1e293b]">Lesson blog</h1>
           <p className="mt-1 text-sm text-slate-500">
-            Market insights and daily dose articles—published posts appear on the public blog.
+            Write articles in English first, then add Khmer when you edit. Published posts appear on
+            the public blog.
           </p>
         </div>
         <Link
@@ -37,7 +38,7 @@ export default async function AdminBlogPage() {
         <div className="rounded-xl border border-slate-200 bg-white p-10 text-center">
           <p className="text-sm font-medium text-slate-500">No articles yet</p>
           <p className="mt-1.5 text-sm text-slate-400">
-            Write bilingual market updates similar to a daily dose article.
+            Start with an English article; add the Khmer translation later from Edit.
           </p>
           <Link
             href="/admin/blog/add"
@@ -78,6 +79,11 @@ export default async function AdminBlogPage() {
                     >
                       {post.status === "published" ? "Published" : "Draft"}
                     </span>
+                    {!blogHasKhmerTranslation(post) ? (
+                      <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-800">
+                        Khmer pending
+                      </span>
+                    ) : null}
                   </div>
                   <p className="mt-1 font-mono text-xs text-slate-400">/blog/{post.slug}</p>
                   <p className="mt-1 text-xs text-slate-500">{formatDate(post.published_at)}</p>
