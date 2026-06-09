@@ -43,7 +43,7 @@ export function SiteHeader({
       <SiteLogo size="md" priority className="rounded-lg" />
       <span className="min-w-0">
         <span className="block truncate text-lg font-bold tracking-tight text-[#1e293b] transition group-hover:text-[#0f172a] sm:text-xl">
-          Trading Machenic
+          Algorithmic Alpha Trade
         </span>
         <span className="hidden text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500 lg:block">
           Trading Academy

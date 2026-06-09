@@ -238,7 +238,7 @@ export default async function HomePage({
         />
         <div className="relative mx-auto max-w-3xl text-center">
           <p className="float-badge text-xs font-bold uppercase tracking-[0.25em] text-[#d4af37]">
-            Trading Machenic
+            Algorithmic Alpha Trade
           </p>
           <h2
             id="home-cta"

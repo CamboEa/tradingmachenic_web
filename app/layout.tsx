@@ -24,8 +24,8 @@ const fontKhmer = Noto_Sans_Khmer({
 
 export const metadata: Metadata = {
  title: {
- default: "Trading Machenic",
- template: "%s | Trading Machenic",
+ default: "Algorithmic Alpha Trade",
+ template: "%s | Algorithmic Alpha Trade",
  },
  description:
  "Structured trading education with video lessons on risk, execution, and mindset.",

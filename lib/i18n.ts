@@ -191,7 +191,7 @@ export type Dictionary = {
 
 const en: Dictionary = {
   meta: {
-    title: "Trading Machenic",
+    title: "Algorithmic Alpha Trade",
     description:
       "Structured trading education with video lessons on risk, execution, and mindset.",
   },
@@ -215,7 +215,7 @@ const en: Dictionary = {
     badge: "Trading education",
     headline: "Learn trading with clarity and discipline.",
     subhead:
-      "Trading Machenic is a focused video course covering markets, risk management, and repeatable processes—built for serious beginners and intermediate traders.",
+      "Algorithmic Alpha Trade is a focused video course covering markets, risk management, and repeatable processes—built for serious beginners and intermediate traders.",
     ctaCourse: "Start the course",
     ctaOutline: "View curriculum",
     pillars: [
@@ -264,7 +264,7 @@ const en: Dictionary = {
     learnLink: "Explore all lessons",
     sectionApproach: "Professional standards",
     approachLead:
-      "Trading Machenic is built like an institutional learning track—clear outcomes, sober language, and zero promises of easy profits.",
+      "Algorithmic Alpha Trade is built like an institutional learning track—clear outcomes, sober language, and zero promises of easy profits.",
     approachItems: [
       "General education only—not personalized financial advice",
       "Emphasis on survival, process, and measurable habits",
@@ -281,12 +281,12 @@ const en: Dictionary = {
     heroSplitSubhead: "Get started with a free intro class",
     heroSplitCta: "Register now",
     heroSplitTab: "Free intro class",
-    heroImageAlt: "Trading Machenic classroom and learning session",
+    heroImageAlt: "Algorithmic Alpha Trade classroom and learning session",
     socialProofRating: "Learners rate the programme highly for clarity and structure.",
     socialStudentsTitle: "Hear from our students",
     socialExpertTitle: "Insights from your mentor",
     socialExpertQuote:
-      "The education from Trading Machenic delivers serious learning value—risk, process, and mechanics explained without hype. It is built for traders who want a calm, repeatable path instead of chasing shortcuts.",
+      "The education from Algorithmic Alpha Trade delivers serious learning value—risk, process, and mechanics explained without hype. It is built for traders who want a calm, repeatable path instead of chasing shortcuts.",
     sectionMarkets: "Live Markets",
     marketsTagline: "What you'll learn to read",
     marketsLead: "Gold (XAU/USD) is at the core of our curriculum. Track real-time prices on the instruments our lessons are built around.",
@@ -395,12 +395,12 @@ const en: Dictionary = {
   },
   aboutPage: {
     title: "About",
-    eyebrow: "Trading Machenic",
+    eyebrow: "Algorithmic Alpha Trade",
     intro: "Meet the mentor and the philosophy behind structured, process-first trading education.",
     whyEyebrow: "Why we built this",
     whyTitle: "Fewer unnecessary losses, capital treated with care",
     whyParagraphs: [
-      "Trading Machenic was created for people who want to approach markets without gambling away what they have worked for.",
+      "Algorithmic Alpha Trade was created for people who want to approach markets without gambling away what they have worked for.",
       "The lessons focus on risk, sizing, and disciplined routines so you can avoid common pitfalls and put protecting your capital first—not hype or shortcuts.",
     ],
     mentorBadge: "Your mentor",
@@ -428,7 +428,7 @@ const en: Dictionary = {
     ],
     teachingStatement:
       "Every lesson in this programme is taught by Bean Ratana.",
-    imageAlt: "Bean Ratana, mentor at Trading Machenic",
+    imageAlt: "Bean Ratana, mentor at Algorithmic Alpha Trade",
     ctaEducation: "Browse lessons",
   },
   footer: {
@@ -436,7 +436,7 @@ const en: Dictionary = {
     description:
       "Structured video lessons on risk, execution, and repeatable trading processes—for serious beginners and intermediate traders.",
     tagline: "Education only—not financial advice.",
-    rights: "Trading Machenic. All rights reserved.",
+    rights: "Algorithmic Alpha Trade. All rights reserved.",
     sections: {
       learn: "Learn",
       program: "Program",
@@ -450,7 +450,7 @@ const en: Dictionary = {
 
 const km: Dictionary = {
   meta: {
-    title: "Trading Machenic",
+    title: "Algorithmic Alpha Trade",
     description:
       "ការអប់រំពាណិជ្ជកម្មដែលមានរចនាសម្ព័ន្ធ ជាមួយវីដេអូសិក្សាអំពីហានិភ័យ ការប្រតិបត្តិ និងផ្លូវចិត្ត។",
   },
@@ -474,7 +474,7 @@ const km: Dictionary = {
     badge: "ការអប់រំពាណិជ្ជកម្ម",
     headline: "សិក្សាពាណិជ្ជកម្មដោយភាពច្បាស់លាស់ និងមានវិន័យ។",
     subhead:
-      "Trading Machenic គឺជាវគ្គសិក្សាវីដេអូផ្តោតលើទីផ្សារ ការគ្រប់គ្រងហានិភ័យ និងដំណើរការដែលធ្វើម្តងហើយម្តងទៀត—សម្រាប់អ្នកចាប់ផ្តើម និងអ្នកជំនាញកំរិតមធ្យម។",
+      "Algorithmic Alpha Trade គឺជាវគ្គសិក្សាវីដេអូផ្តោតលើទីផ្សារ ការគ្រប់គ្រងហានិភ័យ និងដំណើរការដែលធ្វើម្តងហើយម្តងទៀត—សម្រាប់អ្នកចាប់ផ្តើម និងអ្នកជំនាញកំរិតមធ្យម។",
     ctaCourse: "ចាប់ផ្តើមវគ្គសិក្សា",
     ctaOutline: "មើលកម្មវិធីសិក្សា",
     pillars: [
@@ -523,7 +523,7 @@ const km: Dictionary = {
     learnLink: "មើលមេរៀនទាំងអស់",
     sectionApproach: "ស្តង់ដាវិជ្ជាជីវៈ",
     approachLead:
-      "Trading Machenic ត្រូវបានសាងសង់ដូចជាផ្លូវសិក្សាកន្លែងធ្វើការ—លទ្ធផលច្បាស់ ភាសារឹងមាំ និងគ្មានការសន្យារកលុយងាយស្រួល។",
+      "Algorithmic Alpha Trade ត្រូវបានសាងសង់ដូចជាផ្លូវសិក្សាកន្លែងធ្វើការ—លទ្ធផលច្បាស់ ភាសារឹងមាំ និងគ្មានការសន្យារកលុយងាយស្រួល។",
     approachItems: [
       "ការអប់រំទូទៅតែប៉ុណ្ណោះ—មិនមែនជាដំបូន្មានហិរញ្ញវត្ថុផ្ទាល់ខ្លួន",
       "ផ្តោតលើការរក្សាដើមទុន ដំណើរការ និងទមលាប់ដែលវាស់វែងបាន",
@@ -540,12 +540,12 @@ const km: Dictionary = {
     heroSplitSubhead: "ចាប់ផ្តើមដោយថ្នាក់ណែនាំឥតគិតថ្លៃ",
     heroSplitCta: "ចុះឈ្មោះឥឡូវនេះ",
     heroSplitTab: "ថ្នាក់ណែនាំឥតគិតថ្លៃ",
-    heroImageAlt: "បន្ទប់រៀន និងសមាជិក Trading Machenic",
+    heroImageAlt: "បន្ទប់រៀន និងសមាជិក Algorithmic Alpha Trade",
     socialProofRating: "អ្នករៀនឲ្យពិន្ទុខ្ពស់ចំពោះភាពច្បាស់លាស់ និងរចនាសម្ព័ន្ធកម្មវិធី។",
     socialStudentsTitle: "ស្តាប់ពីសិស្សរបស់យើង",
     socialExpertTitle: "យល់ដឹងពីអ្នកណែនាំ",
     socialExpertQuote:
-      "ការអប់រំពី Trading Machenic ផ្តល់តម្លៃសិក្សាពិតប្រាកដ—ពន្យល់ហានិភ័យ ដំណើរការ និងលក្ខណៈបច្ចេកទេសដោយគ្មានសំឡេងរន្ទះ។ សាងសម្រាប់អ្នកជួញដូរដែលចង់ផ្លូវស្ងប់ និងធ្វើម្តងហើយម្តងទៀត ជំនួសការរត់តាមផ្លូវកាត់។",
+      "ការអប់រំពី Algorithmic Alpha Trade ផ្តល់តម្លៃសិក្សាពិតប្រាកដ—ពន្យល់ហានិភ័យ ដំណើរការ និងលក្ខណៈបច្ចេកទេសដោយគ្មានសំឡេងរន្ទះ។ សាងសម្រាប់អ្នកជួញដូរដែលចង់ផ្លូវស្ងប់ និងធ្វើម្តងហើយម្តងទៀត ជំនួសការរត់តាមផ្លូវកាត់។",
     sectionMarkets: "ទីផ្សារបន្តផ្ទាល់",
     marketsTagline: "អ្វីដែលអ្នកនឹងរៀនអាន",
     marketsLead: "មាស (XAU/USD) ស្ថិតនៅស្នូលនៃកម្មវិធីសិក្សារបស់យើង។ តាមដានតម្លៃជាក់ស្ដែងលើឧបករណ៍ដែលមេរៀនរបស់យើងបានបង្កើតឡើង។",
@@ -653,12 +653,12 @@ const km: Dictionary = {
   },
   aboutPage: {
     title: "អំពីយើង",
-    eyebrow: "Trading Machenic",
+    eyebrow: "Algorithmic Alpha Trade",
     intro: "ស្គាល់អ្នកណែនាំ និងទស្សនវិជ្ជានៅពីក្រោយការអប់រំពាណិជ្ជកម្មដែលផ្តោតលើដំណើរការ។",
     whyEyebrow: "ហេតុអ្វីបានជាយើងបង្កើត",
     whyTitle: "កាត់បន្ថយការខាតដែលគេច្រើនជួប និងរក្សាដើមទុនឲ្យមានសុវត្ថិភាព",
     whyParagraphs: [
-      "Trading Machenic ត្រូវបានបង្កើតឡើងសម្រាប់អ្នកដែលចង់ចូលទីផ្សារដោយមានការរៀបចំ មិនមែនលេងសំណាងដាក់លុយដែលខំរកមក។",
+      "Algorithmic Alpha Trade ត្រូវបានបង្កើតឡើងសម្រាប់អ្នកដែលចង់ចូលទីផ្សារដោយមានការរៀបចំ មិនមែនលេងសំណាងដាក់លុយដែលខំរកមក។",
       "មេរៀនផ្តោតលើហានិភ័យ ទំហំលុយ និងទមលាប់វិន័យ ដើម្បីជួយអ្នកជៀសវាងកំហុសទូទៅ និងដាក់ការរក្សាដើមទុនជាមូលដ្ឋាន—មិនមែនតាមសំឡេងរន្ទះ ឬផ្លូវកាត់។",
     ],
     mentorBadge: "អ្នកណែនាំរបស់អ្នក",
@@ -686,7 +686,7 @@ const km: Dictionary = {
     ],
     teachingStatement:
       "មេរៀនទាំងអស់ក្នុងកម្មវិធីសិក្សានេះបង្រៀនដោយ Bean Ratana។",
-    imageAlt: "Bean Ratana គ្រូនៅ Trading Machenic",
+    imageAlt: "Bean Ratana គ្រូនៅ Algorithmic Alpha Trade",
     ctaEducation: "មើលមេរៀន",
   },
   footer: {
@@ -694,7 +694,7 @@ const km: Dictionary = {
     description:
       "វីដេអូសិក្សាដែលមានរចនាសម្ព័ន្ធ អំពីហានិភ័យ ការប្រតិបត្តិ និងដំណើរការពាណិជ្ជកម្មដែលធ្វើម្តងហើយម្តងទៀត—សម្រាប់អ្នកចាប់ផ្តើម និងអ្នកជំនាញកំរិតមធ្យម។",
     tagline: "សម្រាប់តែការអប់រំ—មិនមែនជាដំបូន្មានហិរញ្ញវត្ថុ។",
-    rights: "Trading Machenic។ រក្សាសិទ្ធិគ្រប់យ៉ាង។",
+    rights: "Algorithmic Alpha Trade។ រក្សាសិទ្ធិគ្រប់យ៉ាង។",
     sections: {
       learn: "សិក្សា",
       program: "កម្មវិធី",

@@ -84,7 +84,7 @@ export function SiteFooter({ locale, dict }: { locale: Locale; dict: Dictionary 
  <SiteLogo size="md"/>
  <span className="min-w-0">
  <span className="block text-lg font-bold tracking-tight text-white transition group-hover:text-slate-100">
- Trading Machenic
+ Algorithmic Alpha Trade
  </span>
  <span className="block text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
  {f.academyLabel}

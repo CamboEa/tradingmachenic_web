@@ -93,7 +93,7 @@ export function AdminSidebar() {
  <div className="flex items-center gap-3 border-b border-white/10 px-5 py-5">
  <SiteLogo size="md" className="rounded-lg ring-1 ring-white/10" />
  <div>
- <p className="text-sm font-semibold text-white">Trading Machenic</p>
+ <p className="text-sm font-semibold text-white">Algorithmic Alpha Trade</p>
  <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-400">Admin Panel</p>
  </div>
  </div>

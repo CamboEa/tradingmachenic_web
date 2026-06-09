@@ -22,7 +22,7 @@ export default async function AdminDashboard() {
       <AdminPageHeader
         eyebrow="Admin workspace"
         title="Dashboard"
-        description="Overview of your Trading Machenic content, curriculum, and tools."
+        description="Overview of your Algorithmic Alpha Trade content, curriculum, and tools."
       />
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">

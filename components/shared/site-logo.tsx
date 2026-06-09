@@ -27,7 +27,7 @@ export function SiteLogo({
  return (
  <Image
  src={LOGO_SRC}
- alt="Trading Machenic"
+ alt="Algorithmic Alpha Trade"
  width={px}
  height={px}
  priority={priority}

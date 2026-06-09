@@ -27,7 +27,7 @@ export default async function LoginPage({
  <Panel className="w-full">
  <div className="flex flex-col items-center gap-3 text-center sm:flex-row sm:text-left">
  <SiteLogo size="lg" />
- <Eyebrow variant="admin">Trading Machenic</Eyebrow>
+ <Eyebrow variant="admin">Algorithmic Alpha Trade</Eyebrow>
  </div>
  <h1 className={cn("mt-3", ui.pageTitle)}>
  {dict.loginPage.title}
