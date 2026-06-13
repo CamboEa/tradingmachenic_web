@@ -61,7 +61,7 @@ export default async function PodcastEpisodePage({
         <div className="py-7">
           <Link
             href={`/${locale}/podcast`}
-            className="group inline-flex items-center gap-2 text-sm font-semibold text-[#0ea5e9] transition-colors hover:text-sky-700"
+            className="group inline-flex items-center gap-2 text-sm font-semibold text-[#2563EB] transition-colors hover:text-[#1D4ED8]"
           >
             <svg
               viewBox="0 0 16 16"

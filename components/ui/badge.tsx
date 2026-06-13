@@ -5,7 +5,7 @@ const variants = {
   draft: "bg-slate-100 text-slate-600 ring-1 ring-slate-200/80",
   warning: "bg-amber-100 text-amber-800 ring-1 ring-amber-200/80",
   gold: "bg-amber-50 text-amber-900 ring-1 ring-amber-200/80",
-  teal: "bg-sky-100 text-sky-800 ring-1 ring-sky-200/80",
+  teal: "bg-[#DBEAFE] text-[#1E40AF] ring-1 ring-[#BFDBFE]/80",
   neutral: "bg-slate-100 text-slate-600",
 } as const;
 

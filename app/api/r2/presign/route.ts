@@ -66,11 +66,12 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { bucketName, filename, contentType, sizeBytes } = body as {
+    const { bucketName, filename, contentType, sizeBytes, folder } = body as {
       bucketName: string;
       filename: string;
       contentType: string;
       sizeBytes: number;
+      folder?: string;
     };
 
     if (!ALLOWED_BUCKETS.includes(bucketName as BucketName)) {
@@ -98,6 +99,7 @@ export async function POST(request: NextRequest) {
       bucketName: typedBucket,
       filename,
       contentType,
+      folder: typeof folder === "string" ? folder : undefined,
     });
 
     return NextResponse.json(result);

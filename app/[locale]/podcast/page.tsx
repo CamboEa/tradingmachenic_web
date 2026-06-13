@@ -43,7 +43,7 @@ function EpisodeCard({
  className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.04]"
  />
  ) : (
- <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-slate-100 via-white to-sky-50" />
+ <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-slate-100 via-white to-[#EFF6FF]" />
  )}
  <div className="absolute inset-0 bg-linear-to-t from-[#0f172a]/65 via-[#0f172a]/10 to-transparent" aria-hidden />
 
@@ -72,7 +72,7 @@ function EpisodeCard({
 
  {/* Body */}
  <div className="flex flex-1 flex-col p-5 sm:p-6">
- <h2 className="text-[1.0625rem] font-semibold leading-snug tracking-tight text-[#1e293b] transition-colors duration-200 group-hover:text-[#0ea5e9]">
+ <h2 className="text-[1.0625rem] font-semibold leading-snug tracking-tight text-[#1e293b] transition-colors duration-200 group-hover:text-[#2563EB]">
  {title}
  </h2>
  {description ? (
@@ -81,7 +81,7 @@ function EpisodeCard({
 
  {/* CTA */}
  <div className="mt-5 flex items-center justify-end border-t border-slate-100 pt-4">
- <span className="inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-semibold text-[#0ea5e9] ring-1 ring-[color-mix(in_oklab,#0ea5e9_30%,transparent)] transition-all duration-200 group-hover:bg-[#0ea5e9] group-hover:text-white group-hover:ring-transparent">
+ <span className="inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-semibold text-[#2563EB] ring-1 ring-[color-mix(in_oklab,#2563EB_30%,transparent)] transition-all duration-200 group-hover:bg-[#2563EB] group-hover:text-white group-hover:ring-transparent">
  {watchLabel}
  <span aria-hidden className="transition-transform duration-200 group-hover:translate-x-0.5">→</span>
  </span>

@@ -9,7 +9,7 @@
   --surface: #ffffff;
   --surface-soft: #f1f5f9;
   --gold: #d4af37;
-  --teal: #0ea5e9;
+  --teal: #2563EB;
   --ink-muted: #475569;
   --ink-soft: #64748b;
   --bridge: #cbd5e1;
@@ -428,7 +428,7 @@ select {
 }
 
 .blog-article-html a {
-  color: #0ea5e9;
+  color: #2563EB;
   font-weight: 600;
   text-decoration: underline;
   text-underline-offset: 2px;
@@ -443,9 +443,8 @@ select {
 }
 
 .admin-content {
-  margin-inline: auto;
-  max-width: 72rem;
   width: 100%;
+  max-width: 100%;
 }
 
 /* ── Public content cards (listing grids) ── */
@@ -476,4 +475,44 @@ select {
   background: color-mix(in oklab, var(--surface) 92%, transparent);
   padding: 0.25rem;
   backdrop-filter: blur(8px);
+}
+
+/* ── Section background textures (decorative overlays) ──
+   Apply to an absolutely-positioned, pointer-events-none child inside a
+   `relative` section. The radial mask fades the pattern toward the edges. */
+.bg-grid {
+  background-image:
+    linear-gradient(to right, color-mix(in oklab, var(--color-bridge) 42%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, var(--color-bridge) 42%, transparent) 1px, transparent 1px);
+  background-size: 60px 60px;
+  -webkit-mask-image: radial-gradient(ellipse 75% 65% at 50% 45%, #000 30%, transparent 78%);
+  mask-image: radial-gradient(ellipse 75% 65% at 50% 45%, #000 30%, transparent 78%);
+}
+
+.bg-dots {
+  background-image: radial-gradient(
+    color-mix(in oklab, var(--color-bridge) 70%, transparent) 1.25px,
+    transparent 1.25px
+  );
+  background-size: 26px 26px;
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 45%, #000 25%, transparent 75%);
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 45%, #000 25%, transparent 75%);
+}
+
+/* Soft teal/gold glow wash for a section backdrop. */
+.bg-glow-teal {
+  background:
+    radial-gradient(circle at 15% 25%, color-mix(in oklab, var(--color-teal) 12%, transparent), transparent 30rem),
+    radial-gradient(circle at 88% 80%, color-mix(in oklab, var(--color-gold) 9%, transparent), transparent 26rem);
+}
+
+.bg-glow-gold {
+  background:
+    radial-gradient(circle at 85% 18%, color-mix(in oklab, var(--color-gold) 13%, transparent), transparent 28rem),
+    radial-gradient(circle at 12% 85%, color-mix(in oklab, var(--color-teal) 9%, transparent), transparent 26rem);
+}
+
+/* Very subtle tinted surface to alternate full-screen sections. */
+.section-soft {
+  background: color-mix(in oklab, var(--color-surface-soft) 55%, var(--color-background));
 }

@@ -1,8 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 
-import type { LessonVideo } from "@/lib/course";
+import type { Lesson, LessonVideo } from "@/lib/course";
+import {
+ getLessonThumbnailSrc,
+ lessonVideoCount,
+ youtubeThumbnailFromEmbed,
+} from "@/lib/course";
 import type { Locale } from "@/lib/i18n";
 import {
  isDirectVideoFileUrl,
@@ -10,18 +16,64 @@ import {
  resolveLessonVideoEmbedUrl,
 } from "@/lib/video";
 
-interface LessonPlayerProps {
- videos: LessonVideo[];
- locale: Locale;
- lessonTitle: string;
+interface LessonStrings {
  videoInLessonHeading: string;
+ objectives: string;
+ relatedLessons: string;
+ /** "{count} videos" */
+ videosInLesson: string;
  paidVideoHint?: string;
+ videoFallback?: string;
+}
+
+interface LessonPlayerProps {
+ lesson: Lesson;
+ related: Lesson[];
+ locale: Locale;
+ t: LessonStrings;
 }
 
 function formatHeading(template: string, current: number, total: number) {
- return template
- .replace("{current}", String(current))
- .replace("{total}", String(total));
+ return template.replace("{current}", String(current)).replace("{total}", String(total));
+}
+
+function formatCount(template: string, count: number) {
+ return template.replace("{count}", String(count));
+}
+
+function videoThumb(lesson: Lesson, video: LessonVideo): string {
+ return youtubeThumbnailFromEmbed(video.embedUrl) || lesson.thumbnailUrl || "";
+}
+
+function PlayIcon({ className }: { className?: string }) {
+ return (
+ <svg viewBox="0 0 16 16" fill="currentColor" className={className}>
+ <path d="M3 3.732a1.5 1.5 0 0 1 2.305-1.265l6.706 4.268a1.5 1.5 0 0 1 0 2.53L5.305 13.533A1.5 1.5 0 0 1 3 12.268V3.732Z" />
+ </svg>
+ );
+}
+
+function ThumbBox({
+ src,
+ alt,
+ className = "",
+}: {
+ src: string;
+ alt: string;
+ className?: string;
+}) {
+ return (
+ <div className={`relative aspect-video shrink-0 overflow-hidden rounded-lg bg-slate-900 ${className}`}>
+ {src ? (
+ // eslint-disable-next-line @next/next/no-img-element
+ <img src={src} alt={alt} className="h-full w-full object-cover" />
+ ) : (
+ <div className="flex h-full w-full items-center justify-center text-white/40">
+ <PlayIcon className="h-5 w-5" />
+ </div>
+ )}
+ </div>
+ );
 }
 
 function VideoSurface({
@@ -61,93 +113,202 @@ function VideoSurface({
  );
 }
 
-export function LessonPlayer({
- videos,
- locale,
- lessonTitle,
- videoInLessonHeading,
- paidVideoHint,
-}: LessonPlayerProps) {
- const [activeIndex, setActiveIndex] = useState(0);
- const activeVideo = videos[activeIndex];
+export function LessonPlayer({ lesson, related, locale, t }: LessonPlayerProps) {
+ const videos = lesson.videos;
  const total = videos.length;
+ const [activeIndex, setActiveIndex] = useState(0);
+ const [descOpen, setDescOpen] = useState(false);
 
+ const activeVideo = videos[activeIndex];
  const activeTitle =
- activeVideo.titles?.[locale] ??
- formatHeading(videoInLessonHeading, activeIndex + 1, total);
+ activeVideo.titles?.[locale] ?? formatHeading(t.videoInLessonHeading, activeIndex + 1, total);
 
  const rawUrl = activeVideo.embedUrl;
  const isDirect = isDirectVideoFileUrl(rawUrl);
  const playbackSrc = isDirect ? rawUrl.trim() : resolveLessonVideoEmbedUrl(rawUrl);
- const showPaidHint = paidVideoHint && isDirect && !isYouTubeVideoUrl(rawUrl);
+ const showPaidHint = t.paidVideoHint && isDirect && !isYouTubeVideoUrl(rawUrl);
+
+ const objectives = lesson.objectives[locale];
+ const summary = lesson.summaries[locale];
+ const isPaid = lesson.type === "paid";
+
+ const metaLine = `${formatCount(t.videosInLesson, total)} · ~${lesson.approximateMinutes} min`;
 
  return (
- <div className="mt-10 flex flex-col gap-6 lg:flex-row lg:items-start">
- <div className="min-w-0 flex-1">
- <h2 className="mb-4 text-base font-semibold tracking-tight text-[var(--color-ink)]">
- {activeTitle}
- </h2>
- <div className="overflow-hidden rounded-[1.5rem] border border-slate-900/10 bg-black">
+ <div className="grid gap-x-6 gap-y-8 lg:grid-cols-[minmax(0,1fr)_388px]">
+ {/* ── Left: player + info ── */}
+ <div className="min-w-0">
+ <div className="overflow-hidden rounded-2xl border border-slate-900/10 bg-black">
  <div className="aspect-video w-full">
- <VideoSurface src={playbackSrc} title={`${lessonTitle} — ${activeTitle}`} isDirectFile={isDirect} />
+ <VideoSurface
+ src={playbackSrc}
+ title={`${lesson.titles[locale]} — ${activeTitle}`}
+ isDirectFile={isDirect}
+ />
  </div>
  </div>
- {showPaidHint ? (
- <p className="mt-3 text-xs leading-relaxed text-[var(--color-ink-soft)]">{paidVideoHint}</p>
+
+ {/* Title */}
+ <h1 className="mt-4 text-xl font-bold tracking-tight text-[var(--color-ink)] sm:text-2xl">
+ {total > 1 ? activeTitle : lesson.titles[locale]}
+ </h1>
+
+ {/* Meta row */}
+ <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-[var(--color-ink-muted)]">
+ <span
+ className={[
+ "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-bold uppercase tracking-wide",
+ isPaid
+ ? "bg-[color-mix(in_oklab,var(--color-gold)_18%,transparent)] text-[var(--color-gold)]"
+ : "bg-[color-mix(in_oklab,var(--color-teal)_14%,transparent)] text-[var(--color-teal)]",
+ ].join(" ")}
+ >
+ {isPaid ? "Paid" : "Free"}
+ </span>
+ <span className="font-medium">{metaLine}</span>
+ </div>
+
+ {/* Description box (YouTube-style) */}
+ <div className="mt-4 rounded-xl bg-[color-mix(in_oklab,var(--color-bridge)_28%,transparent)] p-4">
+ <p className="text-sm font-semibold text-[var(--color-ink)]">{lesson.titles[locale]}</p>
+ <p
+ className={[
+ "mt-1.5 whitespace-pre-line text-sm leading-relaxed text-[var(--color-ink-muted)]",
+ descOpen ? "" : "line-clamp-2",
+ ].join(" ")}
+ >
+ {summary}
+ </p>
+
+ {descOpen && objectives.length > 0 ? (
+ <div className="mt-4 border-t border-black/5 pt-4">
+ <p className="text-xs font-semibold uppercase tracking-wide text-[var(--color-ink-soft)]">
+ {t.objectives}
+ </p>
+ <ul className="mt-3 space-y-2">
+ {objectives.map((item) => (
+ <li
+ key={item}
+ className="flex gap-2.5 text-sm leading-snug text-[var(--color-ink-muted)]"
+ >
+ <span
+ className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--color-teal)]"
+ aria-hidden
+ />
+ <span>{item}</span>
+ </li>
+ ))}
+ </ul>
+ </div>
+ ) : null}
+
+ {objectives.length > 0 || (summary?.length ?? 0) > 120 ? (
+ <button
+ type="button"
+ onClick={() => setDescOpen((v) => !v)}
+ className="mt-3 text-sm font-semibold text-[var(--color-ink)] transition hover:text-[var(--color-teal)]"
+ >
+ {descOpen ? "Show less" : "…more"}
+ </button>
  ) : null}
  </div>
 
- <aside className="w-full shrink-0 lg:w-72 xl:w-80">
- <p className="mb-3 text-xs font-semibold uppercase tracking-[0.15em] text-[var(--color-ink-soft)]">
- {total} {total === 1 ? "video" : "videos"}
+ {showPaidHint ? (
+ <p className="mt-3 text-xs leading-relaxed text-[var(--color-ink-soft)]">
+ {t.paidVideoHint}
  </p>
- <ul className="space-y-2">
+ ) : t.videoFallback ? (
+ <p className="mt-3 text-xs leading-relaxed text-[var(--color-ink-soft)]">
+ {t.videoFallback}
+ </p>
+ ) : null}
+ </div>
+
+ {/* ── Right rail: playlist + up next ── */}
+ <aside className="min-w-0 space-y-6">
+ {total > 1 ? (
+ <div className="rounded-2xl border border-[color-mix(in_oklab,var(--color-bridge)_60%,transparent)] bg-[var(--color-surface)]">
+ <p className="border-b border-[color-mix(in_oklab,var(--color-bridge)_55%,transparent)] px-4 py-3 text-sm font-bold text-[var(--color-ink)]">
+ {formatCount(t.videosInLesson, total)}
+ </p>
+ <ul className="max-h-[28rem] overflow-y-auto p-2">
  {videos.map((video, index) => {
  const title =
  video.titles?.[locale] ??
- formatHeading(videoInLessonHeading, index + 1, total);
+ formatHeading(t.videoInLessonHeading, index + 1, total);
  const isActive = index === activeIndex;
-
  return (
  <li key={index}>
  <button
  type="button"
  onClick={() => setActiveIndex(index)}
+ aria-current={isActive ? "true" : undefined}
  className={[
- "flex w-full cursor-pointer items-center gap-3 rounded-xl border px-4 py-3 text-left transition",
+ "flex w-full cursor-pointer items-start gap-3 rounded-xl p-2 text-left transition",
  isActive
- ? "border-[var(--color-teal)] bg-[color-mix(in_oklab,var(--color-teal)_8%,var(--color-surface))] text-[var(--color-teal)]"
- : "border-[color-mix(in_oklab,var(--color-bridge)_65%,transparent)] bg-[var(--color-surface)] text-[var(--color-ink-muted)] hover:border-[color-mix(in_oklab,var(--color-teal)_40%,transparent)] hover:text-[var(--color-ink)]",
+ ? "bg-[color-mix(in_oklab,var(--color-teal)_10%,transparent)]"
+ : "hover:bg-[color-mix(in_oklab,var(--color-bridge)_35%,transparent)]",
  ].join(" ")}
  >
- <span
- className={[
- "flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold",
- isActive
- ? "bg-[var(--color-teal)] text-white"
- : "bg-[color-mix(in_oklab,var(--color-bridge)_50%,transparent)] text-[var(--color-ink-soft)]",
- ].join(" ")}
- >
- {index + 1}
- </span>
- <span className="line-clamp-2 text-sm font-medium leading-snug">{title}</span>
+ <div className="relative">
+ <ThumbBox src={videoThumb(lesson, video)} alt={title} className="w-36" />
  {isActive ? (
- <span className="ml-auto shrink-0">
- <svg
- xmlns="http://www.w3.org/2000/svg"
- viewBox="0 0 16 16"
- fill="currentColor"
- className="h-4 w-4"
- >
- <path d="M3 3.732a1.5 1.5 0 0 1 2.305-1.265l6.706 4.268a1.5 1.5 0 0 1 0 2.53L5.305 13.533A1.5 1.5 0 0 1 3 12.268V3.732Z" />
- </svg>
+ <span className="absolute inset-0 flex items-center justify-center rounded-lg bg-black/45 text-white">
+ <PlayIcon className="h-5 w-5" />
  </span>
  ) : null}
+ </div>
+ <div className="min-w-0 flex-1 pt-0.5">
+ <span
+ className={[
+ "block text-sm font-semibold leading-snug line-clamp-2",
+ isActive ? "text-[var(--color-teal)]" : "text-[var(--color-ink)]",
+ ].join(" ")}
+ >
+ {title}
+ </span>
+ <span className="mt-1 block text-xs text-[var(--color-ink-soft)]">
+ {formatHeading(t.videoInLessonHeading, index + 1, total)}
+ </span>
+ </div>
  </button>
  </li>
  );
  })}
  </ul>
+ </div>
+ ) : null}
+
+ {related.length > 0 ? (
+ <div>
+ <p className="mb-3 text-sm font-bold text-[var(--color-ink)]">{t.relatedLessons}</p>
+ <ul className="space-y-3">
+ {related.map((item) => (
+ <li key={item.slug}>
+ <Link
+ href={`/${locale}/education/${item.slug}`}
+ className="group flex items-start gap-3 rounded-xl p-1.5 transition hover:bg-[color-mix(in_oklab,var(--color-bridge)_35%,transparent)]"
+ >
+ <ThumbBox
+ src={getLessonThumbnailSrc(item)}
+ alt={item.titles[locale]}
+ className="w-40"
+ />
+ <div className="min-w-0 flex-1 pt-0.5">
+ <span className="block text-sm font-semibold leading-snug text-[var(--color-ink)] line-clamp-2 group-hover:text-[var(--color-teal)]">
+ {item.titles[locale]}
+ </span>
+ <span className="mt-1 block text-xs text-[var(--color-ink-soft)]">
+ {formatCount(t.videosInLesson, lessonVideoCount(item))} · ~
+ {item.approximateMinutes} min
+ </span>
+ </div>
+ </Link>
+ </li>
+ ))}
+ </ul>
+ </div>
+ ) : null}
  </aside>
  </div>
  );

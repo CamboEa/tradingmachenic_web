@@ -24,7 +24,7 @@ import { isBlogBodyEmpty } from "@/lib/blog-content";
 import { slugify } from "@/lib/slug";
 import { extractYouTubeVideoId, resolveLessonVideoEmbedUrl } from "@/lib/youtube";
 
-import { createClient, createAdminClient } from "./server";
+import { createClient, createAdminClient, getSessionUser } from "./server";
 
 export type AuthState = { error: string } | null | undefined;
 
@@ -65,11 +65,20 @@ export async function signUp(
 ): Promise<AuthState> {
   const supabase = await createClient();
 
+  const fullName = ((formData.get("full_name") as string) ?? "").trim();
+  const password = formData.get("password") as string;
+  const confirmPassword = formData.get("confirm_password") as string;
+
+  if (confirmPassword !== null && password !== confirmPassword) {
+    return { error: "Passwords do not match." };
+  }
+
   const { error } = await supabase.auth.signUp({
     email: formData.get("email") as string,
-    password: formData.get("password") as string,
+    password,
     options: {
       emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
+      data: fullName ? { full_name: fullName } : undefined,
     },
   });
 
@@ -341,7 +350,9 @@ type ToolFormData = {
   proof_of_testing_en?: string;
   proof_of_testing_km?: string;
   gallery?: ToolGalleryItem[];
-  file_url: string;
+  file_url?: string;
+  file_url_mt4?: string;
+  file_url_mt5?: string;
   image_url?: string;
   install_guide_url?: string;
   status: "draft" | "published";
@@ -377,7 +388,9 @@ export async function createTool(formData: ToolFormData): Promise<{ error?: stri
       proof_of_testing_en: formData.proof_of_testing_en ?? null,
       proof_of_testing_km: formData.proof_of_testing_km ?? null,
       gallery: normalizeToolGallery(formData.gallery ?? []),
-      file_url: formData.file_url,
+      file_url: formData.file_url ?? null,
+      file_url_mt4: formData.file_url_mt4 ?? null,
+      file_url_mt5: formData.file_url_mt5 ?? null,
       image_url: formData.image_url ?? null,
       install_guide_url: formData.install_guide_url ?? null,
       status: formData.status,
@@ -429,7 +442,9 @@ export async function updateTool(id: string, formData: ToolFormData): Promise<{ 
       proof_of_testing_en: formData.proof_of_testing_en ?? null,
       proof_of_testing_km: formData.proof_of_testing_km ?? null,
       gallery: normalizeToolGallery(formData.gallery ?? []),
-      file_url: formData.file_url,
+      file_url: formData.file_url ?? null,
+      file_url_mt4: formData.file_url_mt4 ?? null,
+      file_url_mt5: formData.file_url_mt5 ?? null,
       image_url: formData.image_url ?? null,
       install_guide_url: formData.install_guide_url ?? null,
       status: formData.status,
@@ -837,4 +852,26 @@ export async function deleteCurriculumModule(id: string): Promise<{ error?: stri
   if (error) return { error: error.message };
   revalidateCurriculumPaths();
   return {};
+}
+
+export async function updateUserRole(
+  id: string,
+  role: "student" | "admin",
+): Promise<{ error?: string; success?: boolean }> {
+  if (role !== "student" && role !== "admin") {
+    return { error: "Invalid role" };
+  }
+
+  // Prevent an admin from removing their own admin access (avoids lockout).
+  const sessionUser = await getSessionUser();
+  if (sessionUser?.id === id && role !== "admin") {
+    return { error: "You can't change your own role." };
+  }
+
+  const supabase = await createAdminClient();
+  const { error } = await supabase.from("profiles").update({ role }).eq("id", id);
+  if (error) return { error: error.message };
+
+  revalidatePath("/admin/students");
+  return { success: true };
 }

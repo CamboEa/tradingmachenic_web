@@ -40,7 +40,7 @@ export default async function EditToolPage({ params }: { params: Promise<{ id: s
  <span
  className={`rounded-full px-2 py-0.5 text-xs font-semibold ${
  tool.pricing === "free"
- ? "bg-sky-50 text-sky-700"
+ ? "bg-[#EFF6FF] text-[#1D4ED8]"
  : "bg-amber-50 text-amber-900"
  }`}
  >

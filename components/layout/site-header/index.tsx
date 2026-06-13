@@ -38,7 +38,7 @@ export function SiteHeader({
   const brand = (
     <Link
       href={`/${locale}`}
-      className="group flex min-w-0 items-center gap-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0ea5e9]/35 focus-visible:ring-offset-2 sm:gap-3"
+      className="group flex min-w-0 items-center gap-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB]/35 focus-visible:ring-offset-2 sm:gap-3"
     >
       <SiteLogo size="md" priority className="rounded-lg" />
       <span className="min-w-0">
@@ -70,7 +70,7 @@ export function SiteHeader({
                 onClick={() => setMobileNavOpen((open) => !open)}
                 aria-expanded={mobileNavOpen}
                 aria-controls="mobile-site-nav"
-                className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 transition hover:border-[#0ea5e9]/40 hover:text-[#0ea5e9] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0ea5e9]/35"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 transition hover:border-[#2563EB]/40 hover:text-[#2563EB] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB]/35"
               >
                 <span className="sr-only">{mobileNavOpen ? "Close menu" : "Open menu"}</span>
                 <svg

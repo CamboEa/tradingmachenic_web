@@ -204,14 +204,34 @@ export default async function ToolDetailPage({
 
  {/* CTAs */}
  <div className="mt-8 flex flex-wrap gap-3">
- {tool.file_url && (
+ {tool.file_url_mt4 && (
  <a
- href={tool.file_url}
+ href={`/api/tools/${tool.id}/download?platform=mt4`}
  download
  className="flex items-center gap-2.5 rounded-xl bg-[#0ea5e9] px-6 py-3 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:bg-sky-500"
  >
  <DownloadIcon />
- Download Free
+ Download for MT4
+ </a>
+ )}
+ {tool.file_url_mt5 && (
+ <a
+ href={`/api/tools/${tool.id}/download?platform=mt5`}
+ download
+ className="flex items-center gap-2.5 rounded-xl bg-[#0ea5e9] px-6 py-3 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:bg-sky-500"
+ >
+ <DownloadIcon />
+ Download for MT5
+ </a>
+ )}
+ {tool.file_url && (
+ <a
+ href={`/api/tools/${tool.id}/download`}
+ download
+ className="flex items-center gap-2.5 rounded-xl bg-[#0ea5e9] px-6 py-3 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:bg-sky-500"
+ >
+ <DownloadIcon />
+ Download {isFree ? "Free" : "Now"}
  </a>
  )}
  {tool.install_guide_url && (

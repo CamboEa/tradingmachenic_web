@@ -20,7 +20,7 @@ export function TradingViewForexHeatmap() {
     <iframe
       title="Forex currency strength heat map"
       src={src}
-      className="block h-[500px] w-full border-0"
+      className="block h-[clamp(420px,58vh,680px)] w-full border-0"
       referrerPolicy="no-referrer-when-downgrade"
       allow="clipboard-write"
     />

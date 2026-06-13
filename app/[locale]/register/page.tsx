@@ -31,8 +31,13 @@ export default async function RegisterPage({
  </h1>
  <AuthForm
  mode="register"
+ nameLabel={dict.registerPage.nameLabel}
  emailLabel={dict.registerPage.emailLabel}
  passwordLabel={dict.registerPage.passwordLabel}
+ confirmPasswordLabel={dict.registerPage.confirmPasswordLabel}
+ passwordMismatch={dict.registerPage.passwordMismatch}
+ showPasswordLabel={dict.registerPage.showPassword}
+ hidePasswordLabel={dict.registerPage.hidePassword}
  submitLabel={dict.registerPage.submit}
  locale={locale}
  />

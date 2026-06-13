@@ -7,7 +7,7 @@ import { getPublishedTools, type Tool } from "@/lib/supabase/tools";
 
 function ToolPlaceholder({ type }: { type: Tool["type"] }) {
  return (
- <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-slate-100 via-white to-sky-50">
+ <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-slate-100 via-white to-[#EFF6FF]">
  <svg
  viewBox="0 0 64 64"
  fill="none"
@@ -18,12 +18,12 @@ function ToolPlaceholder({ type }: { type: Tool["type"] }) {
  <>
  <path d="M12 46h40" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
  <path d="M18 40V26M32 40V16M46 40V30" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
- <path d="M14 24c7 5 12 6 18 1s10-8 18-2" stroke="#0EA5E9" strokeWidth="4" strokeLinecap="round" />
+ <path d="M14 24c7 5 12 6 18 1s10-8 18-2" stroke="#2563EB" strokeWidth="4" strokeLinecap="round" />
  </>
  ) : (
  <>
  <rect x="15" y="18" width="34" height="28" rx="8" stroke="currentColor" strokeWidth="4" />
- <path d="M24 30h.01M40 30h.01M27 39h10" stroke="#0EA5E9" strokeWidth="4" strokeLinecap="round" />
+ <path d="M24 30h.01M40 30h.01M27 39h10" stroke="#2563EB" strokeWidth="4" strokeLinecap="round" />
  <path d="M32 18v-6" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
  </>
  )}
@@ -59,7 +59,7 @@ function ToolCard({ tool, locale }: { tool: Tool; locale: Locale }) {
  {/* Free / Paid badge — top left */}
  <span className={`absolute left-3 top-3 rounded-md px-2.5 py-1 text-[11px] font-bold uppercase tracking-widest ${
  isFree
- ? "bg-[#0ea5e9] text-white"
+ ? "bg-[#2563EB] text-white"
  : "bg-[#d4af37] text-[#1e293b]"
  }`}>
  {isFree ? "Free" : "Paid"}
@@ -80,7 +80,7 @@ function ToolCard({ tool, locale }: { tool: Tool; locale: Locale }) {
  <div className="flex flex-1 flex-col p-5">
  {/* Name + version */}
  <div className="flex items-baseline justify-between gap-2">
- <h3 className="font-bold leading-snug text-[#1e293b] transition-colors group-hover:text-[#0ea5e9]">
+ <h3 className="font-bold leading-snug text-[#1e293b] transition-colors group-hover:text-[#2563EB]">
  {tool.name}
  </h3>
  <span className="shrink-0 rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[10px] text-slate-400">
@@ -102,9 +102,9 @@ function ToolCard({ tool, locale }: { tool: Tool; locale: Locale }) {
 
  {/* CTA hint */}
  <div className="mt-auto flex items-center justify-between">
- <span className="text-xs font-semibold text-[#0ea5e9] transition group-hover:translate-x-0.5">View details →</span>
+ <span className="text-xs font-semibold text-[#2563EB] transition group-hover:translate-x-0.5">View details →</span>
  {tool.pricing === "free" && (
- <span className="rounded-full bg-sky-50 px-2.5 py-0.5 text-[11px] font-bold text-[#0ea5e9]">Free Download</span>
+ <span className="rounded-full bg-[#EFF6FF] px-2.5 py-0.5 text-[11px] font-bold text-[#2563EB]">Free Download</span>
  )}
  </div>
  </div>

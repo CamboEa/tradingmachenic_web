@@ -34,6 +34,19 @@ export const ui = {
 
   linkCard:
     "group flex flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm shadow-slate-900/5 transition duration-300 hover:-translate-y-1 hover:border-teal/25 hover:shadow-lg hover:shadow-slate-900/10",
+
+  /** Data tables (admin lists) */
+  tableHeadRow:
+    "border-b border-slate-200 bg-slate-50/70 text-left text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-500",
+  tableTh: "whitespace-nowrap px-4 py-3 font-semibold",
+  tableRow: "transition-colors hover:bg-slate-50/70",
+  tableTd: "px-4 py-3 align-middle text-slate-600",
+
+  /** Compact square icon buttons for table row actions */
+  iconBtn:
+    "inline-flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 transition hover:border-teal/40 hover:text-teal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal/30 disabled:pointer-events-none disabled:opacity-50",
+  iconBtnDanger:
+    "inline-flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-400 transition hover:border-red-300 hover:bg-red-50 hover:text-red-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-300/40 disabled:pointer-events-none disabled:opacity-50",
 } as const;
 
 /** Form inputs (admin forms) */

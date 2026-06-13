@@ -15,7 +15,7 @@ export default async function NewCurriculumModulePage({
  return (
  <div>
  <p className="text-sm text-slate-600">Missing phase. Pick a phase from Program Management and use “Add module”.</p>
- <Link href="/admin/program" className="mt-4 inline-block text-sm font-medium text-[#0ea5e9] hover:underline">
+ <Link href="/admin/program" className="mt-4 inline-block text-sm font-medium text-[#2563EB] hover:underline">
  ← Back to program
  </Link>
  </div>

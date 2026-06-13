@@ -220,7 +220,7 @@ export function BlogForm({ post }: { post?: BlogPost }) {
                   className={[
                     "flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-semibold transition",
                     active
-                      ? "border-[#0ea5e9] bg-sky-50 text-[#0ea5e9]"
+                      ? "border-[#2563EB] bg-[#EFF6FF] text-[#2563EB]"
                       : done
                         ? "border-emerald-200 bg-emerald-50 text-emerald-800"
                         : "border-slate-200 bg-slate-50 text-slate-400",
@@ -231,7 +231,7 @@ export function BlogForm({ post }: { post?: BlogPost }) {
                   <span
                     className={[
                       "flex h-5 w-5 items-center justify-center rounded-full text-[10px]",
-                      active ? "bg-[#0ea5e9] text-white" : done ? "bg-emerald-500 text-white" : "bg-slate-200 text-slate-500",
+                      active ? "bg-[#2563EB] text-white" : done ? "bg-emerald-500 text-white" : "bg-slate-200 text-slate-500",
                     ].join(" ")}
                   >
                     {done ? "✓" : i + 1}
@@ -274,7 +274,7 @@ export function BlogForm({ post }: { post?: BlogPost }) {
                       setSlugTouched(false);
                     }
                   }}
-                  className="text-xs font-semibold text-[#0ea5e9] hover:text-sky-700"
+                  className="text-xs font-semibold text-[#2563EB] hover:text-[#1D4ED8]"
                 >
                   Regenerate from title
                 </button>
@@ -413,14 +413,14 @@ export function BlogForm({ post }: { post?: BlogPost }) {
               {(["Draft", "Published"] as const).map((s) => (
                 <label
                   key={s}
-                  className="flex cursor-pointer items-center gap-2 rounded-lg border border-slate-200 px-4 py-2.5 text-sm has-[:checked]:border-[#0ea5e9] has-[:checked]:bg-sky-50"
+                  className="flex cursor-pointer items-center gap-2 rounded-lg border border-slate-200 px-4 py-2.5 text-sm has-[:checked]:border-[#2563EB] has-[:checked]:bg-[#EFF6FF]"
                 >
                   <input
                     type="radio"
                     name="status"
                     value={s}
                     defaultChecked={s === defaultStatus}
-                    className="accent-[#0ea5e9]"
+                    className="accent-[#2563EB]"
                   />
                   {s}
                 </label>
@@ -446,7 +446,7 @@ export function BlogForm({ post }: { post?: BlogPost }) {
             <button
               type="button"
               onClick={handleNext}
-              className="rounded-lg bg-[#0ea5e9] px-6 py-2.5 text-sm font-semibold text-white hover:bg-sky-600"
+              className="rounded-lg bg-[#2563EB] px-6 py-2.5 text-sm font-semibold text-white hover:bg-[#1D4ED8]"
             >
               Continue
             </button>
@@ -454,7 +454,7 @@ export function BlogForm({ post }: { post?: BlogPost }) {
             <button
               type="submit"
               disabled={isSaving}
-              className="rounded-lg bg-[#0ea5e9] px-6 py-2.5 text-sm font-semibold text-white hover:bg-sky-600 disabled:bg-slate-300"
+              className="rounded-lg bg-[#2563EB] px-6 py-2.5 text-sm font-semibold text-white hover:bg-[#1D4ED8] disabled:bg-slate-300"
             >
               {isSaving ? "Saving…" : isEdit ? "Save changes" : "Save article"}
             </button>

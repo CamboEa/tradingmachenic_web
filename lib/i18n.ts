@@ -141,8 +141,13 @@ export type Dictionary = {
   registerPage: {
     title: string;
     intro: string;
+    nameLabel: string;
     emailLabel: string;
     passwordLabel: string;
+    confirmPasswordLabel: string;
+    passwordMismatch: string;
+    showPassword: string;
+    hidePassword: string;
     submit: string;
     switchPrompt: string;
     switchLink: string;
@@ -152,6 +157,8 @@ export type Dictionary = {
     intro: string;
     emailLabel: string;
     passwordLabel: string;
+    showPassword: string;
+    hidePassword: string;
     submit: string;
     switchPrompt: string;
     switchLink: string;
@@ -377,8 +384,13 @@ const en: Dictionary = {
     title: "Create an account",
     intro:
       "Registration is not wired yet—this form is a layout preview only. Connect your auth provider when you are ready.",
+    nameLabel: "Full name",
     emailLabel: "Email",
     passwordLabel: "Password",
+    confirmPasswordLabel: "Confirm password",
+    passwordMismatch: "Passwords do not match.",
+    showPassword: "Show password",
+    hidePassword: "Hide password",
     submit: "Register",
     switchPrompt: "Already have an account?",
     switchLink: "Log in",
@@ -389,6 +401,8 @@ const en: Dictionary = {
       "Sign-in is not connected yet—submitting will not authenticate you until you plug in your backend.",
     emailLabel: "Email",
     passwordLabel: "Password",
+    showPassword: "Show password",
+    hidePassword: "Hide password",
     submit: "Log in",
     switchPrompt: "Need an account?",
     switchLink: "Register",
@@ -635,8 +649,13 @@ const km: Dictionary = {
     title: "បង្កើតគណនី",
     intro:
       "ការចុះឈ្មោះមិនទាន់តភ្ជាប់មែនទេ—ទម្រង់នេះគ្រាន់តែបង្ហាញមុខងារ។ ភ្ជាប់ប្រព័ន្ធផ្ទៀងផ្ទាត់នៅពេលអ្នករួចរាល់។",
+    nameLabel: "ឈ្មោះពេញ",
     emailLabel: "អ៊ីមែល",
     passwordLabel: "ពាក្យសម្ងាត់",
+    confirmPasswordLabel: "បញ្ជាក់ពាក្យសម្ងាត់",
+    passwordMismatch: "ពាក្យសម្ងាត់មិនត្រូវគ្នាទេ។",
+    showPassword: "បង្ហាញពាក្យសម្ងាត់",
+    hidePassword: "លាក់ពាក្យសម្ងាត់",
     submit: "ចុះឈ្មោះ",
     switchPrompt: "មានគណនីរួចហើយ?",
     switchLink: "ចូល",
@@ -647,6 +666,8 @@ const km: Dictionary = {
       "ការចូលមិនទាន់តភ្ជាប់មែនទេ—ការដាក់ស្នើនឹងមិនបញ្ជាក់អត្តសញ្ញាណរហូតដល់អ្នកភ្ជាប់ម៉ាស៊ីនមេ។",
     emailLabel: "អ៊ីមែល",
     passwordLabel: "ពាក្យសម្ងាត់",
+    showPassword: "បង្ហាញពាក្យសម្ងាត់",
+    hidePassword: "លាក់ពាក្យសម្ងាត់",
     submit: "ចូល",
     switchPrompt: "ត្រូវការគណនី?",
     switchLink: "ចុះឈ្មោះ",

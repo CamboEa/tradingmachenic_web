@@ -3,7 +3,9 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { useConfirm } from "@/components/shared/confirm-dialog";
+import { SpinnerIcon, TrashIcon } from "@/components/ui/icons";
 import { deleteBlogPost } from "@/lib/supabase/actions";
+import { ui } from "@/lib/ui/styles";
 
 export function DeleteBlogButton({
   id,
@@ -44,9 +46,11 @@ export function DeleteBlogButton({
         type="button"
         onClick={handleDeleteClick}
         disabled={deleting}
-        className="rounded-md border border-slate-200 px-3 py-2 text-xs font-medium text-slate-400 transition-colors hover:border-red-300 hover:text-red-500 disabled:opacity-50"
+        className={ui.iconBtnDanger}
+        aria-label={`Delete ${title}`}
+        title="Delete"
       >
-        {deleting ? "Deleting…" : "Delete"}
+        {deleting ? <SpinnerIcon /> : <TrashIcon />}
       </button>
       {ConfirmDialogHost}
     </>

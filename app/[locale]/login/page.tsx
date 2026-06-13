@@ -36,6 +36,8 @@ export default async function LoginPage({
  mode="login"
  emailLabel={dict.loginPage.emailLabel}
  passwordLabel={dict.loginPage.passwordLabel}
+ showPasswordLabel={dict.loginPage.showPassword}
+ hidePasswordLabel={dict.loginPage.hidePassword}
  submitLabel={dict.loginPage.submit}
  locale={locale}
  redirectTo={redirectTo}

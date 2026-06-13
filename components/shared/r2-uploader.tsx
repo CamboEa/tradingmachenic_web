@@ -13,6 +13,8 @@ interface R2UploaderProps {
  hint: string;
  initialUrl?: string;
  onUploaded: (publicUrl: string, key: string) => void;
+ /** Returns the R2 key prefix (folder) to upload into, evaluated at upload time. */
+ getKeyPrefix?: () => string;
 }
 
 type State =
@@ -93,6 +95,7 @@ export function R2Uploader({
  hint,
  initialUrl,
  onUploaded,
+ getKeyPrefix,
 }: R2UploaderProps) {
  const [state, setState] = useState<State>(
  initialUrl ? { status: "done", publicUrl: initialUrl } : { status: "idle" },
@@ -119,6 +122,7 @@ export function R2Uploader({
  filename: file.name,
  contentType,
  sizeBytes: file.size,
+ folder: getKeyPrefix?.() || undefined,
  }),
  });
 
@@ -192,12 +196,12 @@ export function R2Uploader({
  className={[
  "flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed px-4 py-8 text-center transition",
  isUploading
- ? "cursor-not-allowed border-[#0ea5e9] bg-sky-50"
+ ? "cursor-not-allowed border-[#2563EB] bg-[#EFF6FF]"
  : state.status === "done"
  ? "border-emerald-300 bg-emerald-50"
  : state.status === "error"
  ? "border-red-300 bg-red-50"
- : "border-slate-200 bg-slate-50 hover:border-[#0ea5e9] hover:bg-sky-50",
+ : "border-slate-200 bg-slate-50 hover:border-[#2563EB] hover:bg-[#EFF6FF]",
  ].join(" ")}
  >
  <input
@@ -219,7 +223,7 @@ export function R2Uploader({
  />
  </svg>
  <p className="mt-2 text-xs text-slate-500">
- Drop file here or <span className="font-semibold text-[#0ea5e9]">browse</span>
+ Drop file here or <span className="font-semibold text-[#2563EB]">browse</span>
  </p>
  <p className="mt-1 text-[10px] text-slate-400">{hint}</p>
  </>
@@ -227,7 +231,7 @@ export function R2Uploader({
 
  {state.status === "uploading" && (
  <>
- <p className="text-sm font-semibold text-[#0ea5e9]">
+ <p className="text-sm font-semibold text-[#2563EB]">
  {state.phase === "preparing"
  ? "Preparing upload…"
  : `Uploading… ${state.progress}%`}
@@ -237,9 +241,9 @@ export function R2Uploader({
  ? `${formatBytes(state.loaded)} / ${formatBytes(state.total)}`
  : "Requesting secure upload URL"}
  </p>
- <div className="mt-3 h-2 w-full max-w-xs overflow-hidden rounded-full bg-sky-100">
+ <div className="mt-3 h-2 w-full max-w-xs overflow-hidden rounded-full bg-[#DBEAFE]">
  <div
- className="h-full rounded-full bg-[#0ea5e9] transition-[width] duration-150 ease-out"
+ className="h-full rounded-full bg-[#2563EB] transition-[width] duration-150 ease-out"
  style={{
  width: state.phase === "preparing" ? "8%" : `${state.progress}%`,
  }}

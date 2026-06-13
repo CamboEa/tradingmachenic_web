@@ -47,7 +47,7 @@ export function TradingViewSymbolOverview() {
     <iframe
       title="Live price charts — Gold, EUR/USD, GBP/USD"
       src={src}
-      className="block h-[480px] w-full border-0"
+      className="block h-[clamp(420px,58vh,680px)] w-full border-0"
       referrerPolicy="no-referrer-when-downgrade"
       allow="clipboard-write"
     />

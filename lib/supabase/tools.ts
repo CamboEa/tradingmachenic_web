@@ -27,7 +27,12 @@ export interface Tool {
   gallery: ToolGalleryItem[];
   install_guide_url: string | null;
   file_url: string | null;
+  file_url_mt4: string | null;
+  file_url_mt5: string | null;
   image_url: string | null;
+  download_count: number;
+  download_count_mt4: number;
+  download_count_mt5: number;
   status: "draft" | "published";
 }
 

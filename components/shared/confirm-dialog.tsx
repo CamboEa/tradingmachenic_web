@@ -55,7 +55,7 @@ export function ConfirmDialog({
  const confirmClass =
  variant === "danger"
  ? "bg-red-600 text-white hover:bg-red-700 focus-visible:ring-red-500/40"
- : "bg-[#0ea5e9] text-white hover:bg-sky-600 focus-visible:ring-[#0ea5e9]/40";
+ : "bg-[#2563EB] text-white hover:bg-[#1D4ED8] focus-visible:ring-[#2563EB]/40";
 
  return createPortal(
  <div
@@ -82,7 +82,7 @@ export function ConfirmDialog({
  className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${
  variant === "danger"
  ? "bg-red-50 text-red-600 ring-1 ring-red-100"
- : "bg-sky-50 text-[#0ea5e9] ring-1 ring-sky-100"
+ : "bg-[#EFF6FF] text-[#2563EB] ring-1 ring-[#DBEAFE]"
  }`}
  aria-hidden
  >
@@ -120,7 +120,7 @@ export function ConfirmDialog({
  type="button"
  onClick={onCancel}
  disabled={loading}
- className="rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0ea5e9]/30 disabled:opacity-50"
+ className="rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB]/30 disabled:opacity-50"
  >
  {cancelLabel}
  </button>

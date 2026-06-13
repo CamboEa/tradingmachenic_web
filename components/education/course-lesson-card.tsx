@@ -22,7 +22,6 @@ export function CourseLessonCard({
   const thumbSrc = getLessonThumbnailSrc(lesson);
   const title = lesson.titles[locale];
   const summary = lesson.summaries[locale];
-  const previewObjectives = lesson.objectives[locale].slice(0, 2);
   const videoCount = lessonVideoCount(lesson);
 
   return (
@@ -107,31 +106,8 @@ export function CourseLessonCard({
             {summary}
           </p>
 
-          {/* Key outcomes */}
-          {previewObjectives.length > 0 && (
-            <div className="mt-4 flex-1 rounded-xl bg-slate-50/80 px-4 py-3.5 ring-1 ring-slate-100">
-              <p className="mb-2.5 text-[10px] font-bold uppercase tracking-[0.16em] text-[var(--color-gold)]">
-                {dict.course.keyOutcomes}
-              </p>
-              <ul className="space-y-2">
-                {previewObjectives.map((item) => (
-                  <li
-                    key={item}
-                    className="flex gap-2.5 text-xs leading-snug text-[var(--color-ink-muted)]"
-                  >
-                    <span
-                      className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--color-teal)]"
-                      aria-hidden
-                    />
-                    <span className="line-clamp-2">{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
           {/* Footer */}
-          <div className="mt-5 flex items-center justify-between border-t border-slate-100 pt-4">
+          <div className="mt-auto flex items-center justify-between border-t border-slate-100 pt-4">
             <span className="text-xs font-medium tabular-nums text-[var(--color-ink-soft)]">
               {String(index + 1).padStart(2, "0")}
               <span className="mx-1 opacity-40">/</span>

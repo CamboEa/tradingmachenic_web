@@ -101,14 +101,14 @@ export function BlogVideoPlayer({
                       className={[
                         "flex w-full items-center gap-3 rounded-xl border px-3 py-2.5 text-left text-sm transition",
                         isActive
-                          ? "border-[#0ea5e9] bg-sky-50 text-[#0ea5e9]"
-                          : "border-slate-200 bg-white text-slate-600 hover:border-[#0ea5e9]/30",
+                          ? "border-[#2563EB] bg-[#EFF6FF] text-[#2563EB]"
+                          : "border-slate-200 bg-white text-slate-600 hover:border-[#2563EB]/30",
                       ].join(" ")}
                     >
                       <span
                         className={[
                           "flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[10px] font-bold",
-                          isActive ? "bg-[#0ea5e9] text-white" : "bg-slate-100 text-slate-500",
+                          isActive ? "bg-[#2563EB] text-white" : "bg-slate-100 text-slate-500",
                         ].join(" ")}
                       >
                         {index + 1}

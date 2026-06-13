@@ -7,6 +7,7 @@ import { R2Uploader } from "@/components/shared/r2-uploader";
 import { ToolGalleryEditor } from "@/components/tools/tool-gallery-editor";
 import type { Tool } from "@/lib/supabase/tools";
 import type { ToolGalleryItem } from "@/lib/supabase/tool-gallery";
+import { slugify } from "@/lib/slug";
 
 const TOOL_TYPES = ["Indicator", "Expert Advisor (EA)"] as const;
 const PLATFORMS = ["MT4", "MT5", "MT4 & MT5"] as const;
@@ -36,7 +37,12 @@ export function ToolsForm({ tool }: Props) {
  const formRef = useRef<HTMLFormElement>(null);
 
  const [step, setStep] = useState(0);
+ const [platform, setPlatform] = useState<(typeof PLATFORMS)[number]>(
+ (tool?.platform as (typeof PLATFORMS)[number]) ?? "MT4",
+ );
  const [uploadedFileUrl, setUploadedFileUrl] = useState<string | null>(tool?.file_url ?? null);
+ const [uploadedFileUrlMt4, setUploadedFileUrlMt4] = useState<string | null>(tool?.file_url_mt4 ?? null);
+ const [uploadedFileUrlMt5, setUploadedFileUrlMt5] = useState<string | null>(tool?.file_url_mt5 ?? null);
  const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(tool?.image_url ?? null);
  const [galleryItems, setGalleryItems] = useState<ToolGalleryItem[]>(tool?.gallery ?? []);
  const [isSaving, setIsSaving] = useState(false);
@@ -46,6 +52,19 @@ export function ToolsForm({ tool }: Props) {
  const defaultStatus = tool?.status === "published" ? "Published" : "Draft";
 
  const isLastStep = step === STEPS.length - 1;
+ const isDualPlatform = platform === "MT4 & MT5";
+
+ // R2 folder for this tool's uploads: indicator/<name> or expert_advisor/<name>.
+ function toolKeyPrefix(): string {
+ const form = formRef.current;
+ const typeFolder =
+ (form ? readFormString(form, "toolType") : defaultType) === "Indicator"
+ ? "indicator"
+ : "expert_advisor";
+ const name = form ? readFormString(form, "toolName") : tool?.name ?? "";
+ const nameSlug = slugify(name) || "untitled";
+ return `${typeFolder}/${nameSlug}`;
+ }
 
  function validateStep(index: number): boolean {
  const form = formRef.current;
@@ -64,9 +83,16 @@ export function ToolsForm({ tool }: Props) {
  }
  }
 
- if (index === STEPS.length - 1 && !uploadedFileUrl) {
+ if (index === STEPS.length - 1) {
+ if (isDualPlatform) {
+ if (!uploadedFileUrlMt4 || !uploadedFileUrlMt5) {
+ toast.error("Please upload both the MT4 and MT5 files before publishing");
+ return false;
+ }
+ } else if (!uploadedFileUrl) {
  toast.error("Please upload a tool file before publishing");
  return false;
+ }
  }
 
  return true;
@@ -138,7 +164,9 @@ export function ToolsForm({ tool }: Props) {
  proof_of_testing_en: proof_of_testing_en || undefined,
  proof_of_testing_km: proof_of_testing_km || undefined,
  gallery: galleryItems,
- file_url: uploadedFileUrl!,
+ file_url: isDualPlatform ? undefined : uploadedFileUrl ?? undefined,
+ file_url_mt4: isDualPlatform ? uploadedFileUrlMt4 ?? undefined : undefined,
+ file_url_mt5: isDualPlatform ? uploadedFileUrlMt5 ?? undefined : undefined,
  image_url: uploadedImageUrl || undefined,
  install_guide_url: install_guide_url || undefined,
  status: (status === "Published" ? "published" : "draft") as "draft" | "published",
@@ -293,7 +321,12 @@ export function ToolsForm({ tool }: Props) {
  </div>
  <div>
  <label className="mb-1.5 block text-xs font-semibold text-slate-600">Platform</label>
- <select name="platform" defaultValue={tool?.platform ?? "MT4"} className={fieldClass}>
+ <select
+ name="platform"
+ value={platform}
+ onChange={(e) => setPlatform(e.target.value as (typeof PLATFORMS)[number])}
+ className={fieldClass}
+ >
  {PLATFORMS.map((p) => (
  <option key={p}>{p}</option>
  ))}
@@ -405,12 +438,46 @@ export function ToolsForm({ tool }: Props) {
  <p className="mt-1 mb-4 text-xs text-slate-500">
  Upload images with English and Khmer captions for the gallery section.
  </p>
- <ToolGalleryEditor initialItems={tool?.gallery} onChange={setGalleryItems} />
+ <ToolGalleryEditor
+ initialItems={tool?.gallery}
+ onChange={setGalleryItems}
+ getKeyPrefix={toolKeyPrefix}
+ />
  </div>
  </div>
 
  {/* Step 5 — Files & publish */}
  <div className={step === 4 ? "space-y-5" : "hidden"}>
+ {isDualPlatform ? (
+ <>
+ <R2Uploader
+ bucketName="trading-tool"
+ accept=".ex4,.mq4,.zip"
+ label={
+ <>
+ MT4 file <span className="text-red-500">*</span>
+ </>
+ }
+ hint=".ex4, .mq4, .zip — max 20 MB"
+ initialUrl={tool?.file_url_mt4 ?? undefined}
+ onUploaded={(url) => setUploadedFileUrlMt4(url)}
+ getKeyPrefix={toolKeyPrefix}
+ />
+ <R2Uploader
+ bucketName="trading-tool"
+ accept=".ex5,.mq5,.zip"
+ label={
+ <>
+ MT5 file <span className="text-red-500">*</span>
+ </>
+ }
+ hint=".ex5, .mq5, .zip — max 20 MB"
+ initialUrl={tool?.file_url_mt5 ?? undefined}
+ onUploaded={(url) => setUploadedFileUrlMt5(url)}
+ getKeyPrefix={toolKeyPrefix}
+ />
+ </>
+ ) : (
  <R2Uploader
  bucketName="trading-tool"
  accept=".ex4,.ex5,.mq4,.mq5,.zip"
@@ -422,7 +489,9 @@ export function ToolsForm({ tool }: Props) {
  hint=".ex4, .ex5, .mq4, .mq5, .zip — max 20 MB"
  initialUrl={tool?.file_url ?? undefined}
  onUploaded={(url) => setUploadedFileUrl(url)}
+ getKeyPrefix={toolKeyPrefix}
  />
+ )}
 
  <R2Uploader
  bucketName="trading-tool"
@@ -435,6 +504,7 @@ export function ToolsForm({ tool }: Props) {
  hint="PNG, JPG, WebP — max 20 MB"
  initialUrl={tool?.image_url ?? undefined}
  onUploaded={(url) => setUploadedImageUrl(url)}
+ getKeyPrefix={toolKeyPrefix}
  />
 
  <div>

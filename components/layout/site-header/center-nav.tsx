@@ -60,7 +60,7 @@ export function CenterNav({
   }, [moreOpen]);
 
   const linkBase =
-    "relative whitespace-nowrap rounded-lg px-3 py-2 text-sm font-semibold tracking-tight transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0ea5e9]/35 sm:rounded-full";
+    "relative whitespace-nowrap rounded-lg px-3 py-2 text-sm font-semibold tracking-tight transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB]/35 sm:rounded-full";
 
   const linkActive =
     `${linkBase} text-[#1e293b] after:pointer-events-none after:absolute after:inset-x-2 after:bottom-1.5 after:h-0.5 after:rounded-full after:bg-[#d4af37] sm:after:hidden sm:bg-[#1e293b] sm:text-white`;

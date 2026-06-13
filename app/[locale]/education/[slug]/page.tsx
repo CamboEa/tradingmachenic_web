@@ -2,7 +2,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { LessonPlayer } from "@/components/education/lesson-player";
-import { RelatedLessons } from "@/components/education/related-lessons";
 import { getAllLessons, getLessonBySlug } from "@/lib/supabase/lessons";
 import { getDictionary, isLocale, type Locale } from "@/lib/i18n";
 import { isDirectVideoFileUrl } from "@/lib/video";
@@ -58,8 +57,8 @@ export default async function LessonPage({
  lesson.videos.some((v) => isDirectVideoFileUrl(v.embedUrl));
 
  return (
- <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
- <p className="text-sm">
+ <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-6 sm:px-6 lg:px-8 lg:py-10">
+ <p className="mb-6 text-sm">
  <Link
  href={`/${locale}/education`}
  className="font-semibold text-[#0ea5e9] transition hover:text-sky-700"
@@ -68,39 +67,19 @@ export default async function LessonPage({
  </Link>
  </p>
 
- <header className="mt-6 max-w-4xl rounded-[2rem] border border-white/80 bg-white/78 p-6 backdrop-blur sm:p-8">
- <h1 className="text-3xl font-semibold tracking-[-0.025em] text-[var(--color-ink)] sm:text-5xl">
- {lesson.titles[locale]}
- </h1>
- <p className="mt-4 max-w-3xl text-lg leading-8 text-[var(--color-ink-muted)]">
- {lesson.summaries[locale]}
- </p>
- </header>
-
  <LessonPlayer
- videos={lesson.videos}
+ lesson={lesson}
+ related={related}
  locale={locale}
- lessonTitle={lesson.titles[locale]}
- videoInLessonHeading={dict.course.videoInLessonHeading}
- paidVideoHint={showHostedHint ? dict.course.paidVideoHint : undefined}
+ t={{
+ videoInLessonHeading: dict.course.videoInLessonHeading,
+ objectives: dict.course.objectives,
+ relatedLessons: dict.course.relatedLessons,
+ videosInLesson: dict.course.videosInLesson,
+ paidVideoHint: showHostedHint ? dict.course.paidVideoHint : undefined,
+ videoFallback: showHostedHint ? dict.course.videoFallback : undefined,
+ }}
  />
-
- {showHostedHint ? (
- <p className="mt-2 text-xs text-[var(--color-ink-soft)]">{dict.course.videoFallback}</p>
- ) : null}
-
- <section className="mt-10 max-w-4xl rounded-[1.5rem] border border-white/80 bg-white/88 p-6 backdrop-blur">
- <h2 className="text-sm font-semibold uppercase tracking-wide text-[var(--color-ink-soft)]">
- {dict.course.objectives}
- </h2>
- <ul className="mt-4 list-disc space-y-2 pl-5 text-[var(--color-ink-muted)]">
- {lesson.objectives[locale].map((item) => (
- <li key={item}>{item}</li>
- ))}
- </ul>
- </section>
-
- <RelatedLessons lessons={related} locale={locale} title={dict.course.relatedLessons} />
  </main>
  );
 }

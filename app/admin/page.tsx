@@ -1,14 +1,26 @@
 import Link from "next/link";
 
-import { AdminPageHeader, ButtonLink, Card, StatCard } from "@/components/ui";
+import {
+  AdminPageHeader,
+  Card,
+  DataTable,
+  EditLink,
+  RowActions,
+  StatCard,
+  Td,
+  Th,
+  Tr,
+} from "@/components/ui";
 import { getCurriculum } from "@/lib/supabase/curriculum-data";
 import { getAllLessonsForAdmin } from "@/lib/supabase/lessons";
+import { getAllTools } from "@/lib/supabase/tools";
 import { cn } from "@/lib/ui/cn";
 
 export default async function AdminDashboard() {
-  const [lessons, curriculum] = await Promise.all([
+  const [lessons, curriculum, tools] = await Promise.all([
     getAllLessonsForAdmin(),
     getCurriculum(),
+    getAllTools(),
   ]);
   const sorted = [...curriculum].sort((a, b) => a.sort_order - b.sort_order);
   const phase0 = sorted[0];
@@ -16,6 +28,8 @@ export default async function AdminDashboard() {
   const theoryModules = phase0?.weeks.length ?? 0;
   const practiceModules = phase1?.weeks.length ?? 0;
   const totalVideos = lessons.reduce((acc, l) => acc + l.videos.length, 0);
+  const publishedTools = tools.filter((t) => t.status === "published").length;
+  const totalDownloads = tools.reduce((acc, t) => acc + (t.download_count ?? 0), 0);
 
   return (
     <div>
@@ -25,7 +39,7 @@ export default async function AdminDashboard() {
         description="Overview of your Algorithmic Alpha Trade content, curriculum, and tools."
       />
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
         <StatCard
           label="Video Lessons"
           value={lessons.length}
@@ -44,25 +58,18 @@ export default async function AdminDashboard() {
           sub={phase1?.label_en ?? "Phase II curriculum"}
           accent="teal"
         />
-        <StatCard label="Tools Published" value={0} sub="Indicators & EAs" accent="slate" />
-      </div>
-
-      <div className="mt-10">
-        <h2 className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
-          Quick actions
-        </h2>
-        <div className="flex flex-wrap gap-3">
-          <ButtonLink href="/admin/program" variant="gold">
-            Manage Program
-          </ButtonLink>
-          <ButtonLink href="/admin/lessons">Manage Lessons</ButtonLink>
-          <ButtonLink href="/admin/tools" variant="secondary" className="bg-slate-brand text-white hover:bg-slate-800 hover:text-white border-slate-brand">
-            Create Tool
-          </ButtonLink>
-          <ButtonLink href="/admin/podcasts" variant="secondary">
-            Manage Podcasts
-          </ButtonLink>
-        </div>
+        <StatCard
+          label="Tools Published"
+          value={publishedTools}
+          sub={`${tools.length} total · indicators & EAs`}
+          accent="slate"
+        />
+        <StatCard
+          label="Tool Downloads"
+          value={totalDownloads}
+          sub="All-time across every tool"
+          accent="gold"
+        />
       </div>
 
       <div className="mt-10">
@@ -74,41 +81,37 @@ export default async function AdminDashboard() {
             View all →
           </Link>
         </div>
-        <Card padding={false} className="overflow-hidden">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-slate-100 bg-slate-50 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
-                <th className="px-5 py-3">Title</th>
-                <th className="px-5 py-3">Videos</th>
-                <th className="px-5 py-3">Duration</th>
-                <th className="px-5 py-3">Slug</th>
-                <th className="px-5 py-3" />
-              </tr>
-            </thead>
-            <tbody>
-              {lessons.map((lesson, i) => (
-                <tr
-                  key={lesson.slug}
-                  className={i < lessons.length - 1 ? "border-b border-slate-100" : ""}
-                >
-                  <td className="px-5 py-3 font-medium text-slate-brand">{lesson.titles.en}</td>
-                  <td className="px-5 py-3 text-slate-500">{lesson.videos.length}</td>
-                  <td className="px-5 py-3 text-slate-500">~{lesson.approximateMinutes} min</td>
-                  <td className="px-5 py-3 font-mono text-xs text-slate-400">{lesson.slug}</td>
-                  <td className="px-5 py-3 text-right">
-                    <ButtonLink
-                      href="/admin/lessons"
-                      variant="secondary"
-                      className="px-3 py-1 text-xs"
-                    >
-                      Edit
-                    </ButtonLink>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </Card>
+        {lessons.length === 0 ? (
+          <Card className="text-center text-sm text-slate-400">No lessons yet.</Card>
+        ) : (
+          <DataTable
+            head={
+              <>
+                <Th>Title</Th>
+                <Th align="center">Videos</Th>
+                <Th>Duration</Th>
+                <Th>Slug</Th>
+                <Th align="right">Actions</Th>
+              </>
+            }
+          >
+            {lessons.slice(0, 6).map((lesson) => (
+              <Tr key={lesson.slug}>
+                <Td className="font-medium text-slate-brand">{lesson.titles.en}</Td>
+                <Td align="center" className="tabular-nums text-slate-500">
+                  {lesson.videos.length}
+                </Td>
+                <Td className="whitespace-nowrap text-slate-500">~{lesson.approximateMinutes} min</Td>
+                <Td className="font-mono text-xs text-slate-400">{lesson.slug}</Td>
+                <Td align="right">
+                  <RowActions>
+                    <EditLink href={`/admin/lessons/edit/${lesson.slug}`} />
+                  </RowActions>
+                </Td>
+              </Tr>
+            ))}
+          </DataTable>
+        )}
       </div>
 
       <div className="mt-10">

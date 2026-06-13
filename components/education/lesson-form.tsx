@@ -21,7 +21,7 @@ const STEPS = [
 ] as const;
 
 const fieldClass =
- "w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#0ea5e9] focus:bg-white focus:ring-2 focus:ring-[#0ea5e9]/20";
+ "w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#2563EB] focus:bg-white focus:ring-2 focus:ring-[#2563EB]/20";
 
 function parseObjectives(value: string): string[] {
  return value
@@ -403,7 +403,7 @@ export function LessonForm({ initialData, isEditing = false }: LessonFormProps) 
  <button
  type="button"
  onClick={addVideo}
- className="text-xs font-semibold text-[#0ea5e9] transition hover:text-sky-700"
+ className="text-xs font-semibold text-[#2563EB] transition hover:text-[#1D4ED8]"
  >
  + Add video
  </button>
@@ -432,7 +432,7 @@ export function LessonForm({ initialData, isEditing = false }: LessonFormProps) 
  placeholder="https://www.youtube.com/watch?v=… or youtu.be/…"
  value={video.embedUrl}
  onChange={(e) => updateVideo(idx, "embedUrl", e.target.value)}
- className="w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#0ea5e9] focus:ring-2 focus:ring-[#0ea5e9]/20"
+ className="w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/20"
  />
  <YoutubeUrlPreview url={video.embedUrl} />
  </div>
@@ -446,7 +446,7 @@ export function LessonForm({ initialData, isEditing = false }: LessonFormProps) 
  placeholder="Optional heading for this video"
  value={video.titles.en}
  onChange={(e) => updateVideo(idx, "titles", e.target.value, "en")}
- className="w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#0ea5e9] focus:ring-2 focus:ring-[#0ea5e9]/20"
+ className="w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/20"
  />
  </div>
 
@@ -459,7 +459,7 @@ export function LessonForm({ initialData, isEditing = false }: LessonFormProps) 
  placeholder="ចំណងជើងវីដេអូ (ច្រើនឯក)"
  value={video.titles.km}
  onChange={(e) => updateVideo(idx, "titles", e.target.value, "km")}
- className="w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#0ea5e9] focus:ring-2 focus:ring-[#0ea5e9]/20"
+ className="w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/20"
  />
  </div>
  </div>
@@ -481,7 +481,7 @@ export function LessonForm({ initialData, isEditing = false }: LessonFormProps) 
  <button
  type="button"
  onClick={() => addPaidVideo("")}
- className="text-xs font-semibold text-[#0ea5e9] transition hover:text-sky-700"
+ className="text-xs font-semibold text-[#2563EB] transition hover:text-[#1D4ED8]"
  >
  + Add video
  </button>
@@ -539,7 +539,7 @@ export function LessonForm({ initialData, isEditing = false }: LessonFormProps) 
  placeholder="Optional heading for this video"
  value={video.titles.en}
  onChange={(e) => updatePaidVideo(idx, "titles", e.target.value, "en")}
- className="w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#0ea5e9] focus:ring-2 focus:ring-[#0ea5e9]/20"
+ className="w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/20"
  />
  </div>
 
@@ -552,7 +552,7 @@ export function LessonForm({ initialData, isEditing = false }: LessonFormProps) 
  placeholder="ចំណងជើងវីដេអូ (ច្រើនឯក)"
  value={video.titles.km}
  onChange={(e) => updatePaidVideo(idx, "titles", e.target.value, "km")}
- className="w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#0ea5e9] focus:ring-2 focus:ring-[#0ea5e9]/20"
+ className="w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/20"
  />
  </div>
  </div>
@@ -598,7 +598,7 @@ export function LessonForm({ initialData, isEditing = false }: LessonFormProps) 
  className={[
  "flex items-center gap-2 rounded-full border px-3 py-1.5 text-left text-xs font-semibold transition",
  active
- ? "border-[#0ea5e9] bg-sky-50 text-[#0ea5e9]"
+ ? "border-[#2563EB] bg-[#EFF6FF] text-[#2563EB]"
  : done
  ? "border-emerald-200 bg-emerald-50 text-emerald-800 hover:bg-emerald-100"
  : "border-slate-200 bg-slate-50 text-slate-400",
@@ -610,7 +610,7 @@ export function LessonForm({ initialData, isEditing = false }: LessonFormProps) 
  className={[
  "flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px]",
  active
- ? "bg-[#0ea5e9] text-white"
+ ? "bg-[#2563EB] text-white"
  : done
  ? "bg-emerald-500 text-white"
  : "bg-slate-200 text-slate-500",
@@ -637,7 +637,7 @@ export function LessonForm({ initialData, isEditing = false }: LessonFormProps) 
  {(["free", "paid"] as const).map((type) => (
  <label
  key={type}
- className="flex cursor-pointer items-center gap-2 rounded-lg border border-slate-200 px-4 py-2.5 text-sm transition-colors has-[:checked]:border-[#0ea5e9] has-[:checked]:bg-sky-50"
+ className="flex cursor-pointer items-center gap-2 rounded-lg border border-slate-200 px-4 py-2.5 text-sm transition-colors has-[:checked]:border-[#2563EB] has-[:checked]:bg-[#EFF6FF]"
  >
  <input
  type="radio"
@@ -645,7 +645,7 @@ export function LessonForm({ initialData, isEditing = false }: LessonFormProps) 
  value={type}
  checked={lessonType === type}
  onChange={(e) => setLessonType(e.target.value as LessonType)}
- className="accent-[#0ea5e9]"
+ className="accent-[#2563EB]"
  />
  {type === "free" ? "Free (YouTube)" : "Paid (Cloudflare)"}
  </label>
@@ -680,7 +680,7 @@ export function LessonForm({ initialData, isEditing = false }: LessonFormProps) 
  <button
  type="button"
  onClick={syncSlugFromTitle}
- className="text-xs font-semibold text-[#0ea5e9] transition hover:text-sky-700"
+ className="text-xs font-semibold text-[#2563EB] transition hover:text-[#1D4ED8]"
  >
  Regenerate from title
  </button>
@@ -817,14 +817,14 @@ export function LessonForm({ initialData, isEditing = false }: LessonFormProps) 
  {(["Draft", "Published"] as const).map((s) => (
  <label
  key={s}
- className="flex cursor-pointer items-center gap-2 rounded-lg border border-slate-200 px-4 py-2.5 text-sm transition-colors has-[:checked]:border-[#0ea5e9] has-[:checked]:bg-sky-50"
+ className="flex cursor-pointer items-center gap-2 rounded-lg border border-slate-200 px-4 py-2.5 text-sm transition-colors has-[:checked]:border-[#2563EB] has-[:checked]:bg-[#EFF6FF]"
  >
  <input
  type="radio"
  name="status"
  value={s}
  defaultChecked={s === defaultStatus}
- className="accent-[#0ea5e9]"
+ className="accent-[#2563EB]"
  />
  {s}
  </label>
@@ -849,8 +849,8 @@ export function LessonForm({ initialData, isEditing = false }: LessonFormProps) 
  className={[
  "rounded-lg px-4 py-2 text-sm font-semibold transition",
  thumbnailMode === mode
- ? "bg-[#0ea5e9] text-white"
- : "border border-slate-200 text-slate-600 hover:border-[#0ea5e9] hover:text-[#0ea5e9]",
+ ? "bg-[#2563EB] text-white"
+ : "border border-slate-200 text-slate-600 hover:border-[#2563EB] hover:text-[#2563EB]",
  ].join(" ")}
  >
  {mode === "url" ? "Paste URL" : "Upload image"}
@@ -909,7 +909,7 @@ export function LessonForm({ initialData, isEditing = false }: LessonFormProps) 
  <button
  type="button"
  onClick={handleNext}
- className="rounded-lg bg-[#0ea5e9] px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-sky-600"
+ className="rounded-lg bg-[#2563EB] px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[#1D4ED8]"
  >
  Continue
  </button>
@@ -917,7 +917,7 @@ export function LessonForm({ initialData, isEditing = false }: LessonFormProps) 
  <button
  type="submit"
  disabled={isSaving}
- className="rounded-lg bg-[#0ea5e9] px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-sky-600 disabled:cursor-not-allowed disabled:bg-slate-300"
+ className="rounded-lg bg-[#2563EB] px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[#1D4ED8] disabled:cursor-not-allowed disabled:bg-slate-300"
  >
  {isSaving
  ? "Saving..."

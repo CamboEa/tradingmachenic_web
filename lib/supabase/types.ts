@@ -88,10 +88,22 @@ export type Database = {
           gallery: unknown;
           install_guide_url: string | null;
           file_url: string | null;
+          file_url_mt4: string | null;
+          file_url_mt5: string | null;
           image_url: string | null;
+          download_count: number;
+          download_count_mt4: number;
+          download_count_mt5: number;
           status: ToolStatus;
         };
-        Insert: Omit<Database["public"]["Tables"]["tools"]["Row"], "id" | "created_at">;
+        Insert: Omit<
+          Database["public"]["Tables"]["tools"]["Row"],
+          "id" | "created_at" | "download_count" | "download_count_mt4" | "download_count_mt5"
+        > & {
+          download_count?: number;
+          download_count_mt4?: number;
+          download_count_mt5?: number;
+        };
         Update: Partial<Database["public"]["Tables"]["tools"]["Insert"]>;
         Relationships: [];
       };
@@ -180,7 +192,12 @@ export type Database = {
       };
     };
     Views: Record<string, never>;
-    Functions: Record<string, never>;
+    Functions: {
+      increment_tool_download: {
+        Args: { p_tool_id: string; p_platform: string };
+        Returns: undefined;
+      };
+    };
     Enums: Record<string, never>;
   };
 };

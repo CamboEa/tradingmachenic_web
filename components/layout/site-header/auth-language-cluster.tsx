@@ -17,7 +17,7 @@ function RegisterLoginLinks({ locale, dict }: { locale: Locale; dict: Dictionary
       </Link>
       <Link
         href={`/${locale}/login`}
-        className="rounded-xl bg-[#0ea5e9] px-3.5 py-2 text-xs font-semibold text-white transition hover:bg-sky-600 sm:text-sm"
+        className="rounded-xl bg-[#2563EB] px-3.5 py-2 text-xs font-semibold text-white transition hover:bg-[#1D4ED8] sm:text-sm"
       >
         {dict.nav.login}
       </Link>

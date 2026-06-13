@@ -89,7 +89,7 @@ export function CurriculumModuleForm({ phaseId, module }: Props) {
  type="number"
  name="sort_order"
  defaultValue={module?.sort_order ?? 0}
- className="w-full max-w-[10rem] rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm outline-none focus:border-[#0ea5e9] focus:bg-white"
+ className="w-full max-w-[10rem] rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm outline-none focus:border-[#2563EB] focus:bg-white"
  />
  </div>
 
@@ -100,7 +100,7 @@ export function CurriculumModuleForm({ phaseId, module }: Props) {
  name="title_en"
  required
  defaultValue={module?.title_en}
- className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm outline-none focus:border-[#0ea5e9] focus:bg-white"
+ className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm outline-none focus:border-[#2563EB] focus:bg-white"
  />
  </div>
  <div>
@@ -109,7 +109,7 @@ export function CurriculumModuleForm({ phaseId, module }: Props) {
  name="title_km"
  required
  defaultValue={module?.title_km}
- className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm outline-none focus:border-[#0ea5e9] focus:bg-white"
+ className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm outline-none focus:border-[#2563EB] focus:bg-white"
  />
  </div>
  </div>
@@ -121,7 +121,7 @@ export function CurriculumModuleForm({ phaseId, module }: Props) {
  required
  rows={3}
  defaultValue={module?.focus_en}
- className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm outline-none focus:border-[#0ea5e9] focus:bg-white"
+ className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm outline-none focus:border-[#2563EB] focus:bg-white"
  />
  </div>
  <div>
@@ -131,7 +131,7 @@ export function CurriculumModuleForm({ phaseId, module }: Props) {
  required
  rows={3}
  defaultValue={module?.focus_km}
- className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm outline-none focus:border-[#0ea5e9] focus:bg-white"
+ className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm outline-none focus:border-[#2563EB] focus:bg-white"
  />
  </div>
 
@@ -142,7 +142,7 @@ export function CurriculumModuleForm({ phaseId, module }: Props) {
  name="activities_en"
  rows={6}
  defaultValue={module?.activities_en}
- className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 font-mono text-sm outline-none focus:border-[#0ea5e9] focus:bg-white"
+ className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 font-mono text-sm outline-none focus:border-[#2563EB] focus:bg-white"
  />
  </div>
  <div>
@@ -152,14 +152,14 @@ export function CurriculumModuleForm({ phaseId, module }: Props) {
  name="activities_km"
  rows={6}
  defaultValue={module?.activities_km}
- className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 font-mono text-sm outline-none focus:border-[#0ea5e9] focus:bg-white"
+ className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 font-mono text-sm outline-none focus:border-[#2563EB] focus:bg-white"
  />
  </div>
 
  <button
  type="submit"
  disabled={isSaving}
- className="w-full rounded-lg bg-[#0ea5e9] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-sky-600 disabled:bg-slate-300"
+ className="w-full rounded-lg bg-[#2563EB] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#1D4ED8] disabled:bg-slate-300"
  >
  {isSaving ? "Saving…" : isEdit ? "Save module" : "Create module"}
  </button>

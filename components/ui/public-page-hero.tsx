@@ -23,7 +23,7 @@ export function PublicPageHero({
       )}
     >
       <div
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,rgba(212,175,55,0.18),transparent_24rem),radial-gradient(circle_at_86%_10%,rgba(14,165,233,0.2),transparent_26rem)]"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,rgba(212,175,55,0.18),transparent_24rem),radial-gradient(circle_at_86%_10%,rgba(37,99,235,0.2),transparent_26rem)]"
         aria-hidden
       />
       <div className="relative mx-auto max-w-7xl">

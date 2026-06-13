@@ -86,7 +86,12 @@ create table if not exists public.tools (
   usage_notes_km     text,
   install_guide_url  text,
   file_url           text,
+  file_url_mt4       text,
+  file_url_mt5       text,
   image_url          text,
+  download_count     integer not null default 0,
+  download_count_mt4 integer not null default 0,
+  download_count_mt5 integer not null default 0,
   status             text not null default 'draft'
                        check (status in ('draft', 'published'))
 );

@@ -45,7 +45,7 @@ export function ProfileMenu({
  onClick={() => setOpen((v) => !v)}
  aria-label="Account menu"
  aria-expanded={open}
- className="flex h-9 w-9 items-center justify-center rounded-full bg-[#0ea5e9] text-xs font-bold text-white ring-2 ring-transparent transition hover:bg-sky-600 focus-visible:outline-none focus-visible:ring-[#0ea5e9]/50"
+ className="flex h-9 w-9 items-center justify-center rounded-full bg-[#2563EB] text-xs font-bold text-white ring-2 ring-transparent transition hover:bg-[#1D4ED8] focus-visible:outline-none focus-visible:ring-[#2563EB]/50"
  >
  {initials}
  </button>

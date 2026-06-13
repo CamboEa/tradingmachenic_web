@@ -5,7 +5,13 @@ import {
   Badge,
   ButtonLink,
   Card,
+  DataTable,
+  EditLink,
   EmptyState,
+  RowActions,
+  Td,
+  Th,
+  Tr,
 } from "@/components/ui";
 import { getCurriculum } from "@/lib/supabase/curriculum-data";
 import { cn } from "@/lib/ui/cn";
@@ -79,56 +85,53 @@ export default async function ProgramPage() {
                   </div>
                 </Card>
 
-                <Card padding={false} className="overflow-hidden">
-                  <table className="w-full text-sm">
-                    <thead>
-                      <tr className="border-b border-slate-100 bg-slate-50 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
-                        <th className="w-10 px-5 py-3">#</th>
-                        <th className="px-5 py-3">Module title (EN)</th>
-                        <th className="px-5 py-3">Module title (KM)</th>
-                        <th className="px-5 py-3">Focus (EN)</th>
-                        <th className="px-5 py-3">Activities</th>
-                        <th className="px-5 py-3" />
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {phase.weeks.map((week, i) => (
-                        <tr
-                          key={week.id}
-                          className={i < phase.weeks.length - 1 ? "border-b border-slate-100" : ""}
-                        >
-                          <td className="px-5 py-4">
-                            <Badge variant={isGold ? "gold" : "teal"} className="h-6 w-6 justify-center p-0">
-                              {i + 1}
-                            </Badge>
-                          </td>
-                          <td className="px-5 py-4 font-semibold text-slate-brand">
-                            {week.titles.en}
-                          </td>
-                          <td className="px-5 py-4 text-slate-500">{week.titles.km}</td>
-                          <td className="max-w-xs px-5 py-4 text-xs leading-relaxed text-slate-500">
-                            {week.focus.en}
-                          </td>
-                          <td className="px-5 py-4">
-                            <Badge variant="neutral">{week.activities.en.length} items</Badge>
-                          </td>
-                          <td className="px-5 py-4 text-right">
-                            <div className="flex items-center justify-end gap-2">
-                              <ButtonLink
-                                href={`/admin/program/module/${week.id}/edit`}
-                                variant="secondary"
-                                className="px-3 py-2 text-xs"
-                              >
-                                Edit
-                              </ButtonLink>
-                              <DeleteCurriculumModuleButton id={week.id} title={week.titles.en} />
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </Card>
+                {phase.weeks.length === 0 ? (
+                  <Card className="text-center text-sm text-slate-400">
+                    No modules in this phase yet.
+                  </Card>
+                ) : (
+                  <DataTable
+                    head={
+                      <>
+                        <Th className="w-12" align="center">
+                          #
+                        </Th>
+                        <Th>Module title (EN)</Th>
+                        <Th>Module title (KM)</Th>
+                        <Th>Focus (EN)</Th>
+                        <Th align="center">Activities</Th>
+                        <Th align="right">Actions</Th>
+                      </>
+                    }
+                  >
+                    {phase.weeks.map((week, i) => (
+                      <Tr key={week.id}>
+                        <Td align="center">
+                          <Badge
+                            variant={isGold ? "gold" : "teal"}
+                            className="h-6 w-6 justify-center p-0"
+                          >
+                            {i + 1}
+                          </Badge>
+                        </Td>
+                        <Td className="font-semibold text-slate-brand">{week.titles.en}</Td>
+                        <Td className="text-slate-500">{week.titles.km}</Td>
+                        <Td className="max-w-xs text-xs leading-relaxed text-slate-500">
+                          {week.focus.en}
+                        </Td>
+                        <Td align="center">
+                          <Badge variant="neutral">{week.activities.en.length}</Badge>
+                        </Td>
+                        <Td align="right">
+                          <RowActions>
+                            <EditLink href={`/admin/program/module/${week.id}/edit`} />
+                            <DeleteCurriculumModuleButton id={week.id} title={week.titles.en} />
+                          </RowActions>
+                        </Td>
+                      </Tr>
+                    ))}
+                  </DataTable>
+                )}
               </section>
             );
           })}
