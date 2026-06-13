@@ -49,6 +49,14 @@ export type Dictionary = {
     ctaBandButton: string;
     principlesTagline: string;
     lessonsNoun: string;
+    sectionFeaturedLessons: string;
+    featuredLessonsTagline: string;
+    featuredLessonsLead: string;
+    featuredLessonsViewAll: string;
+    sectionFeaturedTools: string;
+    featuredToolsTagline: string;
+    featuredToolsLead: string;
+    featuredToolsViewAll: string;
     sectionMarkets: string;
     marketsTagline: string;
     marketsLead: string;
@@ -294,6 +302,14 @@ const en: Dictionary = {
     socialExpertTitle: "Insights from your mentor",
     socialExpertQuote:
       "The education from Algorithmic Alpha Trade delivers serious learning value—risk, process, and mechanics explained without hype. It is built for traders who want a calm, repeatable path instead of chasing shortcuts.",
+    sectionFeaturedLessons: "Education",
+    featuredLessonsTagline: "Start learning today",
+    featuredLessonsLead: "Browse our latest lessons — each one packed with actionable mechanics and zero hype.",
+    featuredLessonsViewAll: "View all lessons",
+    sectionFeaturedTools: "Tools",
+    featuredToolsTagline: "Indicators & Expert Advisors",
+    featuredToolsLead: "Download the tools built around our curriculum — free indicators and EAs ready to install.",
+    featuredToolsViewAll: "View all tools",
     sectionMarkets: "Live Markets",
     marketsTagline: "What you'll learn to read",
     marketsLead: "Gold (XAU/USD) is at the core of our curriculum. Track real-time prices on the instruments our lessons are built around.",
@@ -421,7 +437,7 @@ const en: Dictionary = {
     mentorName: "Bean Ratana",
     experienceLine: "Director of Strategic Partnership & Education · Trading since 2015",
     bioParagraphs: [
-      "Bean Ratana began his trading journey in 2015, driven by a deep curiosity for market behavior and a relentless desire to master strategic execution. Over the years, this passion evolved into a commitment to building smarter, more adaptive trading systems—culminating in his transition to algorithmic development with MQL5 in 2025.",
+      "Mr. Bean Ratana began his trading journey in 2015, driven by a deep curiosity for market behavior and a relentless desire to master strategic execution. Over the years, this passion evolved into a commitment to building smarter, more adaptive trading systems—culminating in his transition to algorithmic development with MQL5 in 2025.",
       "He currently serves as Director of Strategic Partnership and Education at STMarket, where he specialises in educating traders, refining strategies, and bridging the gap between theory and execution. He takes pride in making complex trading concepts accessible, especially for emerging traders and Khmer-speaking learners.",
       "Whether it's through teaching, coding, or collaborating, Bean is always excited to share what he has learned—and even more excited to keep learning alongside others.",
     ],
@@ -560,6 +576,14 @@ const km: Dictionary = {
     socialExpertTitle: "យល់ដឹងពីអ្នកណែនាំ",
     socialExpertQuote:
       "ការអប់រំពី Algorithmic Alpha Trade ផ្តល់តម្លៃសិក្សាពិតប្រាកដ—ពន្យល់ហានិភ័យ ដំណើរការ និងលក្ខណៈបច្ចេកទេសដោយគ្មានសំឡេងរន្ទះ។ សាងសម្រាប់អ្នកជួញដូរដែលចង់ផ្លូវស្ងប់ និងធ្វើម្តងហើយម្តងទៀត ជំនួសការរត់តាមផ្លូវកាត់។",
+    sectionFeaturedLessons: "ការអប់រំ",
+    featuredLessonsTagline: "ចាប់ផ្តើមរៀនថ្ងៃនេះ",
+    featuredLessonsLead: "រកមើលមេរៀនថ្មីបំផុតរបស់យើង — មានបច្ចេកទេសអនុវត្តបានជាក់ស្ដែងគ្មានសំឡេងរំខាន។",
+    featuredLessonsViewAll: "មើលមេរៀនទាំងអស់",
+    sectionFeaturedTools: "ឧបករណ៍",
+    featuredToolsTagline: "សញ្ញាបង្ហាញ និង Expert Advisors",
+    featuredToolsLead: "ទាញយកឧបករណ៍ដែលបង្កើតឡើងស្របតាមកម្មវិធីសិក្សារបស់យើង — សញ្ញាបង្ហាញ និង EA ឥតគិតថ្លៃ ត្រៀមដំឡើង។",
+    featuredToolsViewAll: "មើលឧបករណ៍ទាំងអស់",
     sectionMarkets: "ទីផ្សារបន្តផ្ទាល់",
     marketsTagline: "អ្វីដែលអ្នកនឹងរៀនអាន",
     marketsLead: "មាស (XAU/USD) ស្ថិតនៅស្នូលនៃកម្មវិធីសិក្សារបស់យើង។ តាមដានតម្លៃជាក់ស្ដែងលើឧបករណ៍ដែលមេរៀនរបស់យើងបានបង្កើតឡើង។",

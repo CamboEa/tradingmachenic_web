@@ -1,13 +1,14 @@
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { ConnectorLine } from "@/components/shared/connector-line";
-import { CountUp } from "@/components/shared/count-up";
+import { CourseLessonCard } from "@/components/education/course-lesson-card";
 import { HomeHeroSplit } from "@/components/marketing/home-hero-split";
 import { Reveal } from "@/components/shared/reveal";
 import { TradingViewForexHeatmap } from "@/components/tradingview/tradingview-forex-heatmap";
-import { TradingViewSymbolOverview } from "@/components/tradingview/tradingview-symbol-overview";
 import { getAllLessons } from "@/lib/supabase/lessons";
+import { getPublishedTools, type Tool } from "@/lib/supabase/tools";
 import { getDictionary, isLocale, type Locale } from "@/lib/i18n";
 
 export default async function HomePage({
@@ -18,59 +19,251 @@ export default async function HomePage({
   const { locale: raw } = await params;
   if (!isLocale(raw)) notFound();
   const locale = raw as Locale;
-  const [dict, lessons] = await Promise.all([
+  const [dict, lessons, tools] = await Promise.all([
     getDictionary(locale),
     getAllLessons(),
+    getPublishedTools(),
   ]);
-  const lessonCount = lessons.length;
 
   return (
     <main className="flex-1">
       <HomeHeroSplit locale={locale} dict={dict} />
 
-      {/* ── Principles ── */}
+      {/* ── Meet the mentor ── */}
       <section
-        className="relative flex min-h-screen flex-col justify-center overflow-hidden bg-glow-teal px-4 py-24 sm:px-6 lg:px-8"
-        aria-labelledby="home-principles"
+        className="relative flex flex-col justify-center overflow-hidden px-4 py-24 sm:px-6 lg:px-8"
+        aria-labelledby="home-mentor"
       >
-        <div aria-hidden className="pointer-events-none absolute inset-0 bg-grid" />
-        <div className="relative mx-auto w-full max-w-7xl">
-          <Reveal effect="left">
-            <div className="max-w-2xl">
+        <div className="mx-auto w-full max-w-7xl">
+          <div className="grid gap-12 lg:grid-cols-2 lg:items-center lg:gap-20">
+
+            {/* Photo */}
+            <Reveal effect="left">
+              <div className="relative mx-auto w-full max-w-sm overflow-hidden rounded-3xl lg:mx-0 lg:max-w-none">
+                <div className="relative aspect-[4/5] w-full">
+                  <Image
+                    src="/Images/mentor2.png"
+                    alt={dict.aboutPage.imageAlt}
+                    fill
+                    className="object-cover object-top"
+                    sizes="(max-width: 1024px) 90vw, 50vw"
+                  />
+                </div>
+              </div>
+            </Reveal>
+
+            {/* Info */}
+            <Reveal effect="right" delayMs={110}>
               <p className="text-xs font-semibold uppercase tracking-[0.22em] text-(--color-gold)">
-                {dict.home.sectionPrinciples}
+                {dict.aboutPage.mentorBadge}
               </p>
               <h2
-                id="home-principles"
-                className="mt-3 text-3xl font-bold tracking-tight text-(--color-ink) sm:text-4xl lg:text-5xl"
+                id="home-mentor"
+                className="mt-3 text-3xl font-bold tracking-tight text-(--color-ink) sm:text-4xl"
               >
-                {dict.home.principlesTagline}
+                Mr. {dict.aboutPage.mentorName}
               </h2>
+              <p className="mt-2 text-base font-medium text-(--color-teal)">
+                {dict.aboutPage.experienceLine}
+              </p>
+              <p className="mt-6 text-base leading-relaxed text-(--color-ink-muted)">
+                {dict.aboutPage.bioParagraphs[0]}
+              </p>
+
+              <ul className="mt-8 space-y-3">
+                {dict.aboutPage.roles.map((role) => (
+                  <li
+                    key={role.org}
+                    className="rounded-2xl border border-[color-mix(in_oklab,var(--color-bridge)_55%,transparent)] bg-(--color-surface) px-5 py-4 shadow-sm"
+                  >
+                    <p className="text-[11px] font-semibold uppercase tracking-wide text-(--color-teal)">
+                      {role.org}
+                    </p>
+                    <p className="mt-0.5 font-semibold text-(--color-ink)">{role.title}</p>
+                    <p className="mt-1 text-sm leading-relaxed text-(--color-ink-muted)">{role.detail}</p>
+                  </li>
+                ))}
+              </ul>
+
+              <blockquote className="mt-8 border-l-4 border-(--color-gold) pl-4 text-base italic leading-relaxed text-(--color-ink-muted)">
+                "{dict.aboutPage.teachingStatement}"
+              </blockquote>
+            </Reveal>
+
+          </div>
+        </div>
+      </section>
+
+      {/* ── Featured Lessons ── */}
+      <section
+        className="relative flex min-h-screen flex-col justify-center overflow-hidden px-4 py-24 sm:px-6 lg:px-8"
+        aria-labelledby="home-featured-lessons"
+      >
+        <Image
+          src="/Images/bg-principles-v2.jpg"
+          alt=""
+          fill
+          sizes="100vw"
+          className="object-cover object-center"
+        />
+        <div className="pointer-events-none absolute inset-0 bg-[rgba(10,18,35,0.72)]" aria-hidden />
+        <div className="relative mx-auto w-full max-w-7xl">
+          <Reveal effect="left">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-(--color-gold)">
+                  {dict.home.sectionFeaturedLessons}
+                </p>
+                <h2
+                  id="home-featured-lessons"
+                  className="mt-3 text-3xl font-bold tracking-tight text-white sm:text-4xl"
+                >
+                  {dict.home.featuredLessonsTagline}
+                </h2>
+                <p className="mt-3 max-w-xl text-base leading-relaxed text-slate-300">
+                  {dict.home.featuredLessonsLead}
+                </p>
+              </div>
+              <Link
+                href={`/${locale}/education`}
+                className="shrink-0 text-sm font-semibold text-[#0EA5E9] underline-offset-4 transition hover:underline"
+              >
+                {dict.home.featuredLessonsViewAll} →
+              </Link>
             </div>
           </Reveal>
-          <div className="mt-14 grid gap-6 md:grid-cols-3 lg:mt-20">
-            {dict.home.pillars.map((pillar, i) => (
-              <Reveal key={pillar.title} className="h-full" delayMs={i * 85}>
-                <article className="group relative flex h-full min-h-[19rem] flex-col overflow-hidden rounded-2xl border border-[color-mix(in_oklab,var(--color-bridge)_60%,transparent)] bg-(--color-surface) p-8 shadow-sm transition hover:-translate-y-1 hover:border-[color-mix(in_oklab,var(--color-teal)_28%,var(--color-bridge))] hover:shadow-lg sm:p-10">
-                  <span className="text-6xl font-semibold tabular-nums text-[color-mix(in_oklab,var(--color-bridge)_95%,var(--color-gold))] transition group-hover:text-[color-mix(in_oklab,var(--color-gold)_55%,var(--color-bridge))]">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <div className="shimmer-bar mt-5 h-1 w-12 rounded-full bg-(--color-gold)" />
-                  <h3 className="mt-6 text-xl font-semibold text-(--color-ink)">{pillar.title}</h3>
-                  <p className="mt-3 text-sm leading-relaxed text-(--color-ink-muted) sm:text-base">{pillar.body}</p>
-                </article>
-              </Reveal>
-            ))}
-          </div>
+
+          {lessons.length > 0 ? (
+            <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {lessons.slice(0, 3).map((lesson, i) => (
+                <Reveal key={lesson.slug} delayMs={i * 80}>
+                  <CourseLessonCard
+                    lesson={lesson}
+                    locale={locale}
+                    index={i}
+                    total={lessons.length}
+                    dict={dict}
+                  />
+                </Reveal>
+              ))}
+            </div>
+          ) : (
+            <p className="mt-12 text-sm text-slate-400">{dict.home.featuredLessonsViewAll}</p>
+          )}
+        </div>
+      </section>
+
+      {/* ── Featured Tools ── */}
+      <section
+        className="relative flex min-h-screen flex-col justify-center overflow-hidden px-4 py-24 sm:px-6 lg:px-8"
+        aria-labelledby="home-featured-tools"
+      >
+        <div className="relative mx-auto w-full max-w-7xl">
+          <Reveal effect="left">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-(--color-gold)">
+                  {dict.home.sectionFeaturedTools}
+                </p>
+                <h2
+                  id="home-featured-tools"
+                  className="mt-3 text-3xl font-bold tracking-tight text-(--color-ink) sm:text-4xl"
+                >
+                  {dict.home.featuredToolsTagline}
+                </h2>
+                <p className="mt-3 max-w-xl text-base leading-relaxed text-(--color-ink-muted)">
+                  {dict.home.featuredToolsLead}
+                </p>
+              </div>
+              <Link
+                href={`/${locale}/tools`}
+                className="shrink-0 text-sm font-semibold text-(--color-teal) underline-offset-4 transition hover:underline"
+              >
+                {dict.home.featuredToolsViewAll} →
+              </Link>
+            </div>
+          </Reveal>
+
+          {tools.length > 0 ? (
+            <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {tools.slice(0, 3).map((tool: Tool, i: number) => {
+                const description = locale === "km" ? tool.description_km : tool.description_en;
+                const isFree = tool.pricing === "free";
+                return (
+                  <Reveal key={tool.id} delayMs={i * 80}>
+                    <Link
+                      href={`/${locale}/tools/${tool.id}`}
+                      className="ui-content-card group flex flex-col overflow-hidden"
+                    >
+                      <div className="relative aspect-video w-full overflow-hidden bg-slate-100">
+                        {tool.image_url ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={tool.image_url}
+                            alt={tool.name}
+                            className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
+                          />
+                        ) : (
+                          <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-slate-100 via-white to-[#EFF6FF]">
+                            <svg viewBox="0 0 64 64" fill="none" className="h-16 w-16 text-slate-300" aria-hidden>
+                              <path d="M12 46h40M18 40V26M32 40V16M46 40V30" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
+                              <path d="M14 24c7 5 12 6 18 1s10-8 18-2" stroke="#0EA5E9" strokeWidth="4" strokeLinecap="round" />
+                            </svg>
+                          </div>
+                        )}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                        <span className={`absolute left-3 top-3 rounded-md px-2.5 py-1 text-[11px] font-bold uppercase tracking-widest ${isFree ? "bg-[#0EA5E9] text-white" : "bg-[#D4AF37] text-[#1E293B]"}`}>
+                          {isFree ? "Free" : "Paid"}
+                        </span>
+                        <span className="absolute bottom-3 left-3 rounded-md bg-black/50 px-2 py-0.5 text-[11px] font-semibold text-white/90 backdrop-blur-sm">
+                          {tool.type === "indicator" ? "Indicator" : "Expert Advisor"}
+                        </span>
+                        <span className="absolute bottom-3 right-3 rounded-md bg-black/50 px-2 py-0.5 text-[11px] font-semibold text-white/90 backdrop-blur-sm">
+                          {tool.platform}
+                        </span>
+                      </div>
+                      <div className="flex flex-1 flex-col p-5">
+                        <div className="flex items-baseline justify-between gap-2">
+                          <h3 className="font-bold leading-snug text-(--color-ink) transition-colors group-hover:text-(--color-teal)">
+                            {tool.name}
+                          </h3>
+                          <span className="shrink-0 rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[10px] text-slate-400">
+                            v{tool.version}
+                          </span>
+                        </div>
+                        {description && (
+                          <p className="mt-2.5 line-clamp-2 text-sm leading-relaxed text-(--color-ink-muted)">
+                            {description}
+                          </p>
+                        )}
+                        <div className="my-4 h-px bg-slate-100" />
+                        <div className="mt-auto flex items-center justify-between">
+                          <span className="text-xs font-semibold text-(--color-teal) transition group-hover:translate-x-0.5">
+                            View details →
+                          </span>
+                          {isFree && (
+                            <span className="rounded-full bg-[#EFF6FF] px-2.5 py-0.5 text-[11px] font-bold text-[#0EA5E9]">
+                              Free Download
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </Link>
+                  </Reveal>
+                );
+              })}
+            </div>
+          ) : (
+            <p className="mt-12 text-sm text-(--color-ink-muted)">{dict.home.featuredToolsViewAll}</p>
+          )}
         </div>
       </section>
 
       {/* ── How it works ── */}
       <section
-        className="section-soft relative flex min-h-screen flex-col justify-center overflow-hidden px-4 py-24 sm:px-6 lg:px-8"
+        className="relative flex min-h-screen flex-col justify-center overflow-hidden px-4 py-24 sm:px-6 lg:px-8"
         aria-labelledby="home-how"
       >
-        <div aria-hidden className="pointer-events-none absolute inset-0 bg-dots" />
         <div className="relative mx-auto w-full max-w-7xl">
           <Reveal effect="fade">
             <div className="mx-auto max-w-2xl text-center">
@@ -86,12 +279,12 @@ export default async function HomePage({
             </div>
           </Reveal>
           <div className="relative mt-16 lg:mt-24">
-            <ConnectorLine className="pointer-events-none absolute left-[16.6%] right-[16.6%] top-10 hidden h-px bg-[linear-gradient(90deg,transparent,color-mix(in_oklab,var(--color-bridge)_85%,transparent)_15%,color-mix(in_oklab,var(--color-gold)_45%,var(--color-bridge))_50%,color-mix(in_oklab,var(--color-bridge)_85%,transparent)_85%,transparent)] lg:block" />
+            <ConnectorLine className="pointer-events-none absolute left-[16.6%] right-[16.6%] top-10 hidden h-px bg-[linear-gradient(90deg,transparent,color-mix(in_oklab,var(--color-bridge)_60%,transparent)_15%,color-mix(in_oklab,var(--color-gold)_55%,transparent)_50%,color-mix(in_oklab,var(--color-bridge)_60%,transparent)_85%,transparent)] lg:block" />
             <ol className="grid gap-12 lg:grid-cols-3 lg:gap-8">
               {dict.home.howSteps.map((step, i) => (
                 <li key={step.title} className="relative flex flex-col items-center">
                   <Reveal className="flex w-full flex-col items-center text-center" delayMs={i * 90}>
-                    <span className="relative z-1 flex h-20 w-20 items-center justify-center rounded-2xl border-2 border-[color-mix(in_oklab,var(--color-gold)_35%,var(--color-bridge))] bg-(--color-surface) text-xl font-bold text-(--color-ink) shadow-sm transition-transform duration-500 hover:scale-[1.04]">
+                    <span className="relative z-1 flex h-20 w-20 items-center justify-center rounded-2xl border-2 border-[color-mix(in_oklab,var(--color-gold)_45%,var(--color-bridge))] bg-(--color-surface) text-xl font-bold text-(--color-ink) shadow-sm transition-transform duration-500 hover:scale-[1.04]">
                       {i + 1}
                     </span>
                     <h3 className="mt-7 text-xl font-semibold text-(--color-ink)">{step.title}</h3>
@@ -100,91 +293,6 @@ export default async function HomePage({
                 </li>
               ))}
             </ol>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Live Markets (Symbol Overview) ── */}
-      <section
-        className="relative flex min-h-screen flex-col justify-center overflow-hidden bg-glow-gold px-4 py-24 sm:px-6 lg:px-8"
-        aria-labelledby="home-markets"
-      >
-        <div className="relative mx-auto w-full max-w-7xl">
-          <Reveal effect="left">
-            <div className="mb-10 max-w-3xl">
-              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-(--color-gold)">
-                {dict.home.sectionMarkets}
-              </p>
-              <h2
-                id="home-markets"
-                className="mt-3 text-3xl font-bold tracking-tight text-(--color-ink) sm:text-4xl"
-              >
-                {dict.home.marketsTagline}
-              </h2>
-              <p className="mt-4 text-base leading-relaxed text-(--color-ink-muted) sm:text-lg">
-                {dict.home.marketsLead}
-              </p>
-            </div>
-          </Reveal>
-          <div className="overflow-hidden rounded-2xl border border-[color-mix(in_oklab,var(--color-bridge)_55%,transparent)] bg-white shadow-[0_20px_50px_-24px_color-mix(in_oklab,var(--color-ink)_12%,transparent)]">
-            <TradingViewSymbolOverview />
-          </div>
-        </div>
-      </section>
-
-      {/* ── Inside the curriculum ── */}
-      <section
-        className="relative flex min-h-screen flex-col justify-center overflow-hidden px-4 py-24 sm:px-6 lg:px-8"
-        aria-labelledby="home-learn"
-      >
-        <div aria-hidden className="pointer-events-none absolute inset-0 bg-grid" />
-        <div className="relative mx-auto w-full max-w-7xl">
-          <div className="overflow-hidden rounded-3xl border border-[color-mix(in_oklab,var(--color-bridge)_55%,transparent)] bg-(--color-surface) shadow-[0_20px_50px_-24px_color-mix(in_oklab,var(--color-ink)_22%,transparent)]">
-            <div className="grid gap-10 p-8 lg:grid-cols-2 lg:items-center lg:gap-16 lg:p-16">
-              <Reveal effect="left">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.22em] text-(--color-gold)">
-                    {dict.home.sectionLearn}
-                  </p>
-                  <p className="mt-4 text-2xl font-semibold leading-snug text-(--color-ink) sm:text-3xl">
-                    {dict.home.learnLead}
-                  </p>
-                  <ul className="mt-8 space-y-4">
-                    {dict.home.learnItems.map((item) => (
-                      <li key={item} className="flex gap-3 text-(--color-ink-muted)">
-                        <span
-                          className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-(--color-teal)"
-                          aria-hidden
-                        />
-                        <span className="leading-relaxed sm:text-lg">{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </Reveal>
-              <Reveal effect="right" delayMs={110}>
-                <div className="flex h-full flex-col justify-between gap-8 rounded-2xl bg-[color-mix(in_oklab,var(--color-teal)_07%,var(--color-surface))] p-8 ring-1 ring-[color-mix(in_oklab,var(--color-teal)_18%,var(--color-bridge))] sm:p-10">
-                  <div>
-                    <p className="text-sm font-medium text-(--color-ink-soft)">
-                      {dict.course.lessonsSummary.replace("{count}", String(lessonCount))}
-                    </p>
-                    <p className="mt-4 text-4xl font-semibold tabular-nums text-(--color-ink) sm:text-5xl">
-                      <CountUp end={lessonCount} />
-                      <span className="ml-2 text-lg font-normal text-(--color-ink-muted)">
-                        {dict.home.lessonsNoun}
-                      </span>
-                    </p>
-                  </div>
-                  <Link
-                    href={`/${locale}/education`}
-                    className="inline-flex w-fit items-center gap-2 rounded-xl bg-(--color-teal) px-6 py-3 text-sm font-semibold text-white transition hover:brightness-105"
-                  >
-                    {dict.home.learnLink}
-                    <span aria-hidden className="text-base leading-none">→</span>
-                  </Link>
-                </div>
-              </Reveal>
-            </div>
           </div>
         </div>
       </section>
@@ -259,6 +367,14 @@ export default async function HomePage({
         className="relative flex min-h-screen items-center overflow-hidden bg-[#1e293b] px-4 py-24 sm:px-6 lg:px-8"
         aria-labelledby="home-cta"
       >
+        <Image
+          src="/Images/bg-markets-v2.jpg"
+          alt=""
+          fill
+          sizes="100vw"
+          className="object-cover object-center"
+        />
+        <div className="pointer-events-none absolute inset-0 bg-[rgba(10,18,35,0.68)]" aria-hidden />
         <div
           className="cta-glow absolute inset-0 bg-[radial-gradient(circle_at_18%_50%,rgba(212,175,55,0.18),transparent_22rem),radial-gradient(circle_at_82%_40%,rgba(37,99,235,0.18),transparent_24rem)]"
           aria-hidden

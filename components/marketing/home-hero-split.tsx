@@ -62,9 +62,6 @@ export function HomeHeroSplit({ locale, dict }: { locale: Locale; dict: Dictiona
  <SiteLogo size="hero" priority className="shrink-0 bg-transparent" />
  <span>{h.heroSplitHeadline}</span>
  </h1>
- <p className="hero-enter-subhead mt-5 max-w-md text-pretty text-base leading-relaxed text-slate-200 sm:text-lg">
- {h.heroSplitSubhead}
- </p>
  <div className="hero-enter-ctas mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
  <Link
  href={`/${locale}/register`}
