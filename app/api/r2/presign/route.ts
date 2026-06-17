@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server";
 
 import { presignUpload, type BucketName } from "@/lib/r2/upload";
+import { enforceApiRateLimit } from "@/lib/security/api-rate-limit";
 import { createClient as createSupabaseAdmin } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/server";
 
@@ -32,6 +33,9 @@ const MAX_SIZE_MB: Record<BucketName, number> = {
 
 export async function POST(request: NextRequest) {
   try {
+    const limited = enforceApiRateLimit(request, "r2Api");
+    if (limited) return limited;
+
     // Check authentication
     const supabase = await createClient();
     const {

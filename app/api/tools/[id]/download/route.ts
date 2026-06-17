@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server";
 
 import { createClient as createSupabaseAdmin } from "@supabase/supabase-js";
+import { enforceApiRateLimit } from "@/lib/security/api-rate-limit";
 
 import type { Database } from "@/lib/supabase/types";
 
@@ -15,6 +16,9 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
+  const limited = enforceApiRateLimit(request, "toolDownload");
+  if (limited) return limited;
+
   const { id } = await params;
   const platform = resolvePlatform(request.nextUrl.searchParams.get("platform"));
 

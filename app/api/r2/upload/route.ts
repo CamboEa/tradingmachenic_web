@@ -2,6 +2,7 @@ import { type NextRequest, NextResponse } from "next/server";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { createClient as createSupabaseAdmin } from "@supabase/supabase-js";
 import { r2 } from "@/lib/r2/client";
+import { enforceApiRateLimit } from "@/lib/security/api-rate-limit";
 import { createClient } from "@/lib/supabase/server";
 
 const ALLOWED_BUCKETS = ["trading-lesson", "trading-tool"] as const;
@@ -32,6 +33,9 @@ const MAX_SIZE_MB: Record<string, number> = {
 
 export async function POST(request: NextRequest) {
   try {
+    const limited = enforceApiRateLimit(request, "r2Api");
+    if (limited) return limited;
+
     // Check authentication
     const supabase = await createClient();
     const {
@@ -62,7 +66,7 @@ export async function POST(request: NextRequest) {
 
     if (!profile || profile.role !== "admin") {
       return NextResponse.json(
-        { error: "Forbidden: Admin access required", debug: { email: user.email, profile, profileError: profileError?.message } },
+        { error: "Forbidden: Admin access required" },
         { status: 403 }
       );
     }

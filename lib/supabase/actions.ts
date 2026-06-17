@@ -1,9 +1,13 @@
 "use server";
 
 import { revalidatePath, revalidateTag } from "next/cache";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { CURRICULUM_CACHE_TAG, LESSONS_CACHE_TAG } from "@/lib/cache-tags";
+import { getClientIpFromHeaders } from "@/lib/security/client-ip";
+import { checkRateLimit, RATE_LIMITS } from "@/lib/security/rate-limit";
+import { verifyTurnstileToken } from "@/lib/security/turnstile";
 
 import { defaultLocale, locales } from "@/lib/i18n";
 import type { CurriculumAccent } from "@/lib/curriculum";
@@ -28,10 +32,35 @@ import { createClient, createAdminClient, getSessionUser } from "./server";
 
 export type AuthState = { error: string } | null | undefined;
 
+async function guardAuthAttempt(formData: FormData): Promise<AuthState | null> {
+  const headerStore = await headers();
+  const ip = getClientIpFromHeaders(headerStore);
+  const limited = checkRateLimit("auth", ip, RATE_LIMITS.auth);
+
+  if (!limited.ok) {
+    return {
+      error: "Too many attempts. Please wait a few minutes and try again.",
+    };
+  }
+
+  const turnstile = await verifyTurnstileToken(
+    formData.get("cf-turnstile-response") as string | null,
+  );
+
+  if (!turnstile.ok) {
+    return { error: turnstile.error };
+  }
+
+  return null;
+}
+
 export async function signIn(
   _prev: AuthState,
   formData: FormData,
 ): Promise<AuthState> {
+  const blocked = await guardAuthAttempt(formData);
+  if (blocked) return blocked;
+
   const supabase = await createClient();
 
   const { data, error } = await supabase.auth.signInWithPassword({
@@ -63,6 +92,9 @@ export async function signUp(
   _prev: AuthState,
   formData: FormData,
 ): Promise<AuthState> {
+  const blocked = await guardAuthAttempt(formData);
+  if (blocked) return blocked;
+
   const supabase = await createClient();
 
   const fullName = ((formData.get("full_name") as string) ?? "").trim();

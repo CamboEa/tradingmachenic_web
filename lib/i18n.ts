@@ -171,6 +171,12 @@ export type Dictionary = {
     switchPrompt: string;
     switchLink: string;
   };
+  gatePage: {
+    title: string;
+    body: string;
+    loading: string;
+    error: string;
+  };
   aboutPage: {
     title: string;
     eyebrow: string;
@@ -422,6 +428,12 @@ const en: Dictionary = {
     submit: "Log in",
     switchPrompt: "Need an account?",
     switchLink: "Register",
+  },
+  gatePage: {
+    title: "Quick security check",
+    body: "Complete this step to continue to Algorithmic Alpha Trade. It helps keep bots off the site.",
+    loading: "Verifying…",
+    error: "Verification failed. Please try again.",
   },
   aboutPage: {
     title: "About",
@@ -695,6 +707,12 @@ const km: Dictionary = {
     submit: "ចូល",
     switchPrompt: "ត្រូវការគណនី?",
     switchLink: "ចុះឈ្មោះ",
+  },
+  gatePage: {
+    title: "ពិនិត្យសុវត្ថិភាពរហ័ស",
+    body: "បំពេញជំហាននេះដើម្បីបន្តទៅ Algorithmic Alpha Trade។ វាជួយការពារពី bot។",
+    loading: "កំពុងផ្ទៀងផ្ទាត់…",
+    error: "ការផ្ទៀងផ្ទាត់បរាជ័យ។ សូមព្យាយាមម្តងទៀត។",
   },
   aboutPage: {
     title: "អំពីយើង",

@@ -3,6 +3,13 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
 import { defaultLocale, locales } from "@/lib/i18n";
+import { getClientIpFromRequest } from "@/lib/security/client-ip";
+import { checkRateLimit, RATE_LIMITS } from "@/lib/security/rate-limit";
+import {
+  isSiteGateEnabled,
+  SITE_GATE_COOKIE,
+  verifySiteGateToken,
+} from "@/lib/security/site-gate";
 
 function pathnameStartsWithLocale(pathname: string): boolean {
   return locales.some(
@@ -10,8 +17,67 @@ function pathnameStartsWithLocale(pathname: string): boolean {
   );
 }
 
+function isToolDownloadPath(pathname: string): boolean {
+  return /^\/api\/tools\/[^/]+\/download\/?$/.test(pathname);
+}
+
+function isGatePath(pathname: string): boolean {
+  return locales.some(
+    (locale) =>
+      pathname === `/${locale}/gate` || pathname.startsWith(`/${locale}/gate/`),
+  );
+}
+
+function pathnameLocale(pathname: string): (typeof locales)[number] | null {
+  for (const locale of locales) {
+    if (pathname === `/${locale}` || pathname.startsWith(`/${locale}/`)) {
+      return locale;
+    }
+  }
+  return null;
+}
+
+function shouldBypassSiteGate(pathname: string): boolean {
+  return (
+    pathname.startsWith("/_next") ||
+    pathname.startsWith("/api") ||
+    pathname.startsWith("/auth") ||
+    pathname.includes(".") ||
+    isGatePath(pathname)
+  );
+}
+
+function rateLimitApi(request: NextRequest, namespace: keyof typeof RATE_LIMITS) {
+  const ip = getClientIpFromRequest(request);
+  const result = checkRateLimit(namespace, ip, RATE_LIMITS[namespace]);
+
+  if (!result.ok) {
+    return NextResponse.json(
+      { error: "Too many requests. Please try again later." },
+      {
+        status: 429,
+        headers: result.retryAfterSec
+          ? { "Retry-After": String(result.retryAfterSec) }
+          : undefined,
+      },
+    );
+  }
+
+  return null;
+}
+
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  if (pathname.startsWith("/api/r2")) {
+    const limited = rateLimitApi(request, "r2Api");
+    if (limited) return limited;
+  }
+
+  if (isToolDownloadPath(pathname)) {
+    const limited = rateLimitApi(request, "toolDownload");
+    if (limited) return limited;
+  }
 
   // ── Static assets & internals — pass through immediately ──────
   if (
@@ -21,6 +87,20 @@ export async function middleware(request: NextRequest) {
     pathname.includes(".")
   ) {
     return NextResponse.next();
+  }
+
+  // ── Site-wide Turnstile gate (first visit / expired cookie) ───
+  if (isSiteGateEnabled() && !shouldBypassSiteGate(pathname)) {
+    const gateCookie = request.cookies.get(SITE_GATE_COOKIE)?.value;
+    const verified = await verifySiteGateToken(gateCookie);
+
+    if (!verified) {
+      const locale = pathnameLocale(pathname) ?? defaultLocale;
+      const gateUrl = new URL(`/${locale}/gate`, request.url);
+      const returnTo = `${pathname}${request.nextUrl.search}`;
+      gateUrl.searchParams.set("returnTo", returnTo);
+      return NextResponse.redirect(gateUrl);
+    }
   }
 
   // ── Build a mutable response so Supabase can write auth cookies ─

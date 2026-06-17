@@ -3,7 +3,9 @@
 import { useActionState, useEffect, useId, useState } from "react";
 import { toast } from "react-toastify";
 
+import { TurnstileWidget } from "@/components/auth/turnstile-widget";
 import { signIn, signUp, type AuthState } from "@/lib/supabase/actions";
+import { isTurnstileConfigured } from "@/lib/security/turnstile-public";
 
 interface AuthFormProps {
  mode: "login" | "register";
@@ -129,6 +131,8 @@ export function AuthForm({
  const [confirmPassword, setConfirmPassword] = useState("");
  const [showPassword, setShowPassword] = useState(false);
  const [showConfirm, setShowConfirm] = useState(false);
+ const [turnstileToken, setTurnstileToken] = useState("");
+ const turnstileRequired = isTurnstileConfigured();
 
  const baseId = useId();
  const idName = `${baseId}-name`;
@@ -173,6 +177,11 @@ export function AuthForm({
  if (isRegister && password !== confirmPassword) {
  e.preventDefault();
  toast.error(passwordMismatch ?? "Passwords do not match.");
+ return;
+ }
+ if (turnstileRequired && !turnstileToken) {
+ e.preventDefault();
+ toast.error("Please complete the security check.");
  }
  }
 
@@ -270,9 +279,14 @@ export function AuthForm({
  </div>
  )}
 
+ <TurnstileWidget onTokenChange={setTurnstileToken} />
+ {turnstileRequired && (
+ <input type="hidden" name="cf-turnstile-response" value={turnstileToken} />
+ )}
+
  <button
  type="submit"
- disabled={isPending || mismatch}
+ disabled={isPending || mismatch || (turnstileRequired && !turnstileToken)}
  className="w-full rounded-xl bg-[var(--color-teal)] px-4 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:brightness-105 disabled:translate-y-0 disabled:opacity-60 sm:w-auto sm:min-w-[140px]"
  >
  {isPending ? "Please wait…" : submitLabel}
