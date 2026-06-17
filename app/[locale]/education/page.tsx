@@ -24,6 +24,7 @@ export default async function EducationPage({
         eyebrow={dict.nav.education}
         title={dict.course.title}
         description={dict.course.intro}
+        backgroundImage="/Images/bg-education-header.png"
       />
       <PublicPageMain>
         <EducationLessonGrid lessons={lessons} locale={locale} dict={dict} />

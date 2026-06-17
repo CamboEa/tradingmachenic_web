@@ -1,6 +1,4 @@
-import { Eyebrow } from "@/components/ui/eyebrow";
 import { cn } from "@/lib/ui/cn";
-import { ui } from "@/lib/ui/styles";
 
 export function PublicPageHero({
   eyebrow,
@@ -8,31 +6,43 @@ export function PublicPageHero({
   description,
   children,
   className,
+  backgroundImage,
 }: {
-  eyebrow: string;
+  eyebrow?: string;
   title: string;
   description?: string;
   children?: React.ReactNode;
   className?: string;
+  backgroundImage?: string;
 }) {
   return (
     <section
       className={cn(
-        "relative overflow-hidden bg-slate-brand px-4 py-14 sm:px-6 sm:py-16 lg:px-8",
+        "relative h-64 overflow-hidden bg-slate-brand sm:h-72 lg:h-80",
         className,
       )}
     >
-      <div
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,rgba(212,175,55,0.18),transparent_24rem),radial-gradient(circle_at_86%_10%,rgba(37,99,235,0.2),transparent_26rem)]"
-        aria-hidden
-      />
-      <div className="relative mx-auto max-w-7xl">
-        <Eyebrow variant="public">{eyebrow}</Eyebrow>
-        <h1 className={cn("mt-3 max-w-3xl", ui.pageTitlePublic)}>{title}</h1>
-        {description ? (
-          <p className="mt-4 max-w-2xl text-base leading-7 text-slate-300">{description}</p>
-        ) : null}
-        {children ? <div className="mt-6">{children}</div> : null}
+      {/* Background image */}
+      {backgroundImage && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={backgroundImage}
+          alt=""
+          aria-hidden
+          className="pointer-events-none absolute inset-0 h-full w-full object-cover object-center"
+        />
+      )}
+
+
+      {/* Title pinned to bottom */}
+      <div className="absolute bottom-0 left-0 right-0 pl-2 pr-4 pb-7 pt-5 sm:pl-4 sm:pr-6 lg:pl-6 lg:pr-8">
+        <div className="mx-auto max-w-7xl">
+          <h1 className="text-xl font-bold tracking-tight text-white sm:text-2xl lg:text-3xl">{title}</h1>
+          {description ? (
+            <p className="mt-1 text-sm text-slate-400">{description}</p>
+          ) : null}
+          {children ? <div className="mt-3">{children}</div> : null}
+        </div>
       </div>
     </section>
   );

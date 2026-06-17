@@ -128,7 +128,7 @@ export default async function CurriculumPage({
 
   return (
     <div className="flex flex-col">
-      <PublicPageHero eyebrow={cp.eyebrow} title={cp.title} description={cp.intro} />
+      <PublicPageHero eyebrow={cp.eyebrow} title={cp.title} description={cp.intro} backgroundImage="/Images/bg-curriculum-header.png" />
       <PublicPageMain className="max-w-6xl">
       {curriculum.length === 0 ? (
         <p className="mt-16 text-center text-sm text-(--color-ink-muted)">

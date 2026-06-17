@@ -33,7 +33,7 @@ export default async function AboutPage({
 
   return (
     <div className="flex flex-col">
-      <PublicPageHero eyebrow={a.eyebrow} title={a.title} description={a.intro} />
+      <PublicPageHero backgroundImage="/Images/bg-about-header.png" title={""} />
       <PublicPageMain className="py-12 lg:py-16">
       <div className="mt-12 grid gap-12 lg:grid-cols-[minmax(0,340px)_minmax(0,1fr)] lg:items-start lg:gap-16">
         <Reveal className="min-w-0">

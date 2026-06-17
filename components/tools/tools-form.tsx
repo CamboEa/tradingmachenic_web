@@ -16,7 +16,7 @@ const STEPS = [
  { title: "Basics", hint: "Type, pricing, name, version, platform" },
  { title: "Description", hint: "Short overview in English and Khmer" },
  { title: "Page content", hint: "Requirements, how it works, features, usage" },
- { title: "Proof & gallery", hint: "Testing notes and screenshot images" },
+ { title: "Proof", hint: "Testing notes and proof images" },
  { title: "Files & publish", hint: "Downloads, preview, and status" },
 ] as const;
 
@@ -46,6 +46,8 @@ export function ToolsForm({ tool }: Props) {
  const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(tool?.image_url ?? null);
  const [galleryItems, setGalleryItems] = useState<ToolGalleryItem[]>(tool?.gallery ?? []);
  const [isSaving, setIsSaving] = useState(false);
+ const [fileError, setFileError] = useState(false);
+ const fileUploaderRef = useRef<HTMLDivElement>(null);
 
  const defaultType = tool?.type === "ea" ? "Expert Advisor (EA)" : "Indicator";
  const defaultPricing = tool?.pricing === "paid" ? "Paid" : "Free";
@@ -53,6 +55,9 @@ export function ToolsForm({ tool }: Props) {
 
  const isLastStep = step === STEPS.length - 1;
  const isDualPlatform = platform === "MT4 & MT5";
+ const fileReady = isDualPlatform
+ ? !!uploadedFileUrlMt4 && !!uploadedFileUrlMt5
+ : !!uploadedFileUrl;
 
  // R2 folder for this tool's uploads: indicator/<name> or expert_advisor/<name>.
  function toolKeyPrefix(): string {
@@ -87,10 +92,14 @@ export function ToolsForm({ tool }: Props) {
  if (isDualPlatform) {
  if (!uploadedFileUrlMt4 || !uploadedFileUrlMt5) {
  toast.error("Please upload both the MT4 and MT5 files before publishing");
+ setFileError(true);
+ setTimeout(() => fileUploaderRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }), 50);
  return false;
  }
  } else if (!uploadedFileUrl) {
  toast.error("Please upload a tool file before publishing");
+ setFileError(true);
+ setTimeout(() => fileUploaderRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }), 50);
  return false;
  }
  }
@@ -99,6 +108,7 @@ export function ToolsForm({ tool }: Props) {
  }
 
  function goToStep(next: number) {
+ setFileError(false);
  setStep(next);
  window.scrollTo({ top: 0, behavior: "smooth" });
  }
@@ -404,10 +414,10 @@ export function ToolsForm({ tool }: Props) {
  ))}
  </div>
 
- {/* Step 4 — Proof & gallery */}
+ {/* Step 4 — Proof */}
  <div className={step === 3 ? "space-y-5" : "hidden"}>
  <p className="text-xs text-slate-500">
- Build trust with backtest notes and chart screenshots. Everything here is optional.
+ Build trust with backtest notes and proof images. Everything here is optional.
  </p>
  <div>
  <label className="mb-1.5 block text-xs font-semibold text-slate-600">
@@ -434,7 +444,7 @@ export function ToolsForm({ tool }: Props) {
  />
  </div>
  <div className="border-t border-slate-100 pt-5">
- <h3 className="text-sm font-bold text-[#1e293b]">Proof images & screenshots</h3>
+ <h3 className="text-sm font-bold text-[#1e293b]">Proof images</h3>
  <p className="mt-1 mb-4 text-xs text-slate-500">
  Upload images with English and Khmer captions for the gallery section.
  </p>
@@ -448,6 +458,18 @@ export function ToolsForm({ tool }: Props) {
 
  {/* Step 5 — Files & publish */}
  <div className={step === 4 ? "space-y-5" : "hidden"}>
+ <div
+ ref={fileUploaderRef}
+ className={[
+ "space-y-5 rounded-xl transition",
+ fileError ? "ring-2 ring-red-400 ring-offset-4" : "",
+ ].join(" ")}
+ >
+ {fileError && (
+ <p className="rounded-lg bg-red-50 px-4 py-2.5 text-xs font-semibold text-red-600">
+ A tool file is required before publishing. Please upload it below.
+ </p>
+ )}
  {isDualPlatform ? (
  <>
  <R2Uploader
@@ -460,7 +482,7 @@ export function ToolsForm({ tool }: Props) {
  }
  hint=".ex4, .mq4, .zip — max 20 MB"
  initialUrl={tool?.file_url_mt4 ?? undefined}
- onUploaded={(url) => setUploadedFileUrlMt4(url)}
+ onUploaded={(url) => { setUploadedFileUrlMt4(url); setFileError(false); }}
  getKeyPrefix={toolKeyPrefix}
  />
  <R2Uploader
@@ -473,7 +495,7 @@ export function ToolsForm({ tool }: Props) {
  }
  hint=".ex5, .mq5, .zip — max 20 MB"
  initialUrl={tool?.file_url_mt5 ?? undefined}
- onUploaded={(url) => setUploadedFileUrlMt5(url)}
+ onUploaded={(url) => { setUploadedFileUrlMt5(url); setFileError(false); }}
  getKeyPrefix={toolKeyPrefix}
  />
  </>
@@ -488,10 +510,11 @@ export function ToolsForm({ tool }: Props) {
  }
  hint=".ex4, .ex5, .mq4, .mq5, .zip — max 20 MB"
  initialUrl={tool?.file_url ?? undefined}
- onUploaded={(url) => setUploadedFileUrl(url)}
+ onUploaded={(url) => { setUploadedFileUrl(url); setFileError(false); }}
  getKeyPrefix={toolKeyPrefix}
  />
  )}
+ </div>
 
  <R2Uploader
  bucketName="trading-tool"
@@ -566,13 +589,22 @@ export function ToolsForm({ tool }: Props) {
  Continue
  </button>
  ) : (
+ <div className="flex flex-col items-end gap-1.5">
+ {!fileReady && !isSaving && (
+ <p className="text-xs font-semibold text-amber-600">
+ {isDualPlatform
+ ? "Upload both the MT4 and MT5 files above first"
+ : "Upload the tool file above first"}
+ </p>
+ )}
  <button
  type="submit"
- disabled={isSaving}
+ disabled={isSaving || !fileReady}
  className="rounded-lg bg-[#0ea5e9] px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-sky-600 disabled:cursor-not-allowed disabled:bg-slate-300"
  >
  {isSaving ? "Saving..." : isEdit ? "Save changes" : "Publish tool"}
  </button>
+ </div>
  )}
  </div>
  </div>

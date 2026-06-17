@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 
 import { CourseLessonCard } from "@/components/education/course-lesson-card";
+import { Dropdown } from "@/components/ui/dropdown";
 import type { Lesson } from "@/lib/course";
 import type { Dictionary, Locale } from "@/lib/i18n";
 
@@ -70,27 +71,15 @@ export function EducationLessonGrid({
           />
         </div>
 
-        <div className="flex gap-1.5">
-          {(["all", "free", "paid"] as const).map((f) => (
-            <button
-              key={f}
-              type="button"
-              onClick={() => setFilter(f)}
-              className={[
-                "rounded-lg px-3.5 py-2 text-xs font-semibold capitalize transition-all duration-150",
-                filter === f
-                  ? "bg-[#1e293b] text-white shadow-sm"
-                  : "border border-slate-200 bg-white text-slate-600 shadow-sm hover:border-slate-300 hover:bg-slate-50",
-              ].join(" ")}
-            >
-              {f === "all"
-                ? dict.course.filterAll
-                : f === "free"
-                  ? dict.course.filterFree
-                  : dict.course.filterPaid}
-            </button>
-          ))}
-        </div>
+        <Dropdown
+          value={filter}
+          options={[
+            { value: "all",  label: dict.course.filterAll  },
+            { value: "free", label: dict.course.filterFree },
+            { value: "paid", label: dict.course.filterPaid },
+          ]}
+          onChange={setFilter}
+        />
       </div>
 
       {/* Results count when searching */}

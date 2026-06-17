@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Noto_Sans_Khmer } from "next/font/google";
+import { IBM_Plex_Sans, Geist_Mono, Noto_Sans_Khmer } from "next/font/google";
 
 import { HtmlLang } from "@/components/layout/html-lang";
 import { ToastProvider } from "@/components/shared/toast-provider";
 
 import "./globals.css";
 
-const geistSans = Geist({
- variable: "--font-geist-sans",
+const ibmPlexSans = IBM_Plex_Sans({
+ variable: "--font-ibm-plex",
  subsets: ["latin"],
+ weight: ["300", "400", "500", "600", "700"],
 });
 
 const geistMono = Geist_Mono({
@@ -44,7 +45,7 @@ export default function RootLayout({
  <html
  lang="km"
  suppressHydrationWarning
- className={`${geistSans.variable} ${geistMono.variable} ${fontKhmer.variable} font-sans h-full antialiased`}
+ className={`${ibmPlexSans.variable} ${geistMono.variable} ${fontKhmer.variable} font-sans h-full antialiased`}
  >
  <body className="flex min-h-screen flex-col bg-[var(--background)] font-sans text-[var(--foreground)]">
  <HtmlLang />

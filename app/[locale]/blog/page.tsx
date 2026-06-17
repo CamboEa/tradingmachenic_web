@@ -37,7 +37,7 @@ export default async function BlogIndexPage({
 
   return (
     <div className="flex flex-col">
-      <PublicPageHero eyebrow={t.eyebrow} title={t.title} description={t.intro} />
+      <PublicPageHero eyebrow={t.eyebrow} title={t.title} description={t.intro} backgroundImage="/Images/bg-blog-header.png" />
       <PublicPageMain className="pb-16">
         {posts.length === 0 ? (
           <EmptyState title={t.emptyTitle} description={t.emptyBody} />

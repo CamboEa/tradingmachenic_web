@@ -28,13 +28,13 @@
   --color-ink-soft: var(--ink-soft);
   --color-bridge: var(--bridge);
   --color-slate-brand: var(--slate);
-  --font-sans: var(--font-khmer), var(--font-geist-sans), system-ui,
+  --font-sans: var(--font-khmer), var(--font-ibm-plex), system-ui,
     -apple-system, sans-serif;
   --font-mono: var(--font-geist-mono);
 }
 
 html {
-  font-family: var(--font-khmer), var(--font-geist-sans), system-ui, -apple-system,
+  font-family: var(--font-khmer), var(--font-ibm-plex), system-ui, -apple-system,
     sans-serif;
 }
 
@@ -44,7 +44,7 @@ body {
     radial-gradient(circle at top right, color-mix(in oklab, var(--color-gold) 12%, transparent), transparent 26rem),
     linear-gradient(180deg, #ffffff 0%, var(--background) 26rem);
   color: var(--foreground);
-  font-family: var(--font-khmer), var(--font-geist-sans), system-ui, -apple-system,
+  font-family: var(--font-khmer), var(--font-ibm-plex), system-ui, -apple-system,
     sans-serif;
   min-height: 100vh;
   text-rendering: optimizeLegibility;
@@ -72,7 +72,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: var(--font-khmer), var(--font-geist-sans), system-ui, -apple-system,
+  font-family: var(--font-khmer), var(--font-ibm-plex), system-ui, -apple-system,
     sans-serif;
 }
 
@@ -80,7 +80,7 @@ button,
 input,
 textarea,
 select {
-  font-family: var(--font-khmer), var(--font-geist-sans), system-ui, -apple-system,
+  font-family: var(--font-khmer), var(--font-ibm-plex), system-ui, -apple-system,
     sans-serif;
 }
 

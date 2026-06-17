@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+
 import Link from "next/link";
 
+import { Dropdown } from "@/components/ui/dropdown";
 import type { Locale } from "@/lib/i18n";
 import type { Tool } from "@/lib/supabase/tools";
 
@@ -28,12 +30,18 @@ function ToolPlaceholder({ type }: { type: Tool["type"] }) {
   );
 }
 
+function formatCount(n: number): string {
+  if (n >= 1000) return `${(n / 1000).toFixed(1).replace(/\.0$/, "")}k`;
+  return String(n);
+}
+
 function ToolCard({ tool, locale }: { tool: Tool; locale: Locale }) {
   const description = locale === "km" ? tool.description_km : tool.description_en;
   const isFree = tool.pricing === "free";
+  const totalDownloads = (tool.download_count ?? 0) + (tool.download_count_mt4 ?? 0) + (tool.download_count_mt5 ?? 0);
 
   return (
-    <Link href={`/${locale}/tools/${tool.id}`} className="ui-content-card group flex flex-col overflow-hidden" aria-label={tool.name}>
+    <Link href={`/${locale}/tools/${tool.id}`} className="ui-content-card group flex flex-col overflow-hidden" style={{ borderRadius: 0 }} aria-label={tool.name}>
       <div className="relative aspect-video w-full overflow-hidden bg-slate-100">
         {tool.image_url ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -42,7 +50,7 @@ function ToolCard({ tool, locale }: { tool: Tool; locale: Locale }) {
           <ToolPlaceholder type={tool.type} />
         )}
         <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent" />
-        <span className={`absolute left-3 top-3 rounded-md px-2.5 py-1 text-[11px] font-bold uppercase tracking-widest ${isFree ? "bg-[#2563EB] text-white" : "bg-[#d4af37] text-[#1e293b]"}`}>
+        <span className={`absolute left-2 top-2 rounded px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-widest ${isFree ? "bg-[#2563EB] text-white" : "bg-[#d4af37] text-[#1e293b]"}`}>
           {isFree ? "Free" : "Paid"}
         </span>
         <span className="absolute bottom-3 right-3 rounded-md bg-black/50 px-2 py-0.5 text-[11px] font-semibold text-white/90 backdrop-blur-sm">
@@ -65,7 +73,13 @@ function ToolCard({ tool, locale }: { tool: Tool; locale: Locale }) {
         <div className="my-4 h-px bg-slate-100" />
         <div className="mt-auto flex items-center justify-between">
           <span className="text-xs font-semibold text-[#2563EB] transition group-hover:translate-x-0.5">View details →</span>
-          {isFree && <span className="rounded-full bg-[#EFF6FF] px-2.5 py-0.5 text-[11px] font-bold text-[#2563EB]">Free Download</span>}
+          <span className="flex items-center gap-1 text-[11px] text-slate-400">
+            <svg viewBox="0 0 16 16" fill="currentColor" className="h-3.5 w-3.5 shrink-0" aria-hidden>
+              <path d="M8.75 2.75a.75.75 0 0 0-1.5 0v5.69L5.03 6.22a.75.75 0 0 0-1.06 1.06l3.5 3.5a.75.75 0 0 0 1.06 0l3.5-3.5a.75.75 0 0 0-1.06-1.06L8.75 8.44V2.75Z" />
+              <path d="M3.5 9.75a.75.75 0 0 0-1.5 0v1.5A2.75 2.75 0 0 0 4.75 14h6.5A2.75 2.75 0 0 0 14 11.25v-1.5a.75.75 0 0 0-1.5 0v1.5c0 .69-.56 1.25-1.25 1.25h-6.5c-.69 0-1.25-.56-1.25-1.25v-1.5Z" />
+            </svg>
+            {formatCount(totalDownloads)}
+          </span>
         </div>
       </div>
     </Link>
@@ -80,9 +94,12 @@ const FILTER_OPTIONS: { value: FilterType; label: string }[] = [
   { value: "ea", label: "Expert Advisors" },
 ];
 
+const ITEMS_PER_PAGE = 12;
+
 export function ToolsSearchGrid({ tools, locale }: { tools: Tool[]; locale: Locale }) {
   const [query, setQuery] = useState("");
   const [typeFilter, setTypeFilter] = useState<FilterType>("all");
+  const [page, setPage] = useState(0);
 
   const filtered = tools.filter((t) => {
     const matchesType = typeFilter === "all" || t.type === typeFilter;
@@ -95,6 +112,19 @@ export function ToolsSearchGrid({ tools, locale }: { tools: Tool[]; locale: Loca
       t.description_km?.toLowerCase().includes(q)
     );
   });
+
+  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
+  const paginated = filtered.slice(page * ITEMS_PER_PAGE, (page + 1) * ITEMS_PER_PAGE);
+
+  const handleSearch = (q: string) => {
+    setQuery(q);
+    setPage(0);
+  };
+
+  const handleFilter = (f: FilterType) => {
+    setTypeFilter(f);
+    setPage(0);
+  };
 
   return (
     <div>
@@ -115,35 +145,16 @@ export function ToolsSearchGrid({ tools, locale }: { tools: Tool[]; locale: Loca
             type="search"
             placeholder="Search tools…"
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={(e) => handleSearch(e.target.value)}
             className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm text-slate-700 placeholder-slate-400 shadow-sm transition focus:border-[#2563EB]/50 focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20"
           />
         </div>
 
-        {/* Type dropdown */}
-        <div className="relative">
-          <select
-            value={typeFilter}
-            onChange={(e) => setTypeFilter(e.target.value as FilterType)}
-            className="h-full appearance-none rounded-xl border border-slate-200 bg-white py-2.5 pl-4 pr-9 text-sm font-semibold text-slate-700 shadow-sm transition focus:border-[#2563EB]/50 focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20"
-          >
-            {FILTER_OPTIONS.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
-          {/* Chevron icon */}
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-            className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400"
-            aria-hidden
-          >
-            <path fillRule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clipRule="evenodd" />
-          </svg>
-        </div>
+        <Dropdown
+          value={typeFilter}
+          options={FILTER_OPTIONS}
+          onChange={handleFilter}
+        />
       </div>
 
       {filtered.length === 0 ? (
@@ -155,11 +166,57 @@ export function ToolsSearchGrid({ tools, locale }: { tools: Tool[]; locale: Loca
           </p>
         </div>
       ) : (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((tool) => (
-            <ToolCard key={tool.id} tool={tool} locale={locale} />
-          ))}
-        </div>
+        <>
+          <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
+            {paginated.map((tool) => (
+              <ToolCard key={tool.id} tool={tool} locale={locale} />
+            ))}
+          </div>
+
+          {totalPages > 1 && (
+            <div className="mt-8 flex justify-center">
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={() => setPage((p) => Math.max(0, p - 1))}
+                  disabled={page === 0}
+                  className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 transition hover:border-[#2563EB]/40 hover:text-[#2563EB] disabled:cursor-not-allowed disabled:opacity-40"
+                  aria-label="Previous page"
+                >
+                  <svg viewBox="0 0 16 16" fill="currentColor" className="h-3.5 w-3.5" aria-hidden>
+                    <path fillRule="evenodd" d="M9.78 4.22a.75.75 0 0 1 0 1.06L7.06 8l2.72 2.72a.75.75 0 1 1-1.06 1.06L5.47 8.53a.75.75 0 0 1 0-1.06l3.25-3.25a.75.75 0 0 1 1.06 0Z" clipRule="evenodd" />
+                  </svg>
+                </button>
+
+                {Array.from({ length: totalPages }, (_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setPage(i)}
+                    className={`flex h-8 min-w-[2rem] cursor-pointer items-center justify-center rounded-lg border px-2 text-xs font-semibold transition ${
+                      i === page
+                        ? "border-[#2563EB] bg-[#2563EB] text-white"
+                        : "border-slate-200 bg-white text-slate-500 hover:border-[#2563EB]/40 hover:text-[#2563EB]"
+                    }`}
+                    aria-label={`Page ${i + 1}`}
+                    aria-current={i === page ? "page" : undefined}
+                  >
+                    {i + 1}
+                  </button>
+                ))}
+
+                <button
+                  onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
+                  disabled={page === totalPages - 1}
+                  className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 transition hover:border-[#2563EB]/40 hover:text-[#2563EB] disabled:cursor-not-allowed disabled:opacity-40"
+                  aria-label="Next page"
+                >
+                  <svg viewBox="0 0 16 16" fill="currentColor" className="h-3.5 w-3.5" aria-hidden>
+                    <path fillRule="evenodd" d="M6.22 4.22a.75.75 0 0 1 1.06 0l3.25 3.25a.75.75 0 0 1 0 1.06l-3.25 3.25a.75.75 0 1 1-1.06-1.06L9.19 8 6.22 5.03a.75.75 0 0 1 0-1.06Z" clipRule="evenodd" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

@@ -261,7 +261,7 @@ export default async function HomePage({
 
       {/* ── How it works ── */}
       <section
-        className="relative flex min-h-screen flex-col justify-center overflow-hidden px-4 py-24 sm:px-6 lg:px-8"
+        className="relative flex flex-col justify-center overflow-hidden px-4 py-24 sm:px-6 lg:px-8"
         aria-labelledby="home-how"
       >
         <div className="relative mx-auto w-full max-w-7xl">
@@ -299,7 +299,7 @@ export default async function HomePage({
 
       {/* ── Forex Heatmap ── */}
       <section
-        className="section-soft relative flex min-h-screen flex-col justify-center overflow-hidden px-4 py-24 sm:px-6 lg:px-8"
+        className="relative flex flex-col justify-center overflow-hidden px-4 py-24 sm:px-6 lg:px-8"
         aria-labelledby="home-heatmap"
       >
         <div className="relative mx-auto w-full max-w-7xl">
@@ -327,10 +327,9 @@ export default async function HomePage({
 
       {/* ── Professional standards ── */}
       <section
-        className="relative flex min-h-screen flex-col justify-center overflow-hidden bg-glow-gold px-4 py-24 sm:px-6 lg:px-8"
+        className="relative flex flex-col justify-center overflow-hidden px-4 py-24 sm:px-6 lg:px-8"
         aria-labelledby="home-approach"
       >
-        <div aria-hidden className="pointer-events-none absolute inset-0 bg-dots" />
         <div className="relative mx-auto w-full max-w-7xl">
           <Reveal effect="left">
             <div className="max-w-3xl">
