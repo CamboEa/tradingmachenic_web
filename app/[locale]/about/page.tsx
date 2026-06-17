@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { Reveal } from "@/components/shared/reveal";
@@ -53,7 +52,7 @@ export default async function AboutPage({
 
         <Reveal className="min-w-0" delayMs={100}>
         <div className="min-w-0">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--color-teal)]">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-(--color-teal)">
             {a.mentorBadge}
           </p>
           <h2 className="mt-2 text-2xl font-semibold tracking-tight text-[var(--color-ink)] sm:text-3xl">
@@ -99,6 +98,69 @@ export default async function AboutPage({
             </li>
           ))}
         </ul>
+      </Reveal>
+      {/* ── Team ── */}
+      {/* ── Team ── */}
+      <Reveal className="mt-24">
+        <div className="px-6 py-14 sm:px-10">
+          <div className="text-center">
+            <h2 className="text-3xl font-bold tracking-tight text-[#1E293B] sm:text-4xl">
+              {locale === "km" ? "ក្រុមការងាររបស់យើង" : "Our Team"}
+            </h2>
+            <div className="mx-auto mt-3 h-0.5 w-12 bg-[#D4AF37]" />
+            <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-slate-500">
+              {locale === "km"
+                ? "ក្រុមការងារដែលស្ពឹកស្ពាន់ ដើម្បីផ្តល់ចំណេះដឹងការជួញដូរ និងឧបករណ៍ល្អបំផុតដល់អ្នក។"
+                : "A dedicated team building the best trading education and algorithmic tools for our community."}
+            </p>
+          </div>
+
+          <div className="mt-12 flex flex-col items-center justify-center gap-8 sm:flex-row sm:items-start">
+            {/* Member 1 */}
+            <div className="flex flex-col items-center text-center">
+              <div className="relative overflow-hidden rounded-2xl border-2 border-[#D4AF37]/40 shadow-lg" style={{ width: 220, height: 280 }}>
+                <Image
+                  src="/team/hengbunkheag.png"
+                  alt="Heng Bunkheang"
+                  fill
+                  className="object-cover object-top"
+                  sizes="220px"
+                />
+              </div>
+              <h3 className="mt-5 text-lg font-bold text-[#1E293B]">Heng Bunkheang</h3>
+              <p className="mt-1 text-xs font-semibold uppercase tracking-[0.18em] text-[#0EA5E9]">
+                {locale === "km" ? "អ្នកអភិវឌ្ឍន៍កម្មវិធី" : "Software Developer"}
+              </p>
+              <p className="mt-3 max-w-55 text-sm leading-relaxed text-slate-500">
+                {locale === "km"
+                  ? "អ្នកអភិវឌ្ឍន៍ប្រព័ន្ធ Trading Web និងឧបករណ៍ Algorithmic Trading។"
+                  : "Builds the trading platform and full-stack infrastructure powering the academy."}
+              </p>
+            </div>
+
+            {/* Member 2 */}
+            <div className="flex flex-col items-center text-center">
+              <div className="relative overflow-hidden rounded-2xl border-2 border-[#D4AF37]/40 shadow-lg" style={{ width: 220, height: 280 }}>
+                <Image
+                  src="/team/vireakyuth.png"
+                  alt="Srun Vireakyuth"
+                  fill
+                  className="object-cover object-top"
+                  sizes="220px"
+                />
+              </div>
+              <h3 className="mt-5 text-lg font-bold text-[#1E293B]">Srun Vireakyuth</h3>
+              <p className="mt-1 text-xs font-semibold uppercase tracking-[0.18em] text-[#0EA5E9]">
+                {locale === "km" ? "អ្នកអភិវឌ្ឍន៍ MQL5" : "MQL5 Developer"}
+              </p>
+              <p className="mt-3 max-w-55 text-sm leading-relaxed text-slate-500">
+                {locale === "km"
+                  ? "អ្នកស្ទាត់ជំនាញក្នុងការសរសេរ Expert Advisors និង Custom Indicators ក្នុង MQL5។"
+                  : "Specialist in writing Expert Advisors and custom indicators for MT4 & MT5."}
+              </p>
+            </div>
+          </div>
+        </div>
       </Reveal>
     </PublicPageMain>
     </div>
