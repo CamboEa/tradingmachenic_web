@@ -177,6 +177,16 @@ export type Dictionary = {
     loading: string;
     error: string;
   };
+  notFoundPage: {
+    eyebrow: string;
+    title: string;
+    description: string;
+    home: string;
+    education: string;
+    tools: string;
+    blog: string;
+    adminDashboard: string;
+  };
   aboutPage: {
     title: string;
     eyebrow: string;
@@ -434,6 +444,17 @@ const en: Dictionary = {
     body: "Complete this step to continue to Algorithmic Alpha Trade. It helps keep bots off the site.",
     loading: "Verifying…",
     error: "Verification failed. Please try again.",
+  },
+  notFoundPage: {
+    eyebrow: "Error 404",
+    title: "This page doesn't exist",
+    description:
+      "The link may be outdated, or the page was moved. Head back to the academy or explore our lessons and tools.",
+    home: "Back to home",
+    education: "Browse education",
+    tools: "Tools",
+    blog: "Blog",
+    adminDashboard: "Admin dashboard",
   },
   aboutPage: {
     title: "About",
@@ -713,6 +734,17 @@ const km: Dictionary = {
     body: "បំពេញជំហាននេះដើម្បីបន្តទៅ Algorithmic Alpha Trade។ វាជួយការពារពី bot។",
     loading: "កំពុងផ្ទៀងផ្ទាត់…",
     error: "ការផ្ទៀងផ្ទាត់បរាជ័យ។ សូមព្យាយាមម្តងទៀត។",
+  },
+  notFoundPage: {
+    eyebrow: "កំហុស 404",
+    title: "រកមិនឃើញទំព័រនេះ",
+    description:
+      "តំណអាចផុតកំណត់ ឬទំព័រត្រូវបានផ្លាស់ទី។ ត្រឡប់ទៅទំព័រដើម ឬរុករកមេរៀន និងឧបករណ៍របស់យើង។",
+    home: "ត្រឡប់ទៅដើម",
+    education: "រុករកការអប់រំ",
+    tools: "ឧបករណ៍",
+    blog: "ប្លុក",
+    adminDashboard: "ផ្ទាំងគ្រប់គ្រង",
   },
   aboutPage: {
     title: "អំពីយើង",
