@@ -150,37 +150,29 @@ export default async function HomePage({
 
       {/* ── Featured Tools ── */}
       <section
-        className="relative flex min-h-screen flex-col justify-center overflow-hidden px-4 py-24 sm:px-6 lg:px-8"
+        className="overflow-hidden bg-[#f8fafc] px-4 py-24 sm:px-6 lg:px-8"
         aria-labelledby="home-featured-tools"
       >
-        <div className="relative mx-auto w-full max-w-7xl">
-          <Reveal effect="left">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-(--color-gold)">
-                  {dict.home.sectionFeaturedTools}
-                </p>
-                <h2
-                  id="home-featured-tools"
-                  className="mt-3 text-3xl font-bold tracking-tight text-(--color-ink) sm:text-4xl"
-                >
-                  {dict.home.featuredToolsTagline}
-                </h2>
-                <p className="mt-3 max-w-xl text-base leading-relaxed text-(--color-ink-muted)">
-                  {dict.home.featuredToolsLead}
-                </p>
-              </div>
-              <Link
-                href={`/${locale}/tools`}
-                className="shrink-0 text-sm font-semibold text-(--color-teal) underline-offset-4 transition hover:underline"
+        <div className="mx-auto w-full max-w-7xl">
+          <Reveal effect="fade">
+            <div className="mb-14 text-center">
+              <p className="text-xs font-bold uppercase tracking-[0.28em] text-(--color-gold)">
+                {dict.home.sectionFeaturedTools}
+              </p>
+              <h2
+                id="home-featured-tools"
+                className="mt-4 text-3xl font-bold tracking-tight text-(--color-ink) sm:text-4xl lg:text-5xl"
               >
-                {dict.home.featuredToolsViewAll} →
-              </Link>
+                {dict.home.featuredToolsTagline}
+              </h2>
+              <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-(--color-ink-muted)">
+                {dict.home.featuredToolsLead}
+              </p>
             </div>
           </Reveal>
 
           {tools.length > 0 ? (
-            <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {tools.slice(0, 6).map((tool: Tool, i: number) => {
                 const description = locale === "km" ? tool.description_km : tool.description_en;
                 const isFree = tool.pricing === "free";
@@ -249,8 +241,17 @@ export default async function HomePage({
               })}
             </div>
           ) : (
-            <p className="mt-12 text-sm text-(--color-ink-muted)">{dict.home.featuredToolsViewAll}</p>
+            <p className="mt-12 text-center text-sm text-(--color-ink-muted)">{dict.home.featuredToolsViewAll}</p>
           )}
+
+          <div className="mt-12 text-center">
+            <Link
+              href={`/${locale}/tools`}
+              className="inline-flex items-center gap-2 rounded-xl bg-[#0EA5E9] px-8 py-3 text-sm font-bold text-white shadow-lg shadow-[#0EA5E9]/25 transition hover:-translate-y-0.5 hover:brightness-110"
+            >
+              {dict.home.featuredToolsViewAll} →
+            </Link>
+          </div>
         </div>
       </section>
 
