@@ -17,6 +17,7 @@ export type Dictionary = {
     tools: string;
     podcast: string;
     blog: string;
+    technicalAnalysis: string;
     about: string;
     /** Primary nav overflow — opens menu with extra links */
     more: string;
@@ -235,6 +236,7 @@ const en: Dictionary = {
     tools: "Tools",
     podcast: "Podcast",
     blog: "Blog",
+    technicalAnalysis: "Technical Analysis",
     about: "About",
     more: "More",
     register: "Register",
@@ -310,8 +312,8 @@ const en: Dictionary = {
     principlesTagline:
       "Grounded lessons you can apply—not noise.",
     lessonsNoun: "lessons",
-    heroSplitHeadline: "Trade with confidence, in any market",
-    heroSplitSubhead: "Get started with a free intro class",
+    heroSplitHeadline: "Learn, Grow & Trade with the Community",
+    heroSplitSubhead: "Structured trading education built for serious learners — join a growing community mastering risk, discipline, and execution.",
     heroSplitCta: "Register now",
     heroSplitTab: "Free intro class",
     heroImageAlt: "FIN HUB KH classroom and learning session",
@@ -526,6 +528,7 @@ const km: Dictionary = {
     tools: "ឧបករណ៍",
     podcast: "ផតខាស",
     blog: "ប្លុក",
+    technicalAnalysis: "វិភាគបច្ចេកទេស",
     about: "អំពី",
     more: "ច្រើនទៀត",
     register: "ចុះឈ្មោះ",
@@ -601,8 +604,8 @@ const km: Dictionary = {
     principlesTagline:
       "មេរៀនរឹងមាំដែលយកទៅអនុវត្តបាន—មិនមែនសំឡេងរំខាន។",
     lessonsNoun: "មេរៀន",
-    heroSplitHeadline: "ធ្វើពាណិជ្ជកម្មដោយទំនុកចិត្ត និងវិន័យ—នៅគ្រប់ទីផ្សារ",
-    heroSplitSubhead: "ចាប់ផ្តើមដោយថ្នាក់ណែនាំឥតគិតថ្លៃ",
+    heroSplitHeadline: "រៀន រីកចម្រើន និងជួញដូរជាមួយសហគមន៍",
+    heroSplitSubhead: "ការអប់រំពាណិជ្ជកម្មដែលមានរចនាសម្ព័ន្ធ — ចូលរួមសហគមន៍ដែលកំពុងរីកចម្រើន ដើម្បីស្វែងយល់ពីហានិភ័យ វិន័យ និងការប្រតិបត្តិ។",
     heroSplitCta: "ចុះឈ្មោះឥឡូវនេះ",
     heroSplitTab: "ថ្នាក់ណែនាំឥតគិតថ្លៃ",
     heroImageAlt: "បន្ទប់រៀន និងសមាជិក FIN HUB KH",

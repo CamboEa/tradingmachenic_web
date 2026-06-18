@@ -97,46 +97,31 @@ export default async function HomePage({
 
       {/* ── Featured Lessons ── */}
       <section
-        className="relative flex min-h-screen flex-col justify-center overflow-hidden px-4 py-24 sm:px-6 lg:px-8"
+        className="relative overflow-hidden bg-[#0d1420] px-4 py-24 sm:px-6 lg:px-8"
         aria-labelledby="home-featured-lessons"
       >
-        <Image
-          src="/Images/bg-principles-v2.jpg"
-          alt=""
-          fill
-          sizes="100vw"
-          className="object-cover object-center"
-        />
-        <div className="pointer-events-none absolute inset-0 bg-[rgba(10,18,35,0.72)]" aria-hidden />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_40%_at_50%_0%,color-mix(in_oklab,#0EA5E9_12%,transparent),transparent)]" aria-hidden />
         <div className="relative mx-auto w-full max-w-7xl">
-          <Reveal effect="left">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-(--color-gold)">
-                  {dict.home.sectionFeaturedLessons}
-                </p>
-                <h2
-                  id="home-featured-lessons"
-                  className="mt-3 text-3xl font-bold tracking-tight text-white sm:text-4xl"
-                >
-                  {dict.home.featuredLessonsTagline}
-                </h2>
-                <p className="mt-3 max-w-xl text-base leading-relaxed text-slate-300">
-                  {dict.home.featuredLessonsLead}
-                </p>
-              </div>
-              <Link
-                href={`/${locale}/education`}
-                className="shrink-0 text-sm font-semibold text-[#0EA5E9] underline-offset-4 transition hover:underline"
+          <Reveal effect="fade">
+            <div className="mb-14 text-center">
+              <p className="text-xs font-bold uppercase tracking-[0.28em] text-[#D4AF37]">
+                {dict.home.sectionFeaturedLessons}
+              </p>
+              <h2
+                id="home-featured-lessons"
+                className="mt-4 text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl"
               >
-                {dict.home.featuredLessonsViewAll} →
-              </Link>
+                {dict.home.featuredLessonsTagline}
+              </h2>
+              <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-slate-400">
+                {dict.home.featuredLessonsLead}
+              </p>
             </div>
           </Reveal>
 
           {lessons.length > 0 ? (
-            <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {lessons.slice(0, 3).map((lesson, i) => (
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {lessons.slice(0, 6).map((lesson, i) => (
                 <Reveal key={lesson.slug} delayMs={i * 80}>
                   <CourseLessonCard
                     lesson={lesson}
@@ -149,8 +134,17 @@ export default async function HomePage({
               ))}
             </div>
           ) : (
-            <p className="mt-12 text-sm text-slate-400">{dict.home.featuredLessonsViewAll}</p>
+            <p className="mt-12 text-center text-sm text-slate-500">{dict.home.featuredLessonsViewAll}</p>
           )}
+
+          <div className="mt-12 text-center">
+            <Link
+              href={`/${locale}/education`}
+              className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-8 py-3 text-sm font-semibold text-white backdrop-blur-sm transition hover:-translate-y-0.5 hover:bg-white/10 hover:border-white/30"
+            >
+              {dict.home.featuredLessonsViewAll} →
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -187,7 +181,7 @@ export default async function HomePage({
 
           {tools.length > 0 ? (
             <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {tools.slice(0, 3).map((tool: Tool, i: number) => {
+              {tools.slice(0, 6).map((tool: Tool, i: number) => {
                 const description = locale === "km" ? tool.description_km : tool.description_en;
                 const isFree = tool.pricing === "free";
                 return (
@@ -205,14 +199,14 @@ export default async function HomePage({
                             className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
                           />
                         ) : (
-                          <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-slate-100 via-white to-[#EFF6FF]">
+                          <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-slate-100 via-white to-[#EFF6FF]">
                             <svg viewBox="0 0 64 64" fill="none" className="h-16 w-16 text-slate-300" aria-hidden>
                               <path d="M12 46h40M18 40V26M32 40V16M46 40V30" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
                               <path d="M14 24c7 5 12 6 18 1s10-8 18-2" stroke="#0EA5E9" strokeWidth="4" strokeLinecap="round" />
                             </svg>
                           </div>
                         )}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                        <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent" />
                         <span className={`absolute left-3 top-3 rounded-md px-2.5 py-1 text-[11px] font-bold uppercase tracking-widest ${isFree ? "bg-[#0EA5E9] text-white" : "bg-[#D4AF37] text-[#1E293B]"}`}>
                           {isFree ? "Free" : "Paid"}
                         </span>
@@ -346,7 +340,7 @@ export default async function HomePage({
             {dict.home.approachItems.map((item, i) => (
               <li key={item}>
                 <Reveal className="h-full" effect="scale" delayMs={i * 75}>
-                  <div className="flex h-full min-h-[14rem] flex-col rounded-2xl border border-[color-mix(in_oklab,var(--color-bridge)_55%,transparent)] bg-[color-mix(in_oklab,var(--color-surface)_98%,var(--color-background))] p-8 transition hover:-translate-y-1 hover:border-[color-mix(in_oklab,var(--color-teal)_28%,var(--color-bridge))] hover:shadow-lg">
+                  <div className="flex h-full min-h-56 flex-col rounded-2xl border border-[color-mix(in_oklab,var(--color-bridge)_55%,transparent)] bg-[color-mix(in_oklab,var(--color-surface)_98%,var(--color-background))] p-8 transition hover:-translate-y-1 hover:border-[color-mix(in_oklab,var(--color-teal)_28%,var(--color-bridge))] hover:shadow-lg">
                     <span className="text-sm font-bold tabular-nums text-(--color-gold)">
                       {String(i + 1).padStart(2, "0")}
                     </span>
@@ -367,14 +361,6 @@ export default async function HomePage({
         className="relative flex min-h-screen items-center overflow-hidden bg-[#1e293b] px-4 py-24 sm:px-6 lg:px-8"
         aria-labelledby="home-cta"
       >
-        <Image
-          src="/Images/bg-markets-v2.jpg"
-          alt=""
-          fill
-          sizes="100vw"
-          className="object-cover object-center"
-        />
-        <div className="pointer-events-none absolute inset-0 bg-[rgba(10,18,35,0.68)]" aria-hidden />
         <div
           className="cta-glow absolute inset-0 bg-[radial-gradient(circle_at_18%_50%,rgba(212,175,55,0.18),transparent_22rem),radial-gradient(circle_at_82%_40%,rgba(37,99,235,0.18),transparent_24rem)]"
           aria-hidden

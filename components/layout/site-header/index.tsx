@@ -43,7 +43,7 @@ export function SiteHeader({
     >
       <SiteLogo size="md" priority className="rounded-lg" />
       <span className="min-w-0">
-        <span className="block truncate text-lg font-bold tracking-tight text-[#1e293b] transition group-hover:text-[#0f172a] sm:text-xl">
+        <span className="block truncate text-lg font-bold uppercase tracking-tight text-[#1e293b] transition group-hover:text-[#0f172a] sm:text-xl">
           {BRAND_NAME}
         </span>
         <span className="hidden text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500 lg:block">
@@ -113,7 +113,7 @@ export function SiteHeader({
           ) : null}
         </div>
 
-        <div className="hidden sm:grid sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:items-center sm:gap-x-6">
+        <div className="hidden sm:grid sm:grid-cols-[auto_1fr_auto] sm:items-center sm:gap-x-6">
           <div className="flex min-w-0 justify-start">{brand}</div>
           <CenterNav
             key={pathname}

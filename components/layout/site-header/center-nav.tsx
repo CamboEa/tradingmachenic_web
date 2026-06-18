@@ -24,6 +24,7 @@ export function CenterNav({
     { suffix: "tools", label: dict.nav.tools, href: `/${locale}/tools` },
     { suffix: "podcast", label: dict.nav.podcast, href: `/${locale}/podcast` },
     { suffix: "blog", label: dict.nav.blog, href: `/${locale}/blog` },
+    { suffix: "technical-analysis", label: dict.nav.technicalAnalysis, href: `/${locale}/technical-analysis` },
     { suffix: "about", label: dict.nav.about, href: `/${locale}/about` },
   ];
 
@@ -37,7 +38,7 @@ export function CenterNav({
   return (
     <nav
       className={[
-        "flex flex-wrap items-center justify-center gap-1 sm:inline-flex sm:rounded-full sm:px-1 sm:py-1 sm:transition-[background-color,border-color,box-shadow,backdrop-filter] sm:duration-300",
+        "flex flex-wrap items-center justify-center gap-1 sm:flex sm:w-full sm:justify-center sm:rounded-full sm:px-1 sm:py-1 sm:transition-[background-color,border-color,box-shadow,backdrop-filter] sm:duration-300",
         scrolled
           ? "sm:border sm:border-slate-200/90 sm:bg-white/82 sm:backdrop-blur-md"
           : "sm:border sm:border-transparent sm:bg-transparent",
