@@ -1,5 +1,6 @@
 import { AdminPageHeader, Card, StatCard } from "@/components/ui";
 import { UsersTable } from "@/components/users/users-table";
+import { BRAND_NAME } from "@/lib/brand";
 import { getAllProfiles } from "@/lib/supabase/profiles";
 import { getSessionUser } from "@/lib/supabase/server";
 
@@ -15,7 +16,7 @@ export default async function UsersPage() {
     <div>
       <AdminPageHeader
         title="Users"
-        description="Everyone registered on Algorithmic Alpha Trade. Promote students to admins or revoke access."
+        description={`Everyone registered on ${BRAND_NAME}. Promote students to admins or revoke access.`}
       />
 
       <div className="grid gap-4 sm:grid-cols-3">

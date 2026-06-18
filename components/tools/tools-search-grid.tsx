@@ -5,6 +5,11 @@ import { useState } from "react";
 import Link from "next/link";
 
 import { Dropdown } from "@/components/ui/dropdown";
+import {
+  paginateItems,
+  SearchGridPagination,
+  totalPagesFor,
+} from "@/components/ui/search-grid-pagination";
 import type { Locale } from "@/lib/i18n";
 import type { Tool } from "@/lib/supabase/tools";
 
@@ -113,8 +118,8 @@ export function ToolsSearchGrid({ tools, locale }: { tools: Tool[]; locale: Loca
     );
   });
 
-  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
-  const paginated = filtered.slice(page * ITEMS_PER_PAGE, (page + 1) * ITEMS_PER_PAGE);
+  const totalPages = totalPagesFor(filtered.length, ITEMS_PER_PAGE);
+  const paginated = paginateItems(filtered, page, ITEMS_PER_PAGE);
 
   const handleSearch = (q: string) => {
     setQuery(q);
@@ -173,49 +178,11 @@ export function ToolsSearchGrid({ tools, locale }: { tools: Tool[]; locale: Loca
             ))}
           </div>
 
-          {totalPages > 1 && (
-            <div className="mt-8 flex justify-center">
-              <div className="flex items-center gap-1">
-                <button
-                  onClick={() => setPage((p) => Math.max(0, p - 1))}
-                  disabled={page === 0}
-                  className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 transition hover:border-[#2563EB]/40 hover:text-[#2563EB] disabled:cursor-not-allowed disabled:opacity-40"
-                  aria-label="Previous page"
-                >
-                  <svg viewBox="0 0 16 16" fill="currentColor" className="h-3.5 w-3.5" aria-hidden>
-                    <path fillRule="evenodd" d="M9.78 4.22a.75.75 0 0 1 0 1.06L7.06 8l2.72 2.72a.75.75 0 1 1-1.06 1.06L5.47 8.53a.75.75 0 0 1 0-1.06l3.25-3.25a.75.75 0 0 1 1.06 0Z" clipRule="evenodd" />
-                  </svg>
-                </button>
-
-                {Array.from({ length: totalPages }, (_, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setPage(i)}
-                    className={`flex h-8 min-w-[2rem] cursor-pointer items-center justify-center rounded-lg border px-2 text-xs font-semibold transition ${
-                      i === page
-                        ? "border-[#2563EB] bg-[#2563EB] text-white"
-                        : "border-slate-200 bg-white text-slate-500 hover:border-[#2563EB]/40 hover:text-[#2563EB]"
-                    }`}
-                    aria-label={`Page ${i + 1}`}
-                    aria-current={i === page ? "page" : undefined}
-                  >
-                    {i + 1}
-                  </button>
-                ))}
-
-                <button
-                  onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
-                  disabled={page === totalPages - 1}
-                  className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 transition hover:border-[#2563EB]/40 hover:text-[#2563EB] disabled:cursor-not-allowed disabled:opacity-40"
-                  aria-label="Next page"
-                >
-                  <svg viewBox="0 0 16 16" fill="currentColor" className="h-3.5 w-3.5" aria-hidden>
-                    <path fillRule="evenodd" d="M6.22 4.22a.75.75 0 0 1 1.06 0l3.25 3.25a.75.75 0 0 1 0 1.06l-3.25 3.25a.75.75 0 1 1-1.06-1.06L9.19 8 6.22 5.03a.75.75 0 0 1 0-1.06Z" clipRule="evenodd" />
-                  </svg>
-                </button>
-              </div>
-            </div>
-          )}
+          <SearchGridPagination
+            page={page}
+            totalPages={totalPages}
+            onPageChange={setPage}
+          />
         </>
       )}
     </div>

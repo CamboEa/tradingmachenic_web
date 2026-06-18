@@ -14,6 +14,15 @@
   --ink-soft: #64748b;
   --bridge: #cbd5e1;
   --slate: #1e293b;
+  --font-stack-en: var(--font-open-sans), Tahoma, "Helvetica Neue", Helvetica,
+    sans-serif;
+  --font-stack-km: var(--font-khmer), var(--font-open-sans), Tahoma,
+    "Helvetica Neue", Helvetica, sans-serif;
+  --font-stack: var(--font-stack-en);
+}
+
+html[lang="km"] {
+  --font-stack: var(--font-stack-km);
 }
 
 @theme inline {
@@ -28,21 +37,18 @@
   --color-ink-soft: var(--ink-soft);
   --color-bridge: var(--bridge);
   --color-slate-brand: var(--slate);
-  --font-sans: var(--font-khmer), var(--font-ibm-plex), system-ui,
-    -apple-system, sans-serif;
+  --font-sans: var(--font-stack);
   --font-mono: var(--font-geist-mono);
 }
 
 html {
-  font-family: var(--font-khmer), var(--font-ibm-plex), system-ui, -apple-system,
-    sans-serif;
+  font-family: var(--font-stack);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-khmer), var(--font-ibm-plex), system-ui, -apple-system,
-    sans-serif;
+  font-family: var(--font-stack);
   min-height: 100vh;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -69,16 +75,14 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: var(--font-khmer), var(--font-ibm-plex), system-ui, -apple-system,
-    sans-serif;
+  font-family: var(--font-stack);
 }
 
 button,
 input,
 textarea,
 select {
-  font-family: var(--font-khmer), var(--font-ibm-plex), system-ui, -apple-system,
-    sans-serif;
+  font-family: var(--font-stack);
 }
 
 @keyframes reveal-up {

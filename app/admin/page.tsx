@@ -12,6 +12,7 @@ import {
   Tr,
 } from "@/components/ui";
 import { getCurriculum } from "@/lib/supabase/curriculum-data";
+import { BRAND_NAME } from "@/lib/brand";
 import { getAllLessonsForAdmin } from "@/lib/supabase/lessons";
 import { getAllTools } from "@/lib/supabase/tools";
 import { cn } from "@/lib/ui/cn";
@@ -36,7 +37,7 @@ export default async function AdminDashboard() {
       <AdminPageHeader
         eyebrow="Admin workspace"
         title="Dashboard"
-        description="Overview of your Algorithmic Alpha Trade content, curriculum, and tools."
+        description={`Overview of your ${BRAND_NAME} content, curriculum, and tools.`}
       />
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">

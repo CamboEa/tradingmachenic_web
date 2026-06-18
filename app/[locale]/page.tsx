@@ -7,6 +7,7 @@ import { CourseLessonCard } from "@/components/education/course-lesson-card";
 import { HomeHeroSplit } from "@/components/marketing/home-hero-split";
 import { Reveal } from "@/components/shared/reveal";
 import { TradingViewForexHeatmap } from "@/components/tradingview/tradingview-forex-heatmap";
+import { BRAND_NAME } from "@/lib/brand";
 import { getAllLessons } from "@/lib/supabase/lessons";
 import { getPublishedTools, type Tool } from "@/lib/supabase/tools";
 import { getDictionary, isLocale, type Locale } from "@/lib/i18n";
@@ -380,7 +381,7 @@ export default async function HomePage({
         />
         <div className="relative mx-auto max-w-3xl text-center">
           <p className="float-badge text-xs font-bold uppercase tracking-[0.25em] text-[#d4af37]">
-            Algorithmic Alpha Trade
+            {BRAND_NAME}
           </p>
           <h2
             id="home-cta"

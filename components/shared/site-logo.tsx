@@ -1,5 +1,7 @@
 import Image from "next/image";
 
+import { BRAND_NAME } from "@/lib/brand";
+
 /** Public path to the brand mark (see `public/Logo/logo.png`). */
 export const LOGO_SRC = "/Logo/logo.png";
 
@@ -27,7 +29,7 @@ export function SiteLogo({
  return (
  <Image
  src={LOGO_SRC}
- alt="Algorithmic Alpha Trade"
+ alt={BRAND_NAME}
  width={px}
  height={px}
  priority={priority}

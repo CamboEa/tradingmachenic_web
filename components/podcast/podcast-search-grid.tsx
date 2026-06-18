@@ -1,11 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 
+import {
+  paginateItems,
+  SearchGridPagination,
+  totalPagesFor,
+} from "@/components/ui/search-grid-pagination";
 import type { Locale } from "@/lib/i18n";
 import type { Podcast } from "@/lib/supabase/podcasts";
 import { extractYouTubeVideoId, youtubeThumbnailUrl } from "@/lib/youtube";
+
+const ITEMS_PER_PAGE = 9;
 
 function EpisodeCard({
   episode,
@@ -91,18 +98,22 @@ export function PodcastSearchGrid({
   emptySearchLabel?: string;
 }) {
   const [query, setQuery] = useState("");
+  const [page, setPage] = useState(0);
 
-  const filtered = query.trim()
-    ? episodes.filter((ep) => {
-        const q = query.toLowerCase();
-        return (
-          ep.title_en.toLowerCase().includes(q) ||
-          ep.title_km?.toLowerCase().includes(q) ||
-          ep.description_en?.toLowerCase().includes(q) ||
-          ep.description_km?.toLowerCase().includes(q)
-        );
-      })
-    : episodes;
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return episodes;
+    return episodes.filter(
+      (ep) =>
+        ep.title_en.toLowerCase().includes(q) ||
+        ep.title_km?.toLowerCase().includes(q) ||
+        ep.description_en?.toLowerCase().includes(q) ||
+        ep.description_km?.toLowerCase().includes(q),
+    );
+  }, [episodes, query]);
+
+  const totalPages = totalPagesFor(filtered.length, ITEMS_PER_PAGE);
+  const paginated = paginateItems(filtered, page, ITEMS_PER_PAGE);
 
   return (
     <div>
@@ -121,7 +132,10 @@ export function PodcastSearchGrid({
           type="search"
           placeholder="Search episodes…"
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={(e) => {
+            setQuery(e.target.value);
+            setPage(0);
+          }}
           className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm text-slate-700 placeholder-slate-400 shadow-sm transition focus:border-[#2563EB]/50 focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20"
         />
       </div>
@@ -133,11 +147,27 @@ export function PodcastSearchGrid({
           </p>
         </div>
       ) : (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((ep, i) => (
-            <EpisodeCard key={ep.id} episode={ep} index={i} locale={locale} watchLabel={watchLabel} />
-          ))}
-        </div>
+        <>
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {paginated.map((ep) => {
+              const index = episodes.findIndex((item) => item.id === ep.id);
+              return (
+                <EpisodeCard
+                  key={ep.id}
+                  episode={ep}
+                  index={index >= 0 ? index : 0}
+                  locale={locale}
+                  watchLabel={watchLabel}
+                />
+              );
+            })}
+          </div>
+          <SearchGridPagination
+            page={page}
+            totalPages={totalPages}
+            onPageChange={setPage}
+          />
+        </>
       )}
     </div>
   );

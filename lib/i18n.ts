@@ -1,3 +1,5 @@
+import { BRAND_NAME } from "@/lib/brand";
+
 export const locales = ["en", "km"] as const;
 export type Locale = (typeof locales)[number];
 export const defaultLocale: Locale = "en";
@@ -222,7 +224,7 @@ export type Dictionary = {
 
 const en: Dictionary = {
   meta: {
-    title: "Algorithmic Alpha Trade",
+    title: BRAND_NAME,
     description:
       "Structured trading education with video lessons on risk, execution, and mindset.",
   },
@@ -246,7 +248,7 @@ const en: Dictionary = {
     badge: "Trading education",
     headline: "Learn trading with clarity and discipline.",
     subhead:
-      "Algorithmic Alpha Trade is a focused video course covering markets, risk management, and repeatable processes—built for serious beginners and intermediate traders.",
+      "FIN HUB KH is a focused video course covering markets, risk management, and repeatable processes—built for serious beginners and intermediate traders.",
     ctaCourse: "Start the course",
     ctaOutline: "View curriculum",
     pillars: [
@@ -295,7 +297,7 @@ const en: Dictionary = {
     learnLink: "Explore all lessons",
     sectionApproach: "Professional standards",
     approachLead:
-      "Algorithmic Alpha Trade is built like an institutional learning track—clear outcomes, sober language, and zero promises of easy profits.",
+      "FIN HUB KH is built like an institutional learning track—clear outcomes, sober language, and zero promises of easy profits.",
     approachItems: [
       "General education only—not personalized financial advice",
       "Emphasis on survival, process, and measurable habits",
@@ -312,12 +314,12 @@ const en: Dictionary = {
     heroSplitSubhead: "Get started with a free intro class",
     heroSplitCta: "Register now",
     heroSplitTab: "Free intro class",
-    heroImageAlt: "Algorithmic Alpha Trade classroom and learning session",
+    heroImageAlt: "FIN HUB KH classroom and learning session",
     socialProofRating: "Learners rate the programme highly for clarity and structure.",
     socialStudentsTitle: "Hear from our students",
     socialExpertTitle: "Insights from your mentor",
     socialExpertQuote:
-      "The education from Algorithmic Alpha Trade delivers serious learning value—risk, process, and mechanics explained without hype. It is built for traders who want a calm, repeatable path instead of chasing shortcuts.",
+      "The education from FIN HUB KH delivers serious learning value—risk, process, and mechanics explained without hype. It is built for traders who want a calm, repeatable path instead of chasing shortcuts.",
     sectionFeaturedLessons: "Education",
     featuredLessonsTagline: "Start learning today",
     featuredLessonsLead: "Browse our latest lessons — each one packed with actionable mechanics and zero hype.",
@@ -441,7 +443,7 @@ const en: Dictionary = {
   },
   gatePage: {
     title: "Quick security check",
-    body: "Complete this step to continue to Algorithmic Alpha Trade. It helps keep bots off the site.",
+    body: "Complete this step to continue to FIN HUB KH. It helps keep bots off the site.",
     loading: "Verifying…",
     error: "Verification failed. Please try again.",
   },
@@ -458,12 +460,12 @@ const en: Dictionary = {
   },
   aboutPage: {
     title: "About",
-    eyebrow: "Algorithmic Alpha Trade",
+    eyebrow: BRAND_NAME,
     intro: "Meet the mentor and the philosophy behind structured, process-first trading education.",
     whyEyebrow: "Why we built this",
     whyTitle: "Fewer unnecessary losses, capital treated with care",
     whyParagraphs: [
-      "Algorithmic Alpha Trade was created for people who want to approach markets without gambling away what they have worked for.",
+      "FIN HUB KH was created for people who want to approach markets without gambling away what they have worked for.",
       "The lessons focus on risk, sizing, and disciplined routines so you can avoid common pitfalls and put protecting your capital first—not hype or shortcuts.",
     ],
     mentorBadge: "Your mentor",
@@ -491,15 +493,15 @@ const en: Dictionary = {
     ],
     teachingStatement:
       "Every lesson in this programme is taught by Bean Ratana.",
-    imageAlt: "Bean Ratana, mentor at Algorithmic Alpha Trade",
+    imageAlt: "Bean Ratana, mentor at FIN HUB KH",
     ctaEducation: "Browse lessons",
   },
   footer: {
-    academyLabel: "Trading Academy",
+    academyLabel: "Finance Hub",
     description:
       "Structured video lessons on risk, execution, and repeatable trading processes—for serious beginners and intermediate traders.",
     tagline: "Education only—not financial advice.",
-    rights: "Algorithmic Alpha Trade. All rights reserved.",
+    rights: `${BRAND_NAME}. All rights reserved.`,
     sections: {
       learn: "Learn",
       program: "Program",
@@ -513,7 +515,7 @@ const en: Dictionary = {
 
 const km: Dictionary = {
   meta: {
-    title: "Algorithmic Alpha Trade",
+    title: BRAND_NAME,
     description:
       "ការអប់រំពាណិជ្ជកម្មដែលមានរចនាសម្ព័ន្ធ ជាមួយវីដេអូសិក្សាអំពីហានិភ័យ ការប្រតិបត្តិ និងផ្លូវចិត្ត។",
   },
@@ -537,7 +539,7 @@ const km: Dictionary = {
     badge: "ការអប់រំពាណិជ្ជកម្ម",
     headline: "សិក្សាពាណិជ្ជកម្មដោយភាពច្បាស់លាស់ និងមានវិន័យ។",
     subhead:
-      "Algorithmic Alpha Trade គឺជាវគ្គសិក្សាវីដេអូផ្តោតលើទីផ្សារ ការគ្រប់គ្រងហានិភ័យ និងដំណើរការដែលធ្វើម្តងហើយម្តងទៀត—សម្រាប់អ្នកចាប់ផ្តើម និងអ្នកជំនាញកំរិតមធ្យម។",
+      "FIN HUB KH គឺជាវគ្គសិក្សាវីដេអូផ្តោតលើទីផ្សារ ការគ្រប់គ្រងហានិភ័យ និងដំណើរការដែលធ្វើម្តងហើយម្តងទៀត—សម្រាប់អ្នកចាប់ផ្តើម និងអ្នកជំនាញកំរិតមធ្យម។",
     ctaCourse: "ចាប់ផ្តើមវគ្គសិក្សា",
     ctaOutline: "មើលកម្មវិធីសិក្សា",
     pillars: [
@@ -586,7 +588,7 @@ const km: Dictionary = {
     learnLink: "មើលមេរៀនទាំងអស់",
     sectionApproach: "ស្តង់ដាវិជ្ជាជីវៈ",
     approachLead:
-      "Algorithmic Alpha Trade ត្រូវបានសាងសង់ដូចជាផ្លូវសិក្សាកន្លែងធ្វើការ—លទ្ធផលច្បាស់ ភាសារឹងមាំ និងគ្មានការសន្យារកលុយងាយស្រួល។",
+      "FIN HUB KH ត្រូវបានសាងសង់ដូចជាផ្លូវសិក្សាកន្លែងធ្វើការ—លទ្ធផលច្បាស់ ភាសារឹងមាំ និងគ្មានការសន្យារកលុយងាយស្រួល។",
     approachItems: [
       "ការអប់រំទូទៅតែប៉ុណ្ណោះ—មិនមែនជាដំបូន្មានហិរញ្ញវត្ថុផ្ទាល់ខ្លួន",
       "ផ្តោតលើការរក្សាដើមទុន ដំណើរការ និងទមលាប់ដែលវាស់វែងបាន",
@@ -603,12 +605,12 @@ const km: Dictionary = {
     heroSplitSubhead: "ចាប់ផ្តើមដោយថ្នាក់ណែនាំឥតគិតថ្លៃ",
     heroSplitCta: "ចុះឈ្មោះឥឡូវនេះ",
     heroSplitTab: "ថ្នាក់ណែនាំឥតគិតថ្លៃ",
-    heroImageAlt: "បន្ទប់រៀន និងសមាជិក Algorithmic Alpha Trade",
+    heroImageAlt: "បន្ទប់រៀន និងសមាជិក FIN HUB KH",
     socialProofRating: "អ្នករៀនឲ្យពិន្ទុខ្ពស់ចំពោះភាពច្បាស់លាស់ និងរចនាសម្ព័ន្ធកម្មវិធី។",
     socialStudentsTitle: "ស្តាប់ពីសិស្សរបស់យើង",
     socialExpertTitle: "យល់ដឹងពីអ្នកណែនាំ",
     socialExpertQuote:
-      "ការអប់រំពី Algorithmic Alpha Trade ផ្តល់តម្លៃសិក្សាពិតប្រាកដ—ពន្យល់ហានិភ័យ ដំណើរការ និងលក្ខណៈបច្ចេកទេសដោយគ្មានសំឡេងរន្ទះ។ សាងសម្រាប់អ្នកជួញដូរដែលចង់ផ្លូវស្ងប់ និងធ្វើម្តងហើយម្តងទៀត ជំនួសការរត់តាមផ្លូវកាត់។",
+      "ការអប់រំពី FIN HUB KH ផ្តល់តម្លៃសិក្សាពិតប្រាកដ—ពន្យល់ហានិភ័យ ដំណើរការ និងលក្ខណៈបច្ចេកទេសដោយគ្មានសំឡេងរន្ទះ។ សាងសម្រាប់អ្នកជួញដូរដែលចង់ផ្លូវស្ងប់ និងធ្វើម្តងហើយម្តងទៀត ជំនួសការរត់តាមផ្លូវកាត់។",
     sectionFeaturedLessons: "ការអប់រំ",
     featuredLessonsTagline: "ចាប់ផ្តើមរៀនថ្ងៃនេះ",
     featuredLessonsLead: "រកមើលមេរៀនថ្មីបំផុតរបស់យើង — មានបច្ចេកទេសអនុវត្តបានជាក់ស្ដែងគ្មានសំឡេងរំខាន។",
@@ -731,7 +733,7 @@ const km: Dictionary = {
   },
   gatePage: {
     title: "ពិនិត្យសុវត្ថិភាពរហ័ស",
-    body: "បំពេញជំហាននេះដើម្បីបន្តទៅ Algorithmic Alpha Trade។ វាជួយការពារពី bot។",
+    body: "បំពេញជំហាននេះដើម្បីបន្តទៅ FIN HUB KH។ វាជួយការពារពី bot។",
     loading: "កំពុងផ្ទៀងផ្ទាត់…",
     error: "ការផ្ទៀងផ្ទាត់បរាជ័យ។ សូមព្យាយាមម្តងទៀត។",
   },
@@ -748,12 +750,12 @@ const km: Dictionary = {
   },
   aboutPage: {
     title: "អំពីយើង",
-    eyebrow: "Algorithmic Alpha Trade",
+    eyebrow: BRAND_NAME,
     intro: "ស្គាល់អ្នកណែនាំ និងទស្សនវិជ្ជានៅពីក្រោយការអប់រំពាណិជ្ជកម្មដែលផ្តោតលើដំណើរការ។",
     whyEyebrow: "ហេតុអ្វីបានជាយើងបង្កើត",
     whyTitle: "កាត់បន្ថយការខាតដែលគេច្រើនជួប និងរក្សាដើមទុនឲ្យមានសុវត្ថិភាព",
     whyParagraphs: [
-      "Algorithmic Alpha Trade ត្រូវបានបង្កើតឡើងសម្រាប់អ្នកដែលចង់ចូលទីផ្សារដោយមានការរៀបចំ មិនមែនលេងសំណាងដាក់លុយដែលខំរកមក។",
+      "FIN HUB KH ត្រូវបានបង្កើតឡើងសម្រាប់អ្នកដែលចង់ចូលទីផ្សារដោយមានការរៀបចំ មិនមែនលេងសំណាងដាក់លុយដែលខំរកមក។",
       "មេរៀនផ្តោតលើហានិភ័យ ទំហំលុយ និងទមលាប់វិន័យ ដើម្បីជួយអ្នកជៀសវាងកំហុសទូទៅ និងដាក់ការរក្សាដើមទុនជាមូលដ្ឋាន—មិនមែនតាមសំឡេងរន្ទះ ឬផ្លូវកាត់។",
     ],
     mentorBadge: "អ្នកណែនាំរបស់អ្នក",
@@ -781,15 +783,15 @@ const km: Dictionary = {
     ],
     teachingStatement:
       "មេរៀនទាំងអស់ក្នុងកម្មវិធីសិក្សានេះបង្រៀនដោយ Bean Ratana។",
-    imageAlt: "Bean Ratana គ្រូនៅ Algorithmic Alpha Trade",
+    imageAlt: "Bean Ratana គ្រូនៅ FIN HUB KH",
     ctaEducation: "មើលមេរៀន",
   },
   footer: {
-    academyLabel: "ថ្នាលពាណិជ្ជកម្ម",
+    academyLabel: "មជ្ឈមណ្ឌលហិរញ្ញវត្ថុ",
     description:
       "វីដេអូសិក្សាដែលមានរចនាសម្ព័ន្ធ អំពីហានិភ័យ ការប្រតិបត្តិ និងដំណើរការពាណិជ្ជកម្មដែលធ្វើម្តងហើយម្តងទៀត—សម្រាប់អ្នកចាប់ផ្តើម និងអ្នកជំនាញកំរិតមធ្យម។",
     tagline: "សម្រាប់តែការអប់រំ—មិនមែនជាដំបូន្មានហិរញ្ញវត្ថុ។",
-    rights: "Algorithmic Alpha Trade។ រក្សាសិទ្ធិគ្រប់យ៉ាង។",
+    rights: `${BRAND_NAME}។ រក្សាសិទ្ធិគ្រប់យ៉ាង។`,
     sections: {
       learn: "សិក្សា",
       program: "កម្មវិធី",

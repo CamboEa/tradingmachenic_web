@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { SiteLogo } from "@/components/shared/site-logo";
+import { BRAND_NAME } from "@/lib/brand";
 import type { Dictionary, Locale } from "@/lib/i18n";
 
 type FooterLink = { href: string; label: string };
@@ -84,7 +85,7 @@ export function SiteFooter({ locale, dict }: { locale: Locale; dict: Dictionary 
  <SiteLogo size="md"/>
  <span className="min-w-0">
  <span className="block text-lg font-bold tracking-tight text-white transition group-hover:text-slate-100">
- Algorithmic Alpha Trade
+ {BRAND_NAME}
  </span>
  <span className="block text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
  {f.academyLabel}

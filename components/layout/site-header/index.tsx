@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { SiteLogo } from "@/components/shared/site-logo";
+import { BRAND_NAME } from "@/lib/brand";
 import type { Dictionary, Locale } from "@/lib/i18n";
 
 import { AuthLanguageCluster } from "./auth-language-cluster";
@@ -43,10 +44,10 @@ export function SiteHeader({
       <SiteLogo size="md" priority className="rounded-lg" />
       <span className="min-w-0">
         <span className="block truncate text-lg font-bold tracking-tight text-[#1e293b] transition group-hover:text-[#0f172a] sm:text-xl">
-          Algorithmic Alpha Trade
+          {BRAND_NAME}
         </span>
         <span className="hidden text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500 lg:block">
-          Trading Academy
+          {dict.footer.academyLabel}
         </span>
       </span>
     </Link>

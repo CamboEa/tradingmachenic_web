@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 
 import { AdminSidebar } from "@/components/layout/admin-sidebar";
 import { AdminTopbar } from "@/components/layout/admin-topbar";
+import { BRAND_NAME } from "@/lib/brand";
 
 export const metadata: Metadata = {
- title: { default: "Admin", template: "%s | Admin — Algorithmic Alpha Trade" },
+ title: { default: "Admin", template: `%s | Admin — ${BRAND_NAME}` },
 };
 
 export default function AdminLayout({

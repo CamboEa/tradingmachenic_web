@@ -4,6 +4,7 @@ import { SiteGateForm } from "@/components/security/site-gate-form";
 import { SiteLogo } from "@/components/shared/site-logo";
 import { Panel } from "@/components/ui/card";
 import { Eyebrow } from "@/components/ui/eyebrow";
+import { BRAND_NAME } from "@/lib/brand";
 import { getDictionary, isLocale, type Locale } from "@/lib/i18n";
 import { safeGateReturnTo } from "@/lib/security/site-gate";
 import { cn } from "@/lib/ui/cn";
@@ -29,7 +30,7 @@ export default async function SiteGatePage({
       <Panel className="w-full max-w-md">
         <div className="flex flex-col items-center gap-3 text-center sm:flex-row sm:text-left">
           <SiteLogo size="lg" />
-          <Eyebrow variant="admin">Algorithmic Alpha Trade</Eyebrow>
+          <Eyebrow variant="admin">{BRAND_NAME}</Eyebrow>
         </div>
         <h1 className={cn("mt-3", ui.pageTitle)}>{dict.gatePage.title}</h1>
         <p className="mt-2 text-sm leading-relaxed text-(--color-ink-muted)">

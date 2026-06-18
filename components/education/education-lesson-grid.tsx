@@ -4,19 +4,17 @@ import { useMemo, useState } from "react";
 
 import { CourseLessonCard } from "@/components/education/course-lesson-card";
 import { Dropdown } from "@/components/ui/dropdown";
+import {
+  paginateItems,
+  SearchGridPagination,
+  totalPagesFor,
+} from "@/components/ui/search-grid-pagination";
 import type { Lesson } from "@/lib/course";
 import type { Dictionary, Locale } from "@/lib/i18n";
 
 type Filter = "all" | "free" | "paid";
 
-function StatPill({ value, label }: { value: string | number; label: string }) {
-  return (
-    <div className="flex items-baseline gap-1.5 rounded-xl border border-slate-200 bg-white px-4 py-2.5 shadow-sm">
-      <span className="text-base font-bold tabular-nums text-(--color-ink)">{value}</span>
-      <span className="text-xs text-(--color-ink-soft)">{label}</span>
-    </div>
-  );
-}
+const ITEMS_PER_PAGE = 9;
 
 export function EducationLessonGrid({
   lessons,
@@ -29,6 +27,7 @@ export function EducationLessonGrid({
 }) {
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<Filter>("all");
+  const [page, setPage] = useState(0);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -41,9 +40,8 @@ export function EducationLessonGrid({
     });
   }, [lessons, query, filter, locale]);
 
-  const totalMinutes = lessons.reduce((acc, l) => acc + l.approximateMinutes, 0);
-  const totalHours = (totalMinutes / 60).toFixed(1);
-  const freeCount = lessons.filter((l) => !l.type || l.type === "free").length;
+  const totalPages = totalPagesFor(filtered.length, ITEMS_PER_PAGE);
+  const paginated = paginateItems(filtered, page, ITEMS_PER_PAGE);
 
   return (
     <>
@@ -65,7 +63,10 @@ export function EducationLessonGrid({
           <input
             type="search"
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              setPage(0);
+            }}
             placeholder={dict.course.searchPlaceholder}
             className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-9 pr-4 text-sm text-slate-800 shadow-sm outline-none transition focus:border-(--color-teal) focus:ring-2 focus:ring-teal/20"
           />
@@ -78,7 +79,10 @@ export function EducationLessonGrid({
             { value: "free", label: dict.course.filterFree },
             { value: "paid", label: dict.course.filterPaid },
           ]}
-          onChange={setFilter}
+          onChange={(value) => {
+            setFilter(value);
+            setPage(0);
+          }}
         />
       </div>
 
@@ -101,21 +105,28 @@ export function EducationLessonGrid({
           <p className="text-sm font-medium text-(--color-ink-muted)">{dict.course.noLessonsMatch}</p>
         </div>
       ) : (
-        <div className="mt-8 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-          {filtered.map((lesson) => {
-            const index = lessons.findIndex((l) => l.slug === lesson.slug);
-            return (
-              <CourseLessonCard
-                key={lesson.slug}
-                lesson={lesson}
-                locale={locale}
-                index={index >= 0 ? index : 0}
-                total={lessons.length}
-                dict={dict}
-              />
-            );
-          })}
-        </div>
+        <>
+          <div className="mt-8 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+            {paginated.map((lesson) => {
+              const index = lessons.findIndex((l) => l.slug === lesson.slug);
+              return (
+                <CourseLessonCard
+                  key={lesson.slug}
+                  lesson={lesson}
+                  locale={locale}
+                  index={index >= 0 ? index : 0}
+                  total={lessons.length}
+                  dict={dict}
+                />
+              );
+            })}
+          </div>
+          <SearchGridPagination
+            page={page}
+            totalPages={totalPages}
+            onPageChange={setPage}
+          />
+        </>
       )}
     </>
   );

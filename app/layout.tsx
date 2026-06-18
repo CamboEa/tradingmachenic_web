@@ -1,32 +1,34 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Sans, Geist_Mono, Noto_Sans_Khmer } from "next/font/google";
+import { Geist_Mono, Noto_Sans_Khmer, Open_Sans } from "next/font/google";
 
 import { HtmlLang } from "@/components/layout/html-lang";
 import { ToastProvider } from "@/components/shared/toast-provider";
+import { BRAND_NAME } from "@/lib/brand";
 
 import "./globals.css";
 
-const ibmPlexSans = IBM_Plex_Sans({
- variable: "--font-ibm-plex",
- subsets: ["latin"],
- weight: ["300", "400", "500", "600", "700"],
+/** Matches MetaTrader 5 marketing site: Open Sans + system fallbacks. */
+const openSans = Open_Sans({
+  variable: "--font-open-sans",
+  subsets: ["latin"],
+  weight: ["300", "400", "600", "700"],
 });
 
 const geistMono = Geist_Mono({
- variable: "--font-geist-mono",
- subsets: ["latin"],
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
 });
 
 const fontKhmer = Noto_Sans_Khmer({
- variable: "--font-khmer",
- subsets: ["khmer"],
- weight: ["400", "600", "700"],
+  variable: "--font-khmer",
+  subsets: ["khmer"],
+  weight: ["400", "600", "700"],
 });
 
 export const metadata: Metadata = {
  title: {
- default: "Algorithmic Alpha Trade",
- template: "%s | Algorithmic Alpha Trade",
+ default: BRAND_NAME,
+ template: `%s | ${BRAND_NAME}`,
  },
  description:
  "Structured trading education with video lessons on risk, execution, and mindset.",
@@ -43,9 +45,9 @@ export default function RootLayout({
 }>) {
  return (
  <html
- lang="km"
+ lang="en"
  suppressHydrationWarning
- className={`${ibmPlexSans.variable} ${geistMono.variable} ${fontKhmer.variable} font-sans h-full antialiased`}
+ className={`${openSans.variable} ${geistMono.variable} ${fontKhmer.variable} font-sans h-full antialiased`}
  >
  <body className="flex min-h-screen flex-col bg-[var(--background)] font-sans text-[var(--foreground)]">
  <HtmlLang />
