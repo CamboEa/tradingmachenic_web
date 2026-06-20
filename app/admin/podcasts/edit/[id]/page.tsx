@@ -22,7 +22,7 @@ export default async function EditPodcastPage({ params }: { params: Promise<{ id
  ← Back
  </Link>
  <div className="min-w-0 flex-1">
- <h1 className="text-2xl font-bold text-[#0D1B33]">Edit episode</h1>
+ <h1 className="text-2xl font-bold text-[#22332E]">Edit episode</h1>
  <p className="mt-1 truncate text-sm text-slate-500" title={podcast.title_en}>
  {podcast.title_en}
  </p>

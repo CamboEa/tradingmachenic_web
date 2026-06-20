@@ -64,7 +64,7 @@ export default async function BlogArticlePage({
           <nav className="flex items-center justify-between gap-4">
             <Link
               href={`/${locale}/blog`}
-              className="group inline-flex items-center gap-2 text-sm font-semibold text-slate-600 transition hover:text-[#1E3EE8]"
+              className="group inline-flex items-center gap-2 text-sm font-semibold text-slate-600 transition hover:text-[#22332E]"
             >
               <svg
                 viewBox="0 0 16 16"
@@ -133,7 +133,7 @@ export default async function BlogArticlePage({
         <div className="mt-12 flex justify-center border-t border-slate-200 pt-8">
           <Link
             href={`/${locale}/blog`}
-            className="inline-flex items-center gap-2 rounded-none border border-slate-200 bg-white px-6 py-3 text-sm font-bold text-slate-700 transition hover:border-[#1E3EE8] hover:text-[#1E3EE8]"
+            className="inline-flex items-center gap-2 rounded-none border border-slate-200 bg-white px-6 py-3 text-sm font-bold text-slate-700 transition hover:border-[#22332E] hover:text-[#22332E]"
           >
             {t.backToList}
             <svg

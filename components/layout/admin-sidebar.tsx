@@ -11,7 +11,7 @@ export function AdminSidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="hidden h-screen w-64 shrink-0 flex-col border-r border-white/10 bg-[#0D1B33] text-slate-300 lg:flex">
+    <aside className="hidden h-screen w-64 shrink-0 flex-col border-r border-white/10 bg-[#22332E] text-slate-300 lg:flex">
       {/* Logo */}
       <div className="flex items-center gap-3 border-b border-white/10 px-5 py-5">
         <SiteLogo size="md" className="rounded-lg ring-1 ring-white/10" />
@@ -47,12 +47,12 @@ export function AdminSidebar() {
                     >
                       <span
                         className={[
-                          "absolute left-0 top-1/2 h-5 w-0.5 -translate-y-1/2 rounded-full bg-[#1E3EE8] transition-opacity",
+                          "absolute left-0 top-1/2 h-5 w-0.5 -translate-y-1/2 rounded-full bg-[#22332E] transition-opacity",
                           active ? "opacity-100" : "opacity-0",
                         ].join(" ")}
                         aria-hidden
                       />
-                      <span className={active ? "text-[#1E3EE8]" : "text-slate-500 group-hover:text-slate-300"}>
+                      <span className={active ? "text-[#22332E]" : "text-slate-500 group-hover:text-slate-300"}>
                         {item.icon}
                       </span>
                       {item.label}

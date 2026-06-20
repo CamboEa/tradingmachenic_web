@@ -14,7 +14,7 @@ export default function NewCurriculumPhasePage() {
  ← Back
  </Link>
  <div>
- <h1 className="text-2xl font-bold text-[#0D1B33]">New curriculum phase</h1>
+ <h1 className="text-2xl font-bold text-[#22332E]">New curriculum phase</h1>
  <p className="mt-1 text-sm text-slate-500">Create a phase, then add modules to it.</p>
  </div>
  </div>

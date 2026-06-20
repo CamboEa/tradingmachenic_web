@@ -21,7 +21,7 @@ export default async function EditBlogPage({ params }: { params: Promise<{ id: s
           ← Back
         </Link>
         <div className="min-w-0">
-          <h1 className="text-2xl font-bold text-[#0D1B33]">Edit article</h1>
+          <h1 className="text-2xl font-bold text-[#22332E]">Edit article</h1>
           <p className="mt-1 truncate text-sm text-slate-500">{post.title_en}</p>
         </div>
       </div>

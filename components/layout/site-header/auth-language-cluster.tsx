@@ -11,13 +11,13 @@ function RegisterLoginLinks({ locale, dict }: { locale: Locale; dict: Dictionary
     <>
       <Link
         href={`/${locale}/register`}
-        className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition duration-150 hover:border-slate-300 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal/30"
+        className="inline-flex h-9 items-center rounded-lg border border-slate-200 bg-white px-3.5 text-[13px] font-semibold text-slate-700 transition duration-150 hover:border-slate-300 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal/30"
       >
         {dict.nav.register}
       </Link>
       <Link
         href={`/${locale}/login`}
-        className="rounded-lg bg-teal px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-teal/20 transition duration-150 hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal/40"
+        className="inline-flex h-9 items-center rounded-lg bg-teal px-3.5 text-[13px] font-semibold text-white shadow-sm shadow-teal/20 transition duration-150 hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal/40"
       >
         {dict.nav.login}
       </Link>

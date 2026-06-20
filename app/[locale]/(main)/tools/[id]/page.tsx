@@ -127,12 +127,12 @@ export default async function ToolDetailPage({
                 <>
                   <path d="M12 46h40" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
                   <path d="M18 40V26M32 40V16M46 40V30" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
-                  <path d="M14 24c7 5 12 6 18 1s10-8 18-2" stroke="#1E3EE8" strokeWidth="3" strokeLinecap="round" />
+                  <path d="M14 24c7 5 12 6 18 1s10-8 18-2" stroke="#22332E" strokeWidth="3" strokeLinecap="round" />
                 </>
               ) : (
                 <>
                   <rect x="15" y="18" width="34" height="28" rx="8" stroke="currentColor" strokeWidth="3" />
-                  <path d="M24 30h.01M40 30h.01M27 39h10" stroke="#1E3EE8" strokeWidth="3" strokeLinecap="round" />
+                  <path d="M24 30h.01M40 30h.01M27 39h10" stroke="#22332E" strokeWidth="3" strokeLinecap="round" />
                   <path d="M32 18v-6" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
                 </>
               )}

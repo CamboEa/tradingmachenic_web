@@ -66,7 +66,7 @@ export function ToolGalleryEditor({
                     type="button"
                     onClick={addRow}
                     disabled={rows.length >= MAX_GALLERY_ITEMS}
-                    className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-[#0D1B33] transition hover:border-[#1E3EE8]/40 hover:text-[#1E3EE8] disabled:cursor-not-allowed disabled:opacity-50"
+                    className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-[#22332E] transition hover:border-[#22332E]/40 hover:text-[#22332E] disabled:cursor-not-allowed disabled:opacity-50"
                 >
                     + Add image
                 </button>
@@ -116,7 +116,7 @@ export function ToolGalleryEditor({
                                 value={row.description_en ?? ""}
                                 onChange={(e) => updateRow(row.key, { description_en: e.target.value })}
                                 placeholder="e.g. Forward test on XAUUSD H1, Jan–Mar 2025…"
-                                className="w-full resize-y rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-800 outline-none transition focus:border-[#1E3EE8] focus:ring-2 focus:ring-[#1E3EE8]/20"
+                                className="w-full resize-y rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-800 outline-none transition focus:border-[#22332E] focus:ring-2 focus:ring-[#22332E]/20"
                             />
                         </div>
                         <div>
@@ -128,7 +128,7 @@ export function ToolGalleryEditor({
                                 value={row.description_km ?? ""}
                                 onChange={(e) => updateRow(row.key, { description_km: e.target.value })}
                                 placeholder="ពិពណ៌នារូបភាព…"
-                                className="w-full resize-y rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-800 outline-none transition focus:border-[#1E3EE8] focus:ring-2 focus:ring-[#1E3EE8]/20"
+                                className="w-full resize-y rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-800 outline-none transition focus:border-[#22332E] focus:ring-2 focus:ring-[#22332E]/20"
                             />
                         </div>
                     </div>

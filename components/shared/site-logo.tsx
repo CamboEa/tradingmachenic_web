@@ -2,38 +2,40 @@ import Image from "next/image";
 
 import { BRAND_NAME } from "@/lib/brand";
 
-/** Public path to the brand mark (see `public/Logo/logov2.png`). */
-export const LOGO_SRC = "/Logo/logov2.png";
+/** Public path to the FH emblem (see `public/Logo/logoV4.png`). */
+export const LOGO_SRC = "/Logo/logoV4.png";
 
 const SIZES = {
- sm: { box: "h-8 w-8", px: 32 },
- md: { box: "h-10 w-10", px: 40 },
- lg: { box: "h-12 w-12", px: 48 },
- /** Hero headline — large display, no extra chrome */
- hero: { box: "h-32 w-32 sm:h-36 sm:w-36 lg:h-44 lg:w-44", px: 176 },
+  sm:  { box: "h-8 w-8 object-contain",  w: 1024, h: 1024 },
+  md:  { box: "h-10 w-10 object-contain", w: 1024, h: 1024 },
+  lg:  { box: "h-12 w-12 object-contain", w: 1024, h: 1024 },
+  /** FH emblem for the site header — pairs with the FINHUBKH wordmark */
+  nav: { box: "h-9 w-9 object-contain",   w: 1024, h: 1024 },
+  /** Hero headline — large display */
+  hero: { box: "h-32 w-32 object-contain sm:h-36 sm:w-36 lg:h-44 lg:w-44", w: 1024, h: 1024 },
 } as const;
 
 type SiteLogoSize = keyof typeof SIZES;
 
 export function SiteLogo({
- size = "md",
- className = "",
- priority = false,
+  size = "md",
+  className = "",
+  priority = false,
 }: {
- size?: SiteLogoSize;
- className?: string;
- priority?: boolean;
+  size?: SiteLogoSize;
+  className?: string;
+  priority?: boolean;
 }) {
- const { box, px } = SIZES[size];
+  const { box, w, h } = SIZES[size];
 
- return (
- <Image
- src={LOGO_SRC}
- alt={BRAND_NAME}
- width={px}
- height={px}
- priority={priority}
- className={`${box} shrink-0 object-contain ${className}`.trim()}
- />
- );
+  return (
+    <Image
+      src={LOGO_SRC}
+      alt={BRAND_NAME}
+      width={w}
+      height={h}
+      priority={priority}
+      className={`${box} shrink-0 ${className}`.trim()}
+    />
+  );
 }

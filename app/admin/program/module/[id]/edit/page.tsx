@@ -20,7 +20,7 @@ export default async function EditCurriculumModulePage({ params }: { params: Pro
  ← Back
  </Link>
  <div>
- <h1 className="text-2xl font-bold text-[#0D1B33]">Edit module</h1>
+ <h1 className="text-2xl font-bold text-[#22332E]">Edit module</h1>
  <p className="mt-1 truncate text-sm text-slate-500" title={module.title_en}>
  {module.title_en}
  </p>

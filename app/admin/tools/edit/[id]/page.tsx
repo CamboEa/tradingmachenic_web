@@ -22,7 +22,7 @@ export default async function EditToolPage({ params }: { params: Promise<{ id: s
  ← Back
  </Link>
  <div className="min-w-0 flex-1">
- <h1 className="text-2xl font-bold text-[#0D1B33]">Edit Tool</h1>
+ <h1 className="text-2xl font-bold text-[#22332E]">Edit Tool</h1>
  <p className="mt-1 truncate text-sm text-slate-500" title={tool.name}>
  {tool.name}
  </p>
@@ -40,7 +40,7 @@ export default async function EditToolPage({ params }: { params: Promise<{ id: s
  <span
  className={`rounded-full px-2 py-0.5 text-xs font-semibold ${
  tool.pricing === "free"
- ? "bg-[#EFF6FF] text-[#1D4ED8]"
+ ? "bg-[#EEF8F7] text-[#1D4ED8]"
  : "bg-amber-50 text-amber-900"
  }`}
  >

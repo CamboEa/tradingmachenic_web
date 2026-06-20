@@ -11,8 +11,9 @@ import { Reveal } from "@/components/shared/reveal";
 import { TradingViewForexHeatmap } from "@/components/tradingview/tradingview-forex-heatmap";
 import { BRAND_NAME } from "@/lib/brand";
 import { getAllLessons } from "@/lib/supabase/lessons";
-import { getPublishedTools, type Tool } from "@/lib/supabase/tools";
+import { TopDownloadsTable } from "@/components/tools/top-downloads-table";
 import { getDictionary, isLocale, type Locale } from "@/lib/i18n";
+import { getPublishedTools } from "@/lib/supabase/tools";
 
 export default async function HomePage({
   params,
@@ -98,16 +99,50 @@ export default async function HomePage({
         </div>
       </section>
 
+      {/* ── Featured Tools ── */}
+      <section
+        className="overflow-hidden bg-[#f8fafc] px-4 py-24 sm:px-6 lg:px-8"
+        aria-labelledby="home-featured-tools"
+      >
+        <div className="mx-auto w-full max-w-7xl">
+          <Reveal effect="fade">
+            <div className="mb-14 text-center">
+              <p className="text-xs font-bold uppercase tracking-[0.28em] text-(--color-gold)">
+                {dict.home.sectionFeaturedTools}
+              </p>
+              <h2
+                id="home-featured-tools"
+                className="mt-4 text-3xl font-bold tracking-tight text-(--color-ink) sm:text-4xl lg:text-5xl"
+              >
+                {dict.home.featuredToolsTagline}
+              </h2>
+              <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-(--color-ink-muted)">
+                {dict.home.featuredToolsLead}
+              </p>
+            </div>
+          </Reveal>
+
+          {tools.length > 0 ? (
+            <Reveal effect="fade" className="w-full">
+              <TopDownloadsTable tools={tools} locale={locale} limit={10} />
+            </Reveal>
+          ) : (
+            <p className="mt-12 text-center text-sm text-(--color-ink-muted)">{dict.home.featuredToolsViewAll}</p>
+          )}
+
+        </div>
+      </section>
+
       {/* ── Featured Lessons ── */}
       <section
-        className="relative overflow-hidden bg-[#0d1420] px-4 py-24 sm:px-6 lg:px-8"
+        className="relative overflow-hidden bg-[#091D1B] px-4 py-24 sm:px-6 lg:px-8"
         aria-labelledby="home-featured-lessons"
       >
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_40%_at_50%_0%,color-mix(in_oklab,#1E3EE8_12%,transparent),transparent)]" aria-hidden />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_40%_at_50%_0%,color-mix(in_oklab,#22332E_12%,transparent),transparent)]" aria-hidden />
         <div className="relative mx-auto w-full max-w-7xl">
           <Reveal effect="fade">
             <div className="mb-14 text-center">
-              <p className="text-xs font-bold uppercase tracking-[0.28em] text-[#4B78F8]">
+              <p className="text-xs font-bold uppercase tracking-[0.28em] text-[#629696]">
                 {dict.home.sectionFeaturedLessons}
               </p>
               <h2
@@ -146,113 +181,6 @@ export default async function HomePage({
               className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-8 py-3 text-sm font-semibold text-white backdrop-blur-sm transition hover:-translate-y-0.5 hover:bg-white/10 hover:border-white/30"
             >
               {dict.home.featuredLessonsViewAll} →
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Featured Tools ── */}
-      <section
-        className="overflow-hidden bg-[#f8fafc] px-4 py-24 sm:px-6 lg:px-8"
-        aria-labelledby="home-featured-tools"
-      >
-        <div className="mx-auto w-full max-w-7xl">
-          <Reveal effect="fade">
-            <div className="mb-14 text-center">
-              <p className="text-xs font-bold uppercase tracking-[0.28em] text-(--color-gold)">
-                {dict.home.sectionFeaturedTools}
-              </p>
-              <h2
-                id="home-featured-tools"
-                className="mt-4 text-3xl font-bold tracking-tight text-(--color-ink) sm:text-4xl lg:text-5xl"
-              >
-                {dict.home.featuredToolsTagline}
-              </h2>
-              <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-(--color-ink-muted)">
-                {dict.home.featuredToolsLead}
-              </p>
-            </div>
-          </Reveal>
-
-          {tools.length > 0 ? (
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {tools.slice(0, 6).map((tool: Tool, i: number) => {
-                const description = locale === "km" ? tool.description_km : tool.description_en;
-                const isFree = tool.pricing === "free";
-                return (
-                  <Reveal key={tool.id} delayMs={i * 80}>
-                    <Link
-                      href={`/${locale}/tools/${tool.id}`}
-                      className="ui-content-card group flex flex-col overflow-hidden"
-                    >
-                      <div className="relative aspect-video w-full overflow-hidden bg-slate-100">
-                        {tool.image_url ? (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img
-                            src={tool.image_url}
-                            alt={tool.name}
-                            className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
-                          />
-                        ) : (
-                          <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-slate-100 via-white to-[#EFF6FF]">
-                            <svg viewBox="0 0 64 64" fill="none" className="h-16 w-16 text-slate-300" aria-hidden>
-                              <path d="M12 46h40M18 40V26M32 40V16M46 40V30" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
-                              <path d="M14 24c7 5 12 6 18 1s10-8 18-2" stroke="#1E3EE8" strokeWidth="4" strokeLinecap="round" />
-                            </svg>
-                          </div>
-                        )}
-                        <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent" />
-                        <span className={`absolute left-3 top-3 rounded-md px-2.5 py-1 text-[11px] font-bold uppercase tracking-widest ${isFree ? "bg-[#1E3EE8] text-white" : "bg-[#4B78F8] text-[#0D1B33]"}`}>
-                          {isFree ? "Free" : "Paid"}
-                        </span>
-                        <span className="absolute bottom-3 left-3 rounded-md bg-black/50 px-2 py-0.5 text-[11px] font-semibold text-white/90 backdrop-blur-sm">
-                          {tool.type === "indicator" ? "Indicator" : "Expert Advisor"}
-                        </span>
-                        <span className="absolute bottom-3 right-3 rounded-md bg-black/50 px-2 py-0.5 text-[11px] font-semibold text-white/90 backdrop-blur-sm">
-                          {tool.platform}
-                        </span>
-                      </div>
-                      <div className="flex flex-1 flex-col p-5">
-                        <div className="flex items-baseline justify-between gap-2">
-                          <h3 className="font-bold leading-snug text-(--color-ink) transition-colors group-hover:text-(--color-teal)">
-                            {tool.name}
-                          </h3>
-                          <span className="shrink-0 rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[10px] text-slate-400">
-                            v{tool.version}
-                          </span>
-                        </div>
-                        {description && (
-                          <p className="mt-2.5 line-clamp-2 text-sm leading-relaxed text-(--color-ink-muted)">
-                            {description}
-                          </p>
-                        )}
-                        <div className="my-4 h-px bg-slate-100" />
-                        <div className="mt-auto flex items-center justify-between">
-                          <span className="text-xs font-semibold text-(--color-teal) transition group-hover:translate-x-0.5">
-                            View details →
-                          </span>
-                          {isFree && (
-                            <span className="rounded-full bg-[#EFF6FF] px-2.5 py-0.5 text-[11px] font-bold text-[#1E3EE8]">
-                              Free Download
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    </Link>
-                  </Reveal>
-                );
-              })}
-            </div>
-          ) : (
-            <p className="mt-12 text-center text-sm text-(--color-ink-muted)">{dict.home.featuredToolsViewAll}</p>
-          )}
-
-          <div className="mt-12 text-center">
-            <Link
-              href={`/${locale}/tools`}
-              className="inline-flex items-center gap-2 rounded-xl bg-[#1E3EE8] px-8 py-3 text-sm font-bold text-white shadow-lg shadow-[#1E3EE8]/25 transition hover:-translate-y-0.5 hover:brightness-110"
-            >
-              {dict.home.featuredToolsViewAll} →
             </Link>
           </div>
         </div>
@@ -362,15 +290,34 @@ export default async function HomePage({
 
       {/* ── CTA Band ── */}
       <section
-        className="relative flex min-h-screen items-center overflow-hidden bg-[#0D1B33] px-4 py-24 sm:px-6 lg:px-8"
+        className="relative flex min-h-screen items-center overflow-hidden bg-[#22332E] px-4 py-24 sm:px-6 lg:px-8"
         aria-labelledby="home-cta"
       >
+        {/* Alternating background images */}
+        <Image
+          src="/Images/hero.png"
+          alt=""
+          fill
+          sizes="100vw"
+          aria-hidden
+          className="cta-bg-1 object-cover object-center"
+        />
+        <Image
+          src="/Images/bg-about-header.png"
+          alt=""
+          fill
+          sizes="100vw"
+          aria-hidden
+          className="cta-bg-2 object-cover object-center opacity-0"
+        />
+        {/* Dark overlay to keep text readable */}
+        <div className="absolute inset-0 bg-[#22332E]/75" aria-hidden />
         <div
           className="cta-glow absolute inset-0 bg-[radial-gradient(circle_at_18%_50%,rgba(212,175,55,0.18),transparent_22rem),radial-gradient(circle_at_82%_40%,rgba(37,99,235,0.18),transparent_24rem)]"
           aria-hidden
         />
         <div className="relative mx-auto max-w-3xl text-center">
-          <p className="float-badge text-xs font-bold uppercase tracking-[0.25em] text-[#4B78F8]">
+          <p className="float-badge text-xs font-bold uppercase tracking-[0.25em] text-[#629696]">
             {BRAND_NAME}
           </p>
           <h2
@@ -385,7 +332,7 @@ export default async function HomePage({
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link
               href={`/${locale}/education`}
-              className="inline-flex items-center gap-2 rounded-xl bg-[#4B78F8] px-8 py-3.5 text-sm font-bold text-[#0f172a] shadow-lg transition hover:-translate-y-0.5 hover:brightness-105"
+              className="inline-flex items-center gap-2 rounded-xl bg-[#629696] px-8 py-3.5 text-sm font-bold text-[#0f172a] shadow-lg transition hover:-translate-y-0.5 hover:brightness-105"
             >
               {dict.home.ctaBandButton}
               <span aria-hidden>→</span>

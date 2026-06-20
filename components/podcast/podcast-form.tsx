@@ -77,7 +77,7 @@ export function PodcastForm({ podcast }: Props) {
 
  return (
  <div className="w-full rounded-xl border border-slate-200 bg-white p-6">
- <h2 className="mb-6 text-base font-bold text-[#0D1B33]">Episode details</h2>
+ <h2 className="mb-6 text-base font-bold text-[#22332E]">Episode details</h2>
 
  <form className="space-y-5" onSubmit={handleSubmit}>
  <div>
@@ -91,7 +91,7 @@ export function PodcastForm({ podcast }: Props) {
  required
  defaultValue={podcast?.youtube_url ?? ""}
  placeholder="https://www.youtube.com/watch?v=… or youtu.be/…"
- className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm outline-none ring-[#1E3EE8]/30 transition focus:ring-2"
+ className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm outline-none ring-[#22332E]/30 transition focus:ring-2"
  />
  <p className="mt-1 text-xs text-slate-400">
  Paste a watch link, Shorts link, embed URL, or the 11-character video id.
@@ -109,7 +109,7 @@ export function PodcastForm({ podcast }: Props) {
  type="text"
  required
  defaultValue={podcast?.title_en ?? ""}
- className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm outline-none ring-[#1E3EE8]/30 transition focus:ring-2"
+ className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm outline-none ring-[#22332E]/30 transition focus:ring-2"
  />
  </div>
  <div>
@@ -122,7 +122,7 @@ export function PodcastForm({ podcast }: Props) {
  type="text"
  required
  defaultValue={podcast?.title_km ?? ""}
- className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm outline-none ring-[#1E3EE8]/30 transition focus:ring-2"
+ className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm outline-none ring-[#22332E]/30 transition focus:ring-2"
  />
  </div>
  </div>
@@ -137,7 +137,7 @@ export function PodcastForm({ podcast }: Props) {
  name="description_en"
  rows={4}
  defaultValue={podcast?.description_en ?? ""}
- className="w-full resize-y rounded-lg border border-slate-200 px-3 py-2.5 text-sm outline-none ring-[#1E3EE8]/30 transition focus:ring-2"
+ className="w-full resize-y rounded-lg border border-slate-200 px-3 py-2.5 text-sm outline-none ring-[#22332E]/30 transition focus:ring-2"
  />
  </div>
  <div>
@@ -149,7 +149,7 @@ export function PodcastForm({ podcast }: Props) {
  name="description_km"
  rows={4}
  defaultValue={podcast?.description_km ?? ""}
- className="w-full resize-y rounded-lg border border-slate-200 px-3 py-2.5 text-sm outline-none ring-[#1E3EE8]/30 transition focus:ring-2"
+ className="w-full resize-y rounded-lg border border-slate-200 px-3 py-2.5 text-sm outline-none ring-[#22332E]/30 transition focus:ring-2"
  />
  </div>
  </div>
@@ -165,7 +165,7 @@ export function PodcastForm({ podcast }: Props) {
  type="number"
  required
  defaultValue={podcast?.sort_order ?? 0}
- className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm outline-none ring-[#1E3EE8]/30 transition focus:ring-2"
+ className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm outline-none ring-[#22332E]/30 transition focus:ring-2"
  />
  <p className="mt-1 text-xs text-slate-400">Higher numbers appear first on the site.</p>
  </div>
@@ -175,14 +175,14 @@ export function PodcastForm({ podcast }: Props) {
  {(["Draft", "Published"] as const).map((s) => (
  <label
  key={s}
- className="flex cursor-pointer items-center gap-2 rounded-lg border border-slate-200 px-4 py-2.5 text-sm transition-colors has-checked:border-[#1E3EE8] has-checked:bg-[#EFF6FF]"
+ className="flex cursor-pointer items-center gap-2 rounded-lg border border-slate-200 px-4 py-2.5 text-sm transition-colors has-checked:border-[#22332E] has-checked:bg-[#EEF8F7]"
  >
  <input
  type="radio"
  name="status"
  value={s}
  defaultChecked={s === defaultStatus}
- className="accent-[#1E3EE8]"
+ className="accent-[#22332E]"
  />
  {s}
  </label>
@@ -195,7 +195,7 @@ export function PodcastForm({ podcast }: Props) {
  <button
  type="submit"
  disabled={isSaving}
- className="rounded-lg bg-[#1E3EE8] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#1D4ED8] disabled:opacity-50"
+ className="rounded-lg bg-[#22332E] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#1D4ED8] disabled:opacity-50"
  >
  {isSaving ? "Saving…" : isEdit ? "Save changes" : "Create episode"}
  </button>

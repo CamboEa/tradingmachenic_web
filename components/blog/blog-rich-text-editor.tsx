@@ -35,7 +35,7 @@ function ToolbarButton({
       className={[
         "min-w-[2rem] rounded-md px-2 py-1.5 text-xs font-semibold transition",
         active
-          ? "bg-[#1E3EE8] text-white shadow-sm"
+          ? "bg-[#22332E] text-white shadow-sm"
           : "text-slate-600 hover:bg-slate-100 hover:text-slate-900",
         disabled ? "cursor-not-allowed opacity-40" : "",
       ].join(" ")}

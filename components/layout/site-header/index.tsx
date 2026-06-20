@@ -7,7 +7,6 @@ import { useEffect, useState } from "react";
 
 import { ProfileMenu } from "@/components/auth/profile-menu";
 import { SiteLogo } from "@/components/shared/site-logo";
-import { BRAND_NAME } from "@/lib/brand";
 import type { Dictionary, Locale } from "@/lib/i18n";
 
 import { AuthLanguageCluster } from "./auth-language-cluster";
@@ -42,71 +41,63 @@ export function SiteHeader({
 
   return (
     <header
-      className={`sticky top-0 z-40 transition-all duration-200 ${
+      className={`sticky top-0 z-40 overflow-hidden border-b transition-all duration-200 backdrop-blur-md ${
         raised
-          ? "border-b border-slate-200/80 bg-white/95 shadow-sm shadow-slate-900/5 backdrop-blur-md"
-          : "border-b border-transparent bg-[#F8FAFC]/80"
+          ? "border-slate-200/80 bg-white/98 shadow-sm shadow-slate-900/5"
+          : "border-slate-200/50 bg-[#F8FAFC]"
       }`}
     >
       {/* ── Main bar ── */}
-      <div className="mx-auto flex h-16 max-w-7xl items-center px-4 lg:px-8">
+      <div className="mx-auto grid h-16 max-w-7xl grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 px-4 lg:gap-4 lg:px-8">
 
-        {/* Brand */}
+        {/* Left: brand */}
         <Link
           href={`/${locale}`}
           className="group flex shrink-0 items-center gap-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal/30 focus-visible:ring-offset-2"
         >
-          <SiteLogo size="md" priority className="rounded-lg" />
-          <span className="hidden flex-col sm:flex">
-            <span className="text-sm font-bold uppercase tracking-tight text-slate-900 transition-colors group-hover:text-slate-700">
-              {BRAND_NAME}
-            </span>
-            <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-400">
-              {dict.footer.academyLabel}
-            </span>
+          <SiteLogo size="nav" priority />
+          <span className="text-sm font-bold uppercase leading-none tracking-[0.14em]">
+            <span className="text-slate-900 transition-colors group-hover:text-slate-700">FINHUB</span>
+            <span className="text-teal">KH</span>
           </span>
         </Link>
 
-        {/* Desktop: centered nav */}
-        <div className="hidden flex-1 justify-center xl:flex">
+        {/* Centre: nav links (desktop only) */}
+        <div className="hidden items-center justify-center xl:flex">
           <CenterNav locale={locale} dict={dict} pathname={pathname} />
         </div>
 
-        {/* Desktop: right cluster */}
-        <div className="hidden xl:ml-auto xl:flex xl:shrink-0 xl:items-center">
-          <AuthLanguageCluster
-            locale={locale}
-            pathname={pathname}
-            dict={dict}
-            user={user}
-          />
-        </div>
+        {/* Right: auth + language (desktop) / language + hamburger (mobile) */}
+        <div className="flex items-center justify-end gap-3">
+          {/* Desktop auth cluster */}
+          <div className="hidden xl:flex xl:items-center xl:gap-3">
+            <AuthLanguageCluster
+              locale={locale}
+              pathname={pathname}
+              dict={dict}
+              user={user}
+            />
+          </div>
 
-        {/* Mobile: language toggle + hamburger */}
-        <div className="ml-auto flex items-center gap-2 xl:hidden">
-          <LanguageToggle locale={locale} pathname={pathname} dict={dict} />
-          <button
-            type="button"
-            onClick={() => setOpen((v) => !v)}
-            aria-expanded={open}
-            aria-label={open ? "Close menu" : "Open menu"}
-            className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 transition hover:border-slate-300 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal/30"
-          >
-            <svg
-              aria-hidden
-              className="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
+          {/* Mobile: language + hamburger */}
+          <div className="flex items-center gap-2 xl:hidden">
+            <LanguageToggle locale={locale} pathname={pathname} dict={dict} />
+            <button
+              type="button"
+              onClick={() => setOpen((v) => !v)}
+              aria-expanded={open}
+              aria-label={open ? "Close menu" : "Open menu"}
+              className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 transition hover:border-slate-300 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal/30"
             >
-              {open ? (
-                <path strokeLinecap="round" d="M6 6l12 12M18 6L6 18" />
-              ) : (
-                <path strokeLinecap="round" d="M4 7h16M4 12h16M4 17h16" />
-              )}
-            </svg>
-          </button>
+              <svg aria-hidden className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                {open ? (
+                  <path strokeLinecap="round" d="M6 6l12 12M18 6L6 18" />
+                ) : (
+                  <path strokeLinecap="round" d="M4 7h16M4 12h16M4 17h16" />
+                )}
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -115,13 +106,9 @@ export function SiteHeader({
         <div className="border-t border-slate-200/80 bg-white xl:hidden">
           <div className="mx-auto max-w-7xl">
             <CenterNav locale={locale} dict={dict} pathname={pathname} mobile />
-
-            {/* Auth buttons inside drawer */}
             <div className="border-t border-slate-100 px-4 py-3">
               {user ? (
-                <div className="flex justify-start">
-                  <ProfileMenu user={user} signOutLabel={dict.nav.signOut} />
-                </div>
+                <ProfileMenu user={user} signOutLabel={dict.nav.signOut} />
               ) : (
                 <div className="flex gap-2">
                   <Link

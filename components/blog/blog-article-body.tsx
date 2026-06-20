@@ -7,7 +7,7 @@ function InlineText({ text }: { text: string }) {
     <>
       {segments.map((seg, i) =>
         seg.bold ? (
-          <strong key={i} className="font-semibold text-[#0D1B33]">
+          <strong key={i} className="font-semibold text-[#22332E]">
             {seg.text}
           </strong>
         ) : (
@@ -22,13 +22,13 @@ function BlockView({ block }: { block: BlogBlock }) {
   switch (block.type) {
     case "h2":
       return (
-        <h2 className="mt-10 text-xl font-bold tracking-tight text-[#0D1B33] first:mt-0 sm:text-2xl">
+        <h2 className="mt-10 text-xl font-bold tracking-tight text-[#22332E] first:mt-0 sm:text-2xl">
           <InlineText text={block.text} />
         </h2>
       );
     case "h3":
       return (
-        <h3 className="mt-8 text-lg font-semibold text-[#0D1B33]">
+        <h3 className="mt-8 text-lg font-semibold text-[#22332E]">
           <InlineText text={block.text} />
         </h3>
       );

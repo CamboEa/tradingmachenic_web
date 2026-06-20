@@ -191,7 +191,7 @@ export function BlogForm({ post }: { post?: BlogPost }) {
         <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
           Step {step + 1} of {steps.length}
         </p>
-        <h2 className="mt-1 text-base font-bold text-[#0D1B33]">{steps[step].title}</h2>
+        <h2 className="mt-1 text-base font-bold text-[#22332E]">{steps[step].title}</h2>
         <p className="mt-0.5 text-sm text-slate-500">{steps[step].hint}</p>
         {!isEdit ? (
           <p className="mt-2 text-xs text-slate-500">
@@ -220,7 +220,7 @@ export function BlogForm({ post }: { post?: BlogPost }) {
                   className={[
                     "flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-semibold transition",
                     active
-                      ? "border-[#1E3EE8] bg-[#EFF6FF] text-[#1E3EE8]"
+                      ? "border-[#22332E] bg-[#EEF8F7] text-[#22332E]"
                       : done
                         ? "border-emerald-200 bg-emerald-50 text-emerald-800"
                         : "border-slate-200 bg-slate-50 text-slate-400",
@@ -231,7 +231,7 @@ export function BlogForm({ post }: { post?: BlogPost }) {
                   <span
                     className={[
                       "flex h-5 w-5 items-center justify-center rounded-full text-[10px]",
-                      active ? "bg-[#1E3EE8] text-white" : done ? "bg-emerald-500 text-white" : "bg-slate-200 text-slate-500",
+                      active ? "bg-[#22332E] text-white" : done ? "bg-emerald-500 text-white" : "bg-slate-200 text-slate-500",
                     ].join(" ")}
                   >
                     {done ? "✓" : i + 1}
@@ -274,7 +274,7 @@ export function BlogForm({ post }: { post?: BlogPost }) {
                       setSlugTouched(false);
                     }
                   }}
-                  className="text-xs font-semibold text-[#1E3EE8] hover:text-[#1D4ED8]"
+                  className="text-xs font-semibold text-[#22332E] hover:text-[#1D4ED8]"
                 >
                   Regenerate from title
                 </button>
@@ -413,14 +413,14 @@ export function BlogForm({ post }: { post?: BlogPost }) {
               {(["Draft", "Published"] as const).map((s) => (
                 <label
                   key={s}
-                  className="flex cursor-pointer items-center gap-2 rounded-lg border border-slate-200 px-4 py-2.5 text-sm has-[:checked]:border-[#1E3EE8] has-[:checked]:bg-[#EFF6FF]"
+                  className="flex cursor-pointer items-center gap-2 rounded-lg border border-slate-200 px-4 py-2.5 text-sm has-[:checked]:border-[#22332E] has-[:checked]:bg-[#EEF8F7]"
                 >
                   <input
                     type="radio"
                     name="status"
                     value={s}
                     defaultChecked={s === defaultStatus}
-                    className="accent-[#1E3EE8]"
+                    className="accent-[#22332E]"
                   />
                   {s}
                 </label>
@@ -446,7 +446,7 @@ export function BlogForm({ post }: { post?: BlogPost }) {
             <button
               type="button"
               onClick={handleNext}
-              className="rounded-lg bg-[#1E3EE8] px-6 py-2.5 text-sm font-semibold text-white hover:bg-[#1D4ED8]"
+              className="rounded-lg bg-[#22332E] px-6 py-2.5 text-sm font-semibold text-white hover:bg-[#1D4ED8]"
             >
               Continue
             </button>
@@ -454,7 +454,7 @@ export function BlogForm({ post }: { post?: BlogPost }) {
             <button
               type="submit"
               disabled={isSaving}
-              className="rounded-lg bg-[#1E3EE8] px-6 py-2.5 text-sm font-semibold text-white hover:bg-[#1D4ED8] disabled:bg-slate-300"
+              className="rounded-lg bg-[#22332E] px-6 py-2.5 text-sm font-semibold text-white hover:bg-[#1D4ED8] disabled:bg-slate-300"
             >
               {isSaving ? "Saving…" : isEdit ? "Save changes" : "Save article"}
             </button>

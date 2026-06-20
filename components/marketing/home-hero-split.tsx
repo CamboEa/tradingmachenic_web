@@ -1,25 +1,17 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 import type { Dictionary, Locale } from "@/lib/i18n";
 
-const BG_IMAGES = [
-  "/Images/hero.png",
-  "/Images/bg-about-header.png",
-];
-
-const SLIDE_INTERVAL_MS = 5000;
+const HERO_VIDEO = "/video/herosectionvideo.mp4";
 
 export function HomeHeroSplit({ locale, dict }: { locale: Locale; dict: Dictionary }) {
   const h = dict.home;
   const headingRef = useRef<HTMLHeadingElement>(null);
   const subRef = useRef<HTMLParagraphElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
-  const [activeIdx, setActiveIdx] = useState(0);
-
   // Content entrance animation
   useEffect(() => {
     const els = [headingRef, subRef, ctaRef];
@@ -38,50 +30,33 @@ export function HomeHeroSplit({ locale, dict }: { locale: Locale; dict: Dictiona
     });
   }, []);
 
-  // Background carousel
-  useEffect(() => {
-    const id = setInterval(() => {
-      setActiveIdx((prev) => (prev + 1) % BG_IMAGES.length);
-    }, SLIDE_INTERVAL_MS);
-    return () => clearInterval(id);
-  }, []);
 
   return (
     <section
       className="relative h-[calc(100dvh-var(--site-chrome-top))] min-h-[calc(100dvh-var(--site-chrome-top))] overflow-hidden bg-(--color-slate-brand)"
       aria-labelledby="home-hero-heading"
     >
-      {/* Background carousel — Ken Burns zoom + cross-fade */}
-      {BG_IMAGES.map((src, i) => (
-        <Image
-          key={src}
-          src={src}
-          alt=""
-          fill
-          priority={i === 0}
-          sizes="100vw"
-          aria-hidden
-          className={`object-cover object-center transition-opacity duration-1500 ease-in-out ${
-            i === activeIdx ? "opacity-100" : "opacity-0"
-          }`}
-          style={
-            i === activeIdx
-              ? { animation: "kenBurns 7s ease-out forwards" }
-              : { animation: "none", transform: "scale(1) translate(0,0)" }
-          }
-        />
-      ))}
+      {/* Background video — loops continuously */}
+      <video
+        src={HERO_VIDEO}
+        autoPlay
+        loop
+        muted
+        playsInline
+        aria-hidden
+        className="absolute inset-0 h-full w-full object-cover object-center"
+      />
 
       {/* Dark overlay */}
       <div className="absolute inset-0 bg-[rgba(8,15,30,0.72)]" aria-hidden />
 
       {/* Ambient glow */}
       <div
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_70%,color-mix(in_oklab,#1E3EE8_14%,transparent),transparent)]"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_70%,color-mix(in_oklab,#22332E_14%,transparent),transparent)]"
         aria-hidden
       />
       <div
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_50%_40%_at_50%_50%,color-mix(in_oklab,#4B78F8_8%,transparent),transparent)]"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_50%_40%_at_50%_50%,color-mix(in_oklab,#629696_8%,transparent),transparent)]"
         aria-hidden
       />
 
@@ -90,14 +65,14 @@ export function HomeHeroSplit({ locale, dict }: { locale: Locale; dict: Dictiona
 
         {/* Decorative label */}
         <div className="mb-5 flex items-center gap-3">
-          <span className="h-px w-8 bg-[#4B78F8]/40" aria-hidden />
-          <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-[#4B78F8]/70">
+          <span className="h-px w-8" style={{ backgroundColor: "color-mix(in oklab, var(--gold) 50%, transparent)" }} aria-hidden />
+          <span className="text-[11px] font-bold uppercase tracking-[0.3em]" style={{ color: "var(--gold)" }}>
             FIN HUB KH Academy
           </span>
-          <span className="h-px w-8 bg-[#4B78F8]/40" aria-hidden />
+          <span className="h-px w-8" style={{ backgroundColor: "color-mix(in oklab, var(--gold) 50%, transparent)" }} aria-hidden />
         </div>
 
-        {/* Headline — last word in gold gradient */}
+        {/* Headline — last word uses brand accent */}
         <h1
           ref={headingRef}
           id="home-hero-heading"
@@ -110,9 +85,7 @@ export function HomeHeroSplit({ locale, dict }: { locale: Locale; dict: Dictiona
             return (
               <>
                 {rest}{" "}
-                <span className="bg-linear-to-r from-[#7BA8FF] via-[#C8D9FF] to-[#7BA8FF] bg-clip-text text-transparent">
-                  {last}
-                </span>
+                <span style={{ color: "var(--gold)" }}>{last}</span>
               </>
             );
           })()}
@@ -121,11 +94,11 @@ export function HomeHeroSplit({ locale, dict }: { locale: Locale; dict: Dictiona
         {/* Decorative divider */}
         <div className="mt-7 flex items-center gap-2" aria-hidden>
           <span className="h-px w-10 bg-linear-to-r from-transparent to-white/15" />
-          <span className="h-1 w-1 rounded-full bg-[#1E3EE8]/50" />
+          <span className="h-1 w-1 rounded-full bg-[#22332E]/50" />
           <span className="h-px w-16 bg-white/10" />
-          <span className="h-1.5 w-1.5 rounded-full bg-[#4B78F8]/60" />
+          <span className="h-1.5 w-1.5 rounded-full bg-(--color-gold)/60" />
           <span className="h-px w-16 bg-white/10" />
-          <span className="h-1 w-1 rounded-full bg-[#1E3EE8]/50" />
+          <span className="h-1 w-1 rounded-full bg-[#22332E]/50" />
           <span className="h-px w-10 bg-linear-to-l from-transparent to-white/15" />
         </div>
 
@@ -144,7 +117,7 @@ export function HomeHeroSplit({ locale, dict }: { locale: Locale; dict: Dictiona
         >
           <Link
             href={`/${locale}/register`}
-            className="group relative inline-flex items-center gap-2 overflow-hidden rounded-xl bg-[#1E3EE8] px-8 py-3.5 text-sm font-bold uppercase tracking-[0.12em] text-white shadow-[0_8px_32px_rgba(30,62,232,0.35)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_40px_rgba(30,62,232,0.50)]"
+            className="group relative inline-flex items-center gap-2 overflow-hidden rounded-xl bg-[#22332E] px-8 py-3.5 text-sm font-bold uppercase tracking-[0.12em] text-white shadow-[0_8px_32px_rgba(27,58,53,0.35)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_40px_rgba(27,58,53,0.50)]"
           >
             <span className="relative z-10">{h.heroSplitCta}</span>
             <span className="relative z-10 transition-transform duration-300 group-hover:translate-x-1" aria-hidden>→</span>

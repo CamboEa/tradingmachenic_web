@@ -5,7 +5,7 @@ import type { Dictionary, Locale } from "@/lib/i18n";
 import { hrefWithLocale } from "./nav-utils";
 
 const seg =
-  "rounded-md px-2.5 py-1.5 text-xs font-bold uppercase tracking-wide transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal/30";
+  "inline-flex h-8 items-center rounded-md px-2.5 text-xs font-bold uppercase tracking-wide transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal/30";
 
 export function LanguageToggle({
   locale,

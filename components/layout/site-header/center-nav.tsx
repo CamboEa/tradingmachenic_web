@@ -7,7 +7,7 @@ import type { Dictionary, Locale } from "@/lib/i18n";
 import { navPathActive } from "./nav-utils";
 
 const navBase =
-  "relative whitespace-nowrap rounded-lg px-2.5 py-1.5 text-[13px] font-semibold tracking-tight transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal/30";
+  "relative inline-flex h-9 items-center whitespace-nowrap rounded-md px-2 text-[13px] font-semibold uppercase leading-none tracking-[0.05em] transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal/30";
 const navActive = `${navBase} text-slate-900`;
 const navIdle   = `${navBase} text-slate-500 hover:text-slate-800`;
 
@@ -44,7 +44,7 @@ export function CenterNav({
               key={suffix || "home"}
               href={href}
               aria-current={isActive ? "page" : undefined}
-              className={`flex items-center border-l-2 px-5 py-3 text-sm font-medium transition-colors ${
+              className={`flex items-center border-l-2 px-5 py-3 text-sm font-semibold uppercase tracking-wide transition-colors ${
                 isActive
                   ? "border-gold bg-amber-50/40 text-slate-900"
                   : "border-transparent text-slate-500 hover:border-slate-200 hover:bg-slate-50 hover:text-slate-800"
@@ -60,7 +60,7 @@ export function CenterNav({
 
   /* ── Desktop: all items inline ── */
   return (
-    <nav aria-label="Primary" className="flex items-center gap-0">
+    <nav aria-label="Primary" className="flex min-w-0 items-center justify-center gap-0">
       {items.map(({ suffix, label, href }) => {
         const isActive = navPathActive(pathname, locale, suffix);
         return (
@@ -74,7 +74,7 @@ export function CenterNav({
             {isActive && (
               <span
                 aria-hidden
-                className="absolute inset-x-1.5 bottom-0 h-0.5 rounded-full bg-gold"
+                className="absolute inset-x-2 bottom-1 h-0.5 rounded-full bg-gold"
               />
             )}
           </Link>

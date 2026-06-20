@@ -196,12 +196,12 @@ export function R2Uploader({
  className={[
  "flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed px-4 py-8 text-center transition",
  isUploading
- ? "cursor-not-allowed border-[#1E3EE8] bg-[#EFF6FF]"
+ ? "cursor-not-allowed border-[#22332E] bg-[#EEF8F7]"
  : state.status === "done"
  ? "border-emerald-300 bg-emerald-50"
  : state.status === "error"
  ? "border-red-300 bg-red-50"
- : "border-slate-200 bg-slate-50 hover:border-[#1E3EE8] hover:bg-[#EFF6FF]",
+ : "border-slate-200 bg-slate-50 hover:border-[#22332E] hover:bg-[#EEF8F7]",
  ].join(" ")}
  >
  <input
@@ -223,7 +223,7 @@ export function R2Uploader({
  />
  </svg>
  <p className="mt-2 text-xs text-slate-500">
- Drop file here or <span className="font-semibold text-[#1E3EE8]">browse</span>
+ Drop file here or <span className="font-semibold text-[#22332E]">browse</span>
  </p>
  <p className="mt-1 text-[10px] text-slate-400">{hint}</p>
  </>
@@ -231,7 +231,7 @@ export function R2Uploader({
 
  {state.status === "uploading" && (
  <>
- <p className="text-sm font-semibold text-[#1E3EE8]">
+ <p className="text-sm font-semibold text-[#22332E]">
  {state.phase === "preparing"
  ? "Preparing upload…"
  : `Uploading… ${state.progress}%`}
@@ -243,7 +243,7 @@ export function R2Uploader({
  </p>
  <div className="mt-3 h-2 w-full max-w-xs overflow-hidden rounded-full bg-[#DBEAFE]">
  <div
- className="h-full rounded-full bg-[#1E3EE8] transition-[width] duration-150 ease-out"
+ className="h-full rounded-full bg-[#22332E] transition-[width] duration-150 ease-out"
  style={{
  width: state.phase === "preparing" ? "8%" : `${state.progress}%`,
  }}

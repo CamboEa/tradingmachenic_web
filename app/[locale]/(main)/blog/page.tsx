@@ -49,7 +49,7 @@ export default async function BlogIndexPage({
                   href={`/${locale}/blog/${featured.slug}`}
                   className={[
                     "group ui-content-card relative overflow-hidden",
-                    "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1E3EE8] focus-visible:outline-solid",
+                    "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#22332E] focus-visible:outline-solid",
                     hasLatest ? "lg:col-span-8" : "lg:col-span-12",
                   ].join(" ")}
                   aria-label={blogLocalizedTitle(featured, locale)}
@@ -64,7 +64,7 @@ export default async function BlogIndexPage({
                         className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
                       />
                     ) : (
-                      <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-slate-100 via-white to-[#EFF6FF]">
+                      <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-slate-100 via-white to-[#EEF8F7]">
                         <svg
                           viewBox="0 0 64 64"
                           className="h-14 w-14 text-slate-300"
@@ -93,7 +93,7 @@ export default async function BlogIndexPage({
                     >
                       {formatArticleDate(featured.published_at, locale)}
                     </time>
-                    <h2 className="mt-3 text-xl font-bold leading-snug text-slate-900 transition group-hover:text-[#1E3EE8] sm:text-2xl">
+                    <h2 className="mt-3 text-xl font-bold leading-snug text-slate-900 transition group-hover:text-[#22332E] sm:text-2xl">
                       {blogLocalizedTitle(featured, locale)}
                     </h2>
                     {blogLocalizedExcerpt(featured, locale) ? (
@@ -101,7 +101,7 @@ export default async function BlogIndexPage({
                         {blogLocalizedExcerpt(featured, locale)}
                       </p>
                     ) : null}
-                    <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-[#1E3EE8]">
+                    <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-[#22332E]">
                       {t.readArticle}
                       <svg
                         viewBox="0 0 20 20"
@@ -144,7 +144,7 @@ export default async function BlogIndexPage({
                             >
                               {formatArticleDate(post.published_at, locale)}
                             </time>
-                            <p className="mt-2 line-clamp-2 text-sm font-semibold text-slate-900 transition group-hover:text-[#1E3EE8]">
+                            <p className="mt-2 line-clamp-2 text-sm font-semibold text-slate-900 transition group-hover:text-[#22332E]">
                               {title}
                             </p>
                             {excerpt ? (
@@ -189,7 +189,7 @@ export default async function BlogIndexPage({
                               className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
                             />
                           ) : (
-                            <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-slate-100 via-white to-[#EFF6FF]">
+                            <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-slate-100 via-white to-[#EEF8F7]">
                               <svg
                                 viewBox="0 0 64 64"
                                 className="h-12 w-12 text-slate-300"
@@ -218,7 +218,7 @@ export default async function BlogIndexPage({
                           >
                             {formatArticleDate(post.published_at, locale)}
                           </time>
-                          <h3 className="mt-3 text-base font-semibold leading-snug text-slate-900 transition group-hover:text-[#1E3EE8]">
+                          <h3 className="mt-3 text-base font-semibold leading-snug text-slate-900 transition group-hover:text-[#22332E]">
                             {title}
                           </h3>
                           {excerpt ? (
@@ -226,7 +226,7 @@ export default async function BlogIndexPage({
                               {excerpt}
                             </p>
                           ) : null}
-                          <span className="mt-4 inline-flex items-center gap-2 text-xs font-semibold text-[#1E3EE8]">
+                          <span className="mt-4 inline-flex items-center gap-2 text-xs font-semibold text-[#22332E]">
                             {t.readArticle}
                             <svg
                               viewBox="0 0 20 20"

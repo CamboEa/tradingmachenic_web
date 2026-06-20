@@ -51,7 +51,7 @@ export default async function PodcastEpisodePage({
       <div
         className="h-0.75"
         style={{
-          background: "linear-gradient(to right, #4B78F8 0%, rgba(212,175,55,0.4) 60%, transparent 100%)",
+          background: "linear-gradient(to right, #629696 0%, rgba(212,175,55,0.4) 60%, transparent 100%)",
         }}
       />
 
@@ -61,7 +61,7 @@ export default async function PodcastEpisodePage({
         <div className="py-7">
           <Link
             href={`/${locale}/podcast`}
-            className="group inline-flex items-center gap-2 text-sm font-semibold text-[#1E3EE8] transition-colors hover:text-[#1D4ED8]"
+            className="group inline-flex items-center gap-2 text-sm font-semibold text-[#22332E] transition-colors hover:text-[#1D4ED8]"
           >
             <svg
               viewBox="0 0 16 16"
@@ -85,13 +85,13 @@ export default async function PodcastEpisodePage({
           {/* Left — text */}
           <div>
             <div className="mb-4 flex items-center gap-3">
-              <span className="h-px w-8 bg-[#4B78F8]" aria-hidden />
-              <p className="text-[10px] font-bold uppercase tracking-[0.35em] text-[#4B78F8]">
+              <span className="h-px w-8 bg-[#629696]" aria-hidden />
+              <p className="text-[10px] font-bold uppercase tracking-[0.35em] text-[#629696]">
                 {t.episodeEyebrow}
               </p>
             </div>
 
-            <h1 className="text-4xl font-black leading-[1.08] tracking-tight text-[#0D1B33] sm:text-5xl lg:text-[3.5rem]">
+            <h1 className="text-4xl font-black leading-[1.08] tracking-tight text-[#22332E] sm:text-5xl lg:text-[3.5rem]">
               {title}
             </h1>
 

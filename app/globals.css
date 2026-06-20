@@ -2,22 +2,23 @@
 
 :root {
   --site-ticker-h: 3rem;
-  --site-header-h: 4.25rem;
+  --site-header-h: 4rem;
   --site-chrome-top: calc(var(--site-ticker-h) + var(--site-header-h));
   --background: #f8fafc;
-  --foreground: #0D1B33;
+  --foreground: #22332E;
   --surface: #ffffff;
-  --surface-soft: #EEF2FF;
-  --gold: #4B78F8;
-  --teal: #1E3EE8;
-  --ink-muted: #475569;
-  --ink-soft: #64748b;
-  --bridge: #cbd5e1;
-  --slate: #0D1B33;
-  --font-stack-en: var(--font-open-sans), Tahoma, "Helvetica Neue", Helvetica,
-    sans-serif;
-  --font-stack-km: var(--font-khmer), var(--font-open-sans), Tahoma,
-    "Helvetica Neue", Helvetica, sans-serif;
+  --surface-soft: #EEF8F7;
+  --gold: #629696;
+  --highlight: #629696;
+  --teal: #22332E;
+  --ink-muted: #4A6462;
+  --ink-soft: #5C7A78;
+  --bridge: #b2cece;
+  --slate: #22332E;
+  --font-stack-en: var(--font-barlow), "Barlow", system-ui, sans-serif;
+  --font-stack-km: var(--font-khmer), var(--font-barlow), "Barlow", system-ui, sans-serif;
+  --font-stack-km-title: var(--font-khmer-title), var(--font-khmer), var(--font-barlow), "Barlow",
+    system-ui, sans-serif;
   --font-stack: var(--font-stack-en);
 }
 
@@ -31,6 +32,7 @@ html[lang="km"] {
   --color-surface: var(--surface);
   --color-surface-soft: var(--surface-soft);
   --color-gold: var(--gold);
+  --color-highlight: var(--highlight);
   --color-teal: var(--teal);
   --color-ink: var(--foreground);
   --color-ink-muted: var(--ink-muted);
@@ -55,7 +57,12 @@ body {
 }
 
 ::selection {
-  background: color-mix(in oklab, var(--color-teal) 20%, transparent);
+  background: #e2e8f0;
+  color: var(--foreground);
+}
+
+::-moz-selection {
+  background: #e2e8f0;
   color: var(--foreground);
 }
 
@@ -76,6 +83,15 @@ h4,
 h5,
 h6 {
   font-family: var(--font-stack);
+}
+
+html[lang="km"] h1,
+html[lang="km"] h2,
+html[lang="km"] h3,
+html[lang="km"] h4,
+html[lang="km"] h5,
+html[lang="km"] h6 {
+  font-family: var(--font-stack-km-title);
 }
 
 button,
@@ -221,6 +237,15 @@ select {
   animation: line-draw 1.1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
+/* ── CTA band background image alternation ── */
+@keyframes cta-bg-fade {
+  0%, 40%  { opacity: 1; }
+  50%, 90% { opacity: 0; }
+  100%     { opacity: 1; }
+}
+.cta-bg-1 { animation: cta-bg-fade 12s ease-in-out infinite; }
+.cta-bg-2 { animation: cta-bg-fade 12s ease-in-out infinite 6s; }
+
 /* ── CTA badge subtle float ── */
 @keyframes float-badge {
   0%, 100% { transform: translateY(0); }
@@ -321,7 +346,7 @@ select {
   font-weight: 700;
   line-height: 1.3;
   margin-top: 1.25rem;
-  color: #0D1B33;
+  color: #22332E;
 }
 
 .blog-editor-prose h3 {
@@ -329,7 +354,7 @@ select {
   font-weight: 600;
   line-height: 1.35;
   margin-top: 1rem;
-  color: #0D1B33;
+  color: #22332E;
 }
 
 .blog-editor-prose p {
@@ -347,7 +372,7 @@ select {
 }
 
 .blog-editor-prose blockquote {
-  border-left: 3px solid #4B78F8;
+  border-left: 3px solid #629696;
   color: #475569;
   margin-top: 0.75rem;
   padding-left: 1rem;
@@ -360,7 +385,7 @@ select {
   letter-spacing: -0.02em;
   line-height: 1.3;
   margin-top: 2.5rem;
-  color: #0D1B33;
+  color: #22332E;
 }
 
 .blog-article-html h2:first-child {
@@ -372,7 +397,7 @@ select {
   font-weight: 600;
   line-height: 1.35;
   margin-top: 2rem;
-  color: #0D1B33;
+  color: #22332E;
 }
 
 .blog-article-html p {
@@ -417,19 +442,19 @@ select {
 }
 
 .blog-article-html strong {
-  color: #0D1B33;
+  color: #22332E;
   font-weight: 600;
 }
 
 .blog-article-html blockquote {
-  border-left: 3px solid #4B78F8;
+  border-left: 3px solid #629696;
   color: #475569;
   margin-top: 1rem;
   padding-left: 1rem;
 }
 
 .blog-article-html a {
-  color: #1E3EE8;
+  color: #22332E;
   font-weight: 600;
   text-decoration: underline;
   text-underline-offset: 2px;

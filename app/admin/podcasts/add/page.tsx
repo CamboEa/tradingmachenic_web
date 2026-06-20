@@ -16,7 +16,7 @@ export default function AddPodcastPage() {
  ← Back
  </Link>
  <div className="min-w-0 flex-1">
- <h1 className="text-2xl font-bold text-[#0D1B33]">Add podcast episode</h1>
+ <h1 className="text-2xl font-bold text-[#22332E]">Add podcast episode</h1>
  <p className="mt-1 text-sm text-slate-500">Link a YouTube video and set titles for both languages.</p>
  </div>
  </div>

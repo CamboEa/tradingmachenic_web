@@ -20,7 +20,7 @@ export default async function EditCurriculumPhasePage({ params }: { params: Prom
  ← Back
  </Link>
  <div>
- <h1 className="text-2xl font-bold text-[#0D1B33]">Edit phase</h1>
+ <h1 className="text-2xl font-bold text-[#22332E]">Edit phase</h1>
  <p className="mt-1 truncate text-sm text-slate-500" title={phase.label_en}>
  {phase.label_en}
  </p>

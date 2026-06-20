@@ -15,7 +15,7 @@ export default async function NewCurriculumModulePage({
  return (
  <div>
  <p className="text-sm text-slate-600">Missing phase. Pick a phase from Program Management and use “Add module”.</p>
- <Link href="/admin/program" className="mt-4 inline-block text-sm font-medium text-[#1E3EE8] hover:underline">
+ <Link href="/admin/program" className="mt-4 inline-block text-sm font-medium text-[#22332E] hover:underline">
  ← Back to program
  </Link>
  </div>
@@ -35,7 +35,7 @@ export default async function NewCurriculumModulePage({
  ← Back
  </Link>
  <div>
- <h1 className="text-2xl font-bold text-[#0D1B33]">New module</h1>
+ <h1 className="text-2xl font-bold text-[#22332E]">New module</h1>
  <p className="mt-1 text-sm text-slate-500">Phase: {phase.label_en}</p>
  </div>
  </div>
