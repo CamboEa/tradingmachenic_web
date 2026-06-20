@@ -4,611 +4,503 @@ import { useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { createTool, updateTool } from "@/lib/supabase/actions";
 import { R2Uploader } from "@/components/shared/r2-uploader";
-import { ToolGalleryEditor } from "@/components/tools/tool-gallery-editor";
+import { ToolDocEditor } from "@/components/tools/tool-doc-editor";
 import type { Tool } from "@/lib/supabase/tools";
-import type { ToolGalleryItem } from "@/lib/supabase/tool-gallery";
 import { slugify } from "@/lib/slug";
+
+/**
+ * Builds a Khmer translation template from English HTML.
+ *
+ * - Text blocks (p, h1-h3, li, blockquote) are EMPTIED and given
+ *   data-km-hint="<english text>" so the CSS ::before rule in globals.css
+ *   renders a yellow dashed placeholder showing what needs translating.
+ * - Images and video embeds are kept EXACTLY in place (same src, alignment, size).
+ * - All block structure is preserved so the layout mirrors English.
+ */
+function buildKhmerTemplate(html: string): string {
+  if (typeof document === "undefined" || !html.trim()) return "";
+  const root = document.createElement("div");
+  root.innerHTML = html;
+
+  const TEXT_TAGS = new Set(["P", "H1", "H2", "H3", "LI", "BLOCKQUOTE"]);
+
+  function walk(el: Element) {
+    // Never touch media — keep images/videos in exactly the same position
+    if (
+      el.tagName === "IMG" ||
+      el.tagName === "IFRAME" ||
+      el.hasAttribute("data-video-embed")
+    ) return;
+
+    if (TEXT_TAGS.has(el.tagName)) {
+      // If the block contains media, recurse into children instead of clearing
+      if (el.querySelector("img, [data-video-embed]")) {
+        Array.from(el.children).forEach(walk);
+        return;
+      }
+      const english = el.textContent?.trim() ?? "";
+      if (english) {
+        el.setAttribute("data-km-hint", english);
+        el.textContent = ""; // Empty — CSS ::before shows the hint
+      }
+      return;
+    }
+
+    // Recurse into containers (ul, ol, div, etc.)
+    Array.from(el.children).forEach(walk);
+  }
+
+  Array.from(root.children).forEach(walk);
+  return root.innerHTML;
+}
 
 const TOOL_TYPES = ["Indicator", "Expert Advisor (EA)"] as const;
 const PLATFORMS = ["MT4", "MT5", "MT4 & MT5"] as const;
 
 const STEPS = [
- { title: "Basics", hint: "Type, pricing, name, version, platform" },
- { title: "Description", hint: "Short overview in English and Khmer" },
- { title: "Page content", hint: "Requirements, how it works, features, usage" },
- { title: "Proof", hint: "Testing notes and proof images" },
- { title: "Files & publish", hint: "Downloads, preview, and status" },
+  { title: "Basics",          hint: "Type, pricing, name, version, platform" },
+  { title: "Content",         hint: "Write your full document — descriptions, how it works, proof, and media" },
+  { title: "Files & publish", hint: "Download files, preview image, and publish status" },
 ] as const;
 
 const fieldClass =
- "w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#0ea5e9] focus:bg-white focus:ring-2 focus:ring-[#0ea5e9]/20";
+  "w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#22332E] focus:bg-white focus:ring-2 focus:ring-[#22332E]/20";
 
-interface Props {
- tool?: Tool;
-}
+interface Props { tool?: Tool }
 
 function readFormString(form: HTMLFormElement, name: string): string {
- const raw = new FormData(form).get(name);
- return typeof raw === "string" ? raw.trim() : "";
+  const raw = new FormData(form).get(name);
+  return typeof raw === "string" ? raw.trim() : "";
 }
 
 export function ToolsForm({ tool }: Props) {
- const isEdit = !!tool;
- const formRef = useRef<HTMLFormElement>(null);
+  const isEdit = !!tool;
+  const formRef = useRef<HTMLFormElement>(null);
 
- const [step, setStep] = useState(0);
- const [platform, setPlatform] = useState<(typeof PLATFORMS)[number]>(
- (tool?.platform as (typeof PLATFORMS)[number]) ?? "MT4",
- );
- const [uploadedFileUrl, setUploadedFileUrl] = useState<string | null>(tool?.file_url ?? null);
- const [uploadedFileUrlMt4, setUploadedFileUrlMt4] = useState<string | null>(tool?.file_url_mt4 ?? null);
- const [uploadedFileUrlMt5, setUploadedFileUrlMt5] = useState<string | null>(tool?.file_url_mt5 ?? null);
- const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(tool?.image_url ?? null);
- const [galleryItems, setGalleryItems] = useState<ToolGalleryItem[]>(tool?.gallery ?? []);
- const [isSaving, setIsSaving] = useState(false);
- const [fileError, setFileError] = useState(false);
- const fileUploaderRef = useRef<HTMLDivElement>(null);
+  const [step, setStep]         = useState(0);
+  const [langTab, setLangTab]   = useState<"en" | "km">("en");
+  const [platform, setPlatform] = useState<(typeof PLATFORMS)[number]>(
+    (tool?.platform as (typeof PLATFORMS)[number]) ?? "MT4",
+  );
 
- const defaultType = tool?.type === "ea" ? "Expert Advisor (EA)" : "Indicator";
- const defaultPricing = tool?.pricing === "paid" ? "Paid" : "Free";
- const defaultStatus = tool?.status === "published" ? "Published" : "Draft";
+  // Rich content (stored as HTML)
+  const [contentEn, setContentEn] = useState<string>(
+    [
+      tool?.description_en,
+      tool?.requirements_en,
+      tool?.how_it_works_en,
+      tool?.key_features_en,
+      tool?.usage_notes_en,
+      tool?.proof_of_testing_en,
+    ]
+      .filter(Boolean)
+      .join("\n") || "",
+  );
+  const [contentKm, setContentKm] = useState<string>(
+    [
+      tool?.description_km,
+      tool?.requirements_km,
+      tool?.how_it_works_km,
+      tool?.key_features_km,
+      tool?.usage_notes_km,
+      tool?.proof_of_testing_km,
+    ]
+      .filter(Boolean)
+      .join("\n") || "",
+  );
 
- const isLastStep = step === STEPS.length - 1;
- const isDualPlatform = platform === "MT4 & MT5";
- const fileReady = isDualPlatform
- ? !!uploadedFileUrlMt4 && !!uploadedFileUrlMt5
- : !!uploadedFileUrl;
+  const [uploadedFileUrl,     setUploadedFileUrl]     = useState<string | null>(tool?.file_url     ?? null);
+  const [uploadedFileUrlMt4,  setUploadedFileUrlMt4]  = useState<string | null>(tool?.file_url_mt4 ?? null);
+  const [uploadedFileUrlMt5,  setUploadedFileUrlMt5]  = useState<string | null>(tool?.file_url_mt5 ?? null);
+  const [uploadedImageUrl,    setUploadedImageUrl]    = useState<string | null>(tool?.image_url    ?? null);
+  const [isSaving,            setIsSaving]            = useState(false);
+  const [fileError,           setFileError]           = useState(false);
+  const fileUploaderRef = useRef<HTMLDivElement>(null);
 
- // R2 folder for this tool's uploads: indicator/<name> or expert_advisor/<name>.
- function toolKeyPrefix(): string {
- const form = formRef.current;
- const typeFolder =
- (form ? readFormString(form, "toolType") : defaultType) === "Indicator"
- ? "indicator"
- : "expert_advisor";
- const name = form ? readFormString(form, "toolName") : tool?.name ?? "";
- const nameSlug = slugify(name) || "untitled";
- return `${typeFolder}/${nameSlug}`;
- }
+  const defaultType    = tool?.type    === "ea"        ? "Expert Advisor (EA)" : "Indicator";
+  const defaultPricing = tool?.pricing === "paid"      ? "Paid"                : "Free";
+  const defaultStatus  = tool?.status  === "published" ? "Published"           : "Draft";
 
- function validateStep(index: number): boolean {
- const form = formRef.current;
- if (!form) return false;
+  const isLastStep    = step === STEPS.length - 1;
+  const isDualPlatform = platform === "MT4 & MT5";
+  const fileReady     = isDualPlatform
+    ? !!uploadedFileUrlMt4 && !!uploadedFileUrlMt5
+    : !!uploadedFileUrl;
 
- if (index === 0) {
- const name = readFormString(form, "toolName");
- const version = readFormString(form, "version");
- const toolType = readFormString(form, "toolType");
- const pricing = readFormString(form, "pricing");
- const platform = readFormString(form, "platform");
+  function toolKeyPrefix(): string {
+    const form = formRef.current;
+    const typeFolder =
+      (form ? readFormString(form, "toolType") : defaultType) === "Indicator"
+        ? "indicator"
+        : "expert_advisor";
+    const name     = form ? readFormString(form, "toolName") : tool?.name ?? "";
+    const nameSlug = slugify(name) || "untitled";
+    return `${typeFolder}/${nameSlug}`;
+  }
 
- if (!name || !version || !toolType || !pricing || !platform) {
- toast.error("Please complete all fields in Basics");
- return false;
- }
- }
+  function validateStep(index: number): boolean {
+    const form = formRef.current;
+    if (!form) return false;
+    if (index === 0) {
+      const name     = readFormString(form, "toolName");
+      const version  = readFormString(form, "version");
+      const toolType = readFormString(form, "toolType");
+      const pricing  = readFormString(form, "pricing");
+      const platform = readFormString(form, "platform");
+      if (!name || !version || !toolType || !pricing || !platform) {
+        toast.error("Please complete all fields in Basics");
+        return false;
+      }
+    }
+    if (index === STEPS.length - 1) {
+      if (isDualPlatform) {
+        if (!uploadedFileUrlMt4 || !uploadedFileUrlMt5) {
+          toast.error("Please upload both MT4 and MT5 files");
+          setFileError(true);
+          setTimeout(() => fileUploaderRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }), 50);
+          return false;
+        }
+      } else if (!uploadedFileUrl) {
+        toast.error("Please upload a tool file before publishing");
+        setFileError(true);
+        setTimeout(() => fileUploaderRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }), 50);
+        return false;
+      }
+    }
+    return true;
+  }
 
- if (index === STEPS.length - 1) {
- if (isDualPlatform) {
- if (!uploadedFileUrlMt4 || !uploadedFileUrlMt5) {
- toast.error("Please upload both the MT4 and MT5 files before publishing");
- setFileError(true);
- setTimeout(() => fileUploaderRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }), 50);
- return false;
- }
- } else if (!uploadedFileUrl) {
- toast.error("Please upload a tool file before publishing");
- setFileError(true);
- setTimeout(() => fileUploaderRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }), 50);
- return false;
- }
- }
+  function goToStep(next: number) {
+    setFileError(false);
+    setStep(next);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
 
- return true;
- }
+  function handleNext() {
+    // In edit mode skip validation — all data already exists
+    if (!isEdit && !validateStep(step)) return;
+    if (step < STEPS.length - 1) goToStep(step + 1);
+  }
 
- function goToStep(next: number) {
- setFileError(false);
- setStep(next);
- window.scrollTo({ top: 0, behavior: "smooth" });
- }
+  function handleBack() {
+    if (step > 0) goToStep(step - 1);
+  }
 
- function handleNext() {
- if (!validateStep(step)) return;
- if (step < STEPS.length - 1) goToStep(step + 1);
- }
+  const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!isLastStep) { handleNext(); return; }
+    const form = formRef.current;
+    if (!form || !validateStep(step)) return;
 
- function handleBack() {
- if (step > 0) goToStep(step - 1);
- }
+    setIsSaving(true);
+    try {
+      const payload = {
+        name:             readFormString(form, "toolName"),
+        type:             (readFormString(form, "toolType") === "Indicator" ? "indicator" : "ea") as "indicator" | "ea",
+        platform:         readFormString(form, "platform") as "MT4" | "MT5" | "MT4 & MT5",
+        pricing:          (readFormString(form, "pricing") === "Free" ? "free" : "paid") as "free" | "paid",
+        version:          readFormString(form, "version"),
+        description_en:   contentEn || undefined,
+        description_km:   contentKm || undefined,
+        // Legacy fields cleared — content is now in the doc editor
+        requirements_en:  undefined,
+        requirements_km:  undefined,
+        how_it_works_en:  undefined,
+        how_it_works_km:  undefined,
+        key_features_en:  undefined,
+        key_features_km:  undefined,
+        usage_notes_en:   undefined,
+        usage_notes_km:   undefined,
+        proof_of_testing_en: undefined,
+        proof_of_testing_km: undefined,
+        gallery:          [],
+        file_url:         isDualPlatform ? undefined : uploadedFileUrl     ?? undefined,
+        file_url_mt4:     isDualPlatform ? uploadedFileUrlMt4 ?? undefined : undefined,
+        file_url_mt5:     isDualPlatform ? uploadedFileUrlMt5 ?? undefined : undefined,
+        image_url:        uploadedImageUrl  || undefined,
+        install_guide_url: undefined,
+        status:           (readFormString(form, "status") === "Published" ? "published" : "draft") as "draft" | "published",
+      };
 
- const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
- e.preventDefault();
- if (!isLastStep) {
- handleNext();
- return;
- }
+      const result = isEdit
+        ? await updateTool(tool.id, payload)
+        : await createTool(payload);
 
- const form = formRef.current;
- if (!form || !validateStep(step)) return;
+      if (result.error) {
+        toast.error(result.error);
+      } else {
+        toast.success(isEdit ? "Tool updated!" : "Tool published!");
+        setTimeout(() => (window.location.href = "/admin/tools"), 1200);
+      }
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Failed to save tool");
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
- const name = readFormString(form, "toolName");
- const toolType = readFormString(form, "toolType");
- const pricing = readFormString(form, "pricing");
- const version = readFormString(form, "version");
- const platform = readFormString(form, "platform");
- const description_en = readFormString(form, "description_en");
- const description_km = readFormString(form, "description_km");
- const requirements_en = readFormString(form, "requirements_en");
- const requirements_km = readFormString(form, "requirements_km");
- const how_it_works_en = readFormString(form, "how_it_works_en");
- const how_it_works_km = readFormString(form, "how_it_works_km");
- const key_features_en = readFormString(form, "key_features_en");
- const key_features_km = readFormString(form, "key_features_km");
- const usage_notes_en = readFormString(form, "usage_notes_en");
- const usage_notes_km = readFormString(form, "usage_notes_km");
- const proof_of_testing_en = readFormString(form, "proof_of_testing_en");
- const proof_of_testing_km = readFormString(form, "proof_of_testing_km");
- const install_guide_url = readFormString(form, "install_guide_url");
- const status = readFormString(form, "status");
+  return (
+    <div className="w-full rounded-xl border border-slate-200 bg-white">
+      {/* Step progress */}
+      <div className="border-b border-slate-100 px-4 py-5 sm:px-6">
+        <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+          Step {step + 1} of {STEPS.length}
+        </p>
+        <h2 className="mt-1 text-base font-bold text-[#22332E]">{STEPS[step].title}</h2>
+        <p className="mt-0.5 text-sm text-slate-500">{STEPS[step].hint}</p>
 
- setIsSaving(true);
+        <ol className="mt-5 flex flex-wrap gap-2" aria-label="Form progress">
+          {STEPS.map((s, i) => {
+            const done   = i < step;
+            const active = i === step;
+            return (
+              <li key={s.title}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (isEdit) {
+                      // Edit mode: jump freely to any step, no validation gate
+                      goToStep(i);
+                    } else if (i < step) {
+                      goToStep(i);
+                    } else if (i > step) {
+                      for (let j = step; j < i; j++) {
+                        if (!validateStep(j)) return;
+                      }
+                      goToStep(i);
+                    }
+                  }}
+                  disabled={!isEdit && i > step}
+                  className={[
+                    "flex items-center gap-2 rounded-full border px-3 py-1.5 text-left text-xs font-semibold transition",
+                    active ? "border-[#22332E] bg-[#22332E]/5 text-[#22332E]"
+                           : done || isEdit ? "border-emerald-200 bg-emerald-50 text-emerald-800 hover:bg-emerald-100"
+                                            : "border-slate-200 bg-slate-50 text-slate-400",
+                    !isEdit && i > step ? "cursor-not-allowed opacity-60" : "cursor-pointer",
+                  ].join(" ")}
+                  aria-current={active ? "step" : undefined}
+                >
+                  <span
+                    className={[
+                      "flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px]",
+                      active ? "bg-[#22332E] text-white"
+                             : done  ? "bg-emerald-500 text-white"
+                                     : "bg-slate-200 text-slate-500",
+                    ].join(" ")}
+                  >
+                    {done ? "✓" : i + 1}
+                  </span>
+                  <span className="hidden sm:inline">{s.title}</span>
+                </button>
+              </li>
+            );
+          })}
+        </ol>
+      </div>
 
- try {
- const payload = {
- name,
- type: (toolType === "Indicator" ? "indicator" : "ea") as "indicator" | "ea",
- platform: platform as "MT4" | "MT5" | "MT4 & MT5",
- pricing: (pricing === "Free" ? "free" : "paid") as "free" | "paid",
- version,
- description_en: description_en || undefined,
- description_km: description_km || undefined,
- requirements_en: requirements_en || undefined,
- requirements_km: requirements_km || undefined,
- how_it_works_en: how_it_works_en || undefined,
- how_it_works_km: how_it_works_km || undefined,
- key_features_en: key_features_en || undefined,
- key_features_km: key_features_km || undefined,
- usage_notes_en: usage_notes_en || undefined,
- usage_notes_km: usage_notes_km || undefined,
- proof_of_testing_en: proof_of_testing_en || undefined,
- proof_of_testing_km: proof_of_testing_km || undefined,
- gallery: galleryItems,
- file_url: isDualPlatform ? undefined : uploadedFileUrl ?? undefined,
- file_url_mt4: isDualPlatform ? uploadedFileUrlMt4 ?? undefined : undefined,
- file_url_mt5: isDualPlatform ? uploadedFileUrlMt5 ?? undefined : undefined,
- image_url: uploadedImageUrl || undefined,
- install_guide_url: install_guide_url || undefined,
- status: (status === "Published" ? "published" : "draft") as "draft" | "published",
- };
+      <form ref={formRef} className="p-4 sm:p-6" onSubmit={handleSubmit}>
 
- const result = isEdit
- ? await updateTool(tool.id, payload)
- : await createTool(payload);
+        {/* ── Step 1: Basics ── */}
+        <div className={step === 0 ? "space-y-5" : "hidden"}>
+          <div>
+            <label className="mb-1.5 block text-xs font-semibold text-slate-600">Tool type</label>
+            <div className="flex flex-wrap gap-3">
+              {TOOL_TYPES.map((t) => (
+                <label key={t} className="flex cursor-pointer items-center gap-2 rounded-lg border border-slate-200 px-4 py-2.5 text-sm transition-colors has-checked:border-[#22332E] has-checked:bg-[#22332E]/5">
+                  <input type="radio" name="toolType" value={t} defaultChecked={t === defaultType} className="accent-[#22332E]" />
+                  {t}
+                </label>
+              ))}
+            </div>
+          </div>
 
- if (result.error) {
- toast.error(result.error);
- } else {
- toast.success(isEdit ? "Tool updated!" : "Tool published!");
- setTimeout(() => (window.location.href = "/admin/tools"), 1200);
- }
- } catch (err) {
- toast.error(err instanceof Error ? err.message : "Failed to save tool");
- } finally {
- setIsSaving(false);
- }
- };
+          <div>
+            <label className="mb-1.5 block text-xs font-semibold text-slate-600">Pricing</label>
+            <div className="flex gap-3">
+              {["Free", "Paid"].map((p) => (
+                <label key={p} className="flex cursor-pointer items-center gap-2 rounded-lg border border-slate-200 px-4 py-2.5 text-sm transition-colors has-checked:border-[#22332E] has-checked:bg-[#22332E]/5">
+                  <input type="radio" name="pricing" value={p} defaultChecked={p === defaultPricing} className="accent-[#22332E]" />
+                  {p}
+                </label>
+              ))}
+            </div>
+          </div>
 
- return (
- <div className="w-full rounded-xl border border-slate-200 bg-white">
- {/* Step progress */}
- <div className="border-b border-slate-100 px-4 py-5 sm:px-6">
- <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
- Step {step + 1} of {STEPS.length}
- </p>
- <h2 className="mt-1 text-base font-bold text-[#22332E]">{STEPS[step].title}</h2>
- <p className="mt-0.5 text-sm text-slate-500">{STEPS[step].hint}</p>
+          <div>
+            <label className="mb-1.5 block text-xs font-semibold text-slate-600">
+              Name <span className="text-red-500">*</span>
+            </label>
+            <input type="text" name="toolName" defaultValue={tool?.name} placeholder="e.g. TM Risk Manager v1" className={fieldClass} />
+          </div>
 
- <ol className="mt-5 flex flex-wrap gap-2" aria-label="Form progress">
- {STEPS.map((s, i) => {
- const done = i < step;
- const active = i === step;
- return (
- <li key={s.title}>
- <button
- type="button"
- onClick={() => {
- if (i < step) goToStep(i);
- else if (i > step) {
- for (let j = step; j < i; j++) {
- if (!validateStep(j)) return;
- }
- goToStep(i);
- }
- }}
- disabled={i > step}
- className={[
- "flex items-center gap-2 rounded-full border px-3 py-1.5 text-left text-xs font-semibold transition",
- active
- ? "border-[#0ea5e9] bg-sky-50 text-[#0ea5e9]"
- : done
- ? "border-emerald-200 bg-emerald-50 text-emerald-800 hover:bg-emerald-100"
- : "border-slate-200 bg-slate-50 text-slate-400",
- i > step ? "cursor-not-allowed opacity-60" : "cursor-pointer",
- ].join(" ")}
- aria-current={active ? "step" : undefined}
- >
- <span
- className={[
- "flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px]",
- active
- ? "bg-[#0ea5e9] text-white"
- : done
- ? "bg-emerald-500 text-white"
- : "bg-slate-200 text-slate-500",
- ].join(" ")}
- >
- {done ? "✓" : i + 1}
- </span>
- <span className="hidden sm:inline">{s.title}</span>
- </button>
- </li>
- );
- })}
- </ol>
- </div>
+          <div className="grid gap-5 sm:grid-cols-2">
+            <div>
+              <label className="mb-1.5 block text-xs font-semibold text-slate-600">
+                Version <span className="text-red-500">*</span>
+              </label>
+              <input type="text" name="version" defaultValue={tool?.version} placeholder="e.g. 1.0.0" className={fieldClass} />
+            </div>
+            <div>
+              <label className="mb-1.5 block text-xs font-semibold text-slate-600">Platform</label>
+              <select name="platform" value={platform} onChange={(e) => setPlatform(e.target.value as (typeof PLATFORMS)[number])} className={fieldClass}>
+                {PLATFORMS.map((p) => <option key={p}>{p}</option>)}
+              </select>
+            </div>
+          </div>
+        </div>
 
- <form ref={formRef} className="p-4 sm:p-6" onSubmit={handleSubmit}>
- {/* Step 1 — Basics */}
- <div className={step === 0 ? "space-y-5" : "hidden"}>
- <div>
- <label className="mb-1.5 block text-xs font-semibold text-slate-600">Tool type</label>
- <div className="flex flex-wrap gap-3">
- {TOOL_TYPES.map((t) => (
- <label
- key={t}
- className="flex cursor-pointer items-center gap-2 rounded-lg border border-slate-200 px-4 py-2.5 text-sm transition-colors has-checked:border-[#0ea5e9] has-checked:bg-sky-50"
- >
- <input
- type="radio"
- name="toolType"
- value={t}
- defaultChecked={t === defaultType}
- className="accent-[#0ea5e9]"
- />
- {t}
- </label>
- ))}
- </div>
- </div>
+        {/* ── Step 2: Content (Google Docs style) ── */}
+        <div className={step === 1 ? "space-y-5" : "hidden"}>
 
- <div>
- <label className="mb-1.5 block text-xs font-semibold text-slate-600">Pricing</label>
- <div className="flex gap-3">
- {["Free", "Paid"].map((p) => (
- <label
- key={p}
- className="flex cursor-pointer items-center gap-2 rounded-lg border border-slate-200 px-4 py-2.5 text-sm transition-colors has-checked:border-[#0ea5e9] has-checked:bg-sky-50"
- >
- <input
- type="radio"
- name="pricing"
- value={p}
- defaultChecked={p === defaultPricing}
- className="accent-[#0ea5e9]"
- />
- {p}
- </label>
- ))}
- </div>
- </div>
+          {/* Language tabs */}
+          <div className="flex gap-1 rounded-xl border border-slate-200 bg-slate-50 p-1 w-fit">
+            {(["en", "km"] as const).map((lang) => (
+              <button
+                key={lang}
+                type="button"
+                onClick={() => {
+                  if (lang === "km" && !contentKm.trim() && contentEn.trim()) {
+                    // First time opening Khmer — seed it with the English
+                    // structure so images stay and text shows where to translate
+                    setContentKm(buildKhmerTemplate(contentEn));
+                  }
+                  setLangTab(lang);
+                }}
+                className={[
+                  "rounded-lg px-5 py-2 text-sm font-semibold transition",
+                  langTab === lang
+                    ? "bg-[#22332E] text-white shadow-sm"
+                    : "text-slate-500 hover:text-slate-800",
+                ].join(" ")}
+              >
+                {lang === "en" ? "🇺🇸 English" : "🇰🇭 Khmer"}
+              </button>
+            ))}
+          </div>
 
- <div>
- <label className="mb-1.5 block text-xs font-semibold text-slate-600">
- Name <span className="text-red-500">*</span>
- </label>
- <input
- type="text"
- name="toolName"
- defaultValue={tool?.name}
- placeholder="e.g. TM Risk Manager v1"
- className={fieldClass}
- />
- </div>
+          <p className="text-xs text-slate-500">
+            Write your full tool document — use headings to organise sections like Description, How it works, Requirements, Key features, Proof of testing. Embed images and videos inline.
+          </p>
 
- <div className="grid gap-5 sm:grid-cols-2">
- <div>
- <label className="mb-1.5 block text-xs font-semibold text-slate-600">
- Version <span className="text-red-500">*</span>
- </label>
- <input
- type="text"
- name="version"
- defaultValue={tool?.version}
- placeholder="e.g. 1.0.0"
- className={fieldClass}
- />
- </div>
- <div>
- <label className="mb-1.5 block text-xs font-semibold text-slate-600">Platform</label>
- <select
- name="platform"
- value={platform}
- onChange={(e) => setPlatform(e.target.value as (typeof PLATFORMS)[number])}
- className={fieldClass}
- >
- {PLATFORMS.map((p) => (
- <option key={p}>{p}</option>
- ))}
- </select>
- </div>
- </div>
- </div>
+          {/* Only mount the active editor — prevents two Tiptap instances fighting */}
+          {langTab === "en" && (
+            <ToolDocEditor
+              key="editor-en"
+              value={contentEn}
+              onChange={setContentEn}
+              placeholder="Start writing the English content for this tool…"
+              getKeyPrefix={toolKeyPrefix}
+            />
+          )}
+          {langTab === "km" && (
+            <ToolDocEditor
+              key="editor-km"
+              value={contentKm}
+              onChange={setContentKm}
+              placeholder="ចាប់ផ្ដើមសរសេរខ្លឹមសារជាភាសាខ្មែរ…"
+              getKeyPrefix={toolKeyPrefix}
+            />
+          )}
 
- {/* Step 2 — Description */}
- <div className={step === 1 ? "space-y-5" : "hidden"}>
- <p className="text-xs text-slate-500">
- Optional but recommended. Shown at the top of the public tool page.
- </p>
- <div>
- <label className="mb-1.5 block text-xs font-semibold text-slate-600">
- Description (English)
- </label>
- <textarea
- rows={4}
- name="description_en"
- defaultValue={tool?.description_en ?? ""}
- placeholder="What does this tool do? What problem does it solve?"
- className={`${fieldClass} resize-y`}
- />
- </div>
- <div>
- <label className="mb-1.5 block text-xs font-semibold text-slate-600">
- Description (Khmer)
- </label>
- <textarea
- rows={4}
- name="description_km"
- defaultValue={tool?.description_km ?? ""}
- placeholder="ការពិពណ៌នា..."
- className={`${fieldClass} resize-y`}
- />
- </div>
- </div>
+        </div>
 
- {/* Step 3 — Page content */}
- <div className={step === 2 ? "space-y-4" : "hidden"}>
- <p className="text-xs text-slate-500">
- All optional. Each block appears on the tool page only when filled in.
- </p>
- {(
- [
- ["requirements_en", "requirements_km", "What to use with (English)", "What to use with (Khmer)", "Symbols, timeframes, account type…", "គូរប្រាក់ កាលបរិច្ឆេទ…", 3],
- ["how_it_works_en", "how_it_works_km", "How it works (English)", "How it works (Khmer)", "Signals, logic, chart behavior…", "", 4],
- ["key_features_en", "key_features_km", "Key features (English)", "Key features (Khmer)", "One feature per line…", "", 4],
- ["usage_notes_en", "usage_notes_km", "Usage tips & risk (English)", "Usage tips & risk (Khmer)", "Settings, limitations, disclaimer…", "", 3],
- ] as const
- ).map(([nameEn, nameKm, labelEn, labelKm, phEn, phKm, rows]) => (
- <div key={nameEn} className="grid gap-4 sm:grid-cols-2">
- <div>
- <label className="mb-1.5 block text-xs font-semibold text-slate-600">{labelEn}</label>
- <textarea
- rows={rows}
- name={nameEn}
- defaultValue={(tool?.[nameEn as keyof Tool] as string) ?? ""}
- placeholder={phEn}
- className={`${fieldClass} resize-y`}
- />
- </div>
- <div>
- <label className="mb-1.5 block text-xs font-semibold text-slate-600">{labelKm}</label>
- <textarea
- rows={rows}
- name={nameKm}
- defaultValue={(tool?.[nameKm as keyof Tool] as string) ?? ""}
- placeholder={phKm}
- className={`${fieldClass} resize-y`}
- />
- </div>
- </div>
- ))}
- </div>
+        {/* ── Step 3: Files & publish ── */}
+        <div className={step === 2 ? "space-y-5" : "hidden"}>
+          <div
+            ref={fileUploaderRef}
+            className={["space-y-5 rounded-xl transition", fileError ? "ring-2 ring-red-400 ring-offset-4" : ""].join(" ")}
+          >
+            {fileError && (
+              <p className="rounded-lg bg-red-50 px-4 py-2.5 text-xs font-semibold text-red-600">
+                A tool file is required before publishing.
+              </p>
+            )}
+            {isDualPlatform ? (
+              <>
+                <R2Uploader
+                  bucketName="trading-tool" accept=".ex4,.mq4,.zip"
+                  label={<>MT4 file <span className="text-red-500">*</span></>}
+                  hint=".ex4, .mq4, .zip — max 20 MB"
+                  initialUrl={tool?.file_url_mt4 ?? undefined}
+                  onUploaded={(url) => { setUploadedFileUrlMt4(url); setFileError(false); }}
+                  getKeyPrefix={toolKeyPrefix}
+                />
+                <R2Uploader
+                  bucketName="trading-tool" accept=".ex5,.mq5,.zip"
+                  label={<>MT5 file <span className="text-red-500">*</span></>}
+                  hint=".ex5, .mq5, .zip — max 20 MB"
+                  initialUrl={tool?.file_url_mt5 ?? undefined}
+                  onUploaded={(url) => { setUploadedFileUrlMt5(url); setFileError(false); }}
+                  getKeyPrefix={toolKeyPrefix}
+                />
+              </>
+            ) : (
+              <R2Uploader
+                bucketName="trading-tool" accept=".ex4,.ex5,.mq4,.mq5,.zip"
+                label={<>Tool file <span className="text-red-500">*</span></>}
+                hint=".ex4, .ex5, .mq4, .mq5, .zip — max 20 MB"
+                initialUrl={tool?.file_url ?? undefined}
+                onUploaded={(url) => { setUploadedFileUrl(url); setFileError(false); }}
+                getKeyPrefix={toolKeyPrefix}
+              />
+            )}
+          </div>
 
- {/* Step 4 — Proof */}
- <div className={step === 3 ? "space-y-5" : "hidden"}>
- <p className="text-xs text-slate-500">
- Build trust with backtest notes and proof images. Everything here is optional.
- </p>
- <div>
- <label className="mb-1.5 block text-xs font-semibold text-slate-600">
- Proof of testing (English)
- </label>
- <textarea
- rows={4}
- name="proof_of_testing_en"
- defaultValue={tool?.proof_of_testing_en ?? ""}
- placeholder="Backtest period, symbol, timeframe, results summary…"
- className={`${fieldClass} resize-y`}
- />
- </div>
- <div>
- <label className="mb-1.5 block text-xs font-semibold text-slate-600">
- Proof of testing (Khmer)
- </label>
- <textarea
- rows={4}
- name="proof_of_testing_km"
- defaultValue={tool?.proof_of_testing_km ?? ""}
- placeholder="កាលបរិច្ឆេទ គូរប្រាក់ លទ្ធផលសាកល្បង…"
- className={`${fieldClass} resize-y`}
- />
- </div>
- <div className="border-t border-slate-100 pt-5">
- <h3 className="text-sm font-bold text-[#22332E]">Proof images</h3>
- <p className="mt-1 mb-4 text-xs text-slate-500">
- Upload images with English and Khmer captions for the gallery section.
- </p>
- <ToolGalleryEditor
- initialItems={tool?.gallery}
- onChange={setGalleryItems}
- getKeyPrefix={toolKeyPrefix}
- />
- </div>
- </div>
+          <R2Uploader
+            bucketName="trading-tool" accept="image/png,image/jpeg,image/webp"
+            label={<>Preview image <span className="font-normal text-slate-400">(optional)</span></>}
+            hint="PNG, JPG, WebP — max 20 MB"
+            initialUrl={tool?.image_url ?? undefined}
+            onUploaded={(url) => setUploadedImageUrl(url)}
+            getKeyPrefix={toolKeyPrefix}
+          />
 
- {/* Step 5 — Files & publish */}
- <div className={step === 4 ? "space-y-5" : "hidden"}>
- <div
- ref={fileUploaderRef}
- className={[
- "space-y-5 rounded-xl transition",
- fileError ? "ring-2 ring-red-400 ring-offset-4" : "",
- ].join(" ")}
- >
- {fileError && (
- <p className="rounded-lg bg-red-50 px-4 py-2.5 text-xs font-semibold text-red-600">
- A tool file is required before publishing. Please upload it below.
- </p>
- )}
- {isDualPlatform ? (
- <>
- <R2Uploader
- bucketName="trading-tool"
- accept=".ex4,.mq4,.zip"
- label={
- <>
- MT4 file <span className="text-red-500">*</span>
- </>
- }
- hint=".ex4, .mq4, .zip — max 20 MB"
- initialUrl={tool?.file_url_mt4 ?? undefined}
- onUploaded={(url) => { setUploadedFileUrlMt4(url); setFileError(false); }}
- getKeyPrefix={toolKeyPrefix}
- />
- <R2Uploader
- bucketName="trading-tool"
- accept=".ex5,.mq5,.zip"
- label={
- <>
- MT5 file <span className="text-red-500">*</span>
- </>
- }
- hint=".ex5, .mq5, .zip — max 20 MB"
- initialUrl={tool?.file_url_mt5 ?? undefined}
- onUploaded={(url) => { setUploadedFileUrlMt5(url); setFileError(false); }}
- getKeyPrefix={toolKeyPrefix}
- />
- </>
- ) : (
- <R2Uploader
- bucketName="trading-tool"
- accept=".ex4,.ex5,.mq4,.mq5,.zip"
- label={
- <>
- Tool file <span className="text-red-500">*</span>
- </>
- }
- hint=".ex4, .ex5, .mq4, .mq5, .zip — max 20 MB"
- initialUrl={tool?.file_url ?? undefined}
- onUploaded={(url) => { setUploadedFileUrl(url); setFileError(false); }}
- getKeyPrefix={toolKeyPrefix}
- />
- )}
- </div>
+          <div>
+            <label className="mb-1.5 block text-xs font-semibold text-slate-600">Status</label>
+            <div className="flex gap-3">
+              {["Draft", "Published"].map((s) => (
+                <label key={s} className="flex cursor-pointer items-center gap-2 rounded-lg border border-slate-200 px-4 py-2.5 text-sm transition-colors has-checked:border-[#22332E] has-checked:bg-[#22332E]/5">
+                  <input type="radio" name="status" value={s} defaultChecked={s === defaultStatus} className="accent-[#22332E]" />
+                  {s}
+                </label>
+              ))}
+            </div>
+            <p className="mt-2 text-xs text-slate-500">Draft tools are hidden until published.</p>
+          </div>
+        </div>
 
- <R2Uploader
- bucketName="trading-tool"
- accept="image/png,image/jpeg,image/webp"
- label={
- <>
- Preview image <span className="font-normal text-slate-400">(optional)</span>
- </>
- }
- hint="PNG, JPG, WebP — max 20 MB"
- initialUrl={tool?.image_url ?? undefined}
- onUploaded={(url) => setUploadedImageUrl(url)}
- getKeyPrefix={toolKeyPrefix}
- />
+        {/* ── Navigation ── */}
+        <div className="mt-8 flex flex-col-reverse gap-3 border-t border-slate-100 pt-6 sm:flex-row sm:items-center sm:justify-between">
+          <button
+            type="button" onClick={handleBack} disabled={step === 0 || isSaving}
+            className="rounded-lg border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-600 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            Back
+          </button>
 
- <div>
- <label className="mb-1.5 block text-xs font-semibold text-slate-600">
- Install guide URL <span className="font-normal text-slate-400">(optional)</span>
- </label>
- <input
- type="url"
- name="install_guide_url"
- defaultValue={tool?.install_guide_url ?? ""}
- placeholder="https://..."
- className={fieldClass}
- />
- </div>
-
- <div>
- <label className="mb-1.5 block text-xs font-semibold text-slate-600">Status</label>
- <div className="flex gap-3">
- {["Draft", "Published"].map((s) => (
- <label
- key={s}
- className="flex cursor-pointer items-center gap-2 rounded-lg border border-slate-200 px-4 py-2.5 text-sm transition-colors has-checked:border-[#0ea5e9] has-checked:bg-sky-50"
- >
- <input
- type="radio"
- name="status"
- value={s}
- defaultChecked={s === defaultStatus}
- className="accent-[#0ea5e9]"
- />
- {s}
- </label>
- ))}
- </div>
- <p className="mt-2 text-xs text-slate-500">
- Draft tools are hidden from the public site until published.
- </p>
- </div>
- </div>
-
- {/* Navigation */}
- <div className="mt-8 flex flex-col-reverse gap-3 border-t border-slate-100 pt-6 sm:flex-row sm:items-center sm:justify-between">
- <button
- type="button"
- onClick={handleBack}
- disabled={step === 0 || isSaving}
- className="rounded-lg border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-600 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
- >
- Back
- </button>
-
- <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
- {!isLastStep ? (
- <button
- type="button"
- onClick={handleNext}
- className="rounded-lg bg-[#0ea5e9] px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-sky-600"
- >
- Continue
- </button>
- ) : (
- <div className="flex flex-col items-end gap-1.5">
- {!fileReady && !isSaving && (
- <p className="text-xs font-semibold text-amber-600">
- {isDualPlatform
- ? "Upload both the MT4 and MT5 files above first"
- : "Upload the tool file above first"}
- </p>
- )}
- <button
- type="submit"
- disabled={isSaving || !fileReady}
- className="rounded-lg bg-[#0ea5e9] px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-sky-600 disabled:cursor-not-allowed disabled:bg-slate-300"
- >
- {isSaving ? "Saving..." : isEdit ? "Save changes" : "Publish tool"}
- </button>
- </div>
- )}
- </div>
- </div>
- </form>
- </div>
- );
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+            {!isLastStep ? (
+              <button type="button" onClick={handleNext} className="rounded-lg bg-[#22332E] px-6 py-2.5 text-sm font-semibold text-white transition hover:brightness-110">
+                Continue
+              </button>
+            ) : (
+              <div className="flex flex-col items-end gap-1.5">
+                {!fileReady && !isSaving && (
+                  <p className="text-xs font-semibold text-amber-600">
+                    {isDualPlatform ? "Upload both MT4 and MT5 files above first" : "Upload the tool file above first"}
+                  </p>
+                )}
+                <button
+                  type="submit" disabled={isSaving || !fileReady}
+                  className="rounded-lg bg-[#22332E] px-6 py-2.5 text-sm font-semibold text-white transition hover:brightness-110 disabled:cursor-not-allowed disabled:bg-slate-300"
+                >
+                  {isSaving ? "Saving..." : isEdit ? "Save changes" : "Publish tool"}
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      </form>
+    </div>
+  );
 }
