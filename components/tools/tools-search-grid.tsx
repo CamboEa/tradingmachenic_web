@@ -21,12 +21,12 @@ function ToolPlaceholder({ type }: { type: Tool["type"] }) {
           <>
             <path d="M12 46h40" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
             <path d="M18 40V26M32 40V16M46 40V30" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
-            <path d="M14 24c7 5 12 6 18 1s10-8 18-2" stroke="#2563EB" strokeWidth="4" strokeLinecap="round" />
+            <path d="M14 24c7 5 12 6 18 1s10-8 18-2" stroke="#1E3EE8" strokeWidth="4" strokeLinecap="round" />
           </>
         ) : (
           <>
             <rect x="15" y="18" width="34" height="28" rx="8" stroke="currentColor" strokeWidth="4" />
-            <path d="M24 30h.01M40 30h.01M27 39h10" stroke="#2563EB" strokeWidth="4" strokeLinecap="round" />
+            <path d="M24 30h.01M40 30h.01M27 39h10" stroke="#1E3EE8" strokeWidth="4" strokeLinecap="round" />
             <path d="M32 18v-6" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
           </>
         )}
@@ -55,7 +55,7 @@ function ToolCard({ tool, locale }: { tool: Tool; locale: Locale }) {
           <ToolPlaceholder type={tool.type} />
         )}
         <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent" />
-        <span className={`absolute left-2 top-2 rounded px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-widest ${isFree ? "bg-[#2563EB] text-white" : "bg-[#d4af37] text-[#1e293b]"}`}>
+        <span className={`absolute left-2 top-2 rounded px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-widest ${isFree ? "bg-[#1E3EE8] text-white" : "bg-[#4B78F8] text-[#0D1B33]"}`}>
           {isFree ? "Free" : "Paid"}
         </span>
         <span className="absolute bottom-3 right-3 rounded-md bg-black/50 px-2 py-0.5 text-[11px] font-semibold text-white/90 backdrop-blur-sm">
@@ -67,7 +67,7 @@ function ToolCard({ tool, locale }: { tool: Tool; locale: Locale }) {
       </div>
       <div className="flex flex-1 flex-col p-5">
         <div className="flex items-baseline justify-between gap-2">
-          <h3 className="font-bold leading-snug text-[#1e293b] transition-colors group-hover:text-[#2563EB]">{tool.name}</h3>
+          <h3 className="font-bold leading-snug text-[#0D1B33] transition-colors group-hover:text-[#1E3EE8]">{tool.name}</h3>
           <span className="shrink-0 rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[10px] text-slate-400">v{tool.version}</span>
         </div>
         {description ? (
@@ -77,7 +77,7 @@ function ToolCard({ tool, locale }: { tool: Tool; locale: Locale }) {
         )}
         <div className="my-4 h-px bg-slate-100" />
         <div className="mt-auto flex items-center justify-between">
-          <span className="text-xs font-semibold text-[#2563EB] transition group-hover:translate-x-0.5">View details →</span>
+          <span className="text-xs font-semibold text-[#1E3EE8] transition group-hover:translate-x-0.5">View details →</span>
           <span className="flex items-center gap-1 text-[11px] text-slate-400">
             <svg viewBox="0 0 16 16" fill="currentColor" className="h-3.5 w-3.5 shrink-0" aria-hidden>
               <path d="M8.75 2.75a.75.75 0 0 0-1.5 0v5.69L5.03 6.22a.75.75 0 0 0-1.06 1.06l3.5 3.5a.75.75 0 0 0 1.06 0l3.5-3.5a.75.75 0 0 0-1.06-1.06L8.75 8.44V2.75Z" />
@@ -151,7 +151,7 @@ export function ToolsSearchGrid({ tools, locale }: { tools: Tool[]; locale: Loca
             placeholder="Search tools…"
             value={query}
             onChange={(e) => handleSearch(e.target.value)}
-            className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm text-slate-700 placeholder-slate-400 shadow-sm transition focus:border-[#2563EB]/50 focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20"
+            className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm text-slate-700 placeholder-slate-400 shadow-sm transition focus:border-[#1E3EE8]/50 focus:outline-none focus:ring-2 focus:ring-[#1E3EE8]/20"
           />
         </div>
 

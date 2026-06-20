@@ -45,7 +45,7 @@ export function ProfileMenu({
  onClick={() => setOpen((v) => !v)}
  aria-label="Account menu"
  aria-expanded={open}
- className="flex h-9 w-9 items-center justify-center rounded-full bg-[#2563EB] text-xs font-bold text-white ring-2 ring-transparent transition hover:bg-[#1D4ED8] focus-visible:outline-none focus-visible:ring-[#2563EB]/50"
+ className="flex h-9 w-9 items-center justify-center rounded-full bg-[#1E3EE8] text-xs font-bold text-white ring-2 ring-transparent transition hover:bg-[#1D4ED8] focus-visible:outline-none focus-visible:ring-[#1E3EE8]/50"
  >
  {initials}
  </button>
@@ -53,7 +53,7 @@ export function ProfileMenu({
  {open && (
  <div className="absolute right-0 top-full z-50 mt-2 w-52 overflow-hidden rounded-xl border border-slate-200/90 bg-[#f8fafc]">
  <div className="border-b border-slate-200/80 px-4 py-3">
- <p className="truncate text-xs font-semibold text-[#1e293b]">
+ <p className="truncate text-xs font-semibold text-[#0D1B33]">
  {email}
  </p>
  </div>
@@ -65,7 +65,7 @@ export function ProfileMenu({
  >
  <button
  type="submit"
- className="flex w-full items-center gap-2 px-4 py-3 text-sm text-slate-600 transition hover:bg-slate-100 hover:text-[#1e293b]"
+ className="flex w-full items-center gap-2 px-4 py-3 text-sm text-slate-600 transition hover:bg-slate-100 hover:text-[#0D1B33]"
  >
  <svg
  xmlns="http://www.w3.org/2000/svg"

@@ -36,7 +36,7 @@ function EpisodeCard({
       className="ui-content-card group relative flex flex-col overflow-hidden"
       aria-label={title ?? ""}
     >
-      <div className="absolute inset-x-0 top-0 h-0.75 bg-linear-to-r from-[#d4af37] via-[#d4af37]/70 to-transparent" aria-hidden />
+      <div className="absolute inset-x-0 top-0 h-0.75 bg-linear-to-r from-[#4B78F8] via-[#4B78F8]/70 to-transparent" aria-hidden />
 
       <div className="relative aspect-video w-full overflow-hidden bg-slate-100">
         {thumb ? (
@@ -68,7 +68,7 @@ function EpisodeCard({
       </div>
 
       <div className="flex flex-1 flex-col p-5 sm:p-6">
-        <h2 className="text-[1.0625rem] font-semibold leading-snug tracking-tight text-[#1e293b] transition-colors duration-200 group-hover:text-[#2563EB]">
+        <h2 className="text-[1.0625rem] font-semibold leading-snug tracking-tight text-[#0D1B33] transition-colors duration-200 group-hover:text-[#1E3EE8]">
           {title}
         </h2>
         {description ? (
@@ -76,7 +76,7 @@ function EpisodeCard({
         ) : null}
 
         <div className="mt-5 flex items-center justify-end border-t border-slate-100 pt-4">
-          <span className="inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-semibold text-[#2563EB] ring-1 ring-[color-mix(in_oklab,#2563EB_30%,transparent)] transition-all duration-200 group-hover:bg-[#2563EB] group-hover:text-white group-hover:ring-transparent">
+          <span className="inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-semibold text-[#1E3EE8] ring-1 ring-[color-mix(in_oklab,#1E3EE8_30%,transparent)] transition-all duration-200 group-hover:bg-[#1E3EE8] group-hover:text-white group-hover:ring-transparent">
             {watchLabel}
             <span aria-hidden className="transition-transform duration-200 group-hover:translate-x-0.5">→</span>
           </span>
@@ -136,7 +136,7 @@ export function PodcastSearchGrid({
             setQuery(e.target.value);
             setPage(0);
           }}
-          className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm text-slate-700 placeholder-slate-400 shadow-sm transition focus:border-[#2563EB]/50 focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20"
+          className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm text-slate-700 placeholder-slate-400 shadow-sm transition focus:border-[#1E3EE8]/50 focus:outline-none focus:ring-2 focus:ring-[#1E3EE8]/20"
         />
       </div>
 

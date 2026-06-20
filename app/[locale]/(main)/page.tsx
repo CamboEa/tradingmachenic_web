@@ -2,6 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { SiteFooter } from "@/components/layout/site-footer";
+
 import { ConnectorLine } from "@/components/shared/connector-line";
 import { CourseLessonCard } from "@/components/education/course-lesson-card";
 import { HomeHeroSplit } from "@/components/marketing/home-hero-split";
@@ -27,6 +29,7 @@ export default async function HomePage({
   ]);
 
   return (
+    <>
     <main className="flex-1">
       <HomeHeroSplit locale={locale} dict={dict} />
 
@@ -100,11 +103,11 @@ export default async function HomePage({
         className="relative overflow-hidden bg-[#0d1420] px-4 py-24 sm:px-6 lg:px-8"
         aria-labelledby="home-featured-lessons"
       >
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_40%_at_50%_0%,color-mix(in_oklab,#0EA5E9_12%,transparent),transparent)]" aria-hidden />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_40%_at_50%_0%,color-mix(in_oklab,#1E3EE8_12%,transparent),transparent)]" aria-hidden />
         <div className="relative mx-auto w-full max-w-7xl">
           <Reveal effect="fade">
             <div className="mb-14 text-center">
-              <p className="text-xs font-bold uppercase tracking-[0.28em] text-[#D4AF37]">
+              <p className="text-xs font-bold uppercase tracking-[0.28em] text-[#4B78F8]">
                 {dict.home.sectionFeaturedLessons}
               </p>
               <h2
@@ -194,12 +197,12 @@ export default async function HomePage({
                           <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-slate-100 via-white to-[#EFF6FF]">
                             <svg viewBox="0 0 64 64" fill="none" className="h-16 w-16 text-slate-300" aria-hidden>
                               <path d="M12 46h40M18 40V26M32 40V16M46 40V30" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
-                              <path d="M14 24c7 5 12 6 18 1s10-8 18-2" stroke="#0EA5E9" strokeWidth="4" strokeLinecap="round" />
+                              <path d="M14 24c7 5 12 6 18 1s10-8 18-2" stroke="#1E3EE8" strokeWidth="4" strokeLinecap="round" />
                             </svg>
                           </div>
                         )}
                         <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent" />
-                        <span className={`absolute left-3 top-3 rounded-md px-2.5 py-1 text-[11px] font-bold uppercase tracking-widest ${isFree ? "bg-[#0EA5E9] text-white" : "bg-[#D4AF37] text-[#1E293B]"}`}>
+                        <span className={`absolute left-3 top-3 rounded-md px-2.5 py-1 text-[11px] font-bold uppercase tracking-widest ${isFree ? "bg-[#1E3EE8] text-white" : "bg-[#4B78F8] text-[#0D1B33]"}`}>
                           {isFree ? "Free" : "Paid"}
                         </span>
                         <span className="absolute bottom-3 left-3 rounded-md bg-black/50 px-2 py-0.5 text-[11px] font-semibold text-white/90 backdrop-blur-sm">
@@ -229,7 +232,7 @@ export default async function HomePage({
                             View details →
                           </span>
                           {isFree && (
-                            <span className="rounded-full bg-[#EFF6FF] px-2.5 py-0.5 text-[11px] font-bold text-[#0EA5E9]">
+                            <span className="rounded-full bg-[#EFF6FF] px-2.5 py-0.5 text-[11px] font-bold text-[#1E3EE8]">
                               Free Download
                             </span>
                           )}
@@ -247,7 +250,7 @@ export default async function HomePage({
           <div className="mt-12 text-center">
             <Link
               href={`/${locale}/tools`}
-              className="inline-flex items-center gap-2 rounded-xl bg-[#0EA5E9] px-8 py-3 text-sm font-bold text-white shadow-lg shadow-[#0EA5E9]/25 transition hover:-translate-y-0.5 hover:brightness-110"
+              className="inline-flex items-center gap-2 rounded-xl bg-[#1E3EE8] px-8 py-3 text-sm font-bold text-white shadow-lg shadow-[#1E3EE8]/25 transition hover:-translate-y-0.5 hover:brightness-110"
             >
               {dict.home.featuredToolsViewAll} →
             </Link>
@@ -359,7 +362,7 @@ export default async function HomePage({
 
       {/* ── CTA Band ── */}
       <section
-        className="relative flex min-h-screen items-center overflow-hidden bg-[#1e293b] px-4 py-24 sm:px-6 lg:px-8"
+        className="relative flex min-h-screen items-center overflow-hidden bg-[#0D1B33] px-4 py-24 sm:px-6 lg:px-8"
         aria-labelledby="home-cta"
       >
         <div
@@ -367,7 +370,7 @@ export default async function HomePage({
           aria-hidden
         />
         <div className="relative mx-auto max-w-3xl text-center">
-          <p className="float-badge text-xs font-bold uppercase tracking-[0.25em] text-[#d4af37]">
+          <p className="float-badge text-xs font-bold uppercase tracking-[0.25em] text-[#4B78F8]">
             {BRAND_NAME}
           </p>
           <h2
@@ -382,7 +385,7 @@ export default async function HomePage({
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link
               href={`/${locale}/education`}
-              className="inline-flex items-center gap-2 rounded-xl bg-[#d4af37] px-8 py-3.5 text-sm font-bold text-[#0f172a] shadow-lg transition hover:-translate-y-0.5 hover:brightness-105"
+              className="inline-flex items-center gap-2 rounded-xl bg-[#4B78F8] px-8 py-3.5 text-sm font-bold text-[#0f172a] shadow-lg transition hover:-translate-y-0.5 hover:brightness-105"
             >
               {dict.home.ctaBandButton}
               <span aria-hidden>→</span>
@@ -397,5 +400,7 @@ export default async function HomePage({
         </div>
       </section>
     </main>
+    <SiteFooter locale={locale} dict={dict} />
+    </>
   );
 }

@@ -29,7 +29,7 @@ export default async function EditLessonPage({
  ← Back
  </Link>
  <div>
- <h1 className="text-2xl font-bold text-[#1e293b]">Edit Lesson</h1>
+ <h1 className="text-2xl font-bold text-[#0D1B33]">Edit Lesson</h1>
  <p className="mt-1 text-sm text-slate-500">{lesson.title_en}</p>
  </div>
  </div>

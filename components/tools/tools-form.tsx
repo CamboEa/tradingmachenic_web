@@ -206,7 +206,7 @@ export function ToolsForm({ tool }: Props) {
  <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
  Step {step + 1} of {STEPS.length}
  </p>
- <h2 className="mt-1 text-base font-bold text-[#1e293b]">{STEPS[step].title}</h2>
+ <h2 className="mt-1 text-base font-bold text-[#0D1B33]">{STEPS[step].title}</h2>
  <p className="mt-0.5 text-sm text-slate-500">{STEPS[step].hint}</p>
 
  <ol className="mt-5 flex flex-wrap gap-2" aria-label="Form progress">
@@ -444,7 +444,7 @@ export function ToolsForm({ tool }: Props) {
  />
  </div>
  <div className="border-t border-slate-100 pt-5">
- <h3 className="text-sm font-bold text-[#1e293b]">Proof images</h3>
+ <h3 className="text-sm font-bold text-[#0D1B33]">Proof images</h3>
  <p className="mt-1 mb-4 text-xs text-slate-500">
  Upload images with English and Khmer captions for the gallery section.
  </p>

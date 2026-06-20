@@ -5,7 +5,7 @@ import type { Dictionary, Locale } from "@/lib/i18n";
 import { hrefWithLocale } from "./nav-utils";
 
 const seg =
-  "rounded-md px-3 py-1.5 text-xs font-semibold uppercase tracking-wide transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB]/30";
+  "rounded-md px-2.5 py-1.5 text-xs font-bold uppercase tracking-wide transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal/30";
 
 export function LanguageToggle({
   locale,
@@ -18,30 +18,30 @@ export function LanguageToggle({
 }) {
   return (
     <div
-      className="flex shrink-0 items-center gap-0.5 rounded-xl border border-slate-200/90 bg-white/85 p-0.5 backdrop-blur"
+      className="flex shrink-0 items-center gap-0.5 rounded-lg border border-slate-200 bg-white p-0.5"
       role="group"
       aria-label={dict.nav.language}
     >
       <span className="sr-only">{dict.nav.language}</span>
       <Link
         href={hrefWithLocale(pathname, "en")}
+        hrefLang="en"
         className={
           locale === "en"
-            ? `${seg} bg-[#1e293b] text-white`
-            : `${seg} text-slate-500 hover:bg-slate-50 hover:text-[#1e293b]`
+            ? `${seg} bg-slate-brand text-white`
+            : `${seg} text-slate-400 hover:text-slate-700`
         }
-        hrefLang="en"
       >
         {dict.nav.english}
       </Link>
       <Link
         href={hrefWithLocale(pathname, "km")}
+        hrefLang="km"
         className={
           locale === "km"
-            ? `${seg} bg-[#1e293b] text-white`
-            : `${seg} text-slate-500 hover:bg-slate-50 hover:text-[#1e293b]`
+            ? `${seg} bg-slate-brand text-white`
+            : `${seg} text-slate-400 hover:text-slate-700`
         }
-        hrefLang="km"
       >
         {dict.nav.khmer}
       </Link>

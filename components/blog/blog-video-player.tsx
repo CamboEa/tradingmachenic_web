@@ -70,7 +70,7 @@ export function BlogVideoPlayer({
 
   return (
     <section className="mb-10">
-      <h2 className="mb-4 text-base font-semibold tracking-tight text-[#1e293b]">{videoHeading}</h2>
+      <h2 className="mb-4 text-base font-semibold tracking-tight text-[#0D1B33]">{videoHeading}</h2>
       <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
         <div className="min-w-0 flex-1">
           <p className="mb-3 text-sm font-medium text-slate-600">{activeTitle}</p>
@@ -101,14 +101,14 @@ export function BlogVideoPlayer({
                       className={[
                         "flex w-full items-center gap-3 rounded-xl border px-3 py-2.5 text-left text-sm transition",
                         isActive
-                          ? "border-[#2563EB] bg-[#EFF6FF] text-[#2563EB]"
-                          : "border-slate-200 bg-white text-slate-600 hover:border-[#2563EB]/30",
+                          ? "border-[#1E3EE8] bg-[#EFF6FF] text-[#1E3EE8]"
+                          : "border-slate-200 bg-white text-slate-600 hover:border-[#1E3EE8]/30",
                       ].join(" ")}
                     >
                       <span
                         className={[
                           "flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[10px] font-bold",
-                          isActive ? "bg-[#2563EB] text-white" : "bg-slate-100 text-slate-500",
+                          isActive ? "bg-[#1E3EE8] text-white" : "bg-slate-100 text-slate-500",
                         ].join(" ")}
                       >
                         {index + 1}

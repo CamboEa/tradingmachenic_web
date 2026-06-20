@@ -6,55 +6,77 @@ import type { Dictionary, Locale } from "@/lib/i18n";
 
 import { navPathActive } from "./nav-utils";
 
+const navBase =
+  "relative whitespace-nowrap rounded-lg px-2.5 py-1.5 text-[13px] font-semibold tracking-tight transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal/30";
+const navActive = `${navBase} text-slate-900`;
+const navIdle   = `${navBase} text-slate-500 hover:text-slate-800`;
+
 export function CenterNav({
   locale,
   dict,
   pathname,
-  scrolled,
+  mobile = false,
 }: {
   locale: Locale;
   dict: Dictionary;
   pathname: string;
-  scrolled: boolean;
+  mobile?: boolean;
 }) {
   const items = [
-    { suffix: "", label: dict.nav.home, href: `/${locale}` },
-    { suffix: "education", label: dict.nav.education, href: `/${locale}/education` },
-    { suffix: "curriculum", label: dict.nav.curriculum, href: `/${locale}/curriculum` },
-    { suffix: "tools", label: dict.nav.tools, href: `/${locale}/tools` },
-    { suffix: "podcast", label: dict.nav.podcast, href: `/${locale}/podcast` },
-    { suffix: "blog", label: dict.nav.blog, href: `/${locale}/blog` },
-    { suffix: "technical-analysis", label: dict.nav.technicalAnalysis, href: `/${locale}/technical-analysis` },
-    { suffix: "about", label: dict.nav.about, href: `/${locale}/about` },
+    { suffix: "",                    label: dict.nav.home,             href: `/${locale}` },
+    { suffix: "education",           label: dict.nav.education,        href: `/${locale}/education` },
+    { suffix: "curriculum",          label: dict.nav.curriculum,       href: `/${locale}/curriculum` },
+    { suffix: "tools",               label: dict.nav.tools,            href: `/${locale}/tools` },
+    { suffix: "podcast",             label: dict.nav.podcast,          href: `/${locale}/podcast` },
+    { suffix: "blog",                label: dict.nav.blog,             href: `/${locale}/blog` },
+    { suffix: "technical-analysis",  label: dict.nav.technicalAnalysis, href: `/${locale}/technical-analysis` },
+    { suffix: "about",               label: dict.nav.about,            href: `/${locale}/about` },
   ];
 
-  const linkBase =
-    "relative whitespace-nowrap rounded-lg px-3 py-2 text-sm font-semibold tracking-tight transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB]/35 sm:rounded-full";
+  /* ── Mobile: full vertical list ── */
+  if (mobile) {
+    return (
+      <nav aria-label="Primary" className="flex flex-col py-1">
+        {items.map(({ suffix, label, href }) => {
+          const isActive = navPathActive(pathname, locale, suffix);
+          return (
+            <Link
+              key={suffix || "home"}
+              href={href}
+              aria-current={isActive ? "page" : undefined}
+              className={`flex items-center border-l-2 px-5 py-3 text-sm font-medium transition-colors ${
+                isActive
+                  ? "border-gold bg-amber-50/40 text-slate-900"
+                  : "border-transparent text-slate-500 hover:border-slate-200 hover:bg-slate-50 hover:text-slate-800"
+              }`}
+            >
+              {label}
+            </Link>
+          );
+        })}
+      </nav>
+    );
+  }
 
-  const linkActive =
-    `${linkBase} text-[#1e293b] after:pointer-events-none after:absolute after:inset-x-2 after:bottom-1.5 after:h-0.5 after:rounded-full after:bg-[#d4af37] sm:after:hidden sm:bg-[#1e293b] sm:text-white`;
-  const linkIdle = `${linkBase} text-slate-600 hover:text-[#1e293b] sm:hover:bg-slate-50`;
-
+  /* ── Desktop: all items inline ── */
   return (
-    <nav
-      className={[
-        "flex flex-wrap items-center justify-center gap-1 sm:flex sm:w-full sm:justify-center sm:rounded-full sm:px-1 sm:py-1 sm:transition-[background-color,border-color,box-shadow,backdrop-filter] sm:duration-300",
-        scrolled
-          ? "sm:border sm:border-slate-200/90 sm:bg-white/82 sm:backdrop-blur-md"
-          : "sm:border sm:border-transparent sm:bg-transparent",
-      ].join(" ")}
-      aria-label="Primary"
-    >
+    <nav aria-label="Primary" className="flex items-center gap-0">
       {items.map(({ suffix, label, href }) => {
-        const active = navPathActive(pathname, locale, suffix);
+        const isActive = navPathActive(pathname, locale, suffix);
         return (
           <Link
             key={suffix || "home"}
             href={href}
-            className={active ? linkActive : linkIdle}
-            aria-current={active ? "page" : undefined}
+            aria-current={isActive ? "page" : undefined}
+            className={isActive ? navActive : navIdle}
           >
             {label}
+            {isActive && (
+              <span
+                aria-hidden
+                className="absolute inset-x-1.5 bottom-0 h-0.5 rounded-full bg-gold"
+              />
+            )}
           </Link>
         );
       })}

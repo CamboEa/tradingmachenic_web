@@ -64,7 +64,7 @@ export function CurriculumPhaseForm({ phase }: Props) {
 
  return (
  <div className="w-full rounded-xl border border-slate-200 bg-white p-6">
- <h2 className="mb-6 text-base font-bold text-[#1e293b]">{isEdit ? "Edit phase" : "New phase"}</h2>
+ <h2 className="mb-6 text-base font-bold text-[#0D1B33]">{isEdit ? "Edit phase" : "New phase"}</h2>
  <form className="space-y-5" onSubmit={handleSubmit}>
  <div>
  <label className="mb-1.5 block text-xs font-semibold text-slate-600">Slug</label>
@@ -74,7 +74,7 @@ export function CurriculumPhaseForm({ phase }: Props) {
  defaultValue={phase?.slug}
  readOnly={isEdit}
  placeholder="e.g. theory"
- className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm outline-none focus:border-[#2563EB] focus:bg-white read-only:cursor-default read-only:opacity-80"
+ className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm outline-none focus:border-[#1E3EE8] focus:bg-white read-only:cursor-default read-only:opacity-80"
  />
  <p className="mt-1 text-xs text-slate-400">
  {isEdit ? "Slug cannot be changed." : "Lowercase letters, numbers, hyphens."}
@@ -87,7 +87,7 @@ export function CurriculumPhaseForm({ phase }: Props) {
  type="number"
  name="sort_order"
  defaultValue={phase?.sort_order ?? 0}
- className="w-full max-w-[10rem] rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm outline-none focus:border-[#2563EB] focus:bg-white"
+ className="w-full max-w-[10rem] rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm outline-none focus:border-[#1E3EE8] focus:bg-white"
  />
  </div>
 
@@ -96,7 +96,7 @@ export function CurriculumPhaseForm({ phase }: Props) {
  <select
  name="accent"
  defaultValue={phase?.accent ?? "gold"}
- className="w-full max-w-xs rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm outline-none focus:border-[#2563EB] focus:bg-white"
+ className="w-full max-w-xs rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm outline-none focus:border-[#1E3EE8] focus:bg-white"
  >
  <option value="gold">Gold (Phase I style)</option>
  <option value="teal">Teal (Phase II style)</option>
@@ -110,7 +110,7 @@ export function CurriculumPhaseForm({ phase }: Props) {
  name="label_en"
  required
  defaultValue={phase?.label_en}
- className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm outline-none focus:border-[#2563EB] focus:bg-white"
+ className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm outline-none focus:border-[#1E3EE8] focus:bg-white"
  />
  </div>
  <div>
@@ -119,7 +119,7 @@ export function CurriculumPhaseForm({ phase }: Props) {
  name="label_km"
  required
  defaultValue={phase?.label_km}
- className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm outline-none focus:border-[#2563EB] focus:bg-white"
+ className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm outline-none focus:border-[#1E3EE8] focus:bg-white"
  />
  </div>
  </div>
@@ -131,7 +131,7 @@ export function CurriculumPhaseForm({ phase }: Props) {
  name="sublabel_en"
  required
  defaultValue={phase?.sublabel_en}
- className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm outline-none focus:border-[#2563EB] focus:bg-white"
+ className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm outline-none focus:border-[#1E3EE8] focus:bg-white"
  />
  </div>
  <div>
@@ -140,7 +140,7 @@ export function CurriculumPhaseForm({ phase }: Props) {
  name="sublabel_km"
  required
  defaultValue={phase?.sublabel_km}
- className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm outline-none focus:border-[#2563EB] focus:bg-white"
+ className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm outline-none focus:border-[#1E3EE8] focus:bg-white"
  />
  </div>
  </div>
@@ -148,7 +148,7 @@ export function CurriculumPhaseForm({ phase }: Props) {
  <button
  type="submit"
  disabled={isSaving}
- className="w-full rounded-lg bg-[#2563EB] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#1D4ED8] disabled:bg-slate-300"
+ className="w-full rounded-lg bg-[#1E3EE8] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#1D4ED8] disabled:bg-slate-300"
  >
  {isSaving ? "Saving…" : isEdit ? "Save phase" : "Create phase"}
  </button>

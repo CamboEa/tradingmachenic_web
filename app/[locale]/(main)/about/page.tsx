@@ -104,10 +104,10 @@ export default async function AboutPage({
       <Reveal className="mt-24">
         <div className="px-6 py-14 sm:px-10">
           <div className="text-center">
-            <h2 className="text-3xl font-bold tracking-tight text-[#1E293B] sm:text-4xl">
+            <h2 className="text-3xl font-bold tracking-tight text-[#0D1B33] sm:text-4xl">
               {locale === "km" ? "ក្រុមការងាររបស់យើង" : "Our Team"}
             </h2>
-            <div className="mx-auto mt-3 h-0.5 w-12 bg-[#D4AF37]" />
+            <div className="mx-auto mt-3 h-0.5 w-12 bg-[#4B78F8]" />
             <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-slate-500">
               {locale === "km"
                 ? "ក្រុមការងារដែលស្ពឹកស្ពាន់ ដើម្បីផ្តល់ចំណេះដឹងការជួញដូរ និងឧបករណ៍ល្អបំផុតដល់អ្នក។"
@@ -118,7 +118,7 @@ export default async function AboutPage({
           <div className="mt-12 flex flex-col items-center justify-center gap-8 sm:flex-row sm:items-start">
             {/* Member 1 */}
             <div className="flex flex-col items-center text-center">
-              <div className="relative overflow-hidden rounded-2xl border-2 border-[#D4AF37]/40 shadow-lg" style={{ width: 220, height: 280 }}>
+              <div className="relative overflow-hidden rounded-2xl border-2 border-[#4B78F8]/40 shadow-lg" style={{ width: 220, height: 280 }}>
                 <Image
                   src="/team/hengbunkheag.png"
                   alt="Heng Bunkheang"
@@ -127,8 +127,8 @@ export default async function AboutPage({
                   sizes="220px"
                 />
               </div>
-              <h3 className="mt-5 text-lg font-bold text-[#1E293B]">Heng Bunkheang</h3>
-              <p className="mt-1 text-xs font-semibold uppercase tracking-[0.18em] text-[#0EA5E9]">
+              <h3 className="mt-5 text-lg font-bold text-[#0D1B33]">Heng Bunkheang</h3>
+              <p className="mt-1 text-xs font-semibold uppercase tracking-[0.18em] text-[#1E3EE8]">
                 {locale === "km" ? "អ្នកអភិវឌ្ឍន៍កម្មវិធី" : "Software Developer"}
               </p>
               <p className="mt-3 max-w-55 text-sm leading-relaxed text-slate-500">
@@ -140,7 +140,7 @@ export default async function AboutPage({
 
             {/* Member 2 */}
             <div className="flex flex-col items-center text-center">
-              <div className="relative overflow-hidden rounded-2xl border-2 border-[#D4AF37]/40 shadow-lg" style={{ width: 220, height: 280 }}>
+              <div className="relative overflow-hidden rounded-2xl border-2 border-[#4B78F8]/40 shadow-lg" style={{ width: 220, height: 280 }}>
                 <Image
                   src="/team/vireakyuth.png"
                   alt="Srun Vireakyuth"
@@ -149,8 +149,8 @@ export default async function AboutPage({
                   sizes="220px"
                 />
               </div>
-              <h3 className="mt-5 text-lg font-bold text-[#1E293B]">Srun Vireakyuth</h3>
-              <p className="mt-1 text-xs font-semibold uppercase tracking-[0.18em] text-[#0EA5E9]">
+              <h3 className="mt-5 text-lg font-bold text-[#0D1B33]">Srun Vireakyuth</h3>
+              <p className="mt-1 text-xs font-semibold uppercase tracking-[0.18em] text-[#1E3EE8]">
                 {locale === "km" ? "អ្នកអភិវឌ្ឍន៍ MQL5" : "MQL5 Developer"}
               </p>
               <p className="mt-3 max-w-55 text-sm leading-relaxed text-slate-500">

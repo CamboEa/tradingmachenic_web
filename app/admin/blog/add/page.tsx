@@ -15,7 +15,7 @@ export default function AddBlogPage() {
           ← Back
         </Link>
         <div>
-          <h1 className="text-2xl font-bold text-[#1e293b]">New article</h1>
+          <h1 className="text-2xl font-bold text-[#0D1B33]">New article</h1>
           <p className="mt-1 text-sm text-slate-500">
             Write the article in English first. You can add the Khmer translation later when you
             edit the post.

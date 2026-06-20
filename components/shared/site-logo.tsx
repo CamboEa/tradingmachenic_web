@@ -2,8 +2,8 @@ import Image from "next/image";
 
 import { BRAND_NAME } from "@/lib/brand";
 
-/** Public path to the brand mark (see `public/Logo/logo.png`). */
-export const LOGO_SRC = "/Logo/logo.png";
+/** Public path to the brand mark (see `public/Logo/logov2.png`). */
+export const LOGO_SRC = "/Logo/logov2.png";
 
 const SIZES = {
  sm: { box: "h-8 w-8", px: 32 },

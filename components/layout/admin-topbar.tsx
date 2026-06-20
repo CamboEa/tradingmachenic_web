@@ -58,7 +58,7 @@ export function AdminTopbar() {
             onClick={() => setOpen(false)}
             className="absolute inset-0 bg-slate-900/50 backdrop-blur-sm"
           />
-          <div className="absolute left-0 top-0 flex h-full w-72 max-w-[85%] flex-col bg-[#1e293b] text-slate-300 shadow-xl">
+          <div className="absolute left-0 top-0 flex h-full w-72 max-w-[85%] flex-col bg-[#0D1B33] text-slate-300 shadow-xl">
             <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
               <div className="flex items-center gap-3">
                 <SiteLogo size="sm" className="rounded-lg ring-1 ring-white/10" />
@@ -96,7 +96,7 @@ export function AdminTopbar() {
                                 : "text-slate-400 hover:bg-white/5 hover:text-white",
                             ].join(" ")}
                           >
-                            <span className={active ? "text-[#2563EB]" : "text-slate-500"}>
+                            <span className={active ? "text-[#1E3EE8]" : "text-slate-500"}>
                               {item.icon}
                             </span>
                             {item.label}

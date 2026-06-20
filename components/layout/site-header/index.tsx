@@ -5,12 +5,14 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
+import { ProfileMenu } from "@/components/auth/profile-menu";
 import { SiteLogo } from "@/components/shared/site-logo";
 import { BRAND_NAME } from "@/lib/brand";
 import type { Dictionary, Locale } from "@/lib/i18n";
 
 import { AuthLanguageCluster } from "./auth-language-cluster";
 import { CenterNav } from "./center-nav";
+import { LanguageToggle } from "./language-toggle";
 
 export function SiteHeader({
   locale,
@@ -22,116 +24,124 @@ export function SiteHeader({
   user?: User | null;
 }) {
   const pathname = usePathname() ?? `/${locale}`;
-  const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    setMobileNavOpen(false);
+    setOpen(false);
   }, [pathname]);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, [pathname]);
+    const handler = () => setScrolled(window.scrollY > 8);
+    handler();
+    window.addEventListener("scroll", handler, { passive: true });
+    return () => window.removeEventListener("scroll", handler);
+  }, []);
 
-  const brand = (
-    <Link
-      href={`/${locale}`}
-      className="group flex min-w-0 items-center gap-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB]/35 focus-visible:ring-offset-2 sm:gap-3"
-    >
-      <SiteLogo size="md" priority className="rounded-lg" />
-      <span className="min-w-0">
-        <span className="block truncate text-lg font-bold uppercase tracking-tight text-[#1e293b] transition group-hover:text-[#0f172a] sm:text-xl">
-          {BRAND_NAME}
-        </span>
-        <span className="hidden text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500 lg:block">
-          {dict.footer.academyLabel}
-        </span>
-      </span>
-    </Link>
-  );
-
-  const headerSurface = scrolled
-    ? "border-b border-white/60 bg-[#f8fafc]/82 backdrop-blur-xl supports-backdrop-filter:bg-[#f8fafc]/76"
-    : "border-b border-transparent bg-transparent backdrop-blur-none";
+  const raised = scrolled || open;
 
   return (
     <header
-      className={`sticky top-0 z-40 transition-[background-color,border-color,box-shadow,backdrop-filter] duration-300 ${headerSurface}`}
+      className={`sticky top-0 z-40 transition-all duration-200 ${
+        raised
+          ? "border-b border-slate-200/80 bg-white/95 shadow-sm shadow-slate-900/5 backdrop-blur-md"
+          : "border-b border-transparent bg-[#F8FAFC]/80"
+      }`}
     >
-      <div className="mx-auto max-w-7xl px-4 py-3.5 lg:px-8">
-        <div className="flex flex-col gap-3 sm:hidden">
-          <div className="flex items-start justify-between gap-3">
-            {brand}
-            <div className="flex shrink-0 items-center gap-2">
-              <button
-                type="button"
-                onClick={() => setMobileNavOpen((open) => !open)}
-                aria-expanded={mobileNavOpen}
-                aria-controls="mobile-site-nav"
-                className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 transition hover:border-[#2563EB]/40 hover:text-[#2563EB] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB]/35"
-              >
-                <span className="sr-only">{mobileNavOpen ? "Close menu" : "Open menu"}</span>
-                <svg
-                  aria-hidden
-                  className="h-5 w-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  {mobileNavOpen ? (
-                    <path strokeLinecap="round" d="M6 6l12 12M18 6L6 18" />
-                  ) : (
-                    <path strokeLinecap="round" d="M4 7h16M4 12h16M4 17h16" />
-                  )}
-                </svg>
-              </button>
-              <AuthLanguageCluster
-                locale={locale}
-                pathname={pathname}
-                dict={dict}
-                user={user}
-              />
-            </div>
-          </div>
-          {mobileNavOpen ? (
-            <div
-              id="mobile-site-nav"
-              className={`border-t pt-3 ${scrolled ? "border-slate-200/70" : "border-slate-200/40"}`}
-            >
-              <CenterNav
-                key={pathname}
-                locale={locale}
-                dict={dict}
-                pathname={pathname}
-                scrolled={scrolled}
-              />
-            </div>
-          ) : null}
+      {/* ── Main bar ── */}
+      <div className="mx-auto flex h-16 max-w-7xl items-center px-4 lg:px-8">
+
+        {/* Brand */}
+        <Link
+          href={`/${locale}`}
+          className="group flex shrink-0 items-center gap-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal/30 focus-visible:ring-offset-2"
+        >
+          <SiteLogo size="md" priority className="rounded-lg" />
+          <span className="hidden flex-col sm:flex">
+            <span className="text-sm font-bold uppercase tracking-tight text-slate-900 transition-colors group-hover:text-slate-700">
+              {BRAND_NAME}
+            </span>
+            <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-400">
+              {dict.footer.academyLabel}
+            </span>
+          </span>
+        </Link>
+
+        {/* Desktop: centered nav */}
+        <div className="hidden flex-1 justify-center xl:flex">
+          <CenterNav locale={locale} dict={dict} pathname={pathname} />
         </div>
 
-        <div className="hidden sm:grid sm:grid-cols-[auto_1fr_auto] sm:items-center sm:gap-x-6">
-          <div className="flex min-w-0 justify-start">{brand}</div>
-          <CenterNav
-            key={pathname}
+        {/* Desktop: right cluster */}
+        <div className="hidden xl:ml-auto xl:flex xl:shrink-0 xl:items-center">
+          <AuthLanguageCluster
             locale={locale}
-            dict={dict}
             pathname={pathname}
-            scrolled={scrolled}
+            dict={dict}
+            user={user}
           />
-          <div className="flex min-w-0 justify-end">
-            <AuthLanguageCluster
-              locale={locale}
-              pathname={pathname}
-              dict={dict}
-              user={user}
-            />
-          </div>
+        </div>
+
+        {/* Mobile: language toggle + hamburger */}
+        <div className="ml-auto flex items-center gap-2 xl:hidden">
+          <LanguageToggle locale={locale} pathname={pathname} dict={dict} />
+          <button
+            type="button"
+            onClick={() => setOpen((v) => !v)}
+            aria-expanded={open}
+            aria-label={open ? "Close menu" : "Open menu"}
+            className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 transition hover:border-slate-300 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal/30"
+          >
+            <svg
+              aria-hidden
+              className="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              {open ? (
+                <path strokeLinecap="round" d="M6 6l12 12M18 6L6 18" />
+              ) : (
+                <path strokeLinecap="round" d="M4 7h16M4 12h16M4 17h16" />
+              )}
+            </svg>
+          </button>
         </div>
       </div>
+
+      {/* ── Mobile drawer ── */}
+      {open && (
+        <div className="border-t border-slate-200/80 bg-white xl:hidden">
+          <div className="mx-auto max-w-7xl">
+            <CenterNav locale={locale} dict={dict} pathname={pathname} mobile />
+
+            {/* Auth buttons inside drawer */}
+            <div className="border-t border-slate-100 px-4 py-3">
+              {user ? (
+                <div className="flex justify-start">
+                  <ProfileMenu user={user} signOutLabel={dict.nav.signOut} />
+                </div>
+              ) : (
+                <div className="flex gap-2">
+                  <Link
+                    href={`/${locale}/register`}
+                    className="flex-1 rounded-lg border border-slate-200 py-2.5 text-center text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+                  >
+                    {dict.nav.register}
+                  </Link>
+                  <Link
+                    href={`/${locale}/login`}
+                    className="flex-1 rounded-lg bg-teal py-2.5 text-center text-sm font-semibold text-white shadow-sm shadow-teal/20 transition hover:brightness-110"
+                  >
+                    {dict.nav.login}
+                  </Link>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   );
 }

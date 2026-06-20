@@ -15,7 +15,7 @@ export default function AddToolPage() {
  ← Back
  </Link>
  <div className="min-w-0 flex-1">
- <h1 className="text-2xl font-bold text-[#1e293b]">Add New Tool</h1>
+ <h1 className="text-2xl font-bold text-[#0D1B33]">Add New Tool</h1>
  <p className="mt-1 text-sm text-slate-500">
  Follow the five steps to add an indicator or expert advisor.
  </p>

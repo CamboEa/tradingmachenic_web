@@ -32,6 +32,25 @@ import { createClient, createAdminClient, getSessionUser } from "./server";
 
 export type AuthState = { error: string } | null | undefined;
 
+export async function signInWithGoogle(): Promise<never> {
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  const supabase = await createClient();
+
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: {
+      redirectTo: `${siteUrl}/auth/callback`,
+      skipBrowserRedirect: true,
+    },
+  });
+
+  if (error || !data.url) {
+    redirect(`/${defaultLocale}/login?error=oauth_failed`);
+  }
+
+  redirect(data.url);
+}
+
 async function guardAuthAttempt(formData: FormData): Promise<AuthState | null> {
   const headerStore = await headers();
   const ip = getClientIpFromHeaders(headerStore);

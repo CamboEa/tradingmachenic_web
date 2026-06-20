@@ -11,13 +11,13 @@ function RegisterLoginLinks({ locale, dict }: { locale: Locale; dict: Dictionary
     <>
       <Link
         href={`/${locale}/register`}
-        className="rounded-xl border border-slate-200 bg-white/85 px-3.5 py-2 text-xs font-semibold text-[#1e293b] transition hover:border-[#d4af37]/60 hover:bg-white sm:text-sm"
+        className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition duration-150 hover:border-slate-300 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal/30"
       >
         {dict.nav.register}
       </Link>
       <Link
         href={`/${locale}/login`}
-        className="rounded-xl bg-[#2563EB] px-3.5 py-2 text-xs font-semibold text-white transition hover:bg-[#1D4ED8] sm:text-sm"
+        className="rounded-lg bg-teal px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-teal/20 transition duration-150 hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal/40"
       >
         {dict.nav.login}
       </Link>
@@ -25,7 +25,6 @@ function RegisterLoginLinks({ locale, dict }: { locale: Locale; dict: Dictionary
   );
 }
 
-/** Register, Login (or Sign Out), and language toggle aligned on the right */
 export function AuthLanguageCluster({
   locale,
   pathname,
@@ -38,13 +37,13 @@ export function AuthLanguageCluster({
   user?: User | null;
 }) {
   return (
-    <div className="flex max-w-full flex-wrap items-center justify-end gap-x-2 gap-y-2 sm:gap-x-3">
+    <div className="flex items-center gap-2">
       {user ? (
         <ProfileMenu user={user} signOutLabel={dict.nav.signOut} />
       ) : (
         <RegisterLoginLinks locale={locale} dict={dict} />
       )}
-      <span className="hidden h-6 w-px shrink-0 bg-slate-200 sm:block" aria-hidden />
+      <span className="h-5 w-px shrink-0 bg-slate-200" aria-hidden />
       <LanguageToggle locale={locale} pathname={pathname} dict={dict} />
     </div>
   );

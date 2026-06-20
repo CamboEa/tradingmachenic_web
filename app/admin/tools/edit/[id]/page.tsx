@@ -22,7 +22,7 @@ export default async function EditToolPage({ params }: { params: Promise<{ id: s
  ← Back
  </Link>
  <div className="min-w-0 flex-1">
- <h1 className="text-2xl font-bold text-[#1e293b]">Edit Tool</h1>
+ <h1 className="text-2xl font-bold text-[#0D1B33]">Edit Tool</h1>
  <p className="mt-1 truncate text-sm text-slate-500" title={tool.name}>
  {tool.name}
  </p>
