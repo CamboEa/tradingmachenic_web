@@ -32,6 +32,8 @@ const SCRIPT_SRC =
 
 interface TurnstileWidgetProps {
   onTokenChange: (token: string) => void;
+  loadErrorLabel?: string;
+  className?: string;
 }
 
 function loadTurnstileScript(): Promise<void> {
@@ -58,7 +60,11 @@ function loadTurnstileScript(): Promise<void> {
   });
 }
 
-export function TurnstileWidget({ onTokenChange }: TurnstileWidgetProps) {
+export function TurnstileWidget({
+  onTokenChange,
+  loadErrorLabel = "Security check could not load. Refresh the page or disable ad blockers.",
+  className,
+}: TurnstileWidgetProps) {
   const siteKey = getTurnstileSiteKey();
   const containerId = useId().replace(/:/g, "");
   const containerRef = useRef<HTMLDivElement>(null);
@@ -106,11 +112,13 @@ export function TurnstileWidget({ onTokenChange }: TurnstileWidgetProps) {
 
   if (failed) {
     return (
-      <p className="text-sm text-red-600">
-        Security check could not load. Refresh the page or disable ad blockers.
+      <p className="text-center text-sm leading-relaxed text-red-600">
+        {loadErrorLabel}
       </p>
     );
   }
 
-  return <div ref={containerRef} id={containerId} className="min-h-[65px]" />;
+  return (
+    <div ref={containerRef} id={containerId} className={className ?? "min-h-[65px]"} />
+  );
 }

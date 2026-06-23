@@ -13,6 +13,12 @@ import {
 import type { Locale } from "@/lib/i18n";
 import type { Tool } from "@/lib/supabase/tools";
 
+/** Strip HTML tags to get plain text for card previews and search. */
+function stripHtml(html: string | null | undefined): string {
+  if (!html) return "";
+  return html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+}
+
 function ToolPlaceholder({ type }: { type: Tool["type"] }) {
   return (
     <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-slate-100 via-white to-[#EEF8F7]">
@@ -41,7 +47,8 @@ function formatCount(n: number): string {
 }
 
 function ToolCard({ tool, locale }: { tool: Tool; locale: Locale }) {
-  const description = locale === "km" ? tool.description_km : tool.description_en;
+  const rawDesc    = locale === "km" ? tool.description_km : tool.description_en;
+  const description = stripHtml(rawDesc); // strip HTML tags for clean card preview
   const isFree = tool.pricing === "free";
   const totalDownloads = (tool.download_count ?? 0) + (tool.download_count_mt4 ?? 0) + (tool.download_count_mt5 ?? 0);
 
@@ -113,8 +120,8 @@ export function ToolsSearchGrid({ tools, locale }: { tools: Tool[]; locale: Loca
     const q = query.toLowerCase();
     return (
       t.name.toLowerCase().includes(q) ||
-      t.description_en?.toLowerCase().includes(q) ||
-      t.description_km?.toLowerCase().includes(q)
+      stripHtml(t.description_en).toLowerCase().includes(q) ||
+      stripHtml(t.description_km).toLowerCase().includes(q)
     );
   });
 

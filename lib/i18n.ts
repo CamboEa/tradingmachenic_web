@@ -13,6 +13,10 @@ export type Dictionary = {
   nav: {
     home: string;
     education: string;
+    educationForex: string;
+    educationStock: string;
+    educationCrypto: string;
+    educationSiac: string;
     curriculum: string;
     tools: string;
     podcast: string;
@@ -104,6 +108,26 @@ export type Dictionary = {
     noLessonsMatch: string;
     relatedLessons: string;
     paidVideoHint: string;
+    mentorBadge: string;
+    selectMentor: string;
+    viewMentorLessons: string;
+    lessonCount: string;
+    noMentorsYet: string;
+    mentorLessons: string;
+    noLessonsForMentor: string;
+    categoryMentorsIntro: string;
+    mentorLabel: string;
+    categoryLabel: string;
+    hubTitle: string;
+    hubIntro: string;
+    exploreCategory: string;
+    mentorCountOne: string;
+    mentorCountMany: string;
+    categoryForexHint: string;
+    categoryStockHint: string;
+    categoryCryptoHint: string;
+    categorySiacHint: string;
+    noMentorsYetHint: string;
   };
   curriculumPage: {
     eyebrow: string;
@@ -175,10 +199,16 @@ export type Dictionary = {
     switchLink: string;
   };
   gatePage: {
+    eyebrow: string;
+    heroTitle: string;
+    heroBody: string;
     title: string;
-    body: string;
+    intro: string;
+    trustPoints: string[];
+    disclaimer: string;
     loading: string;
     error: string;
+    turnstileError: string;
   };
   notFoundPage: {
     eyebrow: string;
@@ -232,6 +262,10 @@ const en: Dictionary = {
   nav: {
     home: "Home",
     education: "Education",
+    educationForex: "Forex",
+    educationStock: "Stock",
+    educationCrypto: "Crypto",
+    educationSiac: "SIAC",
     curriculum: "Curriculum",
     tools: "Tools",
     podcast: "Podcast",
@@ -362,6 +396,26 @@ const en: Dictionary = {
     noLessonsMatch: "No lessons match your search.",
     relatedLessons: "Continue with",
     paidVideoHint: "Hosted lesson video — use the controls to play, pause, and adjust volume.",
+    mentorBadge: "Mentor",
+    selectMentor: "Choose a mentor to view their lessons.",
+    viewMentorLessons: "View lessons",
+    lessonCount: "{count} lessons",
+    noMentorsYet: "No mentors in this category yet.",
+    mentorLessons: "Lessons with {mentor}",
+    noLessonsForMentor: "No lessons published for this mentor yet.",
+    categoryMentorsIntro: "Select a mentor to explore their lessons in this market.",
+    mentorLabel: "Mentor",
+    categoryLabel: "Category",
+    hubTitle: "Choose your market",
+    hubIntro: "Pick a track to browse mentors and structured video lessons built for disciplined learning.",
+    exploreCategory: "Browse mentors",
+    mentorCountOne: "1 mentor",
+    mentorCountMany: "{count} mentors",
+    categoryForexHint: "Currency markets, liquidity, and execution fundamentals.",
+    categoryStockHint: "Equities, market structure, and process-driven analysis.",
+    categoryCryptoHint: "Digital assets, volatility, and risk-aware trading mechanics.",
+    categorySiacHint: "Securities education and community-led learning initiatives.",
+    noMentorsYetHint: "Mentors for this track will be announced soon.",
   },
   curriculumPage: {
     eyebrow: "Programme Structure",
@@ -444,10 +498,22 @@ const en: Dictionary = {
     switchLink: "Register",
   },
   gatePage: {
-    title: "Quick security check",
-    body: "Complete this step to continue to FIN HUB KH. It helps keep bots off the site.",
-    loading: "Verifying…",
-    error: "Verification failed. Please try again.",
+    eyebrow: "Protected access",
+    heroTitle: "One moment, please.",
+    heroBody:
+      "A brief verification keeps automated traffic off the platform so serious learners get a reliable experience.",
+    title: "Verify your access",
+    intro: "Complete the check below to continue to the academy.",
+    trustPoints: [
+      "Protects lessons, tools, and member areas",
+      "Takes only a few seconds",
+      "Industry-standard protection by Cloudflare",
+    ],
+    disclaimer: "Education only — not financial advice.",
+    loading: "Verifying your session…",
+    error: "We could not verify access. Please try again.",
+    turnstileError:
+      "The verification widget could not load. Refresh the page or disable ad blockers.",
   },
   notFoundPage: {
     eyebrow: "Error 404",
@@ -524,6 +590,10 @@ const km: Dictionary = {
   nav: {
     home: "ទំព័រដើម",
     education: "ការអប់រំ",
+    educationForex: "Forex",
+    educationStock: "Stock",
+    educationCrypto: "Crypto",
+    educationSiac: "SIAC",
     curriculum: "កម្មវិធីសិក្សា",
     tools: "ឧបករណ៍",
     podcast: "ផតខាស",
@@ -654,6 +724,26 @@ const km: Dictionary = {
     noLessonsMatch: "រកមិនឃើញមេរៀនដែលត្រូវគ្នា។",
     relatedLessons: "បន្តជាមួយ",
     paidVideoHint: "វីដេអូមេរៀន — ប្រើប៊ូតុងគ្រប់គ្រងដើម្បីលេង ផ្អាក និងកែកម្រិតសំឡេង។",
+    mentorBadge: "អ្នកណែនាំ",
+    selectMentor: "ជ្រើសរើសអ្នកណែនាំដើម្បីមើលមេរៀនរបស់គាត់។",
+    viewMentorLessons: "មើលមេរៀន",
+    lessonCount: "មេរៀន {count}",
+    noMentorsYet: "មិនទាន់មានអ្នកណែនាំក្នុងប្រភេទនេះទេ។",
+    mentorLessons: "មេរៀនជាមួយ {mentor}",
+    noLessonsForMentor: "មិនទាន់មានមេរៀនដែលបានផ្សាយសម្រាប់អ្នកណែនាំនេះទេ។",
+    categoryMentorsIntro: "ជ្រើសរើសអ្នកណែនាំដើម្បីរុករកមេរៀនក្នុងទីផ្សារនេះ។",
+    mentorLabel: "អ្នកណែនាំ",
+    categoryLabel: "ប្រភេទ",
+    hubTitle: "ជ្រើសរើសទីផ្សាររបស់អ្នក",
+    hubIntro: "ជ្រើសរើសផ្លូវសិក្សាដើម្បីរុករកអ្នកណែនាំ និងមេរៀនវីដេអូដែលមានរចនាសម្ព័ន្ធ។",
+    exploreCategory: "មើលអ្នកណែនាំ",
+    mentorCountOne: "អ្នកណែនាំ ១ នាក់",
+    mentorCountMany: "អ្នកណែនាំ {count} នាក់",
+    categoryForexHint: "ទីផ្សាររូបិយប័ណ្ណ សារធារណៈរឹមរឹល និងមូលដ្ឋានប្រតិបត្តិការ។",
+    categoryStockHint: "ភាគហ៊ុន រចនាសម្ព័ន្ធទីផ្សារ និងការវិភាគតាមដំណើរការ។",
+    categoryCryptoHint: "ទ្រព្យសកម្មឌីជីថល ភាពរសើប និងមេកានិចជួញដោយដឹងហានិភ័យ។",
+    categorySiacHint: "ការអប់រំមូលបត្រ និងផ្នែកសិក្សាដឹកនាំដោយសហគមន៍។",
+    noMentorsYetHint: "អ្នកណែនាំសម្រាប់ផ្លូវនេះនឹងប្រកាសឆាប់ៗនេះ។",
   },
   curriculumPage: {
     eyebrow: "រចនាសម្ព័ន្ធកម្មវិធី",
@@ -735,10 +825,22 @@ const km: Dictionary = {
     switchLink: "ចុះឈ្មោះ",
   },
   gatePage: {
-    title: "ពិនិត្យសុវត្ថិភាពរហ័ស",
-    body: "បំពេញជំហាននេះដើម្បីបន្តទៅ FIN HUB KH។ វាជួយការពារពី bot។",
-    loading: "កំពុងផ្ទៀងផ្ទាត់…",
-    error: "ការផ្ទៀងផ្ទាត់បរាជ័យ។ សូមព្យាយាមម្តងទៀត។",
+    eyebrow: "ការចូលប្រើមានការការពារ",
+    heroTitle: "សូមរង់ចាំបន្តិច។",
+    heroBody:
+      "ការផ្ទៀងផ្ទាត់ខ្លីជួយការពារវេទិកាពីចរចូលស្វ័យប្រវត្តិ ដើម្បីឱ្យអ្នករៀនទទួលបានបទពិសោធន៍ដែលអាចទុកចិត្តបាន។",
+    title: "ផ្ទៀងផ្ទាត់ការចូលប្រើ",
+    intro: "បំពេញការផ្ទៀងផ្ទាត់ខាងក្រោមដើម្បីបន្តទៅកាន់វិទ្យាល័យ។",
+    trustPoints: [
+      "ការពារមេរៀន ឧបករណ៍ និងតំបន់សមាជិក",
+      "ចំណាយពេលតែប៉ុន្មានវិនាទី",
+      "ការការពារតាមស្តង់ដារឧស្សាហកម្មដោយ Cloudflare",
+    ],
+    disclaimer: "សម្រាប់ការអប់រំប៉ុណ្ណោះ — មិនមែនជាការប្រឹក្សាហិរញ្ញវត្ថុ។",
+    loading: "កំពុងផ្ទៀងផ្ទាត់សម័យរបស់អ្នក…",
+    error: "មិនអាចផ្ទៀងផ្ទាត់ការចូលប្រើបានទេ។ សូមព្យាយាមម្តងទៀត។",
+    turnstileError:
+      "ឧបករណ៍ផ្ទៀងផ្ទាត់មិនអាចផ្ទុកបានទេ។ សូមផ្ទុកទំព័រឡើងវិញ ឬបិទ ad blocker។",
   },
   notFoundPage: {
     eyebrow: "កំហុស 404",

@@ -41,7 +41,7 @@ export function SiteHeader({
 
   return (
     <header
-      className={`sticky top-0 z-40 overflow-hidden border-b transition-all duration-200 backdrop-blur-md ${
+      className={`sticky top-0 z-40 border-b transition-all duration-200 backdrop-blur-md ${
         raised
           ? "border-slate-200/80 bg-white/98 shadow-sm shadow-slate-900/5"
           : "border-slate-200/50 bg-[#F8FAFC]"

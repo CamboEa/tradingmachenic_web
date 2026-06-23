@@ -8,6 +8,8 @@ import { LocaleParityHint } from "@/components/shared/locale-parity-hint";
 import { R2Uploader } from "@/components/shared/r2-uploader";
 import { YoutubeUrlPreview } from "@/components/education/youtube-url-preview";
 import { slugify } from "@/lib/slug";
+import { educationCategorySlugs } from "@/lib/education-categories";
+import type { Mentor } from "@/lib/mentors";
 import { extractYouTubeVideoId, resolveLessonVideoEmbedUrl } from "@/lib/youtube";
 
 type LessonType = "free" | "paid";
@@ -47,8 +49,10 @@ interface InitialData {
  thumbnail_url: string | null;
  objectives_en: string[] | null;
  objectives_km: string[] | null;
- type: "free" | "paid" | null;
- status: "draft" | "published" | null;
+  type: "free" | "paid" | null;
+  status: "draft" | "published" | null;
+  mentor_slug: string | null;
+  category: string | null;
  };
  videos: Array<{
  id: string;
@@ -62,6 +66,7 @@ interface InitialData {
 interface LessonFormProps {
  initialData?: InitialData;
  isEditing?: boolean;
+ mentors: Mentor[];
 }
 
 type FreeVideo = { embedUrl: string; titles: { en: string; km: string } };
@@ -122,7 +127,7 @@ function validateVideos(lessonType: LessonType, videos: FreeVideo[], paidVideos:
  return true;
 }
 
-export function LessonForm({ initialData, isEditing = false }: LessonFormProps) {
+export function LessonForm({ initialData, isEditing = false, mentors }: LessonFormProps) {
  const formRef = useRef<HTMLFormElement>(null);
  const initialVideos = initialVideoState(initialData);
 
@@ -142,6 +147,8 @@ export function LessonForm({ initialData, isEditing = false }: LessonFormProps) 
  const [slugTouched, setSlugTouched] = useState(!!initialData?.lesson.slug);
  const [summaryEn, setSummaryEn] = useState(initialData?.lesson.summary_en ?? "");
  const [summaryKm, setSummaryKm] = useState(initialData?.lesson.summary_km ?? "");
+ const [mentorSlug, setMentorSlug] = useState(initialData?.lesson.mentor_slug ?? "");
+ const [category, setCategory] = useState(initialData?.lesson.category ?? "");
  const [isSaving, setIsSaving] = useState(false);
  const { confirm, ConfirmDialogHost } = useConfirm();
 
@@ -265,6 +272,8 @@ export function LessonForm({ initialData, isEditing = false }: LessonFormProps) 
  }));
 
  const thumbnail_url = thumbnailUrl.trim() || null;
+ const mentor_slug = mentorSlug.trim() || null;
+ const lessonCategory = category.trim() || null;
 
  if (isEditing && initialData) {
  const result = await updateLesson(originalSlug, {
@@ -279,6 +288,8 @@ export function LessonForm({ initialData, isEditing = false }: LessonFormProps) 
  type: lessonType,
  status,
  thumbnail_url,
+ mentor_slug,
+ category: lessonCategory,
  videos: videosToSave,
  });
 
@@ -308,6 +319,8 @@ export function LessonForm({ initialData, isEditing = false }: LessonFormProps) 
  type: lessonType,
  status,
  thumbnail_url,
+ mentor_slug,
+ category: lessonCategory,
  videos: videosToSave,
  });
 
@@ -650,6 +663,46 @@ export function LessonForm({ initialData, isEditing = false }: LessonFormProps) 
  {type === "free" ? "Free (YouTube)" : "Paid (Cloudflare)"}
  </label>
  ))}
+ </div>
+ </div>
+
+ <div className="grid gap-5 sm:grid-cols-2">
+ <div>
+ <label className="mb-1.5 block text-xs font-semibold text-slate-600">
+ Category
+ </label>
+ <select
+ name="category"
+ value={category}
+ onChange={(e) => setCategory(e.target.value)}
+ className={fieldClass}
+ >
+ <option value="">Not assigned</option>
+ {educationCategorySlugs.map((value) => (
+ <option key={value} value={value}>
+ {value.charAt(0).toUpperCase() + value.slice(1)}
+ </option>
+ ))}
+ </select>
+ </div>
+
+ <div>
+ <label className="mb-1.5 block text-xs font-semibold text-slate-600">
+ Mentor
+ </label>
+ <select
+ name="mentor_slug"
+ value={mentorSlug}
+ onChange={(e) => setMentorSlug(e.target.value)}
+ className={fieldClass}
+ >
+ <option value="">Not assigned</option>
+ {mentors.map((mentor) => (
+ <option key={mentor.slug} value={mentor.slug}>
+ {mentor.names.en}
+ </option>
+ ))}
+ </select>
  </div>
  </div>
 

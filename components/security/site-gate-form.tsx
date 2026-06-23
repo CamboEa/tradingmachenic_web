@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { TurnstileWidget } from "@/components/auth/turnstile-widget";
+import { SpinnerIcon } from "@/components/ui/icons";
 import { isTurnstileConfigured } from "@/lib/security/turnstile-public";
 
 interface SiteGateFormProps {
@@ -11,6 +12,7 @@ interface SiteGateFormProps {
   labels: {
     loading: string;
     error: string;
+    turnstileError: string;
   };
 }
 
@@ -55,13 +57,39 @@ export function SiteGateForm({ returnTo, labels }: SiteGateFormProps) {
   }
 
   return (
-    <div className="space-y-5">
-      <TurnstileWidget onTokenChange={(token) => void verifyAccess(token)} />
-      {status === "loading" && (
-        <p className="text-center text-sm text-(--color-ink-muted)">{labels.loading}</p>
-      )}
+    <div className="mt-8">
+      <div
+        className={`rounded-2xl border bg-slate-50/60 p-5 transition-colors sm:p-6 ${
+          status === "error"
+            ? "border-red-200 bg-red-50/40"
+            : "border-slate-200/90"
+        }`}
+      >
+        <TurnstileWidget
+          onTokenChange={(token) => void verifyAccess(token)}
+          loadErrorLabel={labels.turnstileError}
+          className="flex min-h-[72px] items-center justify-center"
+        />
+
+        {status === "loading" && (
+          <div
+            className="mt-4 flex items-center justify-center gap-2.5 text-sm text-slate-500"
+            role="status"
+            aria-live="polite"
+          >
+            <SpinnerIcon className="h-4 w-4 text-gold" />
+            <span>{labels.loading}</span>
+          </div>
+        )}
+      </div>
+
       {status === "error" && errorMessage && (
-        <p className="text-center text-sm font-medium text-red-600">{errorMessage}</p>
+        <div
+          className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-center text-sm font-medium text-red-700"
+          role="alert"
+        >
+          {errorMessage}
+        </div>
       )}
     </div>
   );

@@ -1,40 +1,45 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getLessonForEdit } from "@/lib/supabase/actions";
+
 import { LessonForm } from "@/components/education/lesson-form";
+import { getLessonForEdit } from "@/lib/supabase/actions";
+import { getAllMentorsForAdmin } from "@/lib/supabase/mentors";
 
 export const metadata = { title: "Edit Lesson" };
 
 export default async function EditLessonPage({
- params,
+  params,
 }: {
- params: Promise<{ slug: string }>;
+  params: Promise<{ slug: string }>;
 }) {
- const { slug } = await params;
- const data = await getLessonForEdit(slug);
+  const { slug } = await params;
+  const [data, mentors] = await Promise.all([
+    getLessonForEdit(slug),
+    getAllMentorsForAdmin(),
+  ]);
 
- if (!data) {
- notFound();
- }
+  if (!data) {
+    notFound();
+  }
 
- const { lesson, videos } = data;
+  const { lesson, videos } = data;
 
- return (
- <div>
- <div className="mb-8 flex items-center gap-4">
- <Link
- href="/admin/lessons"
- className="rounded-lg border border-slate-200 px-3.5 py-2 text-sm font-medium text-slate-600 transition hover:border-slate-300 hover:bg-slate-50"
- >
- ← Back
- </Link>
- <div>
- <h1 className="text-2xl font-bold text-[#22332E]">Edit Lesson</h1>
- <p className="mt-1 text-sm text-slate-500">{lesson.title_en}</p>
- </div>
- </div>
+  return (
+    <div>
+      <div className="mb-8 flex items-center gap-4">
+        <Link
+          href="/admin/lessons"
+          className="rounded-lg border border-slate-200 px-3.5 py-2 text-sm font-medium text-slate-600 transition hover:border-slate-300 hover:bg-slate-50"
+        >
+          ← Back
+        </Link>
+        <div>
+          <h1 className="text-2xl font-bold text-[#22332E]">Edit Lesson</h1>
+          <p className="mt-1 text-sm text-slate-500">{lesson.title_en}</p>
+        </div>
+      </div>
 
- <LessonForm initialData={{ lesson, videos }} isEditing />
- </div>
- );
+      <LessonForm initialData={{ lesson, videos }} isEditing mentors={mentors} />
+    </div>
+  );
 }

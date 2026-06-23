@@ -147,75 +147,78 @@ export default async function ToolDetailPage({
         <div className="grid gap-8 lg:grid-cols-[1fr_280px]">
 
           {/* ── LEFT 75%: all content ── */}
-          <div className="min-w-0 divide-y divide-slate-200">
+          <div className="min-w-0">
 
-            {/* Description */}
-            {desc && (
-              <div className="pb-8">
-                <div className="mb-3 flex items-center gap-2.5">
-                  <div className="h-4 w-0.5 rounded-full bg-teal" aria-hidden />
-                  <p className={ui.sectionLabel}>{locale === "km" ? "អំពីឧបករណ៍នេះ" : "About this tool"}</p>
+            {/* ── Rich HTML doc (new editor output) ── */}
+            {desc && desc.includes("<") ? (
+              <div
+                className="tool-doc-html py-4"
+                dangerouslySetInnerHTML={{ __html: desc }}
+              />
+            ) : desc ? (
+              /* ── Legacy plain-text description ── */
+              <div className="divide-y divide-slate-200">
+                <div className="pb-8">
+                  <div className="mb-3 flex items-center gap-2.5">
+                    <div className="h-4 w-0.5 rounded-full bg-teal" aria-hidden />
+                    <p className={ui.sectionLabel}>{locale === "km" ? "អំពីឧបករណ៍នេះ" : "About this tool"}</p>
+                  </div>
+                  <p className="text-sm leading-relaxed text-slate-600">{desc}</p>
                 </div>
-                <p className="text-sm leading-relaxed text-slate-600">{desc}</p>
-              </div>
-            )}
 
-            {/* Dynamic content blocks */}
-            {blocks.map((block) => (
-              <section
-                key={block.key}
-                aria-labelledby={`section-${block.key}`}
-                className={
-                  block.caution
-                    ? "bg-amber-50 px-5 py-8"
-                    : "py-8"
-                }
-              >
-                <div className="mb-4 flex items-center gap-2.5">
-                  <div className={`h-4 w-0.5 shrink-0 rounded-full ${block.caution ? "bg-gold" : "bg-teal"}`} aria-hidden />
-                  <p
-                    id={`section-${block.key}`}
-                    className={block.caution ? "text-xs font-bold uppercase tracking-widest text-amber-700" : ui.sectionLabel}
+                {/* Legacy separate section blocks */}
+                {blocks.map((block) => (
+                  <section
+                    key={block.key}
+                    aria-labelledby={`section-${block.key}`}
+                    className={block.caution ? "bg-amber-50 px-5 py-8" : "py-8"}
                   >
-                    {block.title}
-                  </p>
-                </div>
+                    <div className="mb-4 flex items-center gap-2.5">
+                      <div className={`h-4 w-0.5 shrink-0 rounded-full ${block.caution ? "bg-gold" : "bg-teal"}`} aria-hidden />
+                      <p
+                        id={`section-${block.key}`}
+                        className={block.caution ? "text-xs font-bold uppercase tracking-widest text-amber-700" : ui.sectionLabel}
+                      >
+                        {block.title}
+                      </p>
+                    </div>
+                    {block.asList ? (
+                      <ul className="space-y-2">
+                        {block.body.split("\n").filter(Boolean).map((line, i) => (
+                          <li key={i} className="flex items-start gap-2.5">
+                            <CheckIcon />
+                            <span className="text-sm leading-relaxed text-slate-600">{line}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className={`text-sm leading-relaxed ${block.caution ? "text-amber-800" : "text-slate-600"} ${block.preserveLines ? "whitespace-pre-wrap" : ""}`}>
+                        {block.body}
+                      </p>
+                    )}
+                  </section>
+                ))}
 
-                {block.asList ? (
-                  <ul className="space-y-2">
-                    {block.body.split("\n").filter(Boolean).map((line, i) => (
-                      <li key={i} className="flex items-start gap-2.5">
-                        <CheckIcon />
-                        <span className="text-sm leading-relaxed text-slate-600">{line}</span>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className={`text-sm leading-relaxed ${block.caution ? "text-amber-800" : "text-slate-600"} ${block.preserveLines ? "whitespace-pre-wrap" : ""}`}>
-                    {block.body}
-                  </p>
+                {/* Legacy proof gallery */}
+                {tool.gallery.length > 0 && (
+                  <section aria-labelledby="section-gallery" className="py-8">
+                    <div className="mb-4 flex items-center gap-2.5">
+                      <div className="h-4 w-0.5 shrink-0 rounded-full bg-teal" aria-hidden />
+                      <p id="section-gallery" className={ui.sectionLabel}>
+                        {locale === "km" ? "ភស្តុតាង" : "Proof"}
+                      </p>
+                    </div>
+                    <GalleryLightbox
+                      images={tool.gallery.map((item, index) => ({
+                        src: item.image_url,
+                        alt: localizedText(locale, item.description_en, item.description_km) ?? (locale === "km" ? `រូបភាពភស្តុតាង ${index + 1}` : `Proof image ${index + 1}`),
+                        caption: localizedText(locale, item.description_en, item.description_km),
+                      }))}
+                    />
+                  </section>
                 )}
-              </section>
-            ))}
-
-            {/* Proof gallery */}
-            {tool.gallery.length > 0 && (
-              <section aria-labelledby="section-gallery" className="py-8">
-                <div className="mb-4 flex items-center gap-2.5">
-                  <div className="h-4 w-0.5 shrink-0 rounded-full bg-teal" aria-hidden />
-                  <p id="section-gallery" className={ui.sectionLabel}>
-                    {locale === "km" ? "ភស្តុតាង" : "Proof"}
-                  </p>
-                </div>
-                <GalleryLightbox
-                  images={tool.gallery.map((item, index) => ({
-                    src: item.image_url,
-                    alt: localizedText(locale, item.description_en, item.description_km) ?? (locale === "km" ? `រូបភាពភស្តុតាង ${index + 1}` : `Proof image ${index + 1}`),
-                    caption: localizedText(locale, item.description_en, item.description_km),
-                  }))}
-                />
-              </section>
-            )}
+              </div>
+            ) : null}
 
           </div>
 

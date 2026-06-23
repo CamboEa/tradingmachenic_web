@@ -172,6 +172,59 @@ create policy "blog_posts: admin all"
   using (public.is_admin());
 
 
+-- ── Mentors ──────────────────────────────────────────────────
+
+create table if not exists public.mentors (
+  id          uuid default gen_random_uuid() primary key,
+  created_at  timestamptz default now() not null,
+  slug        text not null unique,
+  name_en     text not null,
+  name_km     text not null,
+  title_en    text,
+  title_km    text,
+  bio_en      text,
+  bio_km      text,
+  image_url   text,
+  sort_order  integer not null default 0,
+  status      text not null default 'draft'
+                check (status in ('draft', 'published'))
+);
+
+create table if not exists public.mentor_categories (
+  mentor_id uuid not null references public.mentors(id) on delete cascade,
+  category  text not null check (category in ('forex', 'stock', 'crypto', 'siac')),
+  primary key (mentor_id, category)
+);
+
+create index if not exists mentor_categories_category_idx
+  on public.mentor_categories (category);
+
+alter table public.mentors enable row level security;
+alter table public.mentor_categories enable row level security;
+
+create policy "mentors: public read published"
+  on public.mentors for select
+  using (status = 'published');
+
+create policy "mentors: authenticated all"
+  on public.mentors for all
+  using (auth.role() = 'authenticated');
+
+create policy "mentor_categories: public read published mentors"
+  on public.mentor_categories for select
+  using (
+    exists (
+      select 1 from public.mentors m
+      where m.id = mentor_categories.mentor_id
+        and m.status = 'published'
+    )
+  );
+
+create policy "mentor_categories: authenticated all"
+  on public.mentor_categories for all
+  using (auth.role() = 'authenticated');
+
+
 -- ── Lessons ────────────────────────────────────────────────────
 
 create table if not exists public.lessons (
@@ -188,7 +241,9 @@ create table if not exists public.lessons (
   objectives_en      text[] default '{}',
   objectives_km      text[] default '{}',
   status             text not null default 'draft'
-                       check (status in ('draft', 'published'))
+                       check (status in ('draft', 'published')),
+  mentor_slug        text,
+  category           text check (category is null or category in ('forex', 'stock', 'crypto', 'siac'))
 );
 
 alter table public.lessons enable row level security;

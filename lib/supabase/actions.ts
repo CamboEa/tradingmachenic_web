@@ -217,6 +217,8 @@ export async function createLesson(formData: {
   type: "free" | "paid";
   status: "draft" | "published";
   thumbnail_url?: string | null;
+  mentor_slug?: string | null;
+  category?: string | null;
   videos: Array<{
     embedUrl?: string;
     url?: string;
@@ -247,6 +249,8 @@ export async function createLesson(formData: {
           type: formData.type,
           status: formData.status,
           thumbnail_url: formData.thumbnail_url?.trim() || null,
+          mentor_slug: formData.mentor_slug?.trim() || null,
+          category: formData.category?.trim() || null,
         },
       ])
       .select()
@@ -299,6 +303,8 @@ export async function updateLesson(
     type: "free" | "paid";
     status: "draft" | "published";
     thumbnail_url?: string | null;
+    mentor_slug?: string | null;
+    category?: string | null;
     videos: Array<{
       id?: string;
       embedUrl?: string;
@@ -342,6 +348,8 @@ export async function updateLesson(
         type: formData.type,
         status: formData.status,
         thumbnail_url: formData.thumbnail_url?.trim() || null,
+        mentor_slug: formData.mentor_slug?.trim() || null,
+        category: formData.category?.trim() || null,
       })
       .eq("id", lesson.id);
 

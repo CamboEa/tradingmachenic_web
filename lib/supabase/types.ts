@@ -144,6 +144,42 @@ export type Database = {
         Update: Partial<Database["public"]["Tables"]["blog_posts"]["Insert"]>;
         Relationships: [];
       };
+      mentors: {
+        Row: {
+          id: string;
+          created_at: string;
+          slug: string;
+          name_en: string;
+          name_km: string;
+          title_en: string | null;
+          title_km: string | null;
+          bio_en: string | null;
+          bio_km: string | null;
+          image_url: string | null;
+          sort_order: number;
+          status: LessonStatus;
+        };
+        Insert: Omit<Database["public"]["Tables"]["mentors"]["Row"], "id" | "created_at">;
+        Update: Partial<Database["public"]["Tables"]["mentors"]["Insert"]>;
+        Relationships: [];
+      };
+      mentor_categories: {
+        Row: {
+          mentor_id: string;
+          category: string;
+        };
+        Insert: Database["public"]["Tables"]["mentor_categories"]["Row"];
+        Update: Partial<Database["public"]["Tables"]["mentor_categories"]["Insert"]>;
+        Relationships: [
+          {
+            foreignKeyName: "mentor_categories_mentor_id_fkey";
+            columns: ["mentor_id"];
+            isOneToOne: false;
+            referencedRelation: "mentors";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
       lessons: {
         Row: {
           id: string;
@@ -159,6 +195,8 @@ export type Database = {
           objectives_en: string[];
           objectives_km: string[];
           status: LessonStatus;
+          mentor_slug: string | null;
+          category: string | null;
         };
         Insert: Omit<Database["public"]["Tables"]["lessons"]["Row"], "id" | "created_at" | "thumbnail_url" | "objectives_en" | "objectives_km"> & {
           thumbnail_url?: string | null;

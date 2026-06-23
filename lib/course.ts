@@ -1,4 +1,5 @@
 import type { Locale } from "./i18n";
+import type { EducationCategory } from "./education-categories";
 import { extractYouTubeVideoId, youtubeThumbnailUrl } from "./youtube";
 
 export type LessonVideo = {
@@ -18,6 +19,8 @@ export type Lesson = {
   summaries: Record<Locale, string>;
   objectives: Record<Locale, string[]>;
   type?: "free" | "paid";
+  mentorSlug?: string;
+  category?: EducationCategory;
   /** Set when loaded from admin (draft lessons are hidden on the public site). */
   status?: "draft" | "published";
 };

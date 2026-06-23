@@ -24,6 +24,9 @@ if (!SUPABASE_URL || !SUPABASE_KEY) {
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
+const LESSON_MENTOR_SLUG = "bean-ratana";
+const LESSON_CATEGORY = "forex";
+
 const sampleEmbedA = "https://www.youtube.com/embed/668nUCeBHyY";
 const sampleEmbedB = "https://www.youtube.com/embed/scEDHsr3APg";
 
@@ -178,7 +181,13 @@ async function seed() {
 
       const { data: insertedLesson, error: lessonError } = await supabase
         .from("lessons")
-        .insert([lessonData])
+        .insert([
+          {
+            ...lessonData,
+            mentor_slug: LESSON_MENTOR_SLUG,
+            category: LESSON_CATEGORY,
+          },
+        ])
         .select("id")
         .single();
 

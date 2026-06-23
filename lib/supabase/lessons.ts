@@ -1,6 +1,7 @@
 import { unstable_cache } from "next/cache";
 
 import type { Lesson } from "@/lib/course";
+import type { EducationCategory } from "@/lib/education-categories";
 import { LESSONS_CACHE_TAG } from "@/lib/cache-tags";
 import { resolveLessonVideoEmbedUrl } from "@/lib/youtube";
 import { createClient, createClient as createAdminClient } from "@supabase/supabase-js";
@@ -34,6 +35,8 @@ type LessonRow = {
   objectives_km: string[] | null;
   type: string | null;
   status: string;
+  mentor_slug: string | null;
+  category: string | null;
 };
 
 type LessonVideoRow = {
@@ -81,6 +84,8 @@ function transformLessonRow(
       km: row.objectives_km || [],
     },
     type: (row.type as "free" | "paid") || undefined,
+    mentorSlug: row.mentor_slug || undefined,
+    category: (row.category as EducationCategory) || undefined,
     status: row.status === "published" ? "published" : "draft",
     videos: videos.map((v) => ({
       embedUrl: resolveLessonVideoEmbedUrl(v.embed_url),
@@ -157,4 +162,15 @@ export async function getAllLessonsForAdmin(): Promise<Lesson[]> {
 export async function getLessonBySlug(slug: string): Promise<Lesson | null> {
   const lessons = await getAllLessons();
   return lessons.find((lesson) => lesson.slug === slug) ?? null;
+}
+
+export async function getLessonsByMentorAndCategory(
+  mentorSlug: string,
+  category: EducationCategory,
+): Promise<Lesson[]> {
+  const lessons = await getAllLessons();
+  return lessons.filter(
+    (lesson) =>
+      lesson.mentorSlug === mentorSlug && lesson.category === category,
+  );
 }
