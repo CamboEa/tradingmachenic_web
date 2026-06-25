@@ -58,7 +58,7 @@ const columns: Column<BlogPost>[] = [
   {
     header: "Published",
     className: "whitespace-nowrap",
-    cell: (post) => <span className="text-slate-500">{formatDate(post.published_at)}</span>,
+    cell: (post) => <span className="text-ink-soft">{formatDate(post.published_at)}</span>,
   },
   {
     header: "Actions",

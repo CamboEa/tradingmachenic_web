@@ -13,7 +13,7 @@ export function YoutubeUrlPreview({ url }: { url: string }) {
  if (!embedSrc) return null;
 
  return (
- <div className="mt-2 w-full max-w-xl overflow-hidden rounded-lg border border-slate-200 bg-slate-900">
+ <div className="mt-2 w-full max-w-xl overflow-hidden rounded-lg border border-bridge/40 bg-slate-900">
  <div className="relative aspect-video w-full">
  <iframe
  title="YouTube preview"

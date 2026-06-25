@@ -41,6 +41,11 @@ export function lessonVideoCount(lesson: Lesson): number {
   return lesson.videos.length;
 }
 
+/** Multi-part series (2+ videos) — shown on mentor lesson grids. */
+export function isGroupedLesson(lesson: Lesson): boolean {
+  return lesson.videos.length > 1;
+}
+
 /** Replace per lesson with your hosted file or streaming embed URLs */
 const sampleEmbedA = "https://www.youtube.com/embed/668nUCeBHyY";
 const sampleEmbedB = "https://www.youtube.com/embed/scEDHsr3APg";

@@ -69,7 +69,7 @@ export function Dropdown<T extends string>({
         onClick={() => setOpen((o) => !o)}
         aria-haspopup="listbox"
         aria-expanded={open}
-        className="flex h-full w-full min-w-36 cursor-pointer items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-teal/25"
+        className="flex h-full w-full min-w-36 cursor-pointer items-center justify-between gap-3 rounded-xl border border-bridge/40 bg-surface px-4 py-2.5 text-sm font-semibold text-ink-muted shadow-sm transition hover:border-bridge/60 hover:bg-surface-soft focus:outline-none focus:ring-2 focus:ring-teal/25"
       >
         <span>{selected.label}</span>
         <ChevronDown open={open} />
@@ -80,7 +80,7 @@ export function Dropdown<T extends string>({
         <ul
           role="listbox"
           aria-label="Filter options"
-          className="absolute left-0 top-full z-30 mt-1.5 min-w-full overflow-hidden rounded-xl border border-slate-200 bg-white py-1 shadow-lg shadow-slate-900/8 ring-1 ring-black/5 animate-in fade-in slide-in-from-top-1 duration-150"
+          className="absolute left-0 top-full z-30 mt-1.5 min-w-full overflow-hidden rounded-xl border border-bridge/40 bg-surface py-1 shadow-lg shadow-black/25 ring-1 ring-black/5 animate-in fade-in slide-in-from-top-1 duration-150"
         >
           {options.map((opt) => {
             const isSelected = opt.value === value;
@@ -93,7 +93,7 @@ export function Dropdown<T extends string>({
                 className={`flex cursor-pointer items-center justify-between gap-4 px-4 py-2.5 text-sm transition-colors ${
                   isSelected
                     ? "bg-teal/5 font-semibold text-teal"
-                    : "text-slate-700 hover:bg-slate-50"
+                    : "text-ink-muted hover:bg-surface-soft"
                 }`}
               >
                 <span>{opt.label}</span>

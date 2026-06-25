@@ -17,13 +17,13 @@ export default async function EditToolPage({ params }: { params: Promise<{ id: s
  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
  <Link
  href="/admin/tools"
- className="inline-flex shrink-0 items-center justify-center rounded-lg border border-slate-200 px-3.5 py-2 text-sm font-medium text-slate-600 transition hover:border-slate-300 hover:bg-slate-50"
+ className="inline-flex shrink-0 items-center justify-center rounded-lg border border-bridge/40 px-3.5 py-2 text-sm font-medium text-ink-muted transition hover:border-bridge/60 hover:bg-surface-soft"
  >
  ← Back
  </Link>
  <div className="min-w-0 flex-1">
- <h1 className="text-2xl font-bold text-[#22332E]">Edit Tool</h1>
- <p className="mt-1 truncate text-sm text-slate-500" title={tool.name}>
+ <h1 className="text-2xl font-bold text-foreground">Edit Tool</h1>
+ <p className="mt-1 truncate text-sm text-ink-soft" title={tool.name}>
  {tool.name}
  </p>
  <div className="mt-2 flex flex-wrap items-center gap-2">
@@ -32,7 +32,7 @@ export default async function EditToolPage({ params }: { params: Promise<{ id: s
  className={`rounded-full px-2 py-0.5 text-xs font-semibold ${
  tool.status === "published"
  ? "bg-green-100 text-green-700"
- : "bg-slate-100 text-slate-600"
+ : "bg-surface-soft text-ink-muted"
  }`}
  >
  {tool.status === "published" ? "Published" : "Draft"}
@@ -40,16 +40,16 @@ export default async function EditToolPage({ params }: { params: Promise<{ id: s
  <span
  className={`rounded-full px-2 py-0.5 text-xs font-semibold ${
  tool.pricing === "free"
- ? "bg-[#EEF8F7] text-[#1D4ED8]"
- : "bg-amber-50 text-amber-900"
+ ? "bg-surface-soft text-[#1D4ED8]"
+ : "bg-amber-500/10 text-amber-400"
  }`}
  >
  {tool.pricing === "free" ? "Free" : "Paid"}
  </span>
- <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-600">
+ <span className="rounded-full bg-surface-soft px-2.5 py-0.5 text-xs font-medium text-ink-muted">
  {tool.platform}
  </span>
- <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-600">
+ <span className="rounded-full bg-surface-soft px-2.5 py-0.5 text-xs font-medium text-ink-muted">
  {tool.type === "indicator" ? "Indicator" : "Expert Advisor"}
  </span>
  </div>

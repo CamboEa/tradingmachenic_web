@@ -45,7 +45,7 @@ export default async function PodcastEpisodePage({
   const thumb = youtubeThumbnailUrl(vid);
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC]">
+    <div className="min-h-screen bg-background">
 
       {/* Gold top accent line */}
       <div
@@ -61,7 +61,7 @@ export default async function PodcastEpisodePage({
         <div className="py-7">
           <Link
             href={`/${locale}/podcast`}
-            className="group inline-flex items-center gap-2 text-sm font-semibold text-[#22332E] transition-colors hover:text-[#1D4ED8]"
+            className="group inline-flex items-center gap-2 text-sm font-semibold text-foreground transition-colors hover:text-gold"
           >
             <svg
               viewBox="0 0 16 16"
@@ -91,12 +91,12 @@ export default async function PodcastEpisodePage({
               </p>
             </div>
 
-            <h1 className="text-4xl font-black leading-[1.08] tracking-tight text-[#22332E] sm:text-5xl lg:text-[3.5rem]">
+            <h1 className="text-4xl font-black leading-[1.08] tracking-tight text-foreground sm:text-5xl lg:text-[3.5rem]">
               {title}
             </h1>
 
             {description ? (
-              <p className="mt-5 max-w-xl text-base leading-7 text-slate-500 sm:text-lg">
+              <p className="mt-5 max-w-xl text-base leading-7 text-ink-soft sm:text-lg">
                 {description}
               </p>
             ) : null}
@@ -106,7 +106,7 @@ export default async function PodcastEpisodePage({
         </div>
 
         {/* ── Divider ──────────────────────────────────────────── */}
-        <div className="h-px bg-slate-200" aria-hidden />
+        <div className="h-px bg-bridge/40" aria-hidden />
 
         {/* ── Player ───────────────────────────────────────────── */}
         <div className="py-10">

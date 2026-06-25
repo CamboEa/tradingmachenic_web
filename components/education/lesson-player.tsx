@@ -1,14 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 
 import type { Lesson, LessonVideo } from "@/lib/course";
-import {
- getLessonThumbnailSrc,
- lessonVideoCount,
- youtubeThumbnailFromEmbed,
-} from "@/lib/course";
+import { youtubeThumbnailFromEmbed } from "@/lib/course";
 import type { Locale } from "@/lib/i18n";
 import {
  isDirectVideoFileUrl,
@@ -19,7 +14,6 @@ import {
 interface LessonStrings {
  videoInLessonHeading: string;
  objectives: string;
- relatedLessons: string;
  /** "{count} videos" */
  videosInLesson: string;
  paidVideoHint?: string;
@@ -28,7 +22,6 @@ interface LessonStrings {
 
 interface LessonPlayerProps {
  lesson: Lesson;
- related: Lesson[];
  locale: Locale;
  t: LessonStrings;
 }
@@ -113,7 +106,7 @@ function VideoSurface({
  );
 }
 
-export function LessonPlayer({ lesson, related, locale, t }: LessonPlayerProps) {
+export function LessonPlayer({ lesson, locale, t }: LessonPlayerProps) {
  const videos = lesson.videos;
  const total = videos.length;
  const [activeIndex, setActiveIndex] = useState(0);
@@ -275,37 +268,6 @@ export function LessonPlayer({ lesson, related, locale, t }: LessonPlayerProps) 
  </li>
  );
  })}
- </ul>
- </div>
- ) : null}
-
- {related.length > 0 ? (
- <div>
- <p className="mb-3 text-sm font-bold text-[var(--color-ink)]">{t.relatedLessons}</p>
- <ul className="space-y-3">
- {related.map((item) => (
- <li key={item.slug}>
- <Link
- href={`/${locale}/education/${item.slug}`}
- className="group flex items-start gap-3 rounded-xl p-1.5 transition hover:bg-[color-mix(in_oklab,var(--color-bridge)_35%,transparent)]"
- >
- <ThumbBox
- src={getLessonThumbnailSrc(item)}
- alt={item.titles[locale]}
- className="w-40"
- />
- <div className="min-w-0 flex-1 pt-0.5">
- <span className="block text-sm font-semibold leading-snug text-[var(--color-ink)] line-clamp-2 group-hover:text-[var(--color-teal)]">
- {item.titles[locale]}
- </span>
- <span className="mt-1 block text-xs text-[var(--color-ink-soft)]">
- {formatCount(t.videosInLesson, lessonVideoCount(item))} · ~
- {item.approximateMinutes} min
- </span>
- </div>
- </Link>
- </li>
- ))}
  </ul>
  </div>
  ) : null}

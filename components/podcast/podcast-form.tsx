@@ -76,12 +76,12 @@ export function PodcastForm({ podcast }: Props) {
  const defaultStatus = podcast?.status === "published" ? "Published" : "Draft";
 
  return (
- <div className="w-full rounded-xl border border-slate-200 bg-white p-6">
- <h2 className="mb-6 text-base font-bold text-[#22332E]">Episode details</h2>
+ <div className="w-full rounded-xl border border-bridge/40 bg-surface p-6">
+ <h2 className="mb-6 text-base font-bold text-foreground">Episode details</h2>
 
  <form className="space-y-5" onSubmit={handleSubmit}>
  <div>
- <label htmlFor="youtube_url" className="mb-1.5 block text-xs font-semibold text-slate-600">
+ <label htmlFor="youtube_url" className="mb-1.5 block text-xs font-semibold text-ink-muted">
  YouTube URL or video ID
  </label>
  <input
@@ -91,7 +91,7 @@ export function PodcastForm({ podcast }: Props) {
  required
  defaultValue={podcast?.youtube_url ?? ""}
  placeholder="https://www.youtube.com/watch?v=… or youtu.be/…"
- className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm outline-none ring-[#22332E]/30 transition focus:ring-2"
+ className="w-full rounded-lg border border-bridge/40 px-3 py-2.5 text-sm outline-none ring-teal/30 transition focus:ring-2"
  />
  <p className="mt-1 text-xs text-slate-400">
  Paste a watch link, Shorts link, embed URL, or the 11-character video id.
@@ -100,7 +100,7 @@ export function PodcastForm({ podcast }: Props) {
 
  <div className="grid gap-4 sm:grid-cols-2">
  <div>
- <label htmlFor="title_en" className="mb-1.5 block text-xs font-semibold text-slate-600">
+ <label htmlFor="title_en" className="mb-1.5 block text-xs font-semibold text-ink-muted">
  Title (English)
  </label>
  <input
@@ -109,11 +109,11 @@ export function PodcastForm({ podcast }: Props) {
  type="text"
  required
  defaultValue={podcast?.title_en ?? ""}
- className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm outline-none ring-[#22332E]/30 transition focus:ring-2"
+ className="w-full rounded-lg border border-bridge/40 px-3 py-2.5 text-sm outline-none ring-teal/30 transition focus:ring-2"
  />
  </div>
  <div>
- <label htmlFor="title_km" className="mb-1.5 block text-xs font-semibold text-slate-600">
+ <label htmlFor="title_km" className="mb-1.5 block text-xs font-semibold text-ink-muted">
  Title (Khmer)
  </label>
  <input
@@ -122,14 +122,14 @@ export function PodcastForm({ podcast }: Props) {
  type="text"
  required
  defaultValue={podcast?.title_km ?? ""}
- className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm outline-none ring-[#22332E]/30 transition focus:ring-2"
+ className="w-full rounded-lg border border-bridge/40 px-3 py-2.5 text-sm outline-none ring-teal/30 transition focus:ring-2"
  />
  </div>
  </div>
 
  <div className="grid gap-4 sm:grid-cols-2">
  <div>
- <label htmlFor="description_en" className="mb-1.5 block text-xs font-semibold text-slate-600">
+ <label htmlFor="description_en" className="mb-1.5 block text-xs font-semibold text-ink-muted">
  Description (English)
  </label>
  <textarea
@@ -137,11 +137,11 @@ export function PodcastForm({ podcast }: Props) {
  name="description_en"
  rows={4}
  defaultValue={podcast?.description_en ?? ""}
- className="w-full resize-y rounded-lg border border-slate-200 px-3 py-2.5 text-sm outline-none ring-[#22332E]/30 transition focus:ring-2"
+ className="w-full resize-y rounded-lg border border-bridge/40 px-3 py-2.5 text-sm outline-none ring-teal/30 transition focus:ring-2"
  />
  </div>
  <div>
- <label htmlFor="description_km" className="mb-1.5 block text-xs font-semibold text-slate-600">
+ <label htmlFor="description_km" className="mb-1.5 block text-xs font-semibold text-ink-muted">
  Description (Khmer)
  </label>
  <textarea
@@ -149,14 +149,14 @@ export function PodcastForm({ podcast }: Props) {
  name="description_km"
  rows={4}
  defaultValue={podcast?.description_km ?? ""}
- className="w-full resize-y rounded-lg border border-slate-200 px-3 py-2.5 text-sm outline-none ring-[#22332E]/30 transition focus:ring-2"
+ className="w-full resize-y rounded-lg border border-bridge/40 px-3 py-2.5 text-sm outline-none ring-teal/30 transition focus:ring-2"
  />
  </div>
  </div>
 
  <div className="grid gap-4 sm:grid-cols-2">
  <div>
- <label htmlFor="sort_order" className="mb-1.5 block text-xs font-semibold text-slate-600">
+ <label htmlFor="sort_order" className="mb-1.5 block text-xs font-semibold text-ink-muted">
  Sort order
  </label>
  <input
@@ -165,24 +165,24 @@ export function PodcastForm({ podcast }: Props) {
  type="number"
  required
  defaultValue={podcast?.sort_order ?? 0}
- className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm outline-none ring-[#22332E]/30 transition focus:ring-2"
+ className="w-full rounded-lg border border-bridge/40 px-3 py-2.5 text-sm outline-none ring-teal/30 transition focus:ring-2"
  />
  <p className="mt-1 text-xs text-slate-400">Higher numbers appear first on the site.</p>
  </div>
  <div>
- <span className="mb-1.5 block text-xs font-semibold text-slate-600">Status</span>
+ <span className="mb-1.5 block text-xs font-semibold text-ink-muted">Status</span>
  <div className="flex gap-3 pt-1">
  {(["Draft", "Published"] as const).map((s) => (
  <label
  key={s}
- className="flex cursor-pointer items-center gap-2 rounded-lg border border-slate-200 px-4 py-2.5 text-sm transition-colors has-checked:border-[#22332E] has-checked:bg-[#EEF8F7]"
+ className="flex cursor-pointer items-center gap-2 rounded-lg border border-bridge/40 px-4 py-2.5 text-sm transition-colors has-checked:border-gold has-checked:bg-surface-soft"
  >
  <input
  type="radio"
  name="status"
  value={s}
  defaultChecked={s === defaultStatus}
- className="accent-[#22332E]"
+ className="accent-teal"
  />
  {s}
  </label>
@@ -195,7 +195,7 @@ export function PodcastForm({ podcast }: Props) {
  <button
  type="submit"
  disabled={isSaving}
- className="rounded-lg bg-[#22332E] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#1D4ED8] disabled:opacity-50"
+ className="rounded-lg bg-teal px-5 py-2.5 text-sm font-semibold text-white transition hover:brightness-110 disabled:opacity-50"
  >
  {isSaving ? "Saving…" : isEdit ? "Save changes" : "Create episode"}
  </button>

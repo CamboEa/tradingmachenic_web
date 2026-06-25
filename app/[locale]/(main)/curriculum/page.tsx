@@ -40,7 +40,7 @@ function TimelineCard({
         backgroundColor: accentBg,
         borderColor: borderColor,
       }}
-      className="flex flex-col rounded-3xl border p-7 shadow-sm shadow-slate-900/5 backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-slate-900/10"
+      className="flex flex-col rounded-3xl border p-7 shadow-sm shadow-black/20 backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/30"
     >
       <p
         style={{ color: accentColor }}
@@ -128,7 +128,7 @@ export default async function CurriculumPage({
 
   return (
     <div className="flex flex-col">
-      <PublicPageHero eyebrow={cp.eyebrow} title={cp.title} description={cp.intro} backgroundImage="/Images/bg-curriculum-header.png" />
+      <PublicPageHero eyebrow={cp.eyebrow} title={cp.title} description={cp.intro} />
       <PublicPageMain className="max-w-6xl">
       {curriculum.length === 0 ? (
         <p className="mt-16 text-center text-sm text-(--color-ink-muted)">

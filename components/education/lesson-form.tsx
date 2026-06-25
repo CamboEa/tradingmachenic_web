@@ -23,7 +23,7 @@ const STEPS = [
 ] as const;
 
 const fieldClass =
- "w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#22332E] focus:bg-white focus:ring-2 focus:ring-[#22332E]/20";
+ "w-full rounded-lg border border-bridge/40 bg-surface-soft px-4 py-2.5 text-sm text-foreground outline-none transition focus:border-gold focus:bg-surface focus:ring-2 focus:ring-teal/20";
 
 function parseObjectives(value: string): string[] {
  return value
@@ -67,6 +67,8 @@ interface LessonFormProps {
  initialData?: InitialData;
  isEditing?: boolean;
  mentors: Mentor[];
+ defaultMentorSlug?: string;
+ defaultCategory?: string;
 }
 
 type FreeVideo = { embedUrl: string; titles: { en: string; km: string } };
@@ -127,7 +129,13 @@ function validateVideos(lessonType: LessonType, videos: FreeVideo[], paidVideos:
  return true;
 }
 
-export function LessonForm({ initialData, isEditing = false, mentors }: LessonFormProps) {
+export function LessonForm({
+ initialData,
+ isEditing = false,
+ mentors,
+ defaultMentorSlug = "",
+ defaultCategory = "",
+}: LessonFormProps) {
  const formRef = useRef<HTMLFormElement>(null);
  const initialVideos = initialVideoState(initialData);
 
@@ -147,8 +155,10 @@ export function LessonForm({ initialData, isEditing = false, mentors }: LessonFo
  const [slugTouched, setSlugTouched] = useState(!!initialData?.lesson.slug);
  const [summaryEn, setSummaryEn] = useState(initialData?.lesson.summary_en ?? "");
  const [summaryKm, setSummaryKm] = useState(initialData?.lesson.summary_km ?? "");
- const [mentorSlug, setMentorSlug] = useState(initialData?.lesson.mentor_slug ?? "");
- const [category, setCategory] = useState(initialData?.lesson.category ?? "");
+ const [mentorSlug, setMentorSlug] = useState(
+  initialData?.lesson.mentor_slug ?? defaultMentorSlug,
+ );
+ const [category, setCategory] = useState(initialData?.lesson.category ?? defaultCategory);
  const [isSaving, setIsSaving] = useState(false);
  const { confirm, ConfirmDialogHost } = useConfirm();
 
@@ -412,24 +422,24 @@ export function LessonForm({ initialData, isEditing = false, mentors }: LessonFo
  const freeVideoSection = (
  <>
  <div className="flex items-center justify-between">
- <h3 className="font-semibold text-[#22332E]">YouTube videos</h3>
+ <h3 className="font-semibold text-foreground">YouTube videos</h3>
  <button
  type="button"
  onClick={addVideo}
- className="text-xs font-semibold text-[#22332E] transition hover:text-[#1D4ED8]"
+ className="text-xs font-semibold text-foreground transition hover:text-gold"
  >
  + Add video
  </button>
  </div>
 
  {videos.map((video, idx) => (
- <div key={idx} className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+ <div key={idx} className="rounded-lg border border-bridge/40 bg-surface-soft p-4">
  <div className="mb-3 flex items-center justify-between">
- <span className="text-xs font-semibold text-slate-600">Video {idx + 1}</span>
+ <span className="text-xs font-semibold text-ink-muted">Video {idx + 1}</span>
  <button
  type="button"
  onClick={() => requestRemoveVideo(idx)}
- className="text-xs font-semibold text-red-500 transition hover:text-red-700"
+ className="text-xs font-semibold text-red-500 transition hover:text-red-400"
  >
  Remove
  </button>
@@ -437,7 +447,7 @@ export function LessonForm({ initialData, isEditing = false, mentors }: LessonFo
 
  <div className="space-y-3">
  <div>
- <label className="mb-1 block text-xs font-semibold text-slate-600">
+ <label className="mb-1 block text-xs font-semibold text-ink-muted">
  YouTube URL <span className="text-red-500">*</span>
  </label>
  <input
@@ -445,13 +455,13 @@ export function LessonForm({ initialData, isEditing = false, mentors }: LessonFo
  placeholder="https://www.youtube.com/watch?v=… or youtu.be/…"
  value={video.embedUrl}
  onChange={(e) => updateVideo(idx, "embedUrl", e.target.value)}
- className="w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#22332E] focus:ring-2 focus:ring-[#22332E]/20"
+ className="w-full rounded-lg border border-bridge/40 bg-surface px-4 py-2.5 text-sm text-foreground outline-none transition focus:border-gold focus:ring-2 focus:ring-teal/20"
  />
  <YoutubeUrlPreview url={video.embedUrl} />
  </div>
 
  <div>
- <label className="mb-1 block text-xs font-semibold text-slate-600">
+ <label className="mb-1 block text-xs font-semibold text-ink-muted">
  Video title (English)
  </label>
  <input
@@ -459,12 +469,12 @@ export function LessonForm({ initialData, isEditing = false, mentors }: LessonFo
  placeholder="Optional heading for this video"
  value={video.titles.en}
  onChange={(e) => updateVideo(idx, "titles", e.target.value, "en")}
- className="w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#22332E] focus:ring-2 focus:ring-[#22332E]/20"
+ className="w-full rounded-lg border border-bridge/40 bg-surface px-4 py-2.5 text-sm text-foreground outline-none transition focus:border-gold focus:ring-2 focus:ring-teal/20"
  />
  </div>
 
  <div>
- <label className="mb-1 block text-xs font-semibold text-slate-600">
+ <label className="mb-1 block text-xs font-semibold text-ink-muted">
  Video title (Khmer)
  </label>
  <input
@@ -472,7 +482,7 @@ export function LessonForm({ initialData, isEditing = false, mentors }: LessonFo
  placeholder="ចំណងជើងវីដេអូ (ច្រើនឯក)"
  value={video.titles.km}
  onChange={(e) => updateVideo(idx, "titles", e.target.value, "km")}
- className="w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#22332E] focus:ring-2 focus:ring-[#22332E]/20"
+ className="w-full rounded-lg border border-bridge/40 bg-surface px-4 py-2.5 text-sm text-foreground outline-none transition focus:border-gold focus:ring-2 focus:ring-teal/20"
  />
  </div>
  </div>
@@ -490,24 +500,24 @@ export function LessonForm({ initialData, isEditing = false, mentors }: LessonFo
  const paidVideoSection = (
  <>
  <div className="flex items-center justify-between">
- <h3 className="font-semibold text-[#22332E]">Upload videos</h3>
+ <h3 className="font-semibold text-foreground">Upload videos</h3>
  <button
  type="button"
  onClick={() => addPaidVideo("")}
- className="text-xs font-semibold text-[#22332E] transition hover:text-[#1D4ED8]"
+ className="text-xs font-semibold text-foreground transition hover:text-gold"
  >
  + Add video
  </button>
  </div>
 
  {paidVideos.map((video, idx) => (
- <div key={idx} className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+ <div key={idx} className="rounded-lg border border-bridge/40 bg-surface-soft p-4">
  <div className="mb-3 flex items-center justify-between">
- <span className="text-xs font-semibold text-slate-600">Video {idx + 1}</span>
+ <span className="text-xs font-semibold text-ink-muted">Video {idx + 1}</span>
  <button
  type="button"
  onClick={() => requestRemovePaidVideo(idx)}
- className="text-xs font-semibold text-red-500 transition hover:text-red-700"
+ className="text-xs font-semibold text-red-500 transition hover:text-red-400"
  >
  Remove
  </button>
@@ -515,7 +525,7 @@ export function LessonForm({ initialData, isEditing = false, mentors }: LessonFo
 
  <div className="space-y-3">
  {video.url === "" ? (
- <div className="rounded-lg border border-slate-200 bg-white p-4">
+ <div className="rounded-lg border border-bridge/40 bg-surface p-4">
  <R2Uploader
  bucketName="trading-lesson"
  accept=".mp4,.mov,.webm,.avi,.mkv"
@@ -544,7 +554,7 @@ export function LessonForm({ initialData, isEditing = false, mentors }: LessonFo
  )}
 
  <div>
- <label className="mb-1 block text-xs font-semibold text-slate-600">
+ <label className="mb-1 block text-xs font-semibold text-ink-muted">
  Video title (English)
  </label>
  <input
@@ -552,12 +562,12 @@ export function LessonForm({ initialData, isEditing = false, mentors }: LessonFo
  placeholder="Optional heading for this video"
  value={video.titles.en}
  onChange={(e) => updatePaidVideo(idx, "titles", e.target.value, "en")}
- className="w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#22332E] focus:ring-2 focus:ring-[#22332E]/20"
+ className="w-full rounded-lg border border-bridge/40 bg-surface px-4 py-2.5 text-sm text-foreground outline-none transition focus:border-gold focus:ring-2 focus:ring-teal/20"
  />
  </div>
 
  <div>
- <label className="mb-1 block text-xs font-semibold text-slate-600">
+ <label className="mb-1 block text-xs font-semibold text-ink-muted">
  Video title (Khmer)
  </label>
  <input
@@ -565,7 +575,7 @@ export function LessonForm({ initialData, isEditing = false, mentors }: LessonFo
  placeholder="ចំណងជើងវីដេអូ (ច្រើនឯក)"
  value={video.titles.km}
  onChange={(e) => updatePaidVideo(idx, "titles", e.target.value, "km")}
- className="w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#22332E] focus:ring-2 focus:ring-[#22332E]/20"
+ className="w-full rounded-lg border border-bridge/40 bg-surface px-4 py-2.5 text-sm text-foreground outline-none transition focus:border-gold focus:ring-2 focus:ring-teal/20"
  />
  </div>
  </div>
@@ -582,13 +592,13 @@ export function LessonForm({ initialData, isEditing = false, mentors }: LessonFo
 
  return (
  <>
- <div className="w-full rounded-xl border border-slate-200 bg-white">
- <div className="border-b border-slate-100 px-4 py-5 sm:px-6">
+ <div className="w-full rounded-xl border border-bridge/40 bg-surface">
+ <div className="border-b border-bridge/30 px-4 py-5 sm:px-6">
  <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
  Step {step + 1} of {STEPS.length}
  </p>
- <h2 className="mt-1 text-base font-bold text-[#22332E]">{STEPS[step].title}</h2>
- <p className="mt-0.5 text-sm text-slate-500">{STEPS[step].hint}</p>
+ <h2 className="mt-1 text-base font-bold text-foreground">{STEPS[step].title}</h2>
+ <p className="mt-0.5 text-sm text-ink-soft">{STEPS[step].hint}</p>
 
  <ol className="mt-5 flex flex-wrap gap-2" aria-label="Form progress">
  {STEPS.map((s, i) => {
@@ -611,10 +621,10 @@ export function LessonForm({ initialData, isEditing = false, mentors }: LessonFo
  className={[
  "flex items-center gap-2 rounded-full border px-3 py-1.5 text-left text-xs font-semibold transition",
  active
- ? "border-[#22332E] bg-[#EEF8F7] text-[#22332E]"
+ ? "border-gold bg-surface-soft text-foreground"
  : done
- ? "border-emerald-200 bg-emerald-50 text-emerald-800 hover:bg-emerald-100"
- : "border-slate-200 bg-slate-50 text-slate-400",
+ ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/15"
+ : "border-bridge/40 bg-surface-soft text-slate-400",
  i > step ? "cursor-not-allowed opacity-60" : "cursor-pointer",
  ].join(" ")}
  aria-current={active ? "step" : undefined}
@@ -623,10 +633,10 @@ export function LessonForm({ initialData, isEditing = false, mentors }: LessonFo
  className={[
  "flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px]",
  active
- ? "bg-[#22332E] text-white"
+ ? "bg-teal text-white"
  : done
  ? "bg-emerald-500 text-white"
- : "bg-slate-200 text-slate-500",
+ : "bg-bridge/40 text-ink-soft",
  ].join(" ")}
  >
  {done ? "✓" : i + 1}
@@ -643,14 +653,14 @@ export function LessonForm({ initialData, isEditing = false, mentors }: LessonFo
  {/* Step 1 — Basics */}
  <div className={step === 0 ? "space-y-5" : "hidden"}>
  <div>
- <label className="mb-1.5 block text-xs font-semibold text-slate-600">
+ <label className="mb-1.5 block text-xs font-semibold text-ink-muted">
  Lesson type <span className="text-red-500">*</span>
  </label>
  <div className="flex gap-3">
  {(["free", "paid"] as const).map((type) => (
  <label
  key={type}
- className="flex cursor-pointer items-center gap-2 rounded-lg border border-slate-200 px-4 py-2.5 text-sm transition-colors has-[:checked]:border-[#22332E] has-[:checked]:bg-[#EEF8F7]"
+ className="flex cursor-pointer items-center gap-2 rounded-lg border border-bridge/40 px-4 py-2.5 text-sm transition-colors has-[:checked]:border-gold has-[:checked]:bg-surface-soft"
  >
  <input
  type="radio"
@@ -658,7 +668,7 @@ export function LessonForm({ initialData, isEditing = false, mentors }: LessonFo
  value={type}
  checked={lessonType === type}
  onChange={(e) => setLessonType(e.target.value as LessonType)}
- className="accent-[#22332E]"
+ className="accent-teal"
  />
  {type === "free" ? "Free (YouTube)" : "Paid (Cloudflare)"}
  </label>
@@ -668,7 +678,7 @@ export function LessonForm({ initialData, isEditing = false, mentors }: LessonFo
 
  <div className="grid gap-5 sm:grid-cols-2">
  <div>
- <label className="mb-1.5 block text-xs font-semibold text-slate-600">
+ <label className="mb-1.5 block text-xs font-semibold text-ink-muted">
  Category
  </label>
  <select
@@ -687,7 +697,7 @@ export function LessonForm({ initialData, isEditing = false, mentors }: LessonFo
  </div>
 
  <div>
- <label className="mb-1.5 block text-xs font-semibold text-slate-600">
+ <label className="mb-1.5 block text-xs font-semibold text-ink-muted">
  Mentor
  </label>
  <select
@@ -707,7 +717,7 @@ export function LessonForm({ initialData, isEditing = false, mentors }: LessonFo
  </div>
 
  <div>
- <label className="mb-1.5 block text-xs font-semibold text-slate-600">
+ <label className="mb-1.5 block text-xs font-semibold text-ink-muted">
  Title (English) <span className="text-red-500">*</span>
  </label>
  <input
@@ -726,14 +736,14 @@ export function LessonForm({ initialData, isEditing = false, mentors }: LessonFo
 
  <div>
  <div className="mb-1.5 flex flex-wrap items-center justify-between gap-2">
- <label className="text-xs font-semibold text-slate-600">
+ <label className="text-xs font-semibold text-ink-muted">
  Slug <span className="text-red-500">*</span>
  </label>
  {slugTouched && titleEn.trim() ? (
  <button
  type="button"
  onClick={syncSlugFromTitle}
- className="text-xs font-semibold text-[#22332E] transition hover:text-[#1D4ED8]"
+ className="text-xs font-semibold text-foreground transition hover:text-gold"
  >
  Regenerate from title
  </button>
@@ -756,7 +766,7 @@ export function LessonForm({ initialData, isEditing = false, mentors }: LessonFo
  </div>
 
  <div>
- <label className="mb-1.5 block text-xs font-semibold text-slate-600">
+ <label className="mb-1.5 block text-xs font-semibold text-ink-muted">
  Title (Khmer) <span className="text-red-500">*</span>
  </label>
  <input
@@ -770,7 +780,7 @@ export function LessonForm({ initialData, isEditing = false, mentors }: LessonFo
  </div>
 
  <div>
- <label className="mb-1.5 block text-xs font-semibold text-slate-600">
+ <label className="mb-1.5 block text-xs font-semibold text-ink-muted">
  Approximate duration (minutes) <span className="text-red-500">*</span>
  </label>
  <input
@@ -787,7 +797,7 @@ export function LessonForm({ initialData, isEditing = false, mentors }: LessonFo
  {/* Step 2 — Summary */}
  <div className={step === 1 ? "space-y-5" : "hidden"}>
  <div>
- <label className="mb-1.5 block text-xs font-semibold text-slate-600">
+ <label className="mb-1.5 block text-xs font-semibold text-ink-muted">
  Summary (English) <span className="text-red-500">*</span>
  </label>
  <textarea
@@ -806,7 +816,7 @@ export function LessonForm({ initialData, isEditing = false, mentors }: LessonFo
  </div>
 
  <div>
- <label className="mb-1.5 block text-xs font-semibold text-slate-600">
+ <label className="mb-1.5 block text-xs font-semibold text-ink-muted">
  Summary (Khmer) <span className="text-red-500">*</span>
  </label>
  <textarea
@@ -822,7 +832,7 @@ export function LessonForm({ initialData, isEditing = false, mentors }: LessonFo
 
  {/* Step 3 — Videos */}
  <div className={step === 2 ? "space-y-4" : "hidden"}>
- <p className="text-xs text-slate-500">
+ <p className="text-xs text-ink-soft">
  {lessonType === "free"
  ? "Add one or more YouTube videos. Learners watch them embedded on the lesson page."
  : "Upload video files to Cloudflare R2. Each segment can have optional EN/KM titles."}
@@ -833,7 +843,7 @@ export function LessonForm({ initialData, isEditing = false, mentors }: LessonFo
  {/* Step 4 — Objectives */}
  <div className={step === 3 ? "space-y-5" : "hidden"}>
  <div>
- <label className="mb-1.5 block text-xs font-semibold text-slate-600">
+ <label className="mb-1.5 block text-xs font-semibold text-ink-muted">
  Objectives (English) <span className="text-red-500">*</span>
  </label>
  <textarea
@@ -847,7 +857,7 @@ export function LessonForm({ initialData, isEditing = false, mentors }: LessonFo
  </div>
 
  <div>
- <label className="mb-1.5 block text-xs font-semibold text-slate-600">
+ <label className="mb-1.5 block text-xs font-semibold text-ink-muted">
  Objectives (Khmer) <span className="text-red-500">*</span>
  </label>
  <textarea
@@ -863,34 +873,34 @@ export function LessonForm({ initialData, isEditing = false, mentors }: LessonFo
  {/* Step 5 — Thumbnail & publish */}
  <div className={step === 4 ? "space-y-5" : "hidden"}>
  <div>
- <span className="mb-1.5 block text-xs font-semibold text-slate-600">
+ <span className="mb-1.5 block text-xs font-semibold text-ink-muted">
  Status <span className="text-red-500">*</span>
  </span>
  <div className="flex gap-3">
  {(["Draft", "Published"] as const).map((s) => (
  <label
  key={s}
- className="flex cursor-pointer items-center gap-2 rounded-lg border border-slate-200 px-4 py-2.5 text-sm transition-colors has-[:checked]:border-[#22332E] has-[:checked]:bg-[#EEF8F7]"
+ className="flex cursor-pointer items-center gap-2 rounded-lg border border-bridge/40 px-4 py-2.5 text-sm transition-colors has-[:checked]:border-gold has-[:checked]:bg-surface-soft"
  >
  <input
  type="radio"
  name="status"
  value={s}
  defaultChecked={s === defaultStatus}
- className="accent-[#22332E]"
+ className="accent-teal"
  />
  {s}
  </label>
  ))}
  </div>
  <p className="mt-2 text-xs text-slate-400">
- Only <strong className="font-semibold text-slate-600">Published</strong> lessons
+ Only <strong className="font-semibold text-ink-muted">Published</strong> lessons
  appear on the public Education page.
  </p>
  </div>
 
  <div className="space-y-3">
- <label className="block text-xs font-semibold text-slate-600">
+ <label className="block text-xs font-semibold text-ink-muted">
  Thumbnail <span className="font-normal text-slate-400">(optional)</span>
  </label>
  <div className="flex gap-2">
@@ -902,8 +912,8 @@ export function LessonForm({ initialData, isEditing = false, mentors }: LessonFo
  className={[
  "rounded-lg px-4 py-2 text-sm font-semibold transition",
  thumbnailMode === mode
- ? "bg-[#22332E] text-white"
- : "border border-slate-200 text-slate-600 hover:border-[#22332E] hover:text-[#22332E]",
+ ? "bg-teal text-white"
+ : "border border-bridge/40 text-ink-muted hover:border-gold hover:text-foreground",
  ].join(" ")}
  >
  {mode === "url" ? "Paste URL" : "Upload image"}
@@ -931,7 +941,7 @@ export function LessonForm({ initialData, isEditing = false, mentors }: LessonFo
  )}
 
  {thumbnailUrl ? (
- <div className="overflow-hidden rounded-lg border border-slate-200 bg-slate-50 p-2">
+ <div className="overflow-hidden rounded-lg border border-bridge/40 bg-surface-soft p-2">
  {/* eslint-disable-next-line @next/next/no-img-element */}
  <img
  src={thumbnailUrl}
@@ -947,12 +957,12 @@ export function LessonForm({ initialData, isEditing = false, mentors }: LessonFo
  </div>
  </div>
 
- <div className="mt-8 flex flex-col-reverse gap-3 border-t border-slate-100 pt-6 sm:flex-row sm:items-center sm:justify-between">
+ <div className="mt-8 flex flex-col-reverse gap-3 border-t border-bridge/30 pt-6 sm:flex-row sm:items-center sm:justify-between">
  <button
  type="button"
  onClick={handleBack}
  disabled={step === 0 || isSaving}
- className="rounded-lg border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-600 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+ className="rounded-lg border border-bridge/40 px-4 py-2.5 text-sm font-semibold text-ink-muted transition hover:bg-surface-soft disabled:cursor-not-allowed disabled:opacity-40"
  >
  Back
  </button>
@@ -962,7 +972,7 @@ export function LessonForm({ initialData, isEditing = false, mentors }: LessonFo
  <button
  type="button"
  onClick={handleNext}
- className="rounded-lg bg-[#22332E] px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[#1D4ED8]"
+ className="rounded-lg bg-teal px-6 py-2.5 text-sm font-semibold text-white transition hover:brightness-110"
  >
  Continue
  </button>
@@ -970,7 +980,7 @@ export function LessonForm({ initialData, isEditing = false, mentors }: LessonFo
  <button
  type="submit"
  disabled={isSaving}
- className="rounded-lg bg-[#22332E] px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[#1D4ED8] disabled:cursor-not-allowed disabled:bg-slate-300"
+ className="rounded-lg bg-teal px-6 py-2.5 text-sm font-semibold text-white transition hover:brightness-110 disabled:cursor-not-allowed disabled:bg-slate-300"
  >
  {isSaving
  ? "Saving..."

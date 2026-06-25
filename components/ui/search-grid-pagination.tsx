@@ -23,7 +23,7 @@ export function SearchGridPagination({
           type="button"
           onClick={() => onPageChange(Math.max(0, page - 1))}
           disabled={page === 0}
-          className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 transition hover:border-teal/40 hover:text-teal disabled:cursor-not-allowed disabled:opacity-40"
+          className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-bridge/40 bg-surface text-ink-soft transition hover:border-teal/40 hover:text-teal disabled:cursor-not-allowed disabled:opacity-40"
           aria-label="Previous page"
         >
           <svg viewBox="0 0 16 16" fill="currentColor" className="h-3.5 w-3.5" aria-hidden>
@@ -43,7 +43,7 @@ export function SearchGridPagination({
             className={`flex h-8 min-w-8 cursor-pointer items-center justify-center rounded-lg border px-2 text-xs font-semibold transition ${
               i === page
                 ? "border-teal bg-teal text-white"
-                : "border-slate-200 bg-white text-slate-500 hover:border-teal/40 hover:text-teal"
+                : "border-bridge/40 bg-surface text-ink-soft hover:border-teal/40 hover:text-teal"
             }`}
             aria-label={`Page ${i + 1}`}
             aria-current={i === page ? "page" : undefined}
@@ -56,7 +56,7 @@ export function SearchGridPagination({
           type="button"
           onClick={() => onPageChange(Math.min(totalPages - 1, page + 1))}
           disabled={page === totalPages - 1}
-          className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 transition hover:border-teal/40 hover:text-teal disabled:cursor-not-allowed disabled:opacity-40"
+          className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-bridge/40 bg-surface text-ink-soft transition hover:border-teal/40 hover:text-teal disabled:cursor-not-allowed disabled:opacity-40"
           aria-label="Next page"
         >
           <svg viewBox="0 0 16 16" fill="currentColor" className="h-3.5 w-3.5" aria-hidden>

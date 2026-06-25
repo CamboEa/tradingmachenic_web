@@ -73,7 +73,7 @@ export default async function SiteGatePage({
   const destination = safeGateReturnTo(returnTo, locale);
 
   return (
-    <main className="relative flex min-h-screen flex-1 items-center justify-center overflow-hidden bg-[#F8FAFC] px-4 py-10 sm:px-6 lg:py-16">
+    <main className="relative flex min-h-screen flex-1 items-center justify-center overflow-hidden bg-background px-4 py-10 sm:px-6 lg:py-16">
       <div
         className="pointer-events-none absolute inset-0 bg-dots opacity-35"
         aria-hidden
@@ -119,10 +119,10 @@ export default async function SiteGatePage({
             </ul>
           </div>
 
-          <p className="mt-10 text-xs text-slate-500">{copy.disclaimer}</p>
+          <p className="mt-10 text-xs text-ink-soft">{copy.disclaimer}</p>
         </div>
 
-        <div className="flex-1 bg-white px-8 py-10 sm:px-10 sm:py-12">
+        <div className="flex-1 bg-surface px-8 py-10 sm:px-10 sm:py-12">
           <div className="mb-8 flex items-center gap-3 lg:hidden">
             <SiteLogo size="md" />
             <span className="text-[11px] font-bold uppercase tracking-[0.25em] text-gold">
@@ -131,7 +131,7 @@ export default async function SiteGatePage({
           </div>
 
           <div className="flex items-start gap-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 text-gold">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-bridge/40 bg-surface-soft text-gold">
               <ShieldIcon className="h-6 w-6" />
             </div>
             <div>
@@ -141,7 +141,7 @@ export default async function SiteGatePage({
               <h1 className="mt-1.5 text-2xl font-bold tracking-tight text-slate-brand sm:text-3xl">
                 {copy.title}
               </h1>
-              <p className="mt-2 text-sm leading-relaxed text-slate-500">
+              <p className="mt-2 text-sm leading-relaxed text-ink-soft">
                 {copy.intro}
               </p>
             </div>

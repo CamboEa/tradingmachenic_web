@@ -85,7 +85,7 @@ export function TurnstileWidget({
 
         widgetIdRef.current = window.turnstile.render(containerRef.current, {
           sitekey: siteKey,
-          theme: "light",
+          theme: "dark",
           callback: (token) => onTokenChangeRef.current(token),
           "expired-callback": () => onTokenChangeRef.current(""),
           "error-callback": () => {
@@ -112,7 +112,7 @@ export function TurnstileWidget({
 
   if (failed) {
     return (
-      <p className="text-center text-sm leading-relaxed text-red-600">
+      <p className="text-center text-sm leading-relaxed text-red-400">
         {loadErrorLabel}
       </p>
     );

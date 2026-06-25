@@ -94,11 +94,11 @@ export function HomeHeroSplit({ locale, dict }: { locale: Locale; dict: Dictiona
         {/* Decorative divider */}
         <div className="mt-7 flex items-center gap-2" aria-hidden>
           <span className="h-px w-10 bg-linear-to-r from-transparent to-white/15" />
-          <span className="h-1 w-1 rounded-full bg-[#22332E]/50" />
-          <span className="h-px w-16 bg-white/10" />
+          <span className="h-1 w-1 rounded-full bg-teal/50" />
+          <span className="h-px w-16 bg-surface/10" />
           <span className="h-1.5 w-1.5 rounded-full bg-(--color-gold)/60" />
-          <span className="h-px w-16 bg-white/10" />
-          <span className="h-1 w-1 rounded-full bg-[#22332E]/50" />
+          <span className="h-px w-16 bg-surface/10" />
+          <span className="h-1 w-1 rounded-full bg-teal/50" />
           <span className="h-px w-10 bg-linear-to-l from-transparent to-white/15" />
         </div>
 
@@ -117,16 +117,16 @@ export function HomeHeroSplit({ locale, dict }: { locale: Locale; dict: Dictiona
         >
           <Link
             href={`/${locale}/register`}
-            className="group relative inline-flex items-center gap-2 overflow-hidden rounded-xl bg-[#22332E] px-8 py-3.5 text-sm font-bold uppercase tracking-[0.12em] text-white shadow-[0_8px_32px_rgba(27,58,53,0.35)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_40px_rgba(27,58,53,0.50)]"
+            className="group relative inline-flex items-center gap-2 overflow-hidden rounded-xl bg-teal px-8 py-3.5 text-sm font-bold uppercase tracking-[0.12em] text-white shadow-[0_8px_32px_rgba(27,58,53,0.35)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_40px_rgba(27,58,53,0.50)]"
           >
             <span className="relative z-10">{h.heroSplitCta}</span>
             <span className="relative z-10 transition-transform duration-300 group-hover:translate-x-1" aria-hidden>→</span>
-            <span className="absolute inset-0 -translate-x-full bg-white/10 transition-transform duration-500 group-hover:translate-x-0" aria-hidden />
+            <span className="absolute inset-0 -translate-x-full bg-surface/10 transition-transform duration-500 group-hover:translate-x-0" aria-hidden />
           </Link>
 
           <Link
             href={`/${locale}/curriculum`}
-            className="inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/5 px-8 py-3.5 text-sm font-semibold text-white/90 backdrop-blur-sm transition duration-300 hover:-translate-y-0.5 hover:border-white/40 hover:bg-white/10 hover:text-white"
+            className="inline-flex items-center gap-2 rounded-xl border border-white/20 bg-surface/5 px-8 py-3.5 text-sm font-semibold text-white/90 backdrop-blur-sm transition duration-300 hover:-translate-y-0.5 hover:border-white/40 hover:bg-surface/10 hover:text-white"
           >
             {h.ctaOutline}
           </Link>
@@ -146,7 +146,7 @@ export function HomeHeroSplit({ locale, dict }: { locale: Locale; dict: Dictiona
       {/* Scroll indicator */}
       <div className="absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2">
         <span className="text-[10px] uppercase tracking-[0.22em] text-white/30">Scroll</span>
-        <div className="relative h-8 w-px overflow-hidden bg-white/10">
+        <div className="relative h-8 w-px overflow-hidden bg-surface/10">
           <span
             className="absolute inset-x-0 top-0 h-full bg-linear-to-b from-transparent via-white/60 to-transparent"
             style={{ animation: "scrollLine 1.6s ease-in-out infinite" }}

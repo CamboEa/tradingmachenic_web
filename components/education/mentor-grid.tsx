@@ -3,17 +3,7 @@ import type { Dictionary, Locale } from "@/lib/i18n";
 import type { Lesson } from "@/lib/course";
 import type { Mentor } from "@/lib/mentors";
 
-import { MentorCard } from "./mentor-card";
-
-function lessonCountForMentor(
-  lessons: Lesson[],
-  mentor: Mentor,
-  category: EducationCategory,
-): number {
-  return lessons.filter(
-    (lesson) => lesson.mentorSlug === mentor.slug && lesson.category === category,
-  ).length;
-}
+import { MentorSearchGrid } from "./mentor-search-grid";
 
 export function MentorGrid({
   category,
@@ -30,7 +20,7 @@ export function MentorGrid({
 }) {
   if (mentors.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-bridge/50 bg-white px-6 py-20 text-center">
+      <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-bridge/50 bg-surface px-6 py-20 text-center">
         <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-surface-soft text-gold">
           <svg viewBox="0 0 24 24" fill="none" className="h-7 w-7" aria-hidden>
             <path
@@ -53,17 +43,12 @@ export function MentorGrid({
   }
 
   return (
-    <div className="flex flex-col gap-5">
-      {mentors.map((mentor) => (
-        <MentorCard
-          key={mentor.slug}
-          mentor={mentor}
-          category={category}
-          locale={locale}
-          dict={dict}
-          lessonCount={lessonCountForMentor(lessons, mentor, category)}
-        />
-      ))}
-    </div>
+    <MentorSearchGrid
+      category={category}
+      locale={locale}
+      dict={dict}
+      lessons={lessons}
+      mentors={mentors}
+    />
   );
 }

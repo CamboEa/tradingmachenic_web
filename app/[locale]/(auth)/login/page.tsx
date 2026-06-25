@@ -68,13 +68,13 @@ export default async function LoginPage({
             </ul>
           </div>
 
-          <p className="text-xs text-slate-500 mt-10">
+          <p className="text-xs text-ink-soft mt-10">
             Education only — not financial advice.
           </p>
         </div>
 
         {/* ── Right form panel ── */}
-        <div className="flex-1 bg-white px-8 py-10 sm:px-10 sm:py-12">
+        <div className="flex-1 bg-surface px-8 py-10 sm:px-10 sm:py-12">
           {/* Mobile logo */}
           <div className="flex items-center gap-3 mb-8 lg:hidden">
             <SiteLogo size="md" />
@@ -87,7 +87,7 @@ export default async function LoginPage({
             <h1 className="text-2xl font-bold tracking-tight text-slate-brand sm:text-3xl">
               {dict.loginPage.title}
             </h1>
-            <p className="mt-1.5 text-sm text-slate-500">
+            <p className="mt-1.5 text-sm text-ink-soft">
               Sign in to continue your learning journey.
             </p>
           </div>
@@ -103,7 +103,7 @@ export default async function LoginPage({
             redirectTo={redirectTo}
           />
 
-          <p className="mt-6 text-center text-sm text-slate-500">
+          <p className="mt-6 text-center text-sm text-ink-soft">
             {dict.loginPage.switchPrompt}{" "}
             <Link
               href={`/${locale}/register`}

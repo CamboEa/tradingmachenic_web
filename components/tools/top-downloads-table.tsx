@@ -42,7 +42,7 @@ export function TopDownloadsTable({
   if (top.length === 0) return null;
 
   return (
-    <div className="w-full overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+    <div className="w-full overflow-hidden rounded-none border border-bridge/40 bg-surface shadow-sm">
       <div className="w-full overflow-x-auto">
         <table className="w-full min-w-full table-fixed border-collapse text-left">
           <colgroup>
@@ -53,7 +53,7 @@ export function TopDownloadsTable({
             <col style={{ width: "8.5rem" }} />
           </colgroup>
           <thead>
-            <tr className="border-b border-slate-200 bg-linear-to-r from-[#22332E] to-[#12352f]">
+            <tr className="border-b border-bridge/40 bg-linear-to-r from-[#22332E] to-[#12352f]">
               <th className="w-12 px-4 py-3.5 text-[11px] font-bold uppercase tracking-wider text-white/70">
                 {t.rank}
               </th>
@@ -77,7 +77,7 @@ export function TopDownloadsTable({
               const description = locale === "km" ? tool.description_km : tool.description_en;
 
               return (
-                <tr key={tool.id} className="transition hover:bg-slate-50/80">
+                <tr key={tool.id} className="transition hover:bg-surface-soft/80">
                   <td className="px-4 py-4 text-sm font-bold tabular-nums text-slate-300">
                     {i + 1}
                   </td>
@@ -94,7 +94,7 @@ export function TopDownloadsTable({
                           className="h-10 w-16 shrink-0 rounded-md object-cover ring-1 ring-slate-200"
                         />
                       ) : (
-                        <div className="flex h-10 w-16 shrink-0 items-center justify-center rounded-md bg-slate-100 ring-1 ring-slate-200">
+                        <div className="flex h-10 w-16 shrink-0 items-center justify-center rounded-md bg-surface-soft ring-1 ring-slate-200">
                           <svg viewBox="0 0 20 20" className="h-5 w-5 text-slate-300" aria-hidden>
                             <path d="M4 14h12M6 12V8M10 12V5M14 12V9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" fill="none" />
                           </svg>
@@ -102,13 +102,13 @@ export function TopDownloadsTable({
                       )}
                       <div className="min-w-0 flex-1">
                         <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
-                          <span className="font-semibold text-slate-900 transition group-hover:text-teal">
+                          <span className="font-semibold text-foreground transition group-hover:text-teal">
                             {tool.name}
                           </span>
                           <span className="font-mono text-[10px] text-slate-400">v{tool.version}</span>
                         </div>
                         {description ? (
-                          <p className="mt-0.5 line-clamp-1 text-xs text-slate-500">
+                          <p className="mt-0.5 line-clamp-1 text-xs text-ink-soft">
                             {description}
                           </p>
                         ) : null}
@@ -116,15 +116,15 @@ export function TopDownloadsTable({
                     </Link>
                   </td>
                   <td className="hidden px-4 py-4 sm:table-cell">
-                    <span className="inline-flex rounded-md bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-600">
+                    <span className="inline-flex rounded-md bg-surface-soft px-2 py-1 text-xs font-semibold text-ink-muted">
                       {tool.type === "indicator" ? t.indicator : t.ea}
                     </span>
                   </td>
-                  <td className="hidden px-4 py-4 text-sm text-slate-600 md:table-cell">
+                  <td className="hidden px-4 py-4 text-sm text-ink-muted md:table-cell">
                     {tool.platform}
                   </td>
                   <td className="px-4 py-4 text-right">
-                    <div className="font-semibold tabular-nums text-slate-900">
+                    <div className="font-semibold tabular-nums text-foreground">
                       {formatDownloadCount(total)}
                     </div>
                     {tool.platform === "MT4 & MT5" ? (

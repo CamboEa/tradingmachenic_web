@@ -61,7 +61,7 @@ export async function NotFoundContent({
           <h1 id="not-found-title" className={cn("mt-4", ui.pageTitle)}>
             {copy.title}
           </h1>
-          <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-slate-500 sm:text-base">
+          <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-ink-soft sm:text-base">
             {copy.description}
           </p>
 
@@ -84,7 +84,7 @@ export async function NotFoundContent({
               <Link
                 key={link.href}
                 href={link.href}
-                className="font-medium text-slate-500 transition hover:text-teal"
+                className="font-medium text-ink-soft transition hover:text-teal"
               >
                 {link.label}
               </Link>

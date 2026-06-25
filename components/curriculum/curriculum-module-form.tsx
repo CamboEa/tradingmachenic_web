@@ -80,86 +80,86 @@ export function CurriculumModuleForm({ phaseId, module }: Props) {
  }
 
  return (
- <div className="w-full rounded-xl border border-slate-200 bg-white p-6">
- <h2 className="mb-6 text-base font-bold text-[#22332E]">{isEdit ? "Edit module" : "New module"}</h2>
+ <div className="w-full rounded-xl border border-bridge/40 bg-surface p-6">
+ <h2 className="mb-6 text-base font-bold text-foreground">{isEdit ? "Edit module" : "New module"}</h2>
  <form className="space-y-5" onSubmit={handleSubmit}>
  <div>
- <label className="mb-1.5 block text-xs font-semibold text-slate-600">Sort order</label>
+ <label className="mb-1.5 block text-xs font-semibold text-ink-muted">Sort order</label>
  <input
  type="number"
  name="sort_order"
  defaultValue={module?.sort_order ?? 0}
- className="w-full max-w-[10rem] rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm outline-none focus:border-[#22332E] focus:bg-white"
+ className="w-full max-w-[10rem] rounded-lg border border-bridge/40 bg-surface-soft px-4 py-2.5 text-sm outline-none focus:border-gold focus:bg-surface"
  />
  </div>
 
  <div className="grid gap-4 sm:grid-cols-2">
  <div>
- <label className="mb-1.5 block text-xs font-semibold text-slate-600">Title (English)</label>
+ <label className="mb-1.5 block text-xs font-semibold text-ink-muted">Title (English)</label>
  <input
  name="title_en"
  required
  defaultValue={module?.title_en}
- className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm outline-none focus:border-[#22332E] focus:bg-white"
+ className="w-full rounded-lg border border-bridge/40 bg-surface-soft px-4 py-2.5 text-sm outline-none focus:border-gold focus:bg-surface"
  />
  </div>
  <div>
- <label className="mb-1.5 block text-xs font-semibold text-slate-600">Title (Khmer)</label>
+ <label className="mb-1.5 block text-xs font-semibold text-ink-muted">Title (Khmer)</label>
  <input
  name="title_km"
  required
  defaultValue={module?.title_km}
- className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm outline-none focus:border-[#22332E] focus:bg-white"
+ className="w-full rounded-lg border border-bridge/40 bg-surface-soft px-4 py-2.5 text-sm outline-none focus:border-gold focus:bg-surface"
  />
  </div>
  </div>
 
  <div>
- <label className="mb-1.5 block text-xs font-semibold text-slate-600">Focus (English)</label>
+ <label className="mb-1.5 block text-xs font-semibold text-ink-muted">Focus (English)</label>
  <textarea
  name="focus_en"
  required
  rows={3}
  defaultValue={module?.focus_en}
- className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm outline-none focus:border-[#22332E] focus:bg-white"
+ className="w-full rounded-lg border border-bridge/40 bg-surface-soft px-4 py-2.5 text-sm outline-none focus:border-gold focus:bg-surface"
  />
  </div>
  <div>
- <label className="mb-1.5 block text-xs font-semibold text-slate-600">Focus (Khmer)</label>
+ <label className="mb-1.5 block text-xs font-semibold text-ink-muted">Focus (Khmer)</label>
  <textarea
  name="focus_km"
  required
  rows={3}
  defaultValue={module?.focus_km}
- className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm outline-none focus:border-[#22332E] focus:bg-white"
+ className="w-full rounded-lg border border-bridge/40 bg-surface-soft px-4 py-2.5 text-sm outline-none focus:border-gold focus:bg-surface"
  />
  </div>
 
  <div>
- <label className="mb-1.5 block text-xs font-semibold text-slate-600">Activities (English)</label>
+ <label className="mb-1.5 block text-xs font-semibold text-ink-muted">Activities (English)</label>
  <p className="mb-1 text-xs text-slate-400">One bullet per line.</p>
  <textarea
  name="activities_en"
  rows={6}
  defaultValue={module?.activities_en}
- className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 font-mono text-sm outline-none focus:border-[#22332E] focus:bg-white"
+ className="w-full rounded-lg border border-bridge/40 bg-surface-soft px-4 py-2.5 font-mono text-sm outline-none focus:border-gold focus:bg-surface"
  />
  </div>
  <div>
- <label className="mb-1.5 block text-xs font-semibold text-slate-600">Activities (Khmer)</label>
+ <label className="mb-1.5 block text-xs font-semibold text-ink-muted">Activities (Khmer)</label>
  <p className="mb-1 text-xs text-slate-400">One bullet per line (same line count as English recommended).</p>
  <textarea
  name="activities_km"
  rows={6}
  defaultValue={module?.activities_km}
- className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 font-mono text-sm outline-none focus:border-[#22332E] focus:bg-white"
+ className="w-full rounded-lg border border-bridge/40 bg-surface-soft px-4 py-2.5 font-mono text-sm outline-none focus:border-gold focus:bg-surface"
  />
  </div>
 
  <button
  type="submit"
  disabled={isSaving}
- className="w-full rounded-lg bg-[#22332E] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#1D4ED8] disabled:bg-slate-300"
+ className="w-full rounded-lg bg-teal px-4 py-2.5 text-sm font-semibold text-white transition hover:brightness-110 disabled:bg-slate-300"
  >
  {isSaving ? "Saving…" : isEdit ? "Save module" : "Create module"}
  </button>

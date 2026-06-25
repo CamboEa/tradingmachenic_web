@@ -18,7 +18,6 @@ function RowCard({ lesson, locale, index, dict }: {
   const title      = lesson.titles[locale];
   const isFree     = lesson.type === "free";
   const videoCount = lessonVideoCount(lesson);
-  const num        = String(index + 1).padStart(2, "0");
 
   return (
     <Link
@@ -38,14 +37,6 @@ function RowCard({ lesson, locale, index, dict }: {
         )}
         {/* Gradient */}
         <div className="absolute inset-0 bg-linear-to-t from-slate-900 via-transparent to-transparent" />
-
-        {/* Number pill */}
-        <div className="absolute left-3 top-3 flex items-baseline gap-0.5">
-          <span className="text-[9px] font-bold uppercase tracking-widest text-white/40">
-            {dict.course.lessonProgress?.split("{current}")[0]?.trim() || ""}
-          </span>
-          <span className="text-lg font-black leading-none text-white/80 tabular-nums">{num}</span>
-        </div>
 
         {/* Video count */}
         {videoCount > 0 && (
@@ -127,14 +118,14 @@ function FeaturedHero({ lesson, locale, index, dict }: {
         {/* Meta */}
         <div className="mt-5 flex flex-wrap items-center gap-4 text-xs text-slate-400">
           <span className="flex items-center gap-1.5">
-            <svg viewBox="0 0 16 16" fill="currentColor" className="h-3.5 w-3.5 text-slate-500" aria-hidden>
+            <svg viewBox="0 0 16 16" fill="currentColor" className="h-3.5 w-3.5 text-ink-soft" aria-hidden>
               <path fillRule="evenodd" d="M1 8a7 7 0 1 1 14 0A7 7 0 0 1 1 8Zm7.75-4.25a.75.75 0 0 0-1.5 0V8c0 .414.336.75.75.75h3.25a.75.75 0 0 0 0-1.5h-2.5v-3.5Z" clipRule="evenodd"/>
             </svg>
             {lesson.approximateMinutes} min
           </span>
           {videoCount > 0 && (
             <span className="flex items-center gap-1.5">
-              <svg viewBox="0 0 16 16" fill="currentColor" className="h-3.5 w-3.5 text-slate-500" aria-hidden>
+              <svg viewBox="0 0 16 16" fill="currentColor" className="h-3.5 w-3.5 text-ink-soft" aria-hidden>
                 <path d="M3 3.732a1.5 1.5 0 0 1 2.305-1.265l6.706 4.267a1.5 1.5 0 0 1 0 2.532l-6.706 4.268A1.5 1.5 0 0 1 3 12.267V3.732Z"/>
               </svg>
               {videoCount} video{videoCount !== 1 ? "s" : ""}
@@ -171,7 +162,7 @@ function LessonRow({ title, accent, lessons, locale, allLessons, dict }: {
       <div className="mb-4 flex items-center gap-3">
         <div className={`h-5 w-1 shrink-0 rounded-full ${accent}`} aria-hidden />
         <h2 className="text-base font-bold uppercase tracking-[0.15em] text-white">{title}</h2>
-        <span className="ml-1 text-xs text-slate-500">({lessons.length})</span>
+        <span className="ml-1 text-xs text-ink-soft">({lessons.length})</span>
       </div>
 
       {/* Horizontal scroll */}
@@ -229,7 +220,7 @@ export function EducationLessonGrid({
       {/* Search bar */}
       <div className="mb-8 flex justify-center">
         <div className="relative w-full max-w-sm">
-          <svg className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden>
+          <svg className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-soft" width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden>
             <circle cx="6.5" cy="6.5" r="5.5" stroke="currentColor" strokeWidth="1.5"/>
             <path d="M10.5 10.5L14 14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
           </svg>
@@ -246,12 +237,12 @@ export function EducationLessonGrid({
       {/* Search results */}
       {searched !== null ? (
         <div>
-          <p className="mb-4 text-xs text-slate-500">
+          <p className="mb-4 text-xs text-ink-soft">
             {searched.length} result{searched.length !== 1 ? "s" : ""} for &ldquo;{query}&rdquo;
           </p>
           {searched.length === 0 ? (
             <div className="py-20 text-center">
-              <p className="text-sm text-slate-500">{dict.course.noLessonsMatch}</p>
+              <p className="text-sm text-ink-soft">{dict.course.noLessonsMatch}</p>
             </div>
           ) : (
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">

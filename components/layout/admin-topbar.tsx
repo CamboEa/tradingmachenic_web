@@ -13,13 +13,13 @@ export function AdminTopbar() {
   const label = currentAdminLabel(pathname);
 
   return (
-    <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-3 border-b border-slate-200 bg-white/85 px-4 backdrop-blur-md lg:px-10">
+    <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-3 border-b border-bridge/40 bg-surface/85 px-4 backdrop-blur-md lg:px-10">
       <div className="flex items-center gap-3">
         {/* Mobile menu toggle */}
         <button
           type="button"
           onClick={() => setOpen(true)}
-          className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 text-slate-600 transition hover:bg-slate-50 lg:hidden"
+          className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-bridge/40 text-ink-muted transition hover:bg-surface-soft lg:hidden"
           aria-label="Open navigation menu"
         >
           <svg viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5">
@@ -40,7 +40,7 @@ export function AdminTopbar() {
       <Link
         href="/"
         target="_blank"
-        className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-600 transition hover:border-teal/40 hover:text-teal"
+        className="inline-flex items-center gap-1.5 rounded-lg border border-bridge/40 bg-surface px-3 py-1.5 text-xs font-semibold text-ink-muted transition hover:border-teal/40 hover:text-teal"
       >
         <svg viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5">
           <path d="M11 3a1 1 0 1 0 0 2h2.586l-6.293 6.293a1 1 0 1 0 1.414 1.414L15 6.414V9a1 1 0 1 0 2 0V4a1 1 0 0 0-1-1h-5Z" />
@@ -58,7 +58,7 @@ export function AdminTopbar() {
             onClick={() => setOpen(false)}
             className="absolute inset-0 bg-slate-900/50 backdrop-blur-sm"
           />
-          <div className="absolute left-0 top-0 flex h-full w-72 max-w-[85%] flex-col bg-[#22332E] text-slate-300 shadow-xl">
+          <div className="absolute left-0 top-0 flex h-full w-72 max-w-[85%] flex-col bg-teal text-slate-300 shadow-xl">
             <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
               <div className="flex items-center gap-3">
                 <SiteLogo size="sm" className="rounded-lg ring-1 ring-white/10" />
@@ -67,7 +67,7 @@ export function AdminTopbar() {
               <button
                 type="button"
                 onClick={() => setOpen(false)}
-                className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-white/5 hover:text-white"
+                className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-surface/5 hover:text-white"
                 aria-label="Close"
               >
                 <svg viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5">
@@ -78,7 +78,7 @@ export function AdminTopbar() {
             <nav className="flex-1 space-y-6 overflow-y-auto px-3 py-5">
               {NAV.map((section) => (
                 <div key={section.heading}>
-                  <p className="mb-1.5 px-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+                  <p className="mb-1.5 px-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-ink-soft">
                     {section.heading}
                   </p>
                   <ul className="space-y-0.5">
@@ -92,11 +92,11 @@ export function AdminTopbar() {
                             className={[
                               "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
                               active
-                                ? "bg-white/5 text-white"
-                                : "text-slate-400 hover:bg-white/5 hover:text-white",
+                                ? "bg-surface/5 text-white"
+                                : "text-slate-400 hover:bg-surface/5 hover:text-white",
                             ].join(" ")}
                           >
-                            <span className={active ? "text-[#22332E]" : "text-slate-500"}>
+                            <span className={active ? "text-foreground" : "text-ink-soft"}>
                               {item.icon}
                             </span>
                             {item.label}

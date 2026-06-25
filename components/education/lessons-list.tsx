@@ -92,12 +92,12 @@ export function LessonsList({ lessons }: LessonsListProps) {
       header: "Videos",
       align: "center",
       className: "tabular-nums",
-      cell: (lesson) => <span className="text-slate-500">{lesson.videos.length}</span>,
+      cell: (lesson) => <span className="text-ink-soft">{lesson.videos.length}</span>,
     },
     {
       header: "Duration",
       className: "whitespace-nowrap",
-      cell: (lesson) => <span className="text-slate-500">~{lesson.approximateMinutes} min</span>,
+      cell: (lesson) => <span className="text-ink-soft">~{lesson.approximateMinutes} min</span>,
     },
     {
       header: "Status",

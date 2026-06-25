@@ -28,7 +28,7 @@ export default async function UsersPage() {
       <div className="mt-8">
         {users.length === 0 ? (
           <Card className="px-8 py-14 text-center">
-            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-slate-100">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-surface-soft">
               <svg
                 viewBox="0 0 20 20"
                 fill="currentColor"
@@ -39,7 +39,7 @@ export default async function UsersPage() {
               </svg>
             </div>
             <h2 className="mt-4 text-xl font-bold text-slate-brand">No users yet</h2>
-            <p className="mx-auto mt-3 max-w-sm text-sm leading-relaxed text-slate-500">
+            <p className="mx-auto mt-3 max-w-sm text-sm leading-relaxed text-ink-soft">
               Registered users will appear here once people sign up.
             </p>
           </Card>

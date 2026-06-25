@@ -13,7 +13,7 @@ function buildSrc(): string {
     width: "100%",
     height: "100%",
     locale: "en",
-    colorTheme: "light",
+    colorTheme: "dark",
     autosize: true,
     showVolume: false,
     showMA: false,
@@ -33,7 +33,7 @@ function buildSrc(): string {
     topColor: "rgba(212,175,55,0.12)",
     bottomColor: "rgba(212,175,55,0)",
     backgroundColor: "rgba(255,255,255,0)",
-    gridLineColor: "rgba(0,0,0,0.05)",
+    gridLineColor: "rgba(255,255,255,0.08)",
     isTransparent: true,
     dateRanges: ["1d|1", "1m|30", "3m|60", "12m|1D", "60m|1W", "all|1M"],
   };

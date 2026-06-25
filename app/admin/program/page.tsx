@@ -64,7 +64,7 @@ export default async function ProgramPage() {
                       Order {phase.sort_order} · {phase.slug}
                     </p>
                     <h2 className="mt-0.5 text-base font-bold text-slate-brand">{phase.label_en}</h2>
-                    <p className="text-xs text-slate-500">{phase.label_km}</p>
+                    <p className="text-xs text-ink-soft">{phase.label_km}</p>
                   </div>
                   <div className="flex flex-wrap items-center gap-2">
                     <Badge variant="neutral">{phase.weeks.length} modules</Badge>
@@ -115,8 +115,8 @@ export default async function ProgramPage() {
                           </Badge>
                         </Td>
                         <Td className="font-semibold text-slate-brand">{week.titles.en}</Td>
-                        <Td className="text-slate-500">{week.titles.km}</Td>
-                        <Td className="max-w-xs text-xs leading-relaxed text-slate-500">
+                        <Td className="text-ink-soft">{week.titles.km}</Td>
+                        <Td className="max-w-xs text-xs leading-relaxed text-ink-soft">
                           {week.focus.en}
                         </Td>
                         <Td align="center">

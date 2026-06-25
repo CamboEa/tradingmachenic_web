@@ -30,7 +30,7 @@ export function FooterLanguageToggle({
 
  return (
  <div
- className="flex items-center gap-1 rounded-xl border border-white/10 bg-white/5 p-0.5"
+ className="flex items-center gap-1 rounded-xl border border-white/10 bg-surface/5 p-0.5"
  role="group"
  aria-label={n.language}
  >
@@ -41,8 +41,8 @@ export function FooterLanguageToggle({
  hrefLang={loc}
  className={
  locale === loc
- ? `${seg} bg-white/15 text-white`
- : `${seg} text-slate-400 hover:bg-white/10 hover:text-white`
+ ? `${seg} bg-surface/15 text-white`
+ : `${seg} text-slate-400 hover:bg-surface/10 hover:text-white`
  }
  aria-current={locale === loc ? "true" : undefined}
  >

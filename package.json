@@ -15,7 +15,9 @@
     "seed:tools": "node scripts/seed-tools.mjs",
     "seed:tools20": "node scripts/seed-tools20.mjs",
     "seed:lesson-mentors": "node scripts/seed-lesson-mentors.mjs",
-    "seed:mentors": "node scripts/seed-mentors.mjs"
+    "seed:mentors": "node scripts/seed-mentors.mjs",
+    "seed:thun-tula": "node scripts/seed-thun-tula-mentor.mjs",
+    "seed:thun-tula:fetch": "node scripts/seed-thun-tula-mentor.mjs --fetch"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1045.0",

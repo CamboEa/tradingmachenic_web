@@ -99,10 +99,10 @@ export default async function AdminDashboard() {
             {lessons.slice(0, 6).map((lesson) => (
               <Tr key={lesson.slug}>
                 <Td className="font-medium text-slate-brand">{lesson.titles.en}</Td>
-                <Td align="center" className="tabular-nums text-slate-500">
+                <Td align="center" className="tabular-nums text-ink-soft">
                   {lesson.videos.length}
                 </Td>
-                <Td className="whitespace-nowrap text-slate-500">~{lesson.approximateMinutes} min</Td>
+                <Td className="whitespace-nowrap text-ink-soft">~{lesson.approximateMinutes} min</Td>
                 <Td className="font-mono text-xs text-slate-400">{lesson.slug}</Td>
                 <Td align="right">
                   <RowActions>
@@ -138,17 +138,17 @@ export default async function AdminDashboard() {
                   >
                     {phase.label_en}
                   </p>
-                  <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-600">
+                  <span className="rounded-full bg-surface-soft px-2.5 py-0.5 text-xs font-medium text-ink-muted">
                     {phase.weeks.length} modules
                   </span>
                 </div>
                 <ul className="mt-3 space-y-1.5">
                   {phase.weeks.map((week, i) => (
-                    <li key={week.id} className="flex items-center gap-2 text-sm text-slate-600">
+                    <li key={week.id} className="flex items-center gap-2 text-sm text-ink-muted">
                       <span
                         className={cn(
                           "flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold",
-                          isGold ? "bg-amber-100 text-amber-700" : "bg-sky-100 text-sky-700",
+                          isGold ? "bg-amber-500/15 text-amber-400" : "bg-sky-500/15 text-sky-400",
                         )}
                       >
                         {i + 1}

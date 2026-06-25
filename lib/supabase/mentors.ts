@@ -2,9 +2,14 @@ import { unstable_cache } from "next/cache";
 
 import type { EducationCategory } from "@/lib/education-categories";
 import { MENTORS_CACHE_TAG } from "@/lib/cache-tags";
-import type { Locale } from "@/lib/i18n";
 import type { Mentor } from "@/lib/mentors";
 import { createClient, createClient as createAdminClient } from "@supabase/supabase-js";
+
+export type AdminMentor = Mentor & {
+  id: string;
+  sortOrder: number;
+  status: "draft" | "published";
+};
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -71,6 +76,21 @@ function sortMentors(mentors: MentorRow[]): Mentor[] {
     .map(transformMentorRow);
 }
 
+function transformAdminMentorRow(row: MentorRow): AdminMentor {
+  return {
+    ...transformMentorRow(row),
+    id: row.id,
+    sortOrder: row.sort_order,
+    status: row.status === "published" ? "published" : "draft",
+  };
+}
+
+function sortAdminMentors(mentors: MentorRow[]): AdminMentor[] {
+  return [...mentors]
+    .sort((a, b) => a.sort_order - b.sort_order || a.slug.localeCompare(b.slug))
+    .map(transformAdminMentorRow);
+}
+
 async function fetchPublishedMentors(): Promise<Mentor[]> {
   const { data, error } = await supabase
     .from("mentors")
@@ -87,7 +107,7 @@ async function fetchPublishedMentors(): Promise<Mentor[]> {
   return sortMentors((data ?? []) as MentorRow[]);
 }
 
-async function fetchAdminMentors(): Promise<Mentor[]> {
+async function fetchAdminMentors(): Promise<AdminMentor[]> {
   const client = adminSupabase();
   if (!client) {
     console.error("Missing Supabase admin credentials for mentors");
@@ -105,7 +125,7 @@ async function fetchAdminMentors(): Promise<Mentor[]> {
     return [];
   }
 
-  return sortMentors((data ?? []) as MentorRow[]);
+  return sortAdminMentors((data ?? []) as MentorRow[]);
 }
 
 const getCachedPublishedMentors = unstable_cache(
@@ -121,8 +141,30 @@ export async function getAllMentors(): Promise<Mentor[]> {
   return getCachedPublishedMentors();
 }
 
-export async function getAllMentorsForAdmin(): Promise<Mentor[]> {
+export async function getAllMentorsForAdmin(): Promise<AdminMentor[]> {
   return fetchAdminMentors();
+}
+
+export async function getMentorForAdminBySlug(slug: string): Promise<AdminMentor | null> {
+  const client = adminSupabase();
+  if (!client) {
+    console.error("Missing Supabase admin credentials for mentors");
+    return null;
+  }
+
+  const decoded = decodeURIComponent(slug);
+  const { data, error } = await client
+    .from("mentors")
+    .select(MENTOR_WITH_CATEGORIES_SELECT)
+    .eq("slug", decoded)
+    .maybeSingle();
+
+  if (error || !data) {
+    if (error) console.error("Error fetching mentor for admin:", error);
+    return null;
+  }
+
+  return transformAdminMentorRow(data as MentorRow);
 }
 
 export async function getMentorBySlug(slug: string): Promise<Mentor | null> {

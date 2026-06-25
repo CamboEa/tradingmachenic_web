@@ -28,6 +28,15 @@ export const NAV: NavSection[] = [
     heading: "Content",
     items: [
       {
+        href: "/admin/mentors",
+        label: "Mentors",
+        icon: (
+          <svg viewBox="0 0 20 20" fill="currentColor" className="h-4.5 w-4.5">
+            <path d="M10 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM6 8a2 2 0 1 1 4 0 2 2 0 0 1-4 0ZM2 16.5v-.75A4.5 4.5 0 0 1 6.5 11.25h7A4.5 4.5 0 0 1 18 15.75v.75a.75.75 0 0 1-.75.75h-14.5A.75.75 0 0 1 2 16.5Z" />
+          </svg>
+        ),
+      },
+      {
         href: "/admin/lessons",
         label: "Lessons",
         icon: (

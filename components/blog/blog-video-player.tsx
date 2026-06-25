@@ -70,11 +70,11 @@ export function BlogVideoPlayer({
 
   return (
     <section className="mb-10">
-      <h2 className="mb-4 text-base font-semibold tracking-tight text-[#22332E]">{videoHeading}</h2>
+      <h2 className="mb-4 text-base font-semibold tracking-tight text-foreground">{videoHeading}</h2>
       <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
         <div className="min-w-0 flex-1">
-          <p className="mb-3 text-sm font-medium text-slate-600">{activeTitle}</p>
-          <div className="overflow-hidden rounded-2xl border border-slate-200/80 bg-black shadow-lg shadow-slate-900/10">
+          <p className="mb-3 text-sm font-medium text-ink-muted">{activeTitle}</p>
+          <div className="overflow-hidden rounded-2xl border border-bridge/40 bg-black shadow-lg shadow-black/30">
             <div className="aspect-video w-full">
               <VideoSurface
                 src={playbackSrc}
@@ -101,14 +101,14 @@ export function BlogVideoPlayer({
                       className={[
                         "flex w-full items-center gap-3 rounded-xl border px-3 py-2.5 text-left text-sm transition",
                         isActive
-                          ? "border-[#22332E] bg-[#EEF8F7] text-[#22332E]"
-                          : "border-slate-200 bg-white text-slate-600 hover:border-[#22332E]/30",
+                          ? "border-gold bg-surface-soft text-foreground"
+                          : "border-bridge/40 bg-surface text-ink-muted hover:border-gold/30",
                       ].join(" ")}
                     >
                       <span
                         className={[
                           "flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[10px] font-bold",
-                          isActive ? "bg-[#22332E] text-white" : "bg-slate-100 text-slate-500",
+                          isActive ? "bg-teal text-white" : "bg-surface-soft text-ink-soft",
                         ].join(" ")}
                       >
                         {index + 1}

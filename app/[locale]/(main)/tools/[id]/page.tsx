@@ -100,7 +100,7 @@ export default async function ToolDetailPage({
           <nav aria-label="Breadcrumb">
             <ol className="flex items-center gap-1.5 text-sm">
               <li>
-                <Link href={`/${locale}/tools`} className="font-medium text-slate-500 transition-colors hover:text-slate-brand">
+                <Link href={`/${locale}/tools`} className="font-medium text-ink-soft transition-colors hover:text-slate-brand">
                   {locale === "km" ? "ឧបករណ៍" : "Tools"}
                 </Link>
               </li>
@@ -121,7 +121,7 @@ export default async function ToolDetailPage({
             />
           </div>
         ) : (
-          <div className="mt-4 flex w-full items-center justify-center bg-slate-100 px-4 sm:px-6 lg:px-8" style={{ height: "420px" }}>
+          <div className="mt-4 flex w-full items-center justify-center bg-surface-soft px-4 sm:px-6 lg:px-8" style={{ height: "420px" }}>
             <svg viewBox="0 0 64 64" fill="none" className="h-20 w-20 text-slate-300" aria-hidden>
               {tool.type === "indicator" ? (
                 <>
@@ -163,7 +163,7 @@ export default async function ToolDetailPage({
                     <div className="h-4 w-0.5 rounded-full bg-teal" aria-hidden />
                     <p className={ui.sectionLabel}>{locale === "km" ? "អំពីឧបករណ៍នេះ" : "About this tool"}</p>
                   </div>
-                  <p className="text-sm leading-relaxed text-slate-600">{desc}</p>
+                  <p className="text-sm leading-relaxed text-ink-muted">{desc}</p>
                 </div>
 
                 {/* Legacy separate section blocks */}
@@ -171,13 +171,13 @@ export default async function ToolDetailPage({
                   <section
                     key={block.key}
                     aria-labelledby={`section-${block.key}`}
-                    className={block.caution ? "bg-amber-50 px-5 py-8" : "py-8"}
+                    className={block.caution ? "bg-amber-500/10 px-5 py-8" : "py-8"}
                   >
                     <div className="mb-4 flex items-center gap-2.5">
                       <div className={`h-4 w-0.5 shrink-0 rounded-full ${block.caution ? "bg-gold" : "bg-teal"}`} aria-hidden />
                       <p
                         id={`section-${block.key}`}
-                        className={block.caution ? "text-xs font-bold uppercase tracking-widest text-amber-700" : ui.sectionLabel}
+                        className={block.caution ? "text-xs font-bold uppercase tracking-widest text-amber-400" : ui.sectionLabel}
                       >
                         {block.title}
                       </p>
@@ -187,12 +187,12 @@ export default async function ToolDetailPage({
                         {block.body.split("\n").filter(Boolean).map((line, i) => (
                           <li key={i} className="flex items-start gap-2.5">
                             <CheckIcon />
-                            <span className="text-sm leading-relaxed text-slate-600">{line}</span>
+                            <span className="text-sm leading-relaxed text-ink-muted">{line}</span>
                           </li>
                         ))}
                       </ul>
                     ) : (
-                      <p className={`text-sm leading-relaxed ${block.caution ? "text-amber-800" : "text-slate-600"} ${block.preserveLines ? "whitespace-pre-wrap" : ""}`}>
+                      <p className={`text-sm leading-relaxed ${block.caution ? "text-amber-800" : "text-ink-muted"} ${block.preserveLines ? "whitespace-pre-wrap" : ""}`}>
                         {block.body}
                       </p>
                     )}
@@ -226,7 +226,7 @@ export default async function ToolDetailPage({
           <aside className="lg:sticky lg:top-28 lg:self-start">
 
             {/* Combined Download + Tool Details */}
-            <div className="overflow-hidden border border-slate-200 bg-white shadow-sm">
+            <div className="overflow-hidden border border-bridge/40 bg-surface shadow-sm">
 
               {/* Download header */}
               <div className="bg-slate-brand px-5 py-3.5">
@@ -237,7 +237,7 @@ export default async function ToolDetailPage({
 
               {/* Download buttons */}
               {downloadLinks.length > 0 && (
-                <div className="space-y-2 border-b border-slate-200 p-4">
+                <div className="space-y-2 border-b border-bridge/40 p-4">
                   {downloadLinks.map(({ href, label }) => (
                     <a key={href} href={href} download className={`${ui.btnPrimary} w-full`}>
                       <DownloadIcon />
@@ -254,7 +254,7 @@ export default async function ToolDetailPage({
               )}
 
               {/* Tool Details */}
-              <div className="bg-slate-50/60 px-5 py-3">
+              <div className="bg-surface-soft/60 px-5 py-3">
                 <p className={ui.sectionLabel}>
                   {locale === "km" ? "ព័ត៌មានឧបករណ៍" : "Tool Details"}
                 </p>
@@ -272,7 +272,7 @@ export default async function ToolDetailPage({
                   },
                 ] as { label: string; value: string }[]).map(({ label, value }) => (
                   <div key={label} className="flex items-center justify-between gap-4 py-3">
-                    <dt className="text-xs text-slate-500">{label}</dt>
+                    <dt className="text-xs text-ink-soft">{label}</dt>
                     <dd className="text-right text-xs font-semibold text-slate-brand">{value}</dd>
                   </div>
                 ))}

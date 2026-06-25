@@ -101,7 +101,7 @@ export default async function HomePage({
 
       {/* ── Featured Tools ── */}
       <section
-        className="overflow-hidden bg-[#f8fafc] px-4 py-24 sm:px-6 lg:px-8"
+        className="overflow-hidden bg-background px-4 py-24 sm:px-6 lg:px-8"
         aria-labelledby="home-featured-tools"
       >
         <div className="mx-auto w-full max-w-7xl">
@@ -142,7 +142,7 @@ export default async function HomePage({
         <div className="relative mx-auto w-full max-w-7xl">
           <Reveal effect="fade">
             <div className="mb-14 text-center">
-              <p className="text-xs font-bold uppercase tracking-[0.28em] text-[#629696]">
+              <p className="text-xs font-bold uppercase tracking-[0.28em] text-gold">
                 {dict.home.sectionFeaturedLessons}
               </p>
               <h2
@@ -165,20 +165,19 @@ export default async function HomePage({
                     lesson={lesson}
                     locale={locale}
                     index={i}
-                    total={lessons.length}
                     dict={dict}
                   />
                 </Reveal>
               ))}
             </div>
           ) : (
-            <p className="mt-12 text-center text-sm text-slate-500">{dict.home.featuredLessonsViewAll}</p>
+            <p className="mt-12 text-center text-sm text-ink-soft">{dict.home.featuredLessonsViewAll}</p>
           )}
 
           <div className="mt-12 text-center">
             <Link
               href={`/${locale}/education`}
-              className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-8 py-3 text-sm font-semibold text-white backdrop-blur-sm transition hover:-translate-y-0.5 hover:bg-white/10 hover:border-white/30"
+              className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-surface/5 px-8 py-3 text-sm font-semibold text-white backdrop-blur-sm transition hover:-translate-y-0.5 hover:bg-surface/10 hover:border-white/30"
             >
               {dict.home.featuredLessonsViewAll} →
             </Link>
@@ -246,7 +245,7 @@ export default async function HomePage({
               </p>
             </div>
           </Reveal>
-          <div className="overflow-hidden rounded-2xl border border-[color-mix(in_oklab,var(--color-bridge)_55%,transparent)] bg-white shadow-[0_20px_50px_-24px_color-mix(in_oklab,var(--color-ink)_12%,transparent)]">
+          <div className="overflow-hidden rounded-2xl border border-[color-mix(in_oklab,var(--color-bridge)_55%,transparent)] bg-surface shadow-[0_20px_50px_-24px_color-mix(in_oklab,var(--color-ink)_12%,transparent)]">
             <TradingViewForexHeatmap />
           </div>
         </div>
@@ -290,7 +289,7 @@ export default async function HomePage({
 
       {/* ── CTA Band ── */}
       <section
-        className="relative flex min-h-screen items-center overflow-hidden bg-[#22332E] px-4 py-24 sm:px-6 lg:px-8"
+        className="relative flex min-h-screen items-center overflow-hidden bg-slate-brand px-4 py-24 sm:px-6 lg:px-8"
         aria-labelledby="home-cta"
       >
         {/* Alternating background images */}
@@ -311,13 +310,13 @@ export default async function HomePage({
           className="cta-bg-2 object-cover object-center opacity-0"
         />
         {/* Dark overlay to keep text readable */}
-        <div className="absolute inset-0 bg-[#22332E]/75" aria-hidden />
+        <div className="absolute inset-0 bg-slate-brand/75" aria-hidden />
         <div
           className="cta-glow absolute inset-0 bg-[radial-gradient(circle_at_18%_50%,rgba(212,175,55,0.18),transparent_22rem),radial-gradient(circle_at_82%_40%,rgba(37,99,235,0.18),transparent_24rem)]"
           aria-hidden
         />
         <div className="relative mx-auto max-w-3xl text-center">
-          <p className="float-badge text-xs font-bold uppercase tracking-[0.25em] text-[#629696]">
+          <p className="float-badge text-xs font-bold uppercase tracking-[0.25em] text-gold">
             {BRAND_NAME}
           </p>
           <h2
@@ -332,7 +331,7 @@ export default async function HomePage({
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link
               href={`/${locale}/education`}
-              className="inline-flex items-center gap-2 rounded-xl bg-[#629696] px-8 py-3.5 text-sm font-bold text-[#0f172a] shadow-lg transition hover:-translate-y-0.5 hover:brightness-105"
+              className="inline-flex items-center gap-2 rounded-xl bg-gold px-8 py-3.5 text-sm font-bold text-background shadow-lg transition hover:-translate-y-0.5 hover:brightness-105"
             >
               {dict.home.ctaBandButton}
               <span aria-hidden>→</span>

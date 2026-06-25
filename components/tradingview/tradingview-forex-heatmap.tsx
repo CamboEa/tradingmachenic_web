@@ -1,14 +1,17 @@
 const TV_BASE = "https://s.tradingview.com/embed-widget/forex-heat-map/";
 
+/** Matches app/globals.css --surface */
+const HEATMAP_BG = "#141f1d";
+
 function buildSrc(): string {
   const config = {
     width: "100%",
     height: "100%",
     currencies: ["EUR", "USD", "JPY", "GBP", "CHF", "AUD", "CAD", "NZD"],
-    isTransparent: true,
-    colorTheme: "light",
+    colorTheme: "dark",
+    isTransparent: false,
     locale: "en",
-    backgroundColor: "rgba(255,255,255,0)",
+    backgroundColor: HEATMAP_BG,
   };
   return `${TV_BASE}?locale=en#${encodeURIComponent(JSON.stringify(config))}`;
 }
@@ -20,7 +23,7 @@ export function TradingViewForexHeatmap() {
     <iframe
       title="Forex currency strength heat map"
       src={src}
-      className="block h-[clamp(420px,58vh,680px)] w-full border-0"
+      className="block h-[clamp(420px,58vh,680px)] w-full border-0 bg-surface"
       referrerPolicy="no-referrer-when-downgrade"
       allow="clipboard-write"
     />

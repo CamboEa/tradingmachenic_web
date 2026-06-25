@@ -113,6 +113,8 @@ export type Dictionary = {
     viewMentorLessons: string;
     lessonCount: string;
     noMentorsYet: string;
+    mentorSearchPlaceholder: string;
+    noMentorsMatch: string;
     mentorLessons: string;
     noLessonsForMentor: string;
     categoryMentorsIntro: string;
@@ -401,6 +403,8 @@ const en: Dictionary = {
     viewMentorLessons: "View lessons",
     lessonCount: "{count} lessons",
     noMentorsYet: "No mentors in this category yet.",
+    mentorSearchPlaceholder: "Search by mentor name or strategy…",
+    noMentorsMatch: "No mentors match your search.",
     mentorLessons: "Lessons with {mentor}",
     noLessonsForMentor: "No lessons published for this mentor yet.",
     categoryMentorsIntro: "Select a mentor to explore their lessons in this market.",
@@ -729,6 +733,8 @@ const km: Dictionary = {
     viewMentorLessons: "មើលមេរៀន",
     lessonCount: "មេរៀន {count}",
     noMentorsYet: "មិនទាន់មានអ្នកណែនាំក្នុងប្រភេទនេះទេ។",
+    mentorSearchPlaceholder: "ស្វែងរកតាមឈ្មោះ ឬយុទ្ធសាស្ត្រ…",
+    noMentorsMatch: "រកមិនឃើញអ្នកណែនាំដែលត្រូវគ្នា។",
     mentorLessons: "មេរៀនជាមួយ {mentor}",
     noLessonsForMentor: "មិនទាន់មានមេរៀនដែលបានផ្សាយសម្រាប់អ្នកណែនាំនេះទេ។",
     categoryMentorsIntro: "ជ្រើសរើសអ្នកណែនាំដើម្បីរុករកមេរៀនក្នុងទីផ្សារនេះ។",

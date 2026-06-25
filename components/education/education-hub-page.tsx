@@ -2,7 +2,7 @@ import { educationCategorySlugs } from "@/lib/education-categories";
 import type { Dictionary, Locale } from "@/lib/i18n";
 
 import { CategoryCard } from "./category-card";
-import { EDUCATION_HUB_BACKGROUND, EducationPageShell } from "./education-page-shell";
+import { EducationPageShell } from "./education-page-shell";
 
 export function EducationHubPage({
   locale,
@@ -12,7 +12,7 @@ export function EducationHubPage({
   dict: Dictionary;
 }) {
   return (
-    <EducationPageShell wide backgroundImage={EDUCATION_HUB_BACKGROUND}>
+    <EducationPageShell wide>
       <div className="flex flex-col gap-4">
         {educationCategorySlugs.map((category) => (
           <CategoryCard

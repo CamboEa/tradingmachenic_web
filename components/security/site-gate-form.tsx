@@ -59,10 +59,10 @@ export function SiteGateForm({ returnTo, labels }: SiteGateFormProps) {
   return (
     <div className="mt-8">
       <div
-        className={`rounded-2xl border bg-slate-50/60 p-5 transition-colors sm:p-6 ${
+        className={`rounded-2xl border bg-surface-soft/60 p-5 transition-colors sm:p-6 ${
           status === "error"
-            ? "border-red-200 bg-red-50/40"
-            : "border-slate-200/90"
+            ? "border-red-500/30 bg-red-500/10/40"
+            : "border-bridge/40"
         }`}
       >
         <TurnstileWidget
@@ -73,7 +73,7 @@ export function SiteGateForm({ returnTo, labels }: SiteGateFormProps) {
 
         {status === "loading" && (
           <div
-            className="mt-4 flex items-center justify-center gap-2.5 text-sm text-slate-500"
+            className="mt-4 flex items-center justify-center gap-2.5 text-sm text-ink-soft"
             role="status"
             aria-live="polite"
           >
@@ -85,7 +85,7 @@ export function SiteGateForm({ returnTo, labels }: SiteGateFormProps) {
 
       {status === "error" && errorMessage && (
         <div
-          className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-center text-sm font-medium text-red-700"
+          className="mt-4 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-center text-sm font-medium text-red-400"
           role="alert"
         >
           {errorMessage}

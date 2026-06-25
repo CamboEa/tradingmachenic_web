@@ -56,7 +56,7 @@ const columns: Column<Podcast>[] = [
     header: "Order",
     align: "center",
     className: "tabular-nums",
-    cell: (ep) => <span className="text-slate-500">{ep.sort_order}</span>,
+    cell: (ep) => <span className="text-ink-soft">{ep.sort_order}</span>,
   },
   {
     header: "Status",

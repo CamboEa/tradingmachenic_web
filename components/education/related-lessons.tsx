@@ -24,7 +24,7 @@ export function RelatedLessons({
  <li key={lesson.slug}>
  <Link
  href={`/${locale}/education/${lesson.slug}`}
- className="flex items-center justify-between gap-3 rounded-xl border border-white/80 bg-white/88 px-4 py-3 text-sm font-medium text-[var(--color-ink)] transition hover:border-[var(--color-teal)] hover:text-[var(--color-teal)]"
+ className="flex items-center justify-between gap-3 rounded-xl border border-bridge/30 bg-surface/88 px-4 py-3 text-sm font-medium text-[var(--color-ink)] transition hover:border-[var(--color-teal)] hover:text-[var(--color-teal)]"
  >
  <span className="line-clamp-1">{lesson.titles[locale]}</span>
  <span className="shrink-0 text-[var(--color-teal)]" aria-hidden>

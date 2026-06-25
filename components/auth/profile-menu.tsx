@@ -45,15 +45,15 @@ export function ProfileMenu({
  onClick={() => setOpen((v) => !v)}
  aria-label="Account menu"
  aria-expanded={open}
- className="flex h-9 w-9 items-center justify-center rounded-full bg-[#22332E] text-xs font-bold text-white ring-2 ring-transparent transition hover:bg-[#1D4ED8] focus-visible:outline-none focus-visible:ring-[#22332E]/50"
+ className="flex h-9 w-9 items-center justify-center rounded-full bg-teal text-xs font-bold text-white ring-2 ring-transparent transition hover:brightness-110 focus-visible:outline-none focus-visible:ring-teal/50"
  >
  {initials}
  </button>
 
  {open && (
- <div className="absolute right-0 top-full z-50 mt-2 w-52 overflow-hidden rounded-xl border border-slate-200/90 bg-[#f8fafc]">
- <div className="border-b border-slate-200/80 px-4 py-3">
- <p className="truncate text-xs font-semibold text-[#22332E]">
+ <div className="absolute right-0 top-full z-50 mt-2 w-52 overflow-hidden rounded-xl border border-bridge/40 bg-background">
+ <div className="border-b border-bridge/40 px-4 py-3">
+ <p className="truncate text-xs font-semibold text-foreground">
  {email}
  </p>
  </div>
@@ -65,7 +65,7 @@ export function ProfileMenu({
  >
  <button
  type="submit"
- className="flex w-full items-center gap-2 px-4 py-3 text-sm text-slate-600 transition hover:bg-slate-100 hover:text-[#22332E]"
+ className="flex w-full items-center gap-2 px-4 py-3 text-sm text-ink-muted transition hover:bg-surface-soft hover:text-foreground"
  >
  <svg
  xmlns="http://www.w3.org/2000/svg"

@@ -99,14 +99,14 @@ export function TableThumb({
       <img
         src={src}
         alt={alt}
-        className={cn("h-12 w-12 shrink-0 border border-slate-100 object-cover", rounded, className)}
+        className={cn("h-12 w-12 shrink-0 border border-bridge/30 object-cover", rounded, className)}
       />
     );
   }
   return (
     <div
       className={cn(
-        "flex h-12 w-12 shrink-0 items-center justify-center border border-slate-100 bg-slate-50 text-slate-300",
+        "flex h-12 w-12 shrink-0 items-center justify-center border border-bridge/30 bg-surface-soft text-slate-300",
         rounded,
         className,
       )}

@@ -4,6 +4,7 @@ import { EducationMentorLessonsPage } from "@/components/education/education-men
 import type { EducationCategory } from "@/lib/education-categories";
 import { getDictionary, isLocale, type Locale } from "@/lib/i18n";
 import { mentorTeachesCategory } from "@/lib/mentors";
+import { isGroupedLesson } from "@/lib/course";
 import { getLessonsByMentorAndCategory } from "@/lib/supabase/lessons";
 import { getMentorBySlug } from "@/lib/supabase/mentors";
 
@@ -20,10 +21,12 @@ export function createEducationMentorPage(category: EducationCategory) {
     const mentor = await getMentorBySlug(mentorSlug);
     if (!mentor || !mentorTeachesCategory(mentor, category)) notFound();
 
-    const [dict, lessons] = await Promise.all([
+    const [dict, allLessons] = await Promise.all([
       getDictionary(locale),
       getLessonsByMentorAndCategory(mentorSlug, category),
     ]);
+
+    const lessons = allLessons.filter(isGroupedLesson);
 
     return (
       <EducationMentorLessonsPage

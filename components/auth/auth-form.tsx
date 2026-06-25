@@ -22,7 +22,7 @@ interface AuthFormProps {
 }
 
 const inputClass =
-  "w-full rounded-xl border border-slate-200 bg-slate-50/60 px-4 py-3 pl-11 text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-teal focus:bg-white focus:ring-2 focus:ring-teal/20 disabled:opacity-60";
+  "w-full rounded-xl border border-bridge/40 bg-surface-soft/60 px-4 py-3 pl-11 text-foreground outline-none transition placeholder:text-ink-soft focus:border-teal focus:bg-surface focus:ring-2 focus:ring-teal/20 disabled:opacity-60";
 
 function EyeIcon({ off }: { off: boolean }) {
   return (
@@ -111,7 +111,7 @@ function PasswordField({
 }: PasswordFieldProps) {
   return (
     <div>
-      <label htmlFor={id} className="block text-sm font-medium text-slate-700">
+      <label htmlFor={id} className="block text-sm font-medium text-ink-muted">
         {label}
       </label>
       <div className="relative mt-1.5">
@@ -138,7 +138,7 @@ function PasswordField({
           aria-label={visible ? hideLabel : showLabel}
           aria-pressed={visible}
           title={visible ? hideLabel : showLabel}
-          className="absolute right-2 top-1/2 -translate-y-1/2 rounded-lg p-1.5 text-slate-400 transition hover:text-slate-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal/30 disabled:opacity-50 cursor-pointer"
+          className="absolute right-2 top-1/2 -translate-y-1/2 rounded-lg p-1.5 text-slate-400 transition hover:text-ink-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-teal/30 disabled:opacity-50 cursor-pointer"
         >
           <EyeIcon off={visible} />
         </button>
@@ -198,8 +198,8 @@ export function AuthForm({
   if (showConfirmation) {
     return (
       <div className="mt-8 rounded-xl border border-teal/30 bg-teal/5 px-5 py-6">
-        <p className="font-semibold text-slate-800">Check your email</p>
-        <p className="mt-2 text-sm leading-relaxed text-slate-500">
+        <p className="font-semibold text-foreground">Check your email</p>
+        <p className="mt-2 text-sm leading-relaxed text-ink-soft">
           We sent a confirmation link to your email address. Click it to
           activate your account.
         </p>
@@ -226,7 +226,7 @@ export function AuthForm({
         <button
           type="submit"
           disabled={isPending}
-          className="flex w-full cursor-pointer items-center justify-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm transition duration-200 hover:border-slate-300 hover:bg-slate-50 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal/30 disabled:cursor-not-allowed disabled:opacity-60"
+          className="flex w-full cursor-pointer items-center justify-center gap-3 rounded-xl border border-bridge/40 bg-surface px-4 py-3 text-sm font-semibold text-ink-muted shadow-sm transition duration-200 hover:border-bridge/60 hover:bg-surface-soft hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal/30 disabled:cursor-not-allowed disabled:opacity-60"
         >
           <GoogleIcon />
           Continue with Google
@@ -235,9 +235,9 @@ export function AuthForm({
 
       {/* Divider */}
       <div className="relative flex items-center gap-3">
-        <div className="h-px flex-1 bg-slate-200" />
+        <div className="h-px flex-1 bg-bridge/40" />
         <span className="text-xs font-medium text-slate-400">Or continue with email</span>
-        <div className="h-px flex-1 bg-slate-200" />
+        <div className="h-px flex-1 bg-bridge/40" />
       </div>
 
       {/* Email/password form */}
@@ -255,7 +255,7 @@ export function AuthForm({
         {/* Full name (register only) */}
         {isRegister && (
           <div>
-            <label htmlFor={idName} className="block text-sm font-medium text-slate-700">
+            <label htmlFor={idName} className="block text-sm font-medium text-ink-muted">
               {nameLabel}
             </label>
             <div className="relative mt-1.5">
@@ -278,7 +278,7 @@ export function AuthForm({
 
         {/* Email */}
         <div>
-          <label htmlFor={idEmail} className="block text-sm font-medium text-slate-700">
+          <label htmlFor={idEmail} className="block text-sm font-medium text-ink-muted">
             {emailLabel}
           </label>
           <div className="relative mt-1.5">
@@ -332,7 +332,7 @@ export function AuthForm({
               describedBy={mismatch ? idMismatch : undefined}
             />
             {mismatch && (
-              <p id={idMismatch} className="mt-1.5 text-sm font-medium text-red-600">
+              <p id={idMismatch} className="mt-1.5 text-sm font-medium text-red-400">
                 {passwordMismatch ?? "Passwords do not match."}
               </p>
             )}

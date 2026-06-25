@@ -128,7 +128,7 @@ export function AdminTable<T>({
               }}
               placeholder={searchPlaceholder}
               aria-label={searchPlaceholder}
-              className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-9 pr-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-teal focus:ring-2 focus:ring-teal/20"
+              className="w-full rounded-xl border border-bridge/40 bg-surface py-2.5 pl-9 pr-3 text-sm text-foreground outline-none transition placeholder:text-ink-soft focus:border-teal focus:ring-2 focus:ring-teal/20"
             />
           </div>
         ) : null}
@@ -142,7 +142,7 @@ export function AdminTable<T>({
                 setPage(1);
               }}
               aria-label="Filter"
-              className="w-full cursor-pointer appearance-none rounded-xl border border-slate-200 bg-white py-2.5 pl-3 pr-9 text-sm font-medium text-slate-700 outline-none transition focus:border-teal focus:ring-2 focus:ring-teal/20 sm:w-56"
+              className="w-full cursor-pointer appearance-none rounded-xl border border-bridge/40 bg-surface py-2.5 pl-3 pr-9 text-sm font-medium text-ink-muted outline-none transition focus:border-teal focus:ring-2 focus:ring-teal/20 sm:w-56"
             >
               <option value="all">{filter.allLabel ?? "All"}</option>
               {filter.groups.map((group, gi) =>
@@ -180,8 +180,8 @@ export function AdminTable<T>({
       </div>
 
       {filtered.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-slate-200 bg-white px-6 py-12 text-center">
-          <p className="text-sm font-semibold text-slate-600">No matching results</p>
+        <div className="rounded-2xl border border-dashed border-bridge/40 bg-surface px-6 py-12 text-center">
+          <p className="text-sm font-semibold text-ink-muted">No matching results</p>
           <p className="mt-1 text-sm text-slate-400">Try a different search term or filter.</p>
         </div>
       ) : (
@@ -213,13 +213,13 @@ export function AdminTable<T>({
               className="flex flex-col items-center justify-between gap-3 sm:flex-row"
               aria-label="Pagination"
             >
-              <p className="text-sm text-slate-500">
+              <p className="text-sm text-ink-soft">
                 Showing{" "}
-                <span className="font-semibold text-slate-700">{startIndex + 1}</span>–
-                <span className="font-semibold text-slate-700">
+                <span className="font-semibold text-ink-muted">{startIndex + 1}</span>–
+                <span className="font-semibold text-ink-muted">
                   {startIndex + paged.length}
                 </span>{" "}
-                of <span className="font-semibold text-slate-700">{filtered.length}</span>
+                of <span className="font-semibold text-ink-muted">{filtered.length}</span>
               </p>
 
               <div className="flex items-center gap-1">
@@ -227,7 +227,7 @@ export function AdminTable<T>({
                   type="button"
                   onClick={() => setPage(currentPage - 1)}
                   disabled={currentPage === 1}
-                  className="inline-flex h-9 items-center rounded-lg border border-slate-200 bg-white px-3 text-sm font-medium text-slate-600 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+                  className="inline-flex h-9 items-center rounded-lg border border-bridge/40 bg-surface px-3 text-sm font-medium text-ink-muted transition hover:bg-surface-soft disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   Prev
                 </button>
@@ -247,7 +247,7 @@ export function AdminTable<T>({
                         "inline-flex h-9 min-w-9 items-center justify-center rounded-lg border px-2 text-sm font-medium tabular-nums transition",
                         p === currentPage
                           ? "border-teal bg-teal text-white"
-                          : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50",
+                          : "border-bridge/40 bg-surface text-ink-muted hover:bg-surface-soft",
                       )}
                     >
                       {p}
@@ -259,7 +259,7 @@ export function AdminTable<T>({
                   type="button"
                   onClick={() => setPage(currentPage + 1)}
                   disabled={currentPage === totalPages}
-                  className="inline-flex h-9 items-center rounded-lg border border-slate-200 bg-white px-3 text-sm font-medium text-slate-600 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+                  className="inline-flex h-9 items-center rounded-lg border border-bridge/40 bg-surface px-3 text-sm font-medium text-ink-muted transition hover:bg-surface-soft disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   Next
                 </button>

@@ -64,7 +64,7 @@ const STEPS = [
 ] as const;
 
 const fieldClass =
-  "w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#22332E] focus:bg-white focus:ring-2 focus:ring-[#22332E]/20";
+  "w-full rounded-lg border border-bridge/40 bg-surface-soft px-4 py-2.5 text-sm text-foreground outline-none transition focus:border-gold focus:bg-surface focus:ring-2 focus:ring-teal/20";
 
 interface Props { tool?: Tool }
 
@@ -240,14 +240,14 @@ export function ToolsForm({ tool }: Props) {
   };
 
   return (
-    <div className="w-full rounded-xl border border-slate-200 bg-white">
+    <div className="w-full rounded-xl border border-bridge/40 bg-surface">
       {/* Step progress */}
-      <div className="border-b border-slate-100 px-4 py-5 sm:px-6">
+      <div className="border-b border-bridge/30 px-4 py-5 sm:px-6">
         <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
           Step {step + 1} of {STEPS.length}
         </p>
-        <h2 className="mt-1 text-base font-bold text-[#22332E]">{STEPS[step].title}</h2>
-        <p className="mt-0.5 text-sm text-slate-500">{STEPS[step].hint}</p>
+        <h2 className="mt-1 text-base font-bold text-foreground">{STEPS[step].title}</h2>
+        <p className="mt-0.5 text-sm text-ink-soft">{STEPS[step].hint}</p>
 
         <ol className="mt-5 flex flex-wrap gap-2" aria-label="Form progress">
           {STEPS.map((s, i) => {
@@ -273,9 +273,9 @@ export function ToolsForm({ tool }: Props) {
                   disabled={!isEdit && i > step}
                   className={[
                     "flex items-center gap-2 rounded-full border px-3 py-1.5 text-left text-xs font-semibold transition",
-                    active ? "border-[#22332E] bg-[#22332E]/5 text-[#22332E]"
-                           : done || isEdit ? "border-emerald-200 bg-emerald-50 text-emerald-800 hover:bg-emerald-100"
-                                            : "border-slate-200 bg-slate-50 text-slate-400",
+                    active ? "border-gold bg-teal/5 text-foreground"
+                           : done || isEdit ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/15"
+                                            : "border-bridge/40 bg-surface-soft text-slate-400",
                     !isEdit && i > step ? "cursor-not-allowed opacity-60" : "cursor-pointer",
                   ].join(" ")}
                   aria-current={active ? "step" : undefined}
@@ -283,9 +283,9 @@ export function ToolsForm({ tool }: Props) {
                   <span
                     className={[
                       "flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px]",
-                      active ? "bg-[#22332E] text-white"
+                      active ? "bg-teal text-white"
                              : done  ? "bg-emerald-500 text-white"
-                                     : "bg-slate-200 text-slate-500",
+                                     : "bg-bridge/40 text-ink-soft",
                     ].join(" ")}
                   >
                     {done ? "✓" : i + 1}
@@ -303,11 +303,11 @@ export function ToolsForm({ tool }: Props) {
         {/* ── Step 1: Basics ── */}
         <div className={step === 0 ? "space-y-5" : "hidden"}>
           <div>
-            <label className="mb-1.5 block text-xs font-semibold text-slate-600">Tool type</label>
+            <label className="mb-1.5 block text-xs font-semibold text-ink-muted">Tool type</label>
             <div className="flex flex-wrap gap-3">
               {TOOL_TYPES.map((t) => (
-                <label key={t} className="flex cursor-pointer items-center gap-2 rounded-lg border border-slate-200 px-4 py-2.5 text-sm transition-colors has-checked:border-[#22332E] has-checked:bg-[#22332E]/5">
-                  <input type="radio" name="toolType" value={t} defaultChecked={t === defaultType} className="accent-[#22332E]" />
+                <label key={t} className="flex cursor-pointer items-center gap-2 rounded-lg border border-bridge/40 px-4 py-2.5 text-sm transition-colors has-checked:border-gold has-checked:bg-teal/5">
+                  <input type="radio" name="toolType" value={t} defaultChecked={t === defaultType} className="accent-teal" />
                   {t}
                 </label>
               ))}
@@ -315,11 +315,11 @@ export function ToolsForm({ tool }: Props) {
           </div>
 
           <div>
-            <label className="mb-1.5 block text-xs font-semibold text-slate-600">Pricing</label>
+            <label className="mb-1.5 block text-xs font-semibold text-ink-muted">Pricing</label>
             <div className="flex gap-3">
               {["Free", "Paid"].map((p) => (
-                <label key={p} className="flex cursor-pointer items-center gap-2 rounded-lg border border-slate-200 px-4 py-2.5 text-sm transition-colors has-checked:border-[#22332E] has-checked:bg-[#22332E]/5">
-                  <input type="radio" name="pricing" value={p} defaultChecked={p === defaultPricing} className="accent-[#22332E]" />
+                <label key={p} className="flex cursor-pointer items-center gap-2 rounded-lg border border-bridge/40 px-4 py-2.5 text-sm transition-colors has-checked:border-gold has-checked:bg-teal/5">
+                  <input type="radio" name="pricing" value={p} defaultChecked={p === defaultPricing} className="accent-teal" />
                   {p}
                 </label>
               ))}
@@ -327,7 +327,7 @@ export function ToolsForm({ tool }: Props) {
           </div>
 
           <div>
-            <label className="mb-1.5 block text-xs font-semibold text-slate-600">
+            <label className="mb-1.5 block text-xs font-semibold text-ink-muted">
               Name <span className="text-red-500">*</span>
             </label>
             <input type="text" name="toolName" defaultValue={tool?.name} placeholder="e.g. TM Risk Manager v1" className={fieldClass} />
@@ -335,13 +335,13 @@ export function ToolsForm({ tool }: Props) {
 
           <div className="grid gap-5 sm:grid-cols-2">
             <div>
-              <label className="mb-1.5 block text-xs font-semibold text-slate-600">
+              <label className="mb-1.5 block text-xs font-semibold text-ink-muted">
                 Version <span className="text-red-500">*</span>
               </label>
               <input type="text" name="version" defaultValue={tool?.version} placeholder="e.g. 1.0.0" className={fieldClass} />
             </div>
             <div>
-              <label className="mb-1.5 block text-xs font-semibold text-slate-600">Platform</label>
+              <label className="mb-1.5 block text-xs font-semibold text-ink-muted">Platform</label>
               <select name="platform" value={platform} onChange={(e) => setPlatform(e.target.value as (typeof PLATFORMS)[number])} className={fieldClass}>
                 {PLATFORMS.map((p) => <option key={p}>{p}</option>)}
               </select>
@@ -353,7 +353,7 @@ export function ToolsForm({ tool }: Props) {
         <div className={step === 1 ? "space-y-5" : "hidden"}>
 
           {/* Language tabs */}
-          <div className="flex gap-1 rounded-xl border border-slate-200 bg-slate-50 p-1 w-fit">
+          <div className="flex gap-1 rounded-xl border border-bridge/40 bg-surface-soft p-1 w-fit">
             {(["en", "km"] as const).map((lang) => (
               <button
                 key={lang}
@@ -369,8 +369,8 @@ export function ToolsForm({ tool }: Props) {
                 className={[
                   "rounded-lg px-5 py-2 text-sm font-semibold transition",
                   langTab === lang
-                    ? "bg-[#22332E] text-white shadow-sm"
-                    : "text-slate-500 hover:text-slate-800",
+                    ? "bg-teal text-white shadow-sm"
+                    : "text-ink-soft hover:text-foreground",
                 ].join(" ")}
               >
                 {lang === "en" ? "🇺🇸 English" : "🇰🇭 Khmer"}
@@ -378,7 +378,7 @@ export function ToolsForm({ tool }: Props) {
             ))}
           </div>
 
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-ink-soft">
             Write your full tool document — use headings to organise sections like Description, How it works, Requirements, Key features, Proof of testing. Embed images and videos inline.
           </p>
 
@@ -411,7 +411,7 @@ export function ToolsForm({ tool }: Props) {
             className={["space-y-5 rounded-xl transition", fileError ? "ring-2 ring-red-400 ring-offset-4" : ""].join(" ")}
           >
             {fileError && (
-              <p className="rounded-lg bg-red-50 px-4 py-2.5 text-xs font-semibold text-red-600">
+              <p className="rounded-lg bg-red-500/10 px-4 py-2.5 text-xs font-semibold text-red-400">
                 A tool file is required before publishing.
               </p>
             )}
@@ -456,31 +456,31 @@ export function ToolsForm({ tool }: Props) {
           />
 
           <div>
-            <label className="mb-1.5 block text-xs font-semibold text-slate-600">Status</label>
+            <label className="mb-1.5 block text-xs font-semibold text-ink-muted">Status</label>
             <div className="flex gap-3">
               {["Draft", "Published"].map((s) => (
-                <label key={s} className="flex cursor-pointer items-center gap-2 rounded-lg border border-slate-200 px-4 py-2.5 text-sm transition-colors has-checked:border-[#22332E] has-checked:bg-[#22332E]/5">
-                  <input type="radio" name="status" value={s} defaultChecked={s === defaultStatus} className="accent-[#22332E]" />
+                <label key={s} className="flex cursor-pointer items-center gap-2 rounded-lg border border-bridge/40 px-4 py-2.5 text-sm transition-colors has-checked:border-gold has-checked:bg-teal/5">
+                  <input type="radio" name="status" value={s} defaultChecked={s === defaultStatus} className="accent-teal" />
                   {s}
                 </label>
               ))}
             </div>
-            <p className="mt-2 text-xs text-slate-500">Draft tools are hidden until published.</p>
+            <p className="mt-2 text-xs text-ink-soft">Draft tools are hidden until published.</p>
           </div>
         </div>
 
         {/* ── Navigation ── */}
-        <div className="mt-8 flex flex-col-reverse gap-3 border-t border-slate-100 pt-6 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-8 flex flex-col-reverse gap-3 border-t border-bridge/30 pt-6 sm:flex-row sm:items-center sm:justify-between">
           <button
             type="button" onClick={handleBack} disabled={step === 0 || isSaving}
-            className="rounded-lg border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-600 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+            className="rounded-lg border border-bridge/40 px-4 py-2.5 text-sm font-semibold text-ink-muted transition hover:bg-surface-soft disabled:cursor-not-allowed disabled:opacity-40"
           >
             Back
           </button>
 
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
             {!isLastStep ? (
-              <button type="button" onClick={handleNext} className="rounded-lg bg-[#22332E] px-6 py-2.5 text-sm font-semibold text-white transition hover:brightness-110">
+              <button type="button" onClick={handleNext} className="rounded-lg bg-teal px-6 py-2.5 text-sm font-semibold text-white transition hover:brightness-110">
                 Continue
               </button>
             ) : (
@@ -492,7 +492,7 @@ export function ToolsForm({ tool }: Props) {
                 )}
                 <button
                   type="submit" disabled={isSaving || !fileReady}
-                  className="rounded-lg bg-[#22332E] px-6 py-2.5 text-sm font-semibold text-white transition hover:brightness-110 disabled:cursor-not-allowed disabled:bg-slate-300"
+                  className="rounded-lg bg-teal px-6 py-2.5 text-sm font-semibold text-white transition hover:brightness-110 disabled:cursor-not-allowed disabled:bg-slate-300"
                 >
                   {isSaving ? "Saving..." : isEdit ? "Save changes" : "Publish tool"}
                 </button>

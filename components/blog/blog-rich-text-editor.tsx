@@ -35,8 +35,8 @@ function ToolbarButton({
       className={[
         "min-w-[2rem] rounded-md px-2 py-1.5 text-xs font-semibold transition",
         active
-          ? "bg-[#22332E] text-white shadow-sm"
-          : "text-slate-600 hover:bg-slate-100 hover:text-slate-900",
+          ? "bg-teal text-white shadow-sm"
+          : "text-ink-muted hover:bg-surface-soft hover:text-foreground",
         disabled ? "cursor-not-allowed opacity-40" : "",
       ].join(" ")}
     >
@@ -46,7 +46,7 @@ function ToolbarButton({
 }
 
 function ToolbarDivider() {
-  return <span className="mx-0.5 h-6 w-px bg-slate-200" aria-hidden />;
+  return <span className="mx-0.5 h-6 w-px bg-bridge/40" aria-hidden />;
 }
 
 export function BlogRichTextEditor({
@@ -74,7 +74,7 @@ export function BlogRichTextEditor({
     content: blogBodyForEditor(value),
     editorProps: {
       attributes: {
-        class: `blog-editor-prose outline-none ${minHeightClass} px-5 py-4 text-[15px] leading-[1.75] text-slate-700`,
+        class: `blog-editor-prose outline-none ${minHeightClass} px-5 py-4 text-[15px] leading-[1.75] text-ink-muted`,
       },
     },
     onUpdate: ({ editor: ed }) => {
@@ -85,7 +85,7 @@ export function BlogRichTextEditor({
   if (!editor) {
     return (
       <div
-        className={`rounded-lg border border-slate-200 bg-white ${minHeightClass} animate-pulse`}
+        className={`rounded-lg border border-bridge/40 bg-surface ${minHeightClass} animate-pulse`}
       />
     );
   }
@@ -136,9 +136,9 @@ export function BlogRichTextEditor({
   ];
 
   return (
-    <div className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+    <div className="overflow-hidden rounded-lg border border-bridge/40 bg-surface shadow-sm">
       <div
-        className="flex flex-wrap items-center gap-0.5 border-b border-slate-100 bg-slate-50/80 px-2 py-2"
+        className="flex flex-wrap items-center gap-0.5 border-b border-bridge/30 bg-surface-soft/80 px-2 py-2"
         role="toolbar"
         aria-label="Formatting"
       >

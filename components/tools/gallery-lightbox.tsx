@@ -70,7 +70,7 @@ function Lightbox({
       {/* Close */}
       <button
         onClick={onClose}
-        className="absolute right-4 top-4 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20"
+        className="absolute right-4 top-4 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-surface/10 text-white transition hover:bg-surface/20"
         aria-label="Close"
       >
         <CloseIcon />
@@ -80,7 +80,7 @@ function Lightbox({
       {images.length > 1 && (
         <button
           onClick={(e) => { e.stopPropagation(); prev(); }}
-          className="absolute left-4 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20"
+          className="absolute left-4 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-surface/10 text-white transition hover:bg-surface/20"
           aria-label="Previous image"
         >
           <ChevronLeftIcon />
@@ -102,7 +102,7 @@ function Lightbox({
           <p className="mt-3 text-center text-sm text-slate-300">{img.caption}</p>
         )}
         {images.length > 1 && (
-          <p className="mt-2 text-xs text-slate-500">{current + 1} / {images.length}</p>
+          <p className="mt-2 text-xs text-ink-soft">{current + 1} / {images.length}</p>
         )}
       </div>
 
@@ -110,7 +110,7 @@ function Lightbox({
       {images.length > 1 && (
         <button
           onClick={(e) => { e.stopPropagation(); next(); }}
-          className="absolute right-4 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20"
+          className="absolute right-4 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-surface/10 text-white transition hover:bg-surface/20"
           aria-label="Next image"
         >
           <ChevronRightIcon />
@@ -129,7 +129,7 @@ export function GalleryLightbox({ images }: { images: GalleryImage[] }) {
     <>
       <ul className="grid gap-4 sm:grid-cols-2">
         {images.map((img, index) => (
-          <li key={index} className="group overflow-hidden border border-slate-200">
+          <li key={index} className="group overflow-hidden border border-bridge/40">
             <button
               className="w-full cursor-pointer text-left"
               onClick={() => setActiveIndex(index)}
@@ -142,7 +142,7 @@ export function GalleryLightbox({ images }: { images: GalleryImage[] }) {
                 className="w-full object-contain transition-opacity duration-200 group-hover:opacity-90"
               />
               {img.caption && (
-                <p className="border-t border-slate-200 px-4 py-3 text-sm leading-relaxed text-slate-500">
+                <p className="border-t border-bridge/40 px-4 py-3 text-sm leading-relaxed text-ink-soft">
                   {img.caption}
                 </p>
               )}

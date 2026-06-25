@@ -15,7 +15,7 @@ export function ToastProvider() {
  pauseOnFocusLoss
  draggable
  pauseOnHover
- theme="light"
+ theme="dark"
  />
  );
 }

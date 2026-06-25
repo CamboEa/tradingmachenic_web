@@ -4,7 +4,8 @@ import { revalidatePath, revalidateTag } from "next/cache";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
-import { CURRICULUM_CACHE_TAG, LESSONS_CACHE_TAG } from "@/lib/cache-tags";
+import { CURRICULUM_CACHE_TAG, LESSONS_CACHE_TAG, MENTORS_CACHE_TAG } from "@/lib/cache-tags";
+import { educationCategorySlugs, isEducationCategory } from "@/lib/education-categories";
 import { getClientIpFromHeaders } from "@/lib/security/client-ip";
 import { checkRateLimit, RATE_LIMITS } from "@/lib/security/rate-limit";
 import { verifyTurnstileToken } from "@/lib/security/turnstile";
@@ -910,6 +911,199 @@ export async function deleteCurriculumModule(id: string): Promise<{ error?: stri
   const { error } = await supabase.from("curriculum_modules").delete().eq("id", id);
   if (error) return { error: error.message };
   revalidateCurriculumPaths();
+  return {};
+}
+
+type MentorFormData = {
+  slug: string;
+  name_en: string;
+  name_km: string;
+  title_en?: string;
+  title_km?: string;
+  bio_en?: string;
+  bio_km?: string;
+  image_url?: string;
+  sort_order: number;
+  status: "draft" | "published";
+  categories: string[];
+};
+
+function revalidateMentorPaths() {
+  revalidateTag(MENTORS_CACHE_TAG, "max");
+  revalidatePath("/admin/mentors");
+  for (const loc of locales) {
+    revalidatePath(`/${loc}/education`);
+    for (const category of educationCategorySlugs) {
+      revalidatePath(`/${loc}/education/${category}`);
+      revalidatePath(`/${loc}/education/${category}`, "layout");
+    }
+  }
+}
+
+async function syncMentorCategories(
+  supabase: Awaited<ReturnType<typeof createAdminClient>>,
+  mentorId: string,
+  categories: string[],
+) {
+  const valid = categories.filter(isEducationCategory);
+  const { error: deleteError } = await supabase
+    .from("mentor_categories")
+    .delete()
+    .eq("mentor_id", mentorId);
+
+  if (deleteError) {
+    throw new Error(deleteError.message);
+  }
+
+  if (valid.length === 0) return;
+
+  const { error: insertError } = await supabase.from("mentor_categories").insert(
+    valid.map((category) => ({ mentor_id: mentorId, category })),
+  );
+
+  if (insertError) {
+    throw new Error(insertError.message);
+  }
+}
+
+export async function createMentor(
+  formData: MentorFormData,
+): Promise<{ error?: string; success?: boolean; slug?: string }> {
+  const supabase = await createAdminClient();
+  const slug = slugify(formData.slug || formData.name_en);
+  if (!slug) {
+    return { error: "Slug is required (add an English name or enter a slug)." };
+  }
+  if (!formData.name_en.trim() || !formData.name_km.trim()) {
+    return { error: "English and Khmer names are required." };
+  }
+  if (!formData.categories.some(isEducationCategory)) {
+    return { error: "Select at least one market category." };
+  }
+
+  try {
+    const { data: mentor, error: mentorError } = await supabase
+      .from("mentors")
+      .insert([
+        {
+          slug,
+          name_en: formData.name_en.trim(),
+          name_km: formData.name_km.trim(),
+          title_en: formData.title_en?.trim() || null,
+          title_km: formData.title_km?.trim() || null,
+          bio_en: formData.bio_en?.trim() || null,
+          bio_km: formData.bio_km?.trim() || null,
+          image_url: formData.image_url?.trim() || null,
+          sort_order: formData.sort_order,
+          status: formData.status,
+        },
+      ])
+      .select("id")
+      .single();
+
+    if (mentorError) {
+      return { error: mentorError.message };
+    }
+
+    await syncMentorCategories(supabase, mentor.id, formData.categories);
+    revalidateMentorPaths();
+    return { success: true, slug };
+  } catch (err) {
+    return { error: err instanceof Error ? err.message : "Failed to create mentor" };
+  }
+}
+
+export async function updateMentor(
+  originalSlug: string,
+  formData: MentorFormData,
+): Promise<{ error?: string; success?: boolean; slug?: string }> {
+  const supabase = await createAdminClient();
+  const decodedOriginal = decodeURIComponent(originalSlug);
+  const slug = slugify(formData.slug || formData.name_en);
+  if (!slug) {
+    return { error: "Slug is required (add an English name or enter a slug)." };
+  }
+  if (!formData.name_en.trim() || !formData.name_km.trim()) {
+    return { error: "English and Khmer names are required." };
+  }
+  if (!formData.categories.some(isEducationCategory)) {
+    return { error: "Select at least one market category." };
+  }
+
+  try {
+    const { data: existing, error: fetchError } = await supabase
+      .from("mentors")
+      .select("id")
+      .eq("slug", decodedOriginal)
+      .maybeSingle();
+
+    if (fetchError || !existing) {
+      return { error: fetchError?.message ?? "Mentor not found." };
+    }
+
+    const { error: updateError } = await supabase
+      .from("mentors")
+      .update({
+        slug,
+        name_en: formData.name_en.trim(),
+        name_km: formData.name_km.trim(),
+        title_en: formData.title_en?.trim() || null,
+        title_km: formData.title_km?.trim() || null,
+        bio_en: formData.bio_en?.trim() || null,
+        bio_km: formData.bio_km?.trim() || null,
+        image_url: formData.image_url?.trim() || null,
+        sort_order: formData.sort_order,
+        status: formData.status,
+      })
+      .eq("id", existing.id);
+
+    if (updateError) {
+      return { error: updateError.message };
+    }
+
+    if (slug !== decodedOriginal) {
+      const { error: lessonSlugError } = await supabase
+        .from("lessons")
+        .update({ mentor_slug: slug })
+        .eq("mentor_slug", decodedOriginal);
+
+      if (lessonSlugError) {
+        return { error: lessonSlugError.message };
+      }
+    }
+
+    await syncMentorCategories(supabase, existing.id, formData.categories);
+    revalidateMentorPaths();
+    if (slug !== decodedOriginal) {
+      revalidateTag(LESSONS_CACHE_TAG, "max");
+    }
+    return { success: true, slug };
+  } catch (err) {
+    return { error: err instanceof Error ? err.message : "Failed to update mentor" };
+  }
+}
+
+export async function deleteMentor(slug: string): Promise<{ error?: string }> {
+  const supabase = await createAdminClient();
+  const decoded = decodeURIComponent(slug);
+
+  const { count, error: countError } = await supabase
+    .from("lessons")
+    .select("id", { count: "exact", head: true })
+    .eq("mentor_slug", decoded);
+
+  if (countError) {
+    return { error: countError.message };
+  }
+  if (count && count > 0) {
+    return {
+      error: `Cannot delete this mentor while ${count} lesson(s) still reference them. Reassign or delete those lessons first.`,
+    };
+  }
+
+  const { error } = await supabase.from("mentors").delete().eq("slug", decoded);
+  if (error) return { error: error.message };
+  revalidateMentorPaths();
   return {};
 }
 

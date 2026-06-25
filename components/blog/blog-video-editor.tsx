@@ -75,7 +75,7 @@ export function BlogVideoEditor({
 
   return (
     <div className="space-y-4">
-      <p className="text-xs text-slate-500">
+      <p className="text-xs text-ink-soft">
         Optional. Add YouTube links or upload clips (MP4, WebM, etc.). Shown on the public article
         in the order listed.
       </p>
@@ -85,7 +85,7 @@ export function BlogVideoEditor({
           type="button"
           onClick={() => addRow("youtube")}
           disabled={rows.length >= MAX_BLOG_VIDEOS}
-          className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-[#22332E] hover:border-[#22332E]/40 disabled:opacity-50"
+          className="rounded-lg border border-bridge/40 bg-surface px-3 py-1.5 text-xs font-semibold text-foreground hover:border-gold/40 disabled:opacity-50"
         >
           + YouTube video
         </button>
@@ -93,28 +93,28 @@ export function BlogVideoEditor({
           type="button"
           onClick={() => addRow("upload")}
           disabled={rows.length >= MAX_BLOG_VIDEOS}
-          className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-[#22332E] hover:border-[#22332E]/40 disabled:opacity-50"
+          className="rounded-lg border border-bridge/40 bg-surface px-3 py-1.5 text-xs font-semibold text-foreground hover:border-gold/40 disabled:opacity-50"
         >
           + Upload video
         </button>
       </div>
 
       {rows.length === 0 ? (
-        <p className="rounded-lg border border-dashed border-slate-200 bg-slate-50 px-4 py-6 text-center text-xs text-slate-500">
+        <p className="rounded-lg border border-dashed border-bridge/40 bg-surface-soft px-4 py-6 text-center text-xs text-ink-soft">
           No videos yet. Articles can be text-only.
         </p>
       ) : null}
 
       {rows.map((row, index) => (
-        <div key={row.key} className="rounded-xl border border-slate-200 bg-slate-50/80 p-4">
+        <div key={row.key} className="rounded-xl border border-bridge/40 bg-surface-soft/80 p-4">
           <div className="mb-3 flex items-center justify-between gap-2">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+            <span className="text-xs font-bold uppercase tracking-wider text-ink-soft">
               Video {index + 1} · {row.source === "youtube" ? "YouTube" : "Upload"}
             </span>
             <button
               type="button"
               onClick={() => removeRow(row.key)}
-              className="text-xs font-semibold text-red-600 hover:text-red-700"
+              className="text-xs font-semibold text-red-400 hover:text-red-400"
             >
               Remove
             </button>
@@ -123,7 +123,7 @@ export function BlogVideoEditor({
           {row.source === "youtube" ? (
             <div className="space-y-3">
               <div>
-                <label className="mb-1 block text-xs font-semibold text-slate-600">
+                <label className="mb-1 block text-xs font-semibold text-ink-muted">
                   YouTube URL
                 </label>
                 <input
@@ -131,7 +131,7 @@ export function BlogVideoEditor({
                   value={row.url}
                   onChange={(e) => updateRow(row.key, { url: e.target.value })}
                   placeholder="https://www.youtube.com/watch?v=…"
-                  className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-[#22332E] focus:ring-2 focus:ring-[#22332E]/20"
+                  className="w-full rounded-lg border border-bridge/40 bg-surface px-3 py-2 text-sm outline-none focus:border-gold focus:ring-2 focus:ring-teal/20"
                 />
                 <YoutubeUrlPreview url={row.url} />
               </div>
@@ -149,7 +149,7 @@ export function BlogVideoEditor({
 
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
             <div>
-              <label className="mb-1 block text-xs font-semibold text-slate-600">
+              <label className="mb-1 block text-xs font-semibold text-ink-muted">
                 Caption (English)
               </label>
               <input
@@ -157,18 +157,18 @@ export function BlogVideoEditor({
                 value={row.title_en ?? ""}
                 onChange={(e) => updateRow(row.key, { title_en: e.target.value })}
                 placeholder="Optional label in playlist"
-                className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-[#22332E] focus:ring-2 focus:ring-[#22332E]/20"
+                className="w-full rounded-lg border border-bridge/40 bg-surface px-3 py-2 text-sm outline-none focus:border-gold focus:ring-2 focus:ring-teal/20"
               />
             </div>
             <div>
-              <label className="mb-1 block text-xs font-semibold text-slate-600">
+              <label className="mb-1 block text-xs font-semibold text-ink-muted">
                 Caption (Khmer)
               </label>
               <input
                 type="text"
                 value={row.title_km ?? ""}
                 onChange={(e) => updateRow(row.key, { title_km: e.target.value })}
-                className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-[#22332E] focus:ring-2 focus:ring-[#22332E]/20"
+                className="w-full rounded-lg border border-bridge/40 bg-surface px-3 py-2 text-sm outline-none focus:border-gold focus:ring-2 focus:ring-teal/20"
               />
             </div>
           </div>

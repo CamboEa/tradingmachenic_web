@@ -56,7 +56,7 @@ function ResizableVideoNodeView({ node, updateAttributes, selected }: NodeViewPr
         contentEditable={false}
       >
         {/* 16:9 iframe container */}
-        <div className="relative overflow-hidden rounded-xl border border-slate-200 bg-slate-100" style={{ paddingTop: "56.25%" }}>
+        <div className="relative overflow-hidden rounded-xl border border-bridge/40 bg-surface-soft" style={{ paddingTop: "56.25%" }}>
           <iframe
             src={String(node.attrs.src ?? "")}
             className="absolute inset-0 h-full w-full border-0"
@@ -70,12 +70,12 @@ function ResizableVideoNodeView({ node, updateAttributes, selected }: NodeViewPr
 
         {/* Selection border */}
         {selected && (
-          <div className="pointer-events-none absolute inset-0 rounded-xl border-2 border-[#22332E]" />
+          <div className="pointer-events-none absolute inset-0 rounded-xl border-2 border-gold" />
         )}
 
         {/* Floating alignment toolbar */}
         {selected && (
-          <div className="absolute -top-10 left-1/2 z-20 flex -translate-x-1/2 items-center gap-0.5 rounded-lg border border-slate-200 bg-white px-1.5 py-1 shadow-lg">
+          <div className="absolute -top-10 left-1/2 z-20 flex -translate-x-1/2 items-center gap-0.5 rounded-lg border border-bridge/40 bg-surface px-1.5 py-1 shadow-lg">
             {(["left", "center", "right"] as const).map((dir) => (
               <button
                 key={dir}
@@ -83,13 +83,13 @@ function ResizableVideoNodeView({ node, updateAttributes, selected }: NodeViewPr
                 onMouseDown={(e) => { e.preventDefault(); updateAttributes({ align: dir }); }}
                 className={[
                   "cursor-pointer rounded px-2 py-1 text-xs font-semibold transition",
-                  (node.attrs.align ?? "left") === dir ? "bg-[#22332E] text-white" : "text-slate-500 hover:bg-slate-100 hover:text-slate-800",
+                  (node.attrs.align ?? "left") === dir ? "bg-teal text-white" : "text-ink-soft hover:bg-surface-soft hover:text-foreground",
                 ].join(" ")}
               >
                 {dir === "left" ? "≡L" : dir === "center" ? "≡C" : "≡R"}
               </button>
             ))}
-            <span className="mx-1 h-4 w-px bg-slate-200" />
+            <span className="mx-1 h-4 w-px bg-bridge/40" />
             <span className="text-[10px] text-slate-400 pr-1">align</span>
           </div>
         )}
@@ -99,7 +99,7 @@ function ResizableVideoNodeView({ node, updateAttributes, selected }: NodeViewPr
           <div
             key={c}
             className={[
-              "absolute h-3 w-3 rounded-full border-2 border-[#22332E] bg-white opacity-0 transition-opacity group-hover:opacity-100",
+              "absolute h-3 w-3 rounded-full border-2 border-gold bg-surface opacity-0 transition-opacity group-hover:opacity-100",
               selected ? "opacity-100!" : "",
               c === "tl" ? "-left-1.5 -top-1.5 cursor-nw-resize" : "",
               c === "tr" ? "-right-1.5 -top-1.5 cursor-ne-resize" : "",
@@ -113,7 +113,7 @@ function ResizableVideoNodeView({ node, updateAttributes, selected }: NodeViewPr
         {/* Right-edge drag handle */}
         <div
           onMouseDown={onHandleMouseDown}
-          className="absolute right-0 top-1/2 h-12 w-2.5 -translate-y-1/2 translate-x-1/2 cursor-ew-resize rounded-full bg-[#22332E]/70 opacity-0 transition-opacity group-hover:opacity-100"
+          className="absolute right-0 top-1/2 h-12 w-2.5 -translate-y-1/2 translate-x-1/2 cursor-ew-resize rounded-full bg-teal/70 opacity-0 transition-opacity group-hover:opacity-100"
         />
       </div>
     </NodeViewWrapper>
@@ -228,17 +228,17 @@ function ResizableImageNodeView({ node, updateAttributes, selected }: NodeViewPr
           src={node.attrs.src as string}
           alt={(node.attrs.alt as string) ?? ""}
           draggable={false}
-          className="block w-full rounded-lg border border-slate-200"
+          className="block w-full rounded-lg border border-bridge/40"
         />
 
         {/* Selection border */}
         {selected && (
-          <div className="pointer-events-none absolute inset-0 rounded-lg border-2 border-[#22332E]" />
+          <div className="pointer-events-none absolute inset-0 rounded-lg border-2 border-gold" />
         )}
 
         {/* Floating alignment toolbar — appears on selection */}
         {selected && (
-          <div className="absolute -top-10 left-1/2 z-20 flex -translate-x-1/2 items-center gap-0.5 rounded-lg border border-slate-200 bg-white px-1.5 py-1 shadow-lg">
+          <div className="absolute -top-10 left-1/2 z-20 flex -translate-x-1/2 items-center gap-0.5 rounded-lg border border-bridge/40 bg-surface px-1.5 py-1 shadow-lg">
             {(["left", "center", "right"] as const).map((dir) => (
               <button
                 key={dir}
@@ -246,13 +246,13 @@ function ResizableImageNodeView({ node, updateAttributes, selected }: NodeViewPr
                 onMouseDown={(e) => { e.preventDefault(); updateAttributes({ align: dir }); }}
                 className={[
                   "cursor-pointer rounded px-2 py-1 text-xs font-semibold transition",
-                  align === dir ? "bg-[#22332E] text-white" : "text-slate-500 hover:bg-slate-100 hover:text-slate-800",
+                  align === dir ? "bg-teal text-white" : "text-ink-soft hover:bg-surface-soft hover:text-foreground",
                 ].join(" ")}
               >
                 {dir === "left" ? "≡L" : dir === "center" ? "≡C" : "≡R"}
               </button>
             ))}
-            <span className="mx-1 h-4 w-px bg-slate-200" />
+            <span className="mx-1 h-4 w-px bg-bridge/40" />
             <span className="text-[10px] text-slate-400 pr-1">align</span>
           </div>
         )}
@@ -262,7 +262,7 @@ function ResizableImageNodeView({ node, updateAttributes, selected }: NodeViewPr
           <div
             key={corner}
             className={[
-              "absolute h-3 w-3 rounded-full border-2 border-[#22332E] bg-white opacity-0 transition-opacity group-hover:opacity-100",
+              "absolute h-3 w-3 rounded-full border-2 border-gold bg-surface opacity-0 transition-opacity group-hover:opacity-100",
               selected ? "opacity-100!" : "",
               corner === "tl" ? "-left-1.5 -top-1.5 cursor-nw-resize" : "",
               corner === "tr" ? "-right-1.5 -top-1.5 cursor-ne-resize" : "",
@@ -276,7 +276,7 @@ function ResizableImageNodeView({ node, updateAttributes, selected }: NodeViewPr
         {/* Right-edge drag handle */}
         <div
           onMouseDown={onHandleMouseDown}
-          className="absolute right-0 top-1/2 h-10 w-2.5 -translate-y-1/2 translate-x-1/2 cursor-ew-resize rounded-full bg-[#22332E]/70 opacity-0 transition-opacity group-hover:opacity-100"
+          className="absolute right-0 top-1/2 h-10 w-2.5 -translate-y-1/2 translate-x-1/2 cursor-ew-resize rounded-full bg-teal/70 opacity-0 transition-opacity group-hover:opacity-100"
         />
       </div>
     </NodeViewWrapper>
@@ -367,8 +367,8 @@ function Btn({
       className={[
         "min-w-7 rounded px-1.5 py-1 text-[12px] font-semibold leading-none transition select-none",
         active
-          ? "bg-[#22332E] text-white shadow-sm"
-          : "text-slate-600 hover:bg-slate-100 hover:text-slate-900",
+          ? "bg-teal text-white shadow-sm"
+          : "text-ink-muted hover:bg-surface-soft hover:text-foreground",
         disabled ? "cursor-not-allowed opacity-40" : "cursor-pointer",
       ].join(" ")}
     >
@@ -378,7 +378,7 @@ function Btn({
 }
 
 function Sep() {
-  return <span className="mx-0.5 h-5 w-px shrink-0 bg-slate-200" aria-hidden />;
+  return <span className="mx-0.5 h-5 w-px shrink-0 bg-bridge/40" aria-hidden />;
 }
 
 /* ── Main component ──────────────────────────────────────────────────── */
@@ -437,7 +437,7 @@ export function ToolDocEditor({
     content: value || "",
     editorProps: {
       attributes: {
-        class: "tool-doc-prose outline-none min-h-[520px] px-5 py-4 text-[14px] leading-[1.85] text-slate-700",
+        class: "tool-doc-prose outline-none min-h-[520px] px-5 py-4 text-[14px] leading-[1.85] text-ink-muted",
       },
     },
     onUpdate: ({ editor: ed }) => {
@@ -570,7 +570,7 @@ export function ToolDocEditor({
   }, [editor, linkUrl]);
 
   if (!editor) {
-    return <div className="h-75 animate-pulse rounded-xl border border-slate-200 bg-slate-50" />;
+    return <div className="h-75 animate-pulse rounded-xl border border-bridge/40 bg-surface-soft" />;
   }
 
   const headingLevel =
@@ -583,12 +583,12 @@ export function ToolDocEditor({
           : "p";
 
   return (
-    <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+    <div className="overflow-hidden rounded-xl border border-bridge/40 bg-surface shadow-sm">
       {/* ── Toolbar ── */}
       <div
         role="toolbar"
         aria-label="Document formatting"
-        className="flex flex-wrap items-center gap-0.5 border-b border-slate-100 bg-slate-50/80 px-2 py-2"
+        className="flex flex-wrap items-center gap-0.5 border-b border-bridge/30 bg-surface-soft/80 px-2 py-2"
       >
         {/* Heading picker */}
         <select
@@ -598,7 +598,7 @@ export function ToolDocEditor({
             if (v === "p") editor?.chain().focus().setParagraph().run();
             else editor?.chain().focus().toggleHeading({ level: Number(v) as 1|2|3 }).run();
           }}
-          className="cursor-pointer rounded border border-slate-200 bg-white px-2 py-1 text-[12px] font-semibold text-slate-600 outline-none focus:border-[#22332E]"
+          className="cursor-pointer rounded border border-bridge/40 bg-surface px-2 py-1 text-[12px] font-semibold text-ink-muted outline-none focus:border-gold"
         >
           <option value="p">Normal</option>
           <option value="1">Heading 1</option>
@@ -687,36 +687,36 @@ export function ToolDocEditor({
             onClick={() => { setShowImageMenu((v) => !v); setShowImageUrl(false); }}
           />
           {showImageMenu && (
-            <div className="absolute left-0 top-full z-30 mt-1 w-52 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-lg shadow-slate-900/10">
+            <div className="absolute left-0 top-full z-30 mt-1 w-52 overflow-hidden rounded-xl border border-bridge/40 bg-surface shadow-lg shadow-black/30">
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="flex w-full cursor-pointer items-center gap-2.5 px-4 py-3 text-left text-sm text-slate-700 hover:bg-slate-50"
+                className="flex w-full cursor-pointer items-center gap-2.5 px-4 py-3 text-left text-sm text-ink-muted hover:bg-surface-soft"
               >
                 <span>📁</span> Upload from device
               </button>
               <button
                 type="button"
                 onClick={() => setShowImageUrl((v) => !v)}
-                className="flex w-full cursor-pointer items-center gap-2.5 border-t border-slate-100 px-4 py-3 text-left text-sm text-slate-700 hover:bg-slate-50"
+                className="flex w-full cursor-pointer items-center gap-2.5 border-t border-bridge/30 px-4 py-3 text-left text-sm text-ink-muted hover:bg-surface-soft"
               >
                 <span>🔗</span> Paste image URL
               </button>
               {showImageUrl && (
-                <div className="border-t border-slate-100 p-3">
+                <div className="border-t border-bridge/30 p-3">
                   <input
                     type="url"
                     value={imageUrl}
                     onChange={(e) => setImageUrl(e.target.value)}
                     placeholder="https://..."
-                    className="w-full rounded-lg border border-slate-200 px-3 py-2 text-xs outline-none focus:border-[#22332E]"
+                    className="w-full rounded-lg border border-bridge/40 px-3 py-2 text-xs outline-none focus:border-gold"
                     onKeyDown={(e) => e.key === "Enter" && handleImageUrl()}
                     autoFocus
                   />
                   <button
                     type="button"
                     onClick={handleImageUrl}
-                    className="mt-2 w-full cursor-pointer rounded-lg bg-[#22332E] py-1.5 text-xs font-semibold text-white hover:brightness-110"
+                    className="mt-2 w-full cursor-pointer rounded-lg bg-teal py-1.5 text-xs font-semibold text-white hover:brightness-110"
                   >
                     Insert
                   </button>
@@ -757,9 +757,9 @@ export function ToolDocEditor({
       <div className="relative">
         <EditorContent editor={editor} className="tool-rich-editor" />
         {dropUploading > 0 && (
-          <div className="absolute inset-0 z-30 flex flex-col items-center justify-center gap-3 rounded-b-xl bg-white/85 backdrop-blur-sm">
-            <div className="h-8 w-8 animate-spin rounded-full border-4 border-slate-200 border-t-[#22332E]" />
-            <p className="text-sm font-semibold text-[#22332E]">
+          <div className="absolute inset-0 z-30 flex flex-col items-center justify-center gap-3 rounded-b-xl bg-surface/85 backdrop-blur-sm">
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-bridge/40 border-t-[#22332E]" />
+            <p className="text-sm font-semibold text-foreground">
               Uploading {dropUploading === 1 ? "image" : `${dropUploading} images`}…
             </p>
           </div>
@@ -769,15 +769,15 @@ export function ToolDocEditor({
       {/* ── Link modal ── */}
       {showLinkModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-          <div className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-2xl">
-            <h3 className="text-base font-bold text-slate-900">Insert link</h3>
+          <div className="w-full max-w-sm rounded-2xl bg-surface p-6 shadow-2xl">
+            <h3 className="text-base font-bold text-foreground">Insert link</h3>
             <input
               type="url"
               value={linkUrl}
               onChange={(e) => setLinkUrl(e.target.value)}
               placeholder="https://..."
               autoFocus
-              className="mt-3 w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm outline-none focus:border-[#22332E] focus:ring-2 focus:ring-[#22332E]/20"
+              className="mt-3 w-full rounded-xl border border-bridge/40 px-4 py-2.5 text-sm outline-none focus:border-gold focus:ring-2 focus:ring-teal/20"
               onKeyDown={(e) => e.key === "Enter" && handleSetLink()}
             />
             <div className="mt-4 flex justify-end gap-2">
@@ -785,15 +785,15 @@ export function ToolDocEditor({
                 <button
                   type="button"
                   onClick={() => { editor?.chain().focus().unsetLink().run(); setShowLinkModal(false); }}
-                  className="cursor-pointer rounded-lg border border-slate-200 px-4 py-2 text-sm font-semibold text-red-600 hover:bg-red-50"
+                  className="cursor-pointer rounded-lg border border-bridge/40 px-4 py-2 text-sm font-semibold text-red-400 hover:bg-red-500/10"
                 >
                   Remove
                 </button>
               )}
-              <button type="button" onClick={() => setShowLinkModal(false)} className="cursor-pointer rounded-lg border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-50">
+              <button type="button" onClick={() => setShowLinkModal(false)} className="cursor-pointer rounded-lg border border-bridge/40 px-4 py-2 text-sm font-semibold text-ink-muted hover:bg-surface-soft">
                 Cancel
               </button>
-              <button type="button" onClick={handleSetLink} className="cursor-pointer rounded-lg bg-[#22332E] px-4 py-2 text-sm font-semibold text-white hover:brightness-110">
+              <button type="button" onClick={handleSetLink} className="cursor-pointer rounded-lg bg-teal px-4 py-2 text-sm font-semibold text-white hover:brightness-110">
                 Save
               </button>
             </div>
@@ -804,23 +804,23 @@ export function ToolDocEditor({
       {/* ── Video modal ── */}
       {showVideoModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-          <div className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-2xl">
-            <h3 className="text-base font-bold text-slate-900">Embed video</h3>
-            <p className="mt-1 text-xs text-slate-500">YouTube, Vimeo, or direct MP4 URL</p>
+          <div className="w-full max-w-sm rounded-2xl bg-surface p-6 shadow-2xl">
+            <h3 className="text-base font-bold text-foreground">Embed video</h3>
+            <p className="mt-1 text-xs text-ink-soft">YouTube, Vimeo, or direct MP4 URL</p>
             <input
               type="url"
               value={videoUrl}
               onChange={(e) => setVideoUrl(e.target.value)}
               placeholder="https://youtube.com/watch?v=..."
               autoFocus
-              className="mt-3 w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm outline-none focus:border-[#22332E] focus:ring-2 focus:ring-[#22332E]/20"
+              className="mt-3 w-full rounded-xl border border-bridge/40 px-4 py-2.5 text-sm outline-none focus:border-gold focus:ring-2 focus:ring-teal/20"
               onKeyDown={(e) => e.key === "Enter" && handleVideoEmbed()}
             />
             <div className="mt-4 flex justify-end gap-2">
-              <button type="button" onClick={() => { setShowVideoModal(false); setVideoUrl(""); }} className="cursor-pointer rounded-lg border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-50">
+              <button type="button" onClick={() => { setShowVideoModal(false); setVideoUrl(""); }} className="cursor-pointer rounded-lg border border-bridge/40 px-4 py-2 text-sm font-semibold text-ink-muted hover:bg-surface-soft">
                 Cancel
               </button>
-              <button type="button" onClick={handleVideoEmbed} disabled={!videoUrl.trim()} className="cursor-pointer rounded-lg bg-[#22332E] px-4 py-2 text-sm font-semibold text-white hover:brightness-110 disabled:opacity-50">
+              <button type="button" onClick={handleVideoEmbed} disabled={!videoUrl.trim()} className="cursor-pointer rounded-lg bg-teal px-4 py-2 text-sm font-semibold text-white hover:brightness-110 disabled:opacity-50">
                 Embed
               </button>
             </div>

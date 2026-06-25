@@ -187,7 +187,7 @@ export function R2Uploader({
 
  return (
  <div>
- <label className="mb-1.5 block text-xs font-semibold text-slate-600">{label}</label>
+ <label className="mb-1.5 block text-xs font-semibold text-ink-muted">{label}</label>
 
  <div
  onDrop={handleDrop}
@@ -196,12 +196,12 @@ export function R2Uploader({
  className={[
  "flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed px-4 py-8 text-center transition",
  isUploading
- ? "cursor-not-allowed border-[#22332E] bg-[#EEF8F7]"
+ ? "cursor-not-allowed border-gold bg-surface-soft"
  : state.status === "done"
- ? "border-emerald-300 bg-emerald-50"
+ ? "border-emerald-300 bg-emerald-500/10"
  : state.status === "error"
- ? "border-red-300 bg-red-50"
- : "border-slate-200 bg-slate-50 hover:border-[#22332E] hover:bg-[#EEF8F7]",
+ ? "border-red-300 bg-red-500/10"
+ : "border-bridge/40 bg-surface-soft hover:border-gold hover:bg-surface-soft",
  ].join(" ")}
  >
  <input
@@ -222,8 +222,8 @@ export function R2Uploader({
  clipRule="evenodd"
  />
  </svg>
- <p className="mt-2 text-xs text-slate-500">
- Drop file here or <span className="font-semibold text-[#22332E]">browse</span>
+ <p className="mt-2 text-xs text-ink-soft">
+ Drop file here or <span className="font-semibold text-foreground">browse</span>
  </p>
  <p className="mt-1 text-[10px] text-slate-400">{hint}</p>
  </>
@@ -231,19 +231,19 @@ export function R2Uploader({
 
  {state.status === "uploading" && (
  <>
- <p className="text-sm font-semibold text-[#22332E]">
+ <p className="text-sm font-semibold text-foreground">
  {state.phase === "preparing"
  ? "Preparing upload…"
  : `Uploading… ${state.progress}%`}
  </p>
- <p className="mt-1 text-xs text-slate-500">
+ <p className="mt-1 text-xs text-ink-soft">
  {state.phase === "uploading"
  ? `${formatBytes(state.loaded)} / ${formatBytes(state.total)}`
  : "Requesting secure upload URL"}
  </p>
- <div className="mt-3 h-2 w-full max-w-xs overflow-hidden rounded-full bg-[#DBEAFE]">
+ <div className="mt-3 h-2 w-full max-w-xs overflow-hidden rounded-full bg-teal/20">
  <div
- className="h-full rounded-full bg-[#22332E] transition-[width] duration-150 ease-out"
+ className="h-full rounded-full bg-teal transition-[width] duration-150 ease-out"
  style={{
  width: state.phase === "preparing" ? "8%" : `${state.progress}%`,
  }}
@@ -261,7 +261,7 @@ export function R2Uploader({
  clipRule="evenodd"
  />
  </svg>
- <p className="mt-2 text-xs font-semibold text-emerald-700">Uploaded</p>
+ <p className="mt-2 text-xs font-semibold text-emerald-400">Uploaded</p>
  <p className="mt-1 max-w-xs truncate font-mono text-[10px] text-emerald-600">
  {state.publicUrl}
  </p>
@@ -271,7 +271,7 @@ export function R2Uploader({
  e.stopPropagation();
  setState({ status: "idle" });
  }}
- className="mt-2 text-[10px] text-slate-400 underline hover:text-slate-600"
+ className="mt-2 text-[10px] text-slate-400 underline hover:text-ink-muted"
  >
  Replace
  </button>
@@ -287,14 +287,14 @@ export function R2Uploader({
  clipRule="evenodd"
  />
  </svg>
- <p className="mt-2 text-xs font-semibold text-red-600">{state.message}</p>
+ <p className="mt-2 text-xs font-semibold text-red-400">{state.message}</p>
  <button
  type="button"
  onClick={(e) => {
  e.stopPropagation();
  setState({ status: "idle" });
  }}
- className="mt-2 text-[10px] text-slate-400 underline hover:text-slate-600"
+ className="mt-2 text-[10px] text-slate-400 underline hover:text-ink-muted"
  >
  Try again
  </button>

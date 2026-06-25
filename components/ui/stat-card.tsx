@@ -27,7 +27,7 @@ export function StatCard({
         accents[accent],
       )}
     >
-      <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+      <p className="text-xs font-semibold uppercase tracking-wide text-ink-soft">
         {label}
       </p>
       <p className="mt-2 text-3xl font-bold tabular-nums text-slate-brand">{value}</p>

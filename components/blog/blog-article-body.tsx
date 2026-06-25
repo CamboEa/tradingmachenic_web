@@ -7,7 +7,7 @@ function InlineText({ text }: { text: string }) {
     <>
       {segments.map((seg, i) =>
         seg.bold ? (
-          <strong key={i} className="font-semibold text-[#22332E]">
+          <strong key={i} className="font-semibold text-foreground">
             {seg.text}
           </strong>
         ) : (
@@ -22,19 +22,19 @@ function BlockView({ block }: { block: BlogBlock }) {
   switch (block.type) {
     case "h2":
       return (
-        <h2 className="mt-10 text-xl font-bold tracking-tight text-[#22332E] first:mt-0 sm:text-2xl">
+        <h2 className="mt-10 text-xl font-bold tracking-tight text-foreground first:mt-0 sm:text-2xl">
           <InlineText text={block.text} />
         </h2>
       );
     case "h3":
       return (
-        <h3 className="mt-8 text-lg font-semibold text-[#22332E]">
+        <h3 className="mt-8 text-lg font-semibold text-foreground">
           <InlineText text={block.text} />
         </h3>
       );
     case "ul":
       return (
-        <ul className="mt-4 list-disc space-y-2 pl-5 text-base leading-relaxed text-slate-600">
+        <ul className="mt-4 list-disc space-y-2 pl-5 text-base leading-relaxed text-ink-muted">
           {block.items.map((item, i) => (
             <li key={i}>
               <InlineText text={item} />
@@ -44,7 +44,7 @@ function BlockView({ block }: { block: BlogBlock }) {
       );
     case "paragraph":
       return (
-        <p className="mt-4 text-base leading-[1.75] text-slate-600 sm:text-[1.0625rem]">
+        <p className="mt-4 text-base leading-[1.75] text-ink-muted sm:text-[1.0625rem]">
           <InlineText text={block.text} />
         </p>
       );

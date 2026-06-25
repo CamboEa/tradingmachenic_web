@@ -9,7 +9,7 @@ export function LocaleParityHint({
 }) {
  if (!enFilled || kmFilled) return null;
  return (
- <p className="mt-1 text-xs font-medium text-amber-700" role="status">
+ <p className="mt-1 text-xs font-medium text-amber-400" role="status">
  {label}
  </p>
  );

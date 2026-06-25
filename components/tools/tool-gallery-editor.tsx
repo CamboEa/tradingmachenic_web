@@ -66,14 +66,14 @@ export function ToolGalleryEditor({
                     type="button"
                     onClick={addRow}
                     disabled={rows.length >= MAX_GALLERY_ITEMS}
-                    className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-[#22332E] transition hover:border-[#22332E]/40 hover:text-[#22332E] disabled:cursor-not-allowed disabled:opacity-50"
+                    className="rounded-lg border border-bridge/40 bg-surface px-3 py-1.5 text-xs font-semibold text-foreground transition hover:border-gold/40 hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
                 >
                     + Add image
                 </button>
             </div>
 
             {rows.length === 0 ? (
-                <p className="rounded-lg border border-dashed border-slate-200 bg-slate-50 px-4 py-6 text-center text-xs text-slate-500">
+                <p className="rounded-lg border border-dashed border-bridge/40 bg-surface-soft px-4 py-6 text-center text-xs text-ink-soft">
                     No gallery images yet. Use &quot;Add image&quot; to upload proof images.
                 </p>
             ) : null}
@@ -81,16 +81,16 @@ export function ToolGalleryEditor({
             {rows.map((row, index) => (
                 <div
                     key={row.key}
-                    className="rounded-xl border border-slate-200 bg-slate-50/80 p-4"
+                    className="rounded-xl border border-bridge/40 bg-surface-soft/80 p-4"
                 >
                     <div className="mb-3 flex items-center justify-between gap-2">
-                        <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                        <span className="text-xs font-bold uppercase tracking-wider text-ink-soft">
                             Image {index + 1}
                         </span>
                         <button
                             type="button"
                             onClick={() => removeRow(row.key)}
-                            className="text-xs font-semibold text-red-600 hover:text-red-700"
+                            className="text-xs font-semibold text-red-400 hover:text-red-400"
                         >
                             Remove
                         </button>
@@ -108,7 +108,7 @@ export function ToolGalleryEditor({
 
                     <div className="mt-4 grid gap-3 sm:grid-cols-2">
                         <div>
-                            <label className="mb-1.5 block text-xs font-semibold text-slate-600">
+                            <label className="mb-1.5 block text-xs font-semibold text-ink-muted">
                                 Caption (English)
                             </label>
                             <textarea
@@ -116,11 +116,11 @@ export function ToolGalleryEditor({
                                 value={row.description_en ?? ""}
                                 onChange={(e) => updateRow(row.key, { description_en: e.target.value })}
                                 placeholder="e.g. Forward test on XAUUSD H1, Jan–Mar 2025…"
-                                className="w-full resize-y rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-800 outline-none transition focus:border-[#22332E] focus:ring-2 focus:ring-[#22332E]/20"
+                                className="w-full resize-y rounded-lg border border-bridge/40 bg-surface px-3 py-2 text-sm text-foreground outline-none transition focus:border-gold focus:ring-2 focus:ring-teal/20"
                             />
                         </div>
                         <div>
-                            <label className="mb-1.5 block text-xs font-semibold text-slate-600">
+                            <label className="mb-1.5 block text-xs font-semibold text-ink-muted">
                                 Caption (Khmer)
                             </label>
                             <textarea
@@ -128,7 +128,7 @@ export function ToolGalleryEditor({
                                 value={row.description_km ?? ""}
                                 onChange={(e) => updateRow(row.key, { description_km: e.target.value })}
                                 placeholder="ពិពណ៌នារូបភាព…"
-                                className="w-full resize-y rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-800 outline-none transition focus:border-[#22332E] focus:ring-2 focus:ring-[#22332E]/20"
+                                className="w-full resize-y rounded-lg border border-bridge/40 bg-surface px-3 py-2 text-sm text-foreground outline-none transition focus:border-gold focus:ring-2 focus:ring-teal/20"
                             />
                         </div>
                     </div>

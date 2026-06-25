@@ -25,7 +25,7 @@ export function CategoryCard({
   return (
     <Link
       href={href}
-      className="group flex w-full min-h-[200px] overflow-hidden rounded-xl border border-bridge/40 bg-white shadow-sm transition duration-300 hover:border-gold/50 hover:shadow-lg hover:shadow-teal/8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/40 sm:min-h-[240px] lg:min-h-[280px]"
+      className="group flex w-full min-h-[200px] overflow-hidden rounded-xl border border-bridge/40 bg-surface shadow-sm transition duration-300 hover:border-gold/50 hover:shadow-lg hover:shadow-teal/8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/40 sm:min-h-[240px] lg:min-h-[280px]"
     >
       <div className="relative hidden w-56 shrink-0 overflow-hidden sm:block md:w-72 lg:w-80 xl:w-96">
         <Image

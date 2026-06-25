@@ -113,7 +113,7 @@ export function CategoryIconBadge({
 
   return (
     <span
-      className={`inline-flex shrink-0 items-center justify-center ${box} bg-white/15 text-white ring-1 ring-white/25 backdrop-blur-sm`}
+      className={`inline-flex shrink-0 items-center justify-center ${box} bg-surface/15 text-white ring-1 ring-white/25 backdrop-blur-sm`}
     >
       <CategoryIcon category={category} className={icon} />
     </span>

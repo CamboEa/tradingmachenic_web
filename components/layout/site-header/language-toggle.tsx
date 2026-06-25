@@ -18,7 +18,7 @@ export function LanguageToggle({
 }) {
   return (
     <div
-      className="flex shrink-0 items-center gap-0.5 rounded-lg border border-slate-200 bg-white p-0.5"
+      className="flex shrink-0 items-center gap-0.5 rounded-lg border border-bridge/40 bg-surface p-0.5"
       role="group"
       aria-label={dict.nav.language}
     >
@@ -29,7 +29,7 @@ export function LanguageToggle({
         className={
           locale === "en"
             ? `${seg} bg-slate-brand text-white`
-            : `${seg} text-slate-400 hover:text-slate-700`
+            : `${seg} text-slate-400 hover:text-ink-muted`
         }
       >
         {dict.nav.english}
@@ -40,7 +40,7 @@ export function LanguageToggle({
         className={
           locale === "km"
             ? `${seg} bg-slate-brand text-white`
-            : `${seg} text-slate-400 hover:text-slate-700`
+            : `${seg} text-slate-400 hover:text-ink-muted`
         }
       >
         {dict.nav.khmer}

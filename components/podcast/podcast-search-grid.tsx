@@ -38,7 +38,7 @@ function EpisodeCard({
     >
       <div className="absolute inset-x-0 top-0 h-0.75 bg-linear-to-r from-[#629696] via-[#629696]/70 to-transparent" aria-hidden />
 
-      <div className="relative aspect-video w-full overflow-hidden bg-slate-100">
+      <div className="relative aspect-video w-full overflow-hidden bg-surface-soft">
         {thumb ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={thumb} alt="" className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.04]" />
@@ -48,7 +48,7 @@ function EpisodeCard({
         <div className="absolute inset-0 bg-linear-to-t from-[#0f172a]/65 via-[#0f172a]/10 to-transparent" aria-hidden />
 
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white/20 ring-2 ring-white/40 backdrop-blur-sm transition duration-300 group-hover:bg-white/30 group-hover:scale-110">
+          <span className="flex h-12 w-12 items-center justify-center rounded-full bg-surface/20 ring-2 ring-white/40 backdrop-blur-sm transition duration-300 group-hover:bg-surface/30 group-hover:scale-110">
             <svg viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5 translate-x-0.5 text-white" aria-hidden>
               <polygon points="4,2 18,10 4,18" />
             </svg>
@@ -68,15 +68,15 @@ function EpisodeCard({
       </div>
 
       <div className="flex flex-1 flex-col p-5 sm:p-6">
-        <h2 className="text-[1.0625rem] font-semibold leading-snug tracking-tight text-[#22332E] transition-colors duration-200 group-hover:text-[#22332E]">
+        <h2 className="text-[1.0625rem] font-semibold leading-snug tracking-tight text-foreground transition-colors duration-200 group-hover:text-foreground">
           {title}
         </h2>
         {description ? (
-          <p className="mt-2.5 line-clamp-2 text-sm leading-relaxed text-slate-500">{description}</p>
+          <p className="mt-2.5 line-clamp-2 text-sm leading-relaxed text-ink-soft">{description}</p>
         ) : null}
 
-        <div className="mt-5 flex items-center justify-end border-t border-slate-100 pt-4">
-          <span className="inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-semibold text-[#22332E] ring-1 ring-[color-mix(in_oklab,#22332E_30%,transparent)] transition-all duration-200 group-hover:bg-[#22332E] group-hover:text-white group-hover:ring-transparent">
+        <div className="mt-5 flex items-center justify-end border-t border-bridge/30 pt-4">
+          <span className="inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-semibold text-foreground ring-1 ring-[color-mix(in_oklab,#22332E_30%,transparent)] transition-all duration-200 group-hover:bg-teal group-hover:text-white group-hover:ring-transparent">
             {watchLabel}
             <span aria-hidden className="transition-transform duration-200 group-hover:translate-x-0.5">→</span>
           </span>
@@ -136,12 +136,12 @@ export function PodcastSearchGrid({
             setQuery(e.target.value);
             setPage(0);
           }}
-          className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm text-slate-700 placeholder-slate-400 shadow-sm transition focus:border-[#22332E]/50 focus:outline-none focus:ring-2 focus:ring-[#22332E]/20"
+          className="w-full rounded-xl border border-bridge/40 bg-surface py-2.5 pl-10 pr-4 text-sm text-ink-muted placeholder-slate-400 shadow-sm transition focus:border-gold/50 focus:outline-none focus:ring-2 focus:ring-teal/20"
         />
       </div>
 
       {filtered.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-slate-200 py-20 text-center">
+        <div className="rounded-xl border border-dashed border-bridge/40 py-20 text-center">
           <p className="text-sm font-medium text-slate-400">
             {emptySearchLabel ?? `No episodes match "${query}".`}
           </p>

@@ -1,12 +1,12 @@
 import { cn } from "@/lib/ui/cn";
 
 const variants = {
-  published: "bg-emerald-100 text-emerald-800 ring-1 ring-emerald-200/80",
-  draft: "bg-slate-100 text-slate-600 ring-1 ring-slate-200/80",
-  warning: "bg-amber-100 text-amber-800 ring-1 ring-amber-200/80",
-  gold: "bg-amber-50 text-amber-900 ring-1 ring-amber-200/80",
-  teal: "bg-[#DBEAFE] text-[#1E40AF] ring-1 ring-[#BFDBFE]/80",
-  neutral: "bg-slate-100 text-slate-600",
+  published: "bg-emerald-500/15 text-emerald-400 ring-1 ring-emerald-500/30",
+  draft: "bg-surface-soft text-ink-muted ring-1 ring-bridge/40",
+  warning: "bg-amber-500/15 text-amber-400 ring-1 ring-amber-500/30",
+  gold: "bg-gold/15 text-gold ring-1 ring-gold/30",
+  teal: "bg-teal/15 text-teal ring-1 ring-teal/30",
+  neutral: "bg-surface-soft text-ink-muted",
 } as const;
 
 export function Badge({

@@ -43,8 +43,8 @@ export function SiteHeader({
     <header
       className={`sticky top-0 z-40 border-b transition-all duration-200 backdrop-blur-md ${
         raised
-          ? "border-slate-200/80 bg-white/98 shadow-sm shadow-slate-900/5"
-          : "border-slate-200/50 bg-[#F8FAFC]"
+          ? "border-bridge/40 bg-surface/98 shadow-sm shadow-black/20"
+          : "border-bridge/30 bg-background/95"
       }`}
     >
       {/* ── Main bar ── */}
@@ -57,7 +57,7 @@ export function SiteHeader({
         >
           <SiteLogo size="nav" priority />
           <span className="text-sm font-bold uppercase leading-none tracking-[0.14em]">
-            <span className="text-slate-900 transition-colors group-hover:text-slate-700">FINHUB</span>
+            <span className="text-foreground transition-colors group-hover:text-ink-muted">FINHUB</span>
             <span className="text-teal">KH</span>
           </span>
         </Link>
@@ -87,7 +87,7 @@ export function SiteHeader({
               onClick={() => setOpen((v) => !v)}
               aria-expanded={open}
               aria-label={open ? "Close menu" : "Open menu"}
-              className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 transition hover:border-slate-300 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal/30"
+              className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg border border-bridge/40 bg-surface text-ink-muted transition hover:border-bridge/60 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal/30"
             >
               <svg aria-hidden className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 {open ? (
@@ -103,17 +103,17 @@ export function SiteHeader({
 
       {/* ── Mobile drawer ── */}
       {open && (
-        <div className="border-t border-slate-200/80 bg-white xl:hidden">
+        <div className="border-t border-bridge/40 bg-surface xl:hidden">
           <div className="mx-auto max-w-7xl">
             <CenterNav locale={locale} dict={dict} pathname={pathname} mobile />
-            <div className="border-t border-slate-100 px-4 py-3">
+            <div className="border-t border-bridge/30 px-4 py-3">
               {user ? (
                 <ProfileMenu user={user} signOutLabel={dict.nav.signOut} />
               ) : (
                 <div className="flex gap-2">
                   <Link
                     href={`/${locale}/register`}
-                    className="flex-1 rounded-lg border border-slate-200 py-2.5 text-center text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+                    className="flex-1 rounded-lg border border-bridge/40 py-2.5 text-center text-sm font-semibold text-ink-muted transition hover:bg-surface-soft"
                   >
                     {dict.nav.register}
                   </Link>

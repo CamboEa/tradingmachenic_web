@@ -55,7 +55,7 @@ export function ConfirmDialog({
  const confirmClass =
  variant === "danger"
  ? "bg-red-600 text-white hover:bg-red-700 focus-visible:ring-red-500/40"
- : "bg-[#22332E] text-white hover:bg-[#1D4ED8] focus-visible:ring-[#22332E]/40";
+ : "bg-teal text-white hover:brightness-110 focus-visible:ring-teal/40";
 
  return createPortal(
  <div
@@ -65,7 +65,7 @@ export function ConfirmDialog({
  <button
  type="button"
  aria-label="Close dialog"
- className="absolute inset-0 bg-[#22332E]/45 backdrop-blur-[2px] transition-opacity"
+ className="absolute inset-0 bg-black/60 backdrop-blur-[2px] transition-opacity"
  onClick={loading ? undefined : onCancel}
  disabled={loading}
  />
@@ -74,15 +74,15 @@ export function ConfirmDialog({
  aria-modal="true"
  aria-labelledby={titleId}
  aria-describedby={descId}
- className="relative w-full max-w-md overflow-hidden rounded-2xl border border-slate-200/90 bg-[#f8fafc]"
+ className="relative w-full max-w-md overflow-hidden rounded-2xl border border-bridge/40 bg-background"
  >
- <div className="border-b border-slate-200/80 bg-white px-6 py-5">
+ <div className="border-b border-bridge/40 bg-surface px-6 py-5">
  <div className="flex gap-4">
  <span
  className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${
  variant === "danger"
- ? "bg-red-50 text-red-600 ring-1 ring-red-100"
- : "bg-[#EEF8F7] text-[#22332E] ring-1 ring-[#DBEAFE]"
+ ? "bg-red-500/15 text-red-400 ring-1 ring-red-500/30"
+ : "bg-surface-soft text-foreground ring-1 ring-teal/20"
  }`}
  aria-hidden
  >
@@ -105,10 +105,10 @@ export function ConfirmDialog({
  )}
  </span>
  <div className="min-w-0 pt-0.5">
- <h2 id={titleId} className="text-lg font-bold tracking-tight text-[#22332E]">
+ <h2 id={titleId} className="text-lg font-bold tracking-tight text-foreground">
  {title}
  </h2>
- <p id={descId} className="mt-1.5 text-sm leading-relaxed text-slate-600">
+ <p id={descId} className="mt-1.5 text-sm leading-relaxed text-ink-muted">
  {description}
  </p>
  </div>
@@ -120,7 +120,7 @@ export function ConfirmDialog({
  type="button"
  onClick={onCancel}
  disabled={loading}
- className="rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#22332E]/30 disabled:opacity-50"
+ className="rounded-lg border border-bridge/40 bg-surface px-4 py-2.5 text-sm font-semibold text-ink-muted transition hover:border-bridge/60 hover:bg-surface-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal/30 disabled:opacity-50"
  >
  {cancelLabel}
  </button>

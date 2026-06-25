@@ -60,11 +60,11 @@ export default async function BlogArticlePage({
   return (
     <div className="flex flex-col">
       <main className="mx-auto w-full max-w-5xl flex-1 px-4 pb-16 pt-10 sm:px-6 lg:px-8">
-        <div className="border-b border-slate-200 pb-4">
+        <div className="border-b border-bridge/40 pb-4">
           <nav className="flex items-center justify-between gap-4">
             <Link
               href={`/${locale}/blog`}
-              className="group inline-flex items-center gap-2 text-sm font-semibold text-slate-600 transition hover:text-[#22332E]"
+              className="group inline-flex items-center gap-2 text-sm font-semibold text-ink-muted transition hover:text-foreground"
             >
               <svg
                 viewBox="0 0 16 16"
@@ -89,20 +89,20 @@ export default async function BlogArticlePage({
           </nav>
         </div>
 
-        <header className="border-b border-slate-200 pb-8 pt-6">
+        <header className="border-b border-bridge/40 pb-8 pt-6">
           <p className="text-xs font-bold uppercase tracking-[0.25em] text-gold">
             {t.articleEyebrow}
           </p>
-          <h1 className="mt-4 text-3xl font-black leading-[1.12] tracking-tight text-slate-900 sm:text-4xl lg:text-[2.6rem]">
+          <h1 className="mt-4 text-3xl font-black leading-[1.12] tracking-tight text-foreground sm:text-4xl lg:text-[2.6rem]">
             {title}
           </h1>
           {excerpt ? (
-            <p className="mt-5 text-lg leading-relaxed text-slate-600">{excerpt}</p>
+            <p className="mt-5 text-lg leading-relaxed text-ink-muted">{excerpt}</p>
           ) : null}
         </header>
 
         {post.featured_image_url ? (
-          <div className="mt-8 border border-slate-200 bg-slate-100">
+          <div className="mt-8 border border-bridge/40 bg-surface-soft">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={post.featured_image_url}
@@ -115,7 +115,7 @@ export default async function BlogArticlePage({
 
         <div className="mt-10">
           {hasVideos ? (
-            <div className="border-y border-slate-200 py-8">
+            <div className="border-y border-bridge/40 py-8">
               <BlogVideoPlayer
                 videos={post.videos}
                 locale={locale}
@@ -130,10 +130,10 @@ export default async function BlogArticlePage({
           </div>
         </div>
 
-        <div className="mt-12 flex justify-center border-t border-slate-200 pt-8">
+        <div className="mt-12 flex justify-center border-t border-bridge/40 pt-8">
           <Link
             href={`/${locale}/blog`}
-            className="inline-flex items-center gap-2 rounded-none border border-slate-200 bg-white px-6 py-3 text-sm font-bold text-slate-700 transition hover:border-[#22332E] hover:text-[#22332E]"
+            className="inline-flex items-center gap-2 rounded-none border border-bridge/40 bg-surface px-6 py-3 text-sm font-bold text-ink-muted transition hover:border-gold hover:text-foreground"
           >
             {t.backToList}
             <svg

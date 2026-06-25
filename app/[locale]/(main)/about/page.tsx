@@ -32,7 +32,11 @@ export default async function AboutPage({
 
   return (
     <div className="flex flex-col">
-      <PublicPageHero backgroundImage="/Images/bg-about-header.png" title={""} />
+      <PublicPageHero
+        eyebrow={a.mentorBadge}
+        title={a.title}
+        description={a.experienceLine}
+      />
       <PublicPageMain className="py-12 lg:py-16">
       <div className="mt-12 grid gap-12 lg:grid-cols-[minmax(0,340px)_minmax(0,1fr)] lg:items-start lg:gap-16">
         <Reveal className="min-w-0">
@@ -68,7 +72,7 @@ export default async function AboutPage({
             ))}
           </div>
 
-          <blockquote className="mt-10 rounded-2xl border border-[color-mix(in_oklab,var(--color-gold)_28%,var(--color-bridge))] border-l-4 border-l-[var(--color-gold)] bg-[color-mix(in_oklab,var(--color-gold)_07%,var(--color-surface))] px-5 py-4 text-[var(--color-ink)] shadow-sm shadow-slate-900/5">
+          <blockquote className="mt-10 rounded-2xl border border-[color-mix(in_oklab,var(--color-gold)_28%,var(--color-bridge))] border-l-4 border-l-[var(--color-gold)] bg-[color-mix(in_oklab,var(--color-gold)_07%,var(--color-surface))] px-5 py-4 text-[var(--color-ink)] shadow-sm shadow-black/20">
             {a.teachingStatement}
           </blockquote>        
         </div>
@@ -84,7 +88,7 @@ export default async function AboutPage({
           {a.roles.map((role) => (
             <li
               key={role.org}
-              className="rounded-2xl border border-white/80 bg-white/88 px-5 py-4 shadow-sm shadow-slate-900/5"
+              className="rounded-2xl border border-bridge/30 bg-surface/88 px-5 py-4 shadow-sm shadow-black/20"
             >
               <p className="text-[11px] font-semibold uppercase tracking-wide text-(--color-teal)">
                 {role.org}
@@ -104,11 +108,11 @@ export default async function AboutPage({
       <Reveal className="mt-24">
         <div className="px-6 py-14 sm:px-10">
           <div className="text-center">
-            <h2 className="text-3xl font-bold tracking-tight text-[#22332E] sm:text-4xl">
+            <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
               {locale === "km" ? "ក្រុមការងាររបស់យើង" : "Our Team"}
             </h2>
             <div className="mx-auto mt-3 h-0.5 w-12 bg-[#629696]" />
-            <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-slate-500">
+            <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-ink-soft">
               {locale === "km"
                 ? "ក្រុមការងារដែលស្ពឹកស្ពាន់ ដើម្បីផ្តល់ចំណេះដឹងការជួញដូរ និងឧបករណ៍ល្អបំផុតដល់អ្នក។"
                 : "A dedicated team building the best trading education and algorithmic tools for our community."}
@@ -127,11 +131,11 @@ export default async function AboutPage({
                   sizes="220px"
                 />
               </div>
-              <h3 className="mt-5 text-lg font-bold text-[#22332E]">Heng Bunkheang</h3>
-              <p className="mt-1 text-xs font-semibold uppercase tracking-[0.18em] text-[#22332E]">
+              <h3 className="mt-5 text-lg font-bold text-foreground">Heng Bunkheang</h3>
+              <p className="mt-1 text-xs font-semibold uppercase tracking-[0.18em] text-foreground">
                 {locale === "km" ? "អ្នកអភិវឌ្ឍន៍កម្មវិធី" : "Software Developer"}
               </p>
-              <p className="mt-3 max-w-55 text-sm leading-relaxed text-slate-500">
+              <p className="mt-3 max-w-55 text-sm leading-relaxed text-ink-soft">
                 {locale === "km"
                   ? "អ្នកអភិវឌ្ឍន៍ប្រព័ន្ធ Trading Web និងឧបករណ៍ Algorithmic Trading។"
                   : "Builds the trading platform and full-stack infrastructure powering the academy."}
@@ -149,11 +153,11 @@ export default async function AboutPage({
                   sizes="220px"
                 />
               </div>
-              <h3 className="mt-5 text-lg font-bold text-[#22332E]">Srun Vireakyuth</h3>
-              <p className="mt-1 text-xs font-semibold uppercase tracking-[0.18em] text-[#22332E]">
+              <h3 className="mt-5 text-lg font-bold text-foreground">Srun Vireakyuth</h3>
+              <p className="mt-1 text-xs font-semibold uppercase tracking-[0.18em] text-foreground">
                 {locale === "km" ? "អ្នកអភិវឌ្ឍន៍ MQL5" : "MQL5 Developer"}
               </p>
-              <p className="mt-3 max-w-55 text-sm leading-relaxed text-slate-500">
+              <p className="mt-3 max-w-55 text-sm leading-relaxed text-ink-soft">
                 {locale === "km"
                   ? "អ្នកស្ទាត់ជំនាញក្នុងការសរសេរ Expert Advisors និង Custom Indicators ក្នុង MQL5។"
                   : "Specialist in writing Expert Advisors and custom indicators for MT4 & MT5."}

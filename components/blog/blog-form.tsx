@@ -46,8 +46,8 @@ function readFormString(form: HTMLFormElement, name: string): string {
 
 function KhmerSectionHeader() {
   return (
-    <div className="rounded-lg border border-amber-200/80 bg-amber-50/60 px-4 py-3">
-      <p className="text-xs font-semibold text-amber-900">Khmer translation</p>
+    <div className="rounded-lg border border-amber-500/30 bg-amber-500/10/60 px-4 py-3">
+      <p className="text-xs font-semibold text-amber-400">Khmer translation</p>
       <p className="mt-0.5 text-xs text-amber-800/90">
         Optional. Leave blank to publish in English only; the Khmer site will show the English
         version until you add a translation.
@@ -186,15 +186,15 @@ export function BlogForm({ post }: { post?: BlogPost }) {
   }
 
   return (
-    <div className="w-full rounded-2xl border border-slate-200/90 bg-white shadow-sm shadow-slate-900/5">
-      <div className="border-b border-slate-100 px-4 py-5 sm:px-6">
+    <div className="w-full rounded-2xl border border-bridge/40 bg-surface shadow-sm shadow-black/20">
+      <div className="border-b border-bridge/30 px-4 py-5 sm:px-6">
         <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
           Step {step + 1} of {steps.length}
         </p>
-        <h2 className="mt-1 text-base font-bold text-[#22332E]">{steps[step].title}</h2>
-        <p className="mt-0.5 text-sm text-slate-500">{steps[step].hint}</p>
+        <h2 className="mt-1 text-base font-bold text-foreground">{steps[step].title}</h2>
+        <p className="mt-0.5 text-sm text-ink-soft">{steps[step].hint}</p>
         {!isEdit ? (
-          <p className="mt-2 text-xs text-slate-500">
+          <p className="mt-2 text-xs text-ink-soft">
             Write in English first. Open this article later to add the Khmer translation.
           </p>
         ) : null}
@@ -220,10 +220,10 @@ export function BlogForm({ post }: { post?: BlogPost }) {
                   className={[
                     "flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-semibold transition",
                     active
-                      ? "border-[#22332E] bg-[#EEF8F7] text-[#22332E]"
+                      ? "border-gold bg-surface-soft text-foreground"
                       : done
-                        ? "border-emerald-200 bg-emerald-50 text-emerald-800"
-                        : "border-slate-200 bg-slate-50 text-slate-400",
+                        ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-400"
+                        : "border-bridge/40 bg-surface-soft text-slate-400",
                     i > step ? "cursor-not-allowed opacity-60" : "cursor-pointer",
                   ].join(" ")}
                   aria-current={active ? "step" : undefined}
@@ -231,7 +231,7 @@ export function BlogForm({ post }: { post?: BlogPost }) {
                   <span
                     className={[
                       "flex h-5 w-5 items-center justify-center rounded-full text-[10px]",
-                      active ? "bg-[#22332E] text-white" : done ? "bg-emerald-500 text-white" : "bg-slate-200 text-slate-500",
+                      active ? "bg-teal text-white" : done ? "bg-emerald-500 text-white" : "bg-bridge/40 text-ink-soft",
                     ].join(" ")}
                   >
                     {done ? "✓" : i + 1}
@@ -247,7 +247,7 @@ export function BlogForm({ post }: { post?: BlogPost }) {
       <form ref={formRef} className="p-4 sm:p-6" onSubmit={handleSubmit}>
         <div className={step === 0 ? "space-y-5" : "hidden"}>
           <div>
-            <label className="mb-1.5 block text-xs font-semibold text-slate-600">
+            <label className="mb-1.5 block text-xs font-semibold text-ink-muted">
               Title (English) <span className="text-red-500">*</span>
             </label>
             <input
@@ -261,7 +261,7 @@ export function BlogForm({ post }: { post?: BlogPost }) {
 
           <div>
             <div className="mb-1.5 flex flex-wrap items-center justify-between gap-2">
-              <label className="text-xs font-semibold text-slate-600">
+              <label className="text-xs font-semibold text-ink-muted">
                 Slug <span className="text-red-500">*</span>
               </label>
               {slugTouched && titleEn.trim() ? (
@@ -274,7 +274,7 @@ export function BlogForm({ post }: { post?: BlogPost }) {
                       setSlugTouched(false);
                     }
                   }}
-                  className="text-xs font-semibold text-[#22332E] hover:text-[#1D4ED8]"
+                  className="text-xs font-semibold text-foreground hover:text-gold"
                 >
                   Regenerate from title
                 </button>
@@ -294,7 +294,7 @@ export function BlogForm({ post }: { post?: BlogPost }) {
           </div>
 
           <div>
-            <label className="mb-1.5 block text-xs font-semibold text-slate-600">
+            <label className="mb-1.5 block text-xs font-semibold text-ink-muted">
               Excerpt (English)
             </label>
             <textarea
@@ -307,7 +307,7 @@ export function BlogForm({ post }: { post?: BlogPost }) {
           </div>
 
           <div>
-            <label className="mb-1.5 block text-xs font-semibold text-slate-600">
+            <label className="mb-1.5 block text-xs font-semibold text-ink-muted">
               Publish date <span className="text-red-500">*</span>
             </label>
             <input
@@ -320,12 +320,12 @@ export function BlogForm({ post }: { post?: BlogPost }) {
         </div>
 
         <div className={step === 1 ? "space-y-5" : "hidden"}>
-          <p className="rounded-lg border border-slate-100 bg-slate-50 px-3 py-2 text-xs text-slate-500">
+          <p className="rounded-lg border border-bridge/30 bg-surface-soft px-3 py-2 text-xs text-ink-soft">
             Write like a document—use the toolbar for headings, bold, lists, and quotes. Your
             formatting is saved automatically.
           </p>
           <div>
-            <label className="mb-1.5 block text-xs font-semibold text-slate-600">
+            <label className="mb-1.5 block text-xs font-semibold text-ink-muted">
               Article (English) <span className="text-red-500">*</span>
             </label>
             <BlogRichTextEditor
@@ -341,7 +341,7 @@ export function BlogForm({ post }: { post?: BlogPost }) {
           <div className={step === khmerStepIndex ? "space-y-5" : "hidden"}>
             <KhmerSectionHeader />
             <div>
-              <label className="mb-1.5 block text-xs font-semibold text-slate-600">
+              <label className="mb-1.5 block text-xs font-semibold text-ink-muted">
                 Title (Khmer)
               </label>
               <input
@@ -356,7 +356,7 @@ export function BlogForm({ post }: { post?: BlogPost }) {
               />
             </div>
             <div>
-              <label className="mb-1.5 block text-xs font-semibold text-slate-600">
+              <label className="mb-1.5 block text-xs font-semibold text-ink-muted">
                 Excerpt (Khmer)
               </label>
               <textarea
@@ -367,7 +367,7 @@ export function BlogForm({ post }: { post?: BlogPost }) {
               />
             </div>
             <div>
-              <label className="mb-1.5 block text-xs font-semibold text-slate-600">
+              <label className="mb-1.5 block text-xs font-semibold text-ink-muted">
                 Article (Khmer)
               </label>
               <BlogRichTextEditor
@@ -408,37 +408,37 @@ export function BlogForm({ post }: { post?: BlogPost }) {
           />
 
           <div>
-            <label className="mb-1.5 block text-xs font-semibold text-slate-600">Status</label>
+            <label className="mb-1.5 block text-xs font-semibold text-ink-muted">Status</label>
             <div className="flex gap-3">
               {(["Draft", "Published"] as const).map((s) => (
                 <label
                   key={s}
-                  className="flex cursor-pointer items-center gap-2 rounded-lg border border-slate-200 px-4 py-2.5 text-sm has-[:checked]:border-[#22332E] has-[:checked]:bg-[#EEF8F7]"
+                  className="flex cursor-pointer items-center gap-2 rounded-lg border border-bridge/40 px-4 py-2.5 text-sm has-[:checked]:border-gold has-[:checked]:bg-surface-soft"
                 >
                   <input
                     type="radio"
                     name="status"
                     value={s}
                     defaultChecked={s === defaultStatus}
-                    className="accent-[#22332E]"
+                    className="accent-teal"
                   />
                   {s}
                 </label>
               ))}
             </div>
-            <p className="mt-2 text-xs text-slate-500">
+            <p className="mt-2 text-xs text-ink-soft">
               Published articles appear on the public blog at /blog.
               {!isEdit ? " Add Khmer later by editing the article." : null}
             </p>
           </div>
         </div>
 
-        <div className="mt-8 flex flex-col-reverse gap-3 border-t border-slate-100 pt-6 sm:flex-row sm:justify-between">
+        <div className="mt-8 flex flex-col-reverse gap-3 border-t border-bridge/30 pt-6 sm:flex-row sm:justify-between">
           <button
             type="button"
             onClick={handleBack}
             disabled={step === 0 || isSaving}
-            className="rounded-lg border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-50 disabled:opacity-40"
+            className="rounded-lg border border-bridge/40 px-4 py-2.5 text-sm font-semibold text-ink-muted hover:bg-surface-soft disabled:opacity-40"
           >
             Back
           </button>
@@ -446,7 +446,7 @@ export function BlogForm({ post }: { post?: BlogPost }) {
             <button
               type="button"
               onClick={handleNext}
-              className="rounded-lg bg-[#22332E] px-6 py-2.5 text-sm font-semibold text-white hover:bg-[#1D4ED8]"
+              className="rounded-lg bg-teal px-6 py-2.5 text-sm font-semibold text-white hover:brightness-110"
             >
               Continue
             </button>
@@ -454,7 +454,7 @@ export function BlogForm({ post }: { post?: BlogPost }) {
             <button
               type="submit"
               disabled={isSaving}
-              className="rounded-lg bg-[#22332E] px-6 py-2.5 text-sm font-semibold text-white hover:bg-[#1D4ED8] disabled:bg-slate-300"
+              className="rounded-lg bg-teal px-6 py-2.5 text-sm font-semibold text-white hover:brightness-110 disabled:bg-slate-300"
             >
               {isSaving ? "Saving…" : isEdit ? "Save changes" : "Save article"}
             </button>

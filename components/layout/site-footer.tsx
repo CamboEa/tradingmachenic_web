@@ -107,7 +107,7 @@ export function SiteFooter({ locale, dict }: { locale: Locale; dict: Dictionary 
  <div className="mt-14 flex flex-col gap-6 border-t border-white/10 pt-8 sm:flex-row sm:items-center sm:justify-between">
  <p className="max-w-2xl text-xs leading-relaxed text-slate-400">{f.tagline}</p>
  <div className="flex flex-col gap-4 sm:items-end">
- <p className="text-xs text-slate-500">
+ <p className="text-xs text-ink-soft">
  © {year} {f.rights}
  </p>
  </div>

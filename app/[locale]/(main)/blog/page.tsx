@@ -37,7 +37,7 @@ export default async function BlogIndexPage({
 
   return (
     <div className="flex flex-col">
-      <PublicPageHero eyebrow={t.eyebrow} title={t.title} description={t.intro} backgroundImage="/Images/bg-blog-header.png" />
+      <PublicPageHero eyebrow={t.eyebrow} title={t.title} description={t.intro} />
       <PublicPageMain className="pb-16">
         {posts.length === 0 ? (
           <EmptyState title={t.emptyTitle} description={t.emptyBody} />
@@ -49,12 +49,12 @@ export default async function BlogIndexPage({
                   href={`/${locale}/blog/${featured.slug}`}
                   className={[
                     "group ui-content-card relative overflow-hidden",
-                    "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#22332E] focus-visible:outline-solid",
+                    "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold focus-visible:outline-solid",
                     hasLatest ? "lg:col-span-8" : "lg:col-span-12",
                   ].join(" ")}
                   aria-label={blogLocalizedTitle(featured, locale)}
                 >
-                  <div className="relative aspect-video overflow-hidden bg-slate-100">
+                  <div className="relative aspect-video overflow-hidden bg-surface-soft">
                     {featured.featured_image_url ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
@@ -93,15 +93,15 @@ export default async function BlogIndexPage({
                     >
                       {formatArticleDate(featured.published_at, locale)}
                     </time>
-                    <h2 className="mt-3 text-xl font-bold leading-snug text-slate-900 transition group-hover:text-[#22332E] sm:text-2xl">
+                    <h2 className="mt-3 text-xl font-bold leading-snug text-foreground transition group-hover:text-foreground sm:text-2xl">
                       {blogLocalizedTitle(featured, locale)}
                     </h2>
                     {blogLocalizedExcerpt(featured, locale) ? (
-                      <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-slate-500">
+                      <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-ink-soft">
                         {blogLocalizedExcerpt(featured, locale)}
                       </p>
                     ) : null}
-                    <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-[#22332E]">
+                    <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-foreground">
                       {t.readArticle}
                       <svg
                         viewBox="0 0 20 20"
@@ -122,7 +122,7 @@ export default async function BlogIndexPage({
 
               {hasLatest ? (
                 <aside className="lg:col-span-4">
-                  <div className="flex items-center justify-between border-b border-slate-200 pb-2">
+                  <div className="flex items-center justify-between border-b border-bridge/40 pb-2">
                     <p className="text-xs font-semibold uppercase tracking-[0.25em] text-slate-400">
                       Latest
                     </p>
@@ -132,7 +132,7 @@ export default async function BlogIndexPage({
                       const title = blogLocalizedTitle(post, locale);
                       const excerpt = blogLocalizedExcerpt(post, locale);
                       return (
-                        <li key={post.id} className="border-b border-slate-100 pb-4 last:border-b-0 last:pb-0">
+                        <li key={post.id} className="border-b border-bridge/30 pb-4 last:border-b-0 last:pb-0">
                           <Link
                             href={`/${locale}/blog/${post.slug}`}
                             className="group block"
@@ -144,11 +144,11 @@ export default async function BlogIndexPage({
                             >
                               {formatArticleDate(post.published_at, locale)}
                             </time>
-                            <p className="mt-2 line-clamp-2 text-sm font-semibold text-slate-900 transition group-hover:text-[#22332E]">
+                            <p className="mt-2 line-clamp-2 text-sm font-semibold text-foreground transition group-hover:text-foreground">
                               {title}
                             </p>
                             {excerpt ? (
-                              <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-slate-500">
+                              <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-ink-soft">
                                 {excerpt}
                               </p>
                             ) : null}
@@ -163,7 +163,7 @@ export default async function BlogIndexPage({
 
             {more.length > 0 ? (
               <section className="mt-12">
-                <div className="flex items-center justify-between border-b border-slate-200 pb-2">
+                <div className="flex items-center justify-between border-b border-bridge/40 pb-2">
                   <p className="text-xs font-semibold uppercase tracking-[0.25em] text-slate-400">
                     More stories
                   </p>
@@ -179,7 +179,7 @@ export default async function BlogIndexPage({
                         className="group ui-content-card flex h-full flex-col overflow-hidden"
                         aria-label={title}
                       >
-                        <div className="relative aspect-16/10 overflow-hidden bg-slate-100">
+                        <div className="relative aspect-16/10 overflow-hidden bg-surface-soft">
                           {post.featured_image_url ? (
                             // eslint-disable-next-line @next/next/no-img-element
                             <img
@@ -218,15 +218,15 @@ export default async function BlogIndexPage({
                           >
                             {formatArticleDate(post.published_at, locale)}
                           </time>
-                          <h3 className="mt-3 text-base font-semibold leading-snug text-slate-900 transition group-hover:text-[#22332E]">
+                          <h3 className="mt-3 text-base font-semibold leading-snug text-foreground transition group-hover:text-foreground">
                             {title}
                           </h3>
                           {excerpt ? (
-                            <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-slate-500">
+                            <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-ink-soft">
                               {excerpt}
                             </p>
                           ) : null}
-                          <span className="mt-4 inline-flex items-center gap-2 text-xs font-semibold text-[#22332E]">
+                          <span className="mt-4 inline-flex items-center gap-2 text-xs font-semibold text-foreground">
                             {t.readArticle}
                             <svg
                               viewBox="0 0 20 20"

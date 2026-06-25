@@ -15,13 +15,13 @@ export default async function EditCurriculumModulePage({ params }: { params: Pro
  <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
  <Link
  href="/admin/program"
- className="inline-flex shrink-0 items-center justify-center rounded-lg border border-slate-200 px-3.5 py-2 text-sm font-medium text-slate-600 transition hover:border-slate-300 hover:bg-slate-50"
+ className="inline-flex shrink-0 items-center justify-center rounded-lg border border-bridge/40 px-3.5 py-2 text-sm font-medium text-ink-muted transition hover:border-bridge/60 hover:bg-surface-soft"
  >
  ← Back
  </Link>
  <div>
- <h1 className="text-2xl font-bold text-[#22332E]">Edit module</h1>
- <p className="mt-1 truncate text-sm text-slate-500" title={module.title_en}>
+ <h1 className="text-2xl font-bold text-foreground">Edit module</h1>
+ <p className="mt-1 truncate text-sm text-ink-soft" title={module.title_en}>
  {module.title_en}
  </p>
  </div>
