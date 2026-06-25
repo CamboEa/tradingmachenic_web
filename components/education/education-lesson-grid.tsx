@@ -200,9 +200,6 @@ export function EducationLessonGrid({
 }) {
   const [query, setQuery] = useState("");
 
-  const free = useMemo(() => lessons.filter(l => l.type === "free"),  [lessons]);
-  const paid = useMemo(() => lessons.filter(l => l.type === "paid"),  [lessons]);
-
   const searched = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return null;
@@ -212,7 +209,7 @@ export function EducationLessonGrid({
     );
   }, [lessons, query, locale]);
 
-  const featured = free[0] ?? lessons[0];
+  const featured = lessons[0];
 
   return (
     <div className="min-h-screen bg-background px-4 py-10 sm:px-6 lg:px-10">
@@ -265,37 +262,14 @@ export function EducationLessonGrid({
             />
           )}
 
-          {/* Free row */}
           <LessonRow
-            title={locale === "km" ? "មេរៀនឥតគិតថ្លៃ" : "Free Lessons"}
+            title={locale === "km" ? "មេរៀនទាំងអស់" : "All Lessons"}
             accent="bg-teal"
-            lessons={free}
+            lessons={lessons}
             locale={locale}
             allLessons={lessons}
             dict={dict}
           />
-
-          {/* Paid row */}
-          <LessonRow
-            title={locale === "km" ? "មេរៀនបង់ប្រាក់" : "Paid Lessons"}
-            accent="bg-gold"
-            lessons={paid}
-            locale={locale}
-            allLessons={lessons}
-            dict={dict}
-          />
-
-          {/* All lessons if no type split */}
-          {free.length === 0 && paid.length === 0 && (
-            <LessonRow
-              title={locale === "km" ? "មេរៀនទាំងអស់" : "All Lessons"}
-              accent="bg-teal"
-              lessons={lessons}
-              locale={locale}
-              allLessons={lessons}
-              dict={dict}
-            />
-          )}
         </>
       )}
     </div>

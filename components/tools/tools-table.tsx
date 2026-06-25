@@ -101,13 +101,6 @@ const filter: Filter<Tool> = {
         { label: "Expert Advisor", value: "type:ea", predicate: (t) => t.type === "ea" },
       ],
     },
-    {
-      label: "Pricing",
-      options: [
-        { label: "Free", value: "pricing:free", predicate: (t) => t.pricing === "free" },
-        { label: "Paid", value: "pricing:paid", predicate: (t) => t.pricing === "paid" },
-      ],
-    },
   ],
 };
 

@@ -28,7 +28,6 @@ const filter: Filter<Lesson> = {
       label: "Type",
       options: [
         { label: "Free", value: "type:free", predicate: (l) => l.type === "free" },
-        { label: "Paid", value: "type:paid", predicate: (l) => l.type === "paid" },
       ],
     },
     {
