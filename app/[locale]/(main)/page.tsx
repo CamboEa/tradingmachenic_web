@@ -135,10 +135,10 @@ export default async function HomePage({
 
       {/* ── Featured Lessons ── */}
       <section
-        className="relative overflow-hidden bg-[#091D1B] px-4 py-24 sm:px-6 lg:px-8"
+        className="relative overflow-hidden bg-background px-4 py-24 sm:px-6 lg:px-8"
         aria-labelledby="home-featured-lessons"
       >
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_40%_at_50%_0%,color-mix(in_oklab,#22332E_12%,transparent),transparent)]" aria-hidden />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_40%_at_50%_0%,color-mix(in_oklab,var(--teal)_12%,transparent),transparent)]" aria-hidden />
         <div className="relative mx-auto w-full max-w-7xl">
           <Reveal effect="fade">
             <div className="mb-14 text-center">
@@ -310,7 +310,7 @@ export default async function HomePage({
           className="cta-bg-2 object-cover object-center opacity-0"
         />
         {/* Dark overlay to keep text readable */}
-        <div className="absolute inset-0 bg-slate-brand/75" aria-hidden />
+        <div className="absolute inset-0 bg-slate-brand/50" aria-hidden />
         <div
           className="cta-glow absolute inset-0 bg-[radial-gradient(circle_at_18%_50%,rgba(212,175,55,0.18),transparent_22rem),radial-gradient(circle_at_82%_40%,rgba(37,99,235,0.18),transparent_24rem)]"
           aria-hidden

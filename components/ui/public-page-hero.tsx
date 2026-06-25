@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 import { cn } from "@/lib/ui/cn";
 
 const TICK_MARKS = [
@@ -7,7 +9,9 @@ const TICK_MARKS = [
   { left: "71%", bottom: "20%", height: "2.25rem", delayClass: "page-hero-tick-4" },
 ] as const;
 
-function HeroBackdrop() {
+function HeroBackdrop({ photo }: { photo?: boolean }) {
+  if (photo) return null;
+
   return (
     <>
       <div
@@ -89,13 +93,23 @@ function HeroBackdrop() {
   );
 }
 
+function HeroPhotoLayer({ src }: { src: string }) {
+  return (
+    <Image
+      src={src}
+      alt=""
+      fill
+      priority
+      sizes="100vw"
+      aria-hidden
+      className="object-cover object-center"
+    />
+  );
+}
+
 function HeroEyebrow({ children }: { children: string }) {
   return (
-    <div className="flex items-center gap-3">
-      <span className="h-px w-8 bg-linear-to-r from-transparent to-gold/50" aria-hidden />
-      <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-gold">{children}</p>
-      <span className="h-px w-8 bg-linear-to-l from-transparent to-gold/50" aria-hidden />
-    </div>
+    <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-highlight">{children}</p>
   );
 }
 
@@ -106,6 +120,9 @@ export function PublicPageHero({
   children,
   className,
   panel,
+  backgroundImage,
+  /** Show only the background image (copy is baked into the artwork). */
+  imageOnly,
 }: {
   eyebrow?: string;
   title: string;
@@ -114,22 +131,33 @@ export function PublicPageHero({
   className?: string;
   /** Full-width panel rendered inside the hero (e.g. mentor lessons page). */
   panel?: React.ReactNode;
+  /** Optional wide photo banner behind the hero copy. */
+  backgroundImage?: string;
+  imageOnly?: boolean;
 }) {
   const hasTitle = title.trim().length > 0;
+  const hasPhoto = Boolean(backgroundImage);
+  const showImageOnly = imageOnly && hasPhoto;
 
   return (
     <section
       className={cn(
-        "relative overflow-hidden bg-slate-brand",
-        panel
-          ? "flex min-h-[20rem] flex-col justify-end sm:min-h-[22rem] lg:min-h-[26rem]"
-          : "flex min-h-[16rem] flex-col justify-end sm:min-h-[18rem] lg:min-h-[20rem]",
+        "relative overflow-hidden",
+        hasPhoto ? "bg-background" : "bg-slate-brand",
+        showImageOnly
+          ? "flex min-h-[16rem] flex-col justify-end sm:min-h-[18rem] lg:min-h-[20rem]"
+          : panel
+            ? "flex min-h-[20rem] flex-col justify-end sm:min-h-[22rem] lg:min-h-[26rem]"
+            : "flex min-h-[16rem] flex-col justify-end sm:min-h-[18rem] lg:min-h-[20rem]",
         className,
       )}
     >
-      <HeroBackdrop />
+      {backgroundImage ? <HeroPhotoLayer src={backgroundImage} /> : null}
+      <HeroBackdrop photo={hasPhoto} />
 
-      {panel ? (
+      {showImageOnly ? (
+        hasTitle ? <h1 className="sr-only">{title}</h1> : null
+      ) : panel ? (
         <div className="relative flex w-full flex-1 flex-col justify-center px-4 pb-10 pt-14 sm:px-8 sm:pb-12 lg:px-12 xl:px-16">
           {panel}
         </div>
@@ -143,29 +171,18 @@ export function PublicPageHero({
             ) : null}
 
             {hasTitle ? (
-              <>
-                <div className="shimmer-bar mb-5 h-0.5 w-16 rounded-full bg-gold/70" aria-hidden />
-                <h1 className="max-w-4xl text-balance text-3xl font-black tracking-tight text-white sm:text-4xl lg:text-[2.75rem] lg:leading-[1.1]">
-                  {title}
-                </h1>
-              </>
+              <h1 className="max-w-4xl text-balance text-3xl font-black tracking-tight text-white sm:text-4xl lg:text-[2.75rem] lg:leading-[1.1]">
+                {title}
+              </h1>
             ) : null}
 
             {description ? (
-              <p className="mt-4 max-w-2xl text-base leading-relaxed text-slate-300/90 sm:text-lg">
+              <p className="mt-4 max-w-2xl text-base leading-relaxed text-foreground/90 sm:text-lg">
                 {description}
               </p>
             ) : null}
 
             {children ? <div className="mt-6">{children}</div> : null}
-
-            <div className="mt-8 flex items-center gap-2" aria-hidden>
-              <span className="h-1 w-1 rounded-full bg-gold/60" />
-              <span className="h-px w-12 bg-white/10" />
-              <span className="h-1.5 w-1.5 rounded-full bg-teal/50" />
-              <span className="h-px w-8 bg-white/10" />
-              <span className="h-1 w-1 rounded-full bg-gold/40" />
-            </div>
           </div>
         </div>
       )}

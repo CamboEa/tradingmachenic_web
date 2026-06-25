@@ -21,7 +21,7 @@ export function MentorGrid({
   if (mentors.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-bridge/50 bg-surface px-6 py-20 text-center">
-        <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-surface-soft text-gold">
+        <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-surface-soft text-highlight">
           <svg viewBox="0 0 24 24" fill="none" className="h-7 w-7" aria-hidden>
             <path
               d="M12 14a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"

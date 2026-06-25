@@ -25,32 +25,36 @@ export function CategoryCard({
   return (
     <Link
       href={href}
-      className="group flex w-full min-h-[200px] overflow-hidden rounded-xl border border-bridge/40 bg-surface shadow-sm transition duration-300 hover:border-gold/50 hover:shadow-lg hover:shadow-teal/8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/40 sm:min-h-[240px] lg:min-h-[280px]"
+      className="group flex flex-col overflow-hidden rounded-xl border border-bridge/40 bg-surface shadow-sm transition duration-300 hover:border-highlight/40 hover:shadow-md hover:shadow-teal/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-highlight/40"
     >
-      <div className="relative hidden w-56 shrink-0 overflow-hidden sm:block md:w-72 lg:w-80 xl:w-96">
+      <div className="relative aspect-[16/9] overflow-hidden bg-surface-soft">
         <Image
           src={imageSrc}
           alt=""
           fill
-          className="object-cover transition-transform duration-700 group-hover:scale-105"
-          sizes="384px"
+          className="object-cover transition-transform duration-500 group-hover:scale-105"
+          sizes="(max-width: 640px) 100vw, 50vw"
         />
-        <div className="absolute inset-0 bg-teal/40" />
-        <div className="absolute inset-y-0 right-0 w-1.5 bg-gold" />
+        <div className="absolute inset-0 bg-teal/30" />
+        <div className="absolute inset-x-0 bottom-0 h-0.5 bg-highlight" />
       </div>
 
-      <div className="flex min-w-0 flex-1 items-center p-6 sm:p-8 lg:p-10">
-        <div className="min-w-0 flex-1">
-          <p className="text-xs font-bold uppercase tracking-[0.16em] text-gold">
-            {theme.tagline}
-          </p>
-          <h2 className="mt-1 text-2xl font-bold tracking-tight text-teal transition group-hover:text-gold sm:text-3xl lg:text-4xl">
-            {label}
-          </h2>
-          <p className="mt-2 line-clamp-2 text-base leading-relaxed text-ink-muted sm:text-lg">
-            {hint}
-          </p>
-        </div>
+      <div className="flex flex-1 flex-col p-5">
+        <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-highlight">
+          {theme.tagline}
+        </p>
+        <h2 className="mt-1 text-xl font-bold tracking-tight text-foreground transition group-hover:text-highlight sm:text-2xl">
+          {label}
+        </h2>
+        <p className="mt-2 line-clamp-2 flex-1 text-sm leading-relaxed text-ink-muted">
+          {hint}
+        </p>
+        <p className="mt-4 text-sm font-semibold text-teal group-hover:text-highlight">
+          {dict.course.exploreCategory}
+          <span aria-hidden className="ml-1 transition-transform group-hover:translate-x-0.5">
+            →
+          </span>
+        </p>
       </div>
     </Link>
   );

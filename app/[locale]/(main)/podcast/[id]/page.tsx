@@ -51,7 +51,7 @@ export default async function PodcastEpisodePage({
       <div
         className="h-0.75"
         style={{
-          background: "linear-gradient(to right, #629696 0%, rgba(212,175,55,0.4) 60%, transparent 100%)",
+          background: "linear-gradient(to right, var(--teal) 0%, color-mix(in oklab, var(--highlight) 40%, transparent) 60%, transparent 100%)",
         }}
       />
 
@@ -85,8 +85,8 @@ export default async function PodcastEpisodePage({
           {/* Left — text */}
           <div>
             <div className="mb-4 flex items-center gap-3">
-              <span className="h-px w-8 bg-[#629696]" aria-hidden />
-              <p className="text-[10px] font-bold uppercase tracking-[0.35em] text-[#629696]">
+              <span className="h-px w-8 bg-teal" aria-hidden />
+              <p className="text-[10px] font-bold uppercase tracking-[0.35em] text-highlight">
                 {t.episodeEyebrow}
               </p>
             </div>

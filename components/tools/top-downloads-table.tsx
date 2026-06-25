@@ -53,7 +53,7 @@ export function TopDownloadsTable({
             <col style={{ width: "8.5rem" }} />
           </colgroup>
           <thead>
-            <tr className="border-b border-bridge/40 bg-linear-to-r from-[#22332E] to-[#12352f]">
+            <tr className="border-b border-bridge/40 bg-linear-to-r from-surface-soft to-background">
               <th className="w-12 px-4 py-3.5 text-[11px] font-bold uppercase tracking-wider text-white/70">
                 {t.rank}
               </th>

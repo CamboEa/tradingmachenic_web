@@ -3,7 +3,7 @@ import type { Locale } from "@/lib/i18n";
 const TV_IFRAME_BASE = "https://s.tradingview.com/embed-widget/ticker-tape/";
 
 /** Matches app/globals.css --background */
-const TICKER_BG = "#0a100f";
+const TICKER_BG = "#182428";
 
 /** Symbols shown in the strip (TradingView `proName` format). */
 const SYMBOLS: { proName: string; description: string }[] = [

@@ -36,7 +36,7 @@ export function CourseLessonCard({
           {thumbSrc ? (
             <Image src={thumbSrc} alt="" fill sizes="(max-width:768px)100vw,50vw" className="object-cover transition-transform duration-500 group-hover:scale-[1.04]" priority={index === 0} />
           ) : (
-            <div className="absolute inset-0 bg-linear-to-br from-slate-700 to-slate-900" />
+            <div className="absolute inset-0 bg-linear-to-br from-surface-soft to-background" />
           )}
           <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/10 to-transparent" />
 
@@ -48,7 +48,7 @@ export function CourseLessonCard({
                 {videoCount}
               </span>
             )}
-            <span className={`rounded-md px-2 py-1 text-[10px] font-bold uppercase tracking-wide backdrop-blur-sm ${isFree ? "bg-teal/80 text-white" : "bg-gold/80 text-foreground"}`}>
+            <span className={`rounded-md px-2 py-1 text-[10px] font-bold uppercase tracking-wide backdrop-blur-sm ${isFree ? "bg-teal/80 text-white" : "bg-highlight/80 text-background"}`}>
               {isFree ? dict.course.filterFree : dict.course.filterPaid}
             </span>
           </div>

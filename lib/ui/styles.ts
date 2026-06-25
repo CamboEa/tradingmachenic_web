@@ -1,4 +1,4 @@
-/** Shared Tailwind class tokens — dark Structured Clarity palette. */
+/** Shared Tailwind class tokens — logo teal/cyan on black (see globals.css). */
 export const ui = {
   /** Primary CTA */
   btnPrimary:
@@ -8,7 +8,7 @@ export const ui = {
   btnGhost:
     "inline-flex items-center justify-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-ink-muted transition hover:bg-surface-soft hover:text-foreground",
   btnGold:
-    "inline-flex items-center justify-center gap-2 rounded-xl bg-gold px-4 py-2.5 text-sm font-semibold text-background shadow-sm transition hover:brightness-110",
+    "inline-flex items-center justify-center gap-2 rounded-xl bg-highlight px-4 py-2.5 text-sm font-semibold text-background shadow-sm shadow-highlight/20 transition hover:brightness-110",
   btnDanger:
     "inline-flex items-center justify-center gap-2 rounded-xl border border-red-500/30 bg-surface px-3 py-2 text-sm font-semibold text-red-400 transition hover:bg-red-500/10",
 
@@ -23,8 +23,8 @@ export const ui = {
   field:
     "w-full rounded-xl border border-bridge/40 bg-surface-soft/80 px-4 py-2.5 text-sm text-foreground outline-none transition placeholder:text-ink-soft focus:border-teal focus:bg-surface focus:ring-2 focus:ring-teal/20",
 
-  eyebrowPublic: "text-xs font-bold uppercase tracking-[0.25em] text-gold",
-  eyebrowAdmin: "text-xs font-semibold uppercase tracking-[0.2em] text-gold",
+  eyebrowPublic: "text-xs font-bold uppercase tracking-[0.25em] text-highlight",
+  eyebrowAdmin: "text-xs font-semibold uppercase tracking-[0.2em] text-highlight",
   pageTitle: "text-2xl font-bold tracking-tight text-foreground sm:text-3xl",
   pageTitlePublic:
     "text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl",

@@ -1,10 +1,12 @@
-import { PublicPageHero } from "@/components/ui";
+import { PublicPageHero, PublicPageMain } from "@/components/ui";
 import type { EducationCategory } from "@/lib/education-categories";
-import { categoryNavKeys } from "@/lib/education-category-meta";
+import { categoryHintKeys, categoryNavKeys } from "@/lib/education-category-meta";
+import { getCategoryTheme, getCategoryHeaderImage } from "@/lib/education-category-theme";
 import type { Dictionary, Locale } from "@/lib/i18n";
 import type { Lesson } from "@/lib/course";
 import type { Mentor } from "@/lib/mentors";
 
+import { EducationBreadcrumb } from "./education-breadcrumb";
 import { MentorGrid } from "./mentor-grid";
 
 export function EducationCategoryPage({
@@ -21,14 +23,19 @@ export function EducationCategoryPage({
   mentors: Mentor[];
 }) {
   const label = dict.nav[categoryNavKeys[category]];
+  const hint = dict.course[categoryHintKeys[category]];
+  const theme = getCategoryTheme(category);
 
   return (
-    <div className="flex min-h-screen flex-col bg-background">
+    <div className="flex flex-col">
       <PublicPageHero
+        eyebrow={theme.tagline}
         title={label}
-        description={dict.course.categoryMentorsIntro}
+        description={hint ?? dict.course.categoryMentorsIntro}
+        backgroundImage={getCategoryHeaderImage(category)}
       />
-      <main className="mx-auto w-full max-w-none flex-1 px-4 py-10 sm:px-8 lg:px-12 xl:px-16">
+      <PublicPageMain className="pb-16">
+        <EducationBreadcrumb href={`/${locale}/education`} label={dict.nav.education} />
         <MentorGrid
           category={category}
           locale={locale}
@@ -36,7 +43,7 @@ export function EducationCategoryPage({
           lessons={lessons}
           mentors={mentors}
         />
-      </main>
+      </PublicPageMain>
     </div>
   );
 }

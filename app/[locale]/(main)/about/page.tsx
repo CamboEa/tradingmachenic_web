@@ -111,7 +111,7 @@ export default async function AboutPage({
             <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
               {locale === "km" ? "ក្រុមការងាររបស់យើង" : "Our Team"}
             </h2>
-            <div className="mx-auto mt-3 h-0.5 w-12 bg-[#629696]" />
+            <div className="mx-auto mt-3 h-0.5 w-12 bg-teal" />
             <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-ink-soft">
               {locale === "km"
                 ? "ក្រុមការងារដែលស្ពឹកស្ពាន់ ដើម្បីផ្តល់ចំណេះដឹងការជួញដូរ និងឧបករណ៍ល្អបំផុតដល់អ្នក។"
@@ -122,7 +122,7 @@ export default async function AboutPage({
           <div className="mt-12 flex flex-col items-center justify-center gap-8 sm:flex-row sm:items-start">
             {/* Member 1 */}
             <div className="flex flex-col items-center text-center">
-              <div className="relative overflow-hidden rounded-2xl border-2 border-[#629696]/40 shadow-lg" style={{ width: 220, height: 280 }}>
+              <div className="relative overflow-hidden rounded-2xl border-2 border-teal/40 shadow-lg" style={{ width: 220, height: 280 }}>
                 <Image
                   src="/team/hengbunkheag.png"
                   alt="Heng Bunkheang"
@@ -144,7 +144,7 @@ export default async function AboutPage({
 
             {/* Member 2 */}
             <div className="flex flex-col items-center text-center">
-              <div className="relative overflow-hidden rounded-2xl border-2 border-[#629696]/40 shadow-lg" style={{ width: 220, height: 280 }}>
+              <div className="relative overflow-hidden rounded-2xl border-2 border-teal/40 shadow-lg" style={{ width: 220, height: 280 }}>
                 <Image
                   src="/team/vireakyuth.png"
                   alt="Srun Vireakyuth"

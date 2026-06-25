@@ -36,16 +36,16 @@ function EpisodeCard({
       className="ui-content-card group relative flex flex-col overflow-hidden"
       aria-label={title ?? ""}
     >
-      <div className="absolute inset-x-0 top-0 h-0.75 bg-linear-to-r from-[#629696] via-[#629696]/70 to-transparent" aria-hidden />
+      <div className="absolute inset-x-0 top-0 h-0.75 bg-linear-to-r from-teal via-teal/70 to-transparent" aria-hidden />
 
       <div className="relative aspect-video w-full overflow-hidden bg-surface-soft">
         {thumb ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={thumb} alt="" className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.04]" />
         ) : (
-          <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-slate-100 via-white to-[#EEF8F7]" />
+          <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-surface-soft to-background" />
         )}
-        <div className="absolute inset-0 bg-linear-to-t from-[#0f172a]/65 via-[#0f172a]/10 to-transparent" aria-hidden />
+        <div className="absolute inset-0 bg-linear-to-t from-background/80 via-background/20 to-transparent" aria-hidden />
 
         <div className="absolute inset-0 flex items-center justify-center">
           <span className="flex h-12 w-12 items-center justify-center rounded-full bg-surface/20 ring-2 ring-white/40 backdrop-blur-sm transition duration-300 group-hover:bg-surface/30 group-hover:scale-110">

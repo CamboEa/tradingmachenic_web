@@ -130,7 +130,7 @@ export function MentorSearchGrid({
           <p className="text-sm font-medium text-ink-muted">{dict.course.noMentorsMatch}</p>
         </div>
       ) : (
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,220px),280px))] justify-start gap-4 lg:gap-5">
+        <div className="grid gap-4 sm:grid-cols-2 lg:gap-5">
           {filtered.map((mentor) => (
             <MentorCard
               key={mentor.slug}

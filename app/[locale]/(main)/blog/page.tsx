@@ -64,7 +64,7 @@ export default async function BlogIndexPage({
                         className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
                       />
                     ) : (
-                      <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-slate-100 via-white to-[#EEF8F7]">
+                      <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-surface-soft to-background">
                         <svg
                           viewBox="0 0 64 64"
                           className="h-14 w-14 text-slate-300"
@@ -189,7 +189,7 @@ export default async function BlogIndexPage({
                               className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
                             />
                           ) : (
-                            <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-slate-100 via-white to-[#EEF8F7]">
+                            <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-surface-soft to-background">
                               <svg
                                 viewBox="0 0 64 64"
                                 className="h-12 w-12 text-slate-300"

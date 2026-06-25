@@ -47,16 +47,16 @@ export function HomeHeroSplit({ locale, dict }: { locale: Locale; dict: Dictiona
         className="absolute inset-0 h-full w-full object-cover object-center"
       />
 
-      {/* Dark overlay */}
-      <div className="absolute inset-0 bg-[rgba(8,15,30,0.72)]" aria-hidden />
+      {/* Light overlay — keeps video visible */}
+      <div className="absolute inset-0 bg-black/45" aria-hidden />
 
-      {/* Ambient glow */}
+      {/* Ambient glow — logo teal/cyan only */}
       <div
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_70%,color-mix(in_oklab,#22332E_14%,transparent),transparent)]"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_70%,color-mix(in_oklab,var(--teal)_16%,transparent),transparent)]"
         aria-hidden
       />
       <div
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_50%_40%_at_50%_50%,color-mix(in_oklab,#629696_8%,transparent),transparent)]"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_50%_40%_at_50%_50%,color-mix(in_oklab,var(--highlight)_10%,transparent),transparent)]"
         aria-hidden
       />
 

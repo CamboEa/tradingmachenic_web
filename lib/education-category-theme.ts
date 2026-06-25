@@ -1,13 +1,15 @@
 import type { EducationCategory } from "@/lib/education-categories";
 
-/** FIN HUB KH brand tokens (see app/globals.css). */
+/** FIN HUB KH brand tokens — match app/globals.css (logoV4 teal/cyan). */
 export const brand = {
-  slate: "#162220",
-  gold: "#7ab8b8",
-  background: "#0a100f",
-  surfaceSoft: "#1a2a28",
-  inkMuted: "#94a8a5",
-  bridge: "#2d4542",
+  slate: "#182428",
+  gold: "#2ee8f5",
+  teal: "#0a9396",
+  highlight: "#00e5ff",
+  background: "#182428",
+  surfaceSoft: "#2a3f46",
+  inkMuted: "#a8e8ea",
+  bridge: "#35565c",
 } as const;
 
 const categoryOptionImages: Record<EducationCategory, string> = {
@@ -16,6 +18,16 @@ const categoryOptionImages: Record<EducationCategory, string> = {
   crypto: "/background_image/each_option/crypto.png",
   siac: "/background_image/each_option/siac.png",
 };
+
+/** Wide hero banners — left side kept darker for readable titles. */
+const categoryHeaderImages: Record<EducationCategory, string> = {
+  forex: "/Images/bg-forex-header.png",
+  stock: "/Images/bg-stock-header.png",
+  crypto: "/Images/bg-crypto-header.png",
+  siac: "/background_image/educaiton_background.png",
+};
+
+export const educationHubHeaderImage = "/Images/bg-education-header.png";
 
 export type CategoryTheme = {
   slug: EducationCategory;
@@ -52,4 +64,8 @@ export function getCategoryTheme(category: EducationCategory): CategoryTheme {
 
 export function getCategoryImage(category: EducationCategory): string {
   return getCategoryTheme(category).image;
+}
+
+export function getCategoryHeaderImage(category: EducationCategory): string {
+  return categoryHeaderImages[category];
 }

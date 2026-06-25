@@ -27,7 +27,7 @@ export default function LocaleLoading() {
             {/* Page body */}
             <div className="mx-auto w-full max-w-7xl flex-1 px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
                 <div className="max-w-3xl space-y-4">
-                    <div className="h-3 w-24 rounded bg-[#629696]/20" />
+                    <div className="h-3 w-24 rounded bg-teal/20" />
                     <div className="h-10 w-full max-w-xl rounded-xl bg-bridge/40" />
                     <div className="h-5 w-full max-w-2xl rounded-lg bg-surface-soft" />
                     <div className="h-5 w-4/5 max-w-xl rounded-lg bg-surface-soft" />

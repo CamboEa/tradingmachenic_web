@@ -13,9 +13,9 @@ function TopToolsSidebar({ tools, locale }: { tools: Tool[]; locale: Locale }) {
   return (
     <aside className="lg:sticky lg:top-24 lg:self-start">
       <div className="overflow-hidden border border-bridge/40 bg-surface shadow-sm">
-        <div className="flex items-center gap-3 border-b border-bridge/40 bg-linear-to-r from-[#22332E] to-[#0f1f35] px-4 py-4">
-          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-[#629696]/20">
-            <svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4 text-[#629696]" aria-hidden>
+        <div className="flex items-center gap-3 border-b border-bridge/40 bg-linear-to-r from-surface-soft to-background px-4 py-4">
+          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-teal/20">
+            <svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4 text-highlight" aria-hidden>
               <path fillRule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401Z" clipRule="evenodd" />
             </svg>
           </div>
@@ -90,7 +90,11 @@ export default async function ToolsPage({
 
   return (
     <div className="flex flex-col">
-      <PublicPageHero eyebrow={t.eyebrow} title={t.title} />
+      <PublicPageHero
+        eyebrow={t.eyebrow}
+        title={t.title}
+        backgroundImage="/Images/bg-tool-header.png"
+      />
       <main className="w-full flex-1 px-3.75 py-10">
         {tools.length === 0 ? (
           <EmptyState title={t.comingSoon} description={t.comingSoonDetail} className="mt-4" />

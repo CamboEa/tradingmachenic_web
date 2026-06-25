@@ -22,7 +22,7 @@ function RowCard({ lesson, locale, index, dict }: {
   return (
     <Link
       href={href}
-      className="group relative flex w-56 shrink-0 flex-col overflow-hidden rounded-xl bg-slate-900 shadow-md transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal/40 sm:w-64"
+      className="group relative flex w-56 shrink-0 flex-col overflow-hidden rounded-xl bg-surface shadow-md transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal/40 sm:w-64"
     >
       {/* Thumbnail */}
       <div className="relative aspect-video w-full overflow-hidden bg-slate-800">
@@ -79,14 +79,14 @@ function FeaturedHero({ lesson, locale, index, dict }: {
   const num        = String(index + 1).padStart(2, "0");
 
   return (
-    <div className="relative mb-10 overflow-hidden rounded-2xl bg-slate-900 shadow-2xl shadow-black/30">
+    <div className="relative mb-10 overflow-hidden rounded-2xl bg-surface shadow-2xl shadow-black/20">
       {/* Background image */}
       {thumbSrc ? (
         <div className="absolute inset-0">
           <Image src={thumbSrc} alt="" fill className="object-cover opacity-40" priority />
         </div>
       ) : (
-        <div className="absolute inset-0 bg-linear-to-br from-slate-800 to-[#0C3530]" />
+        <div className="absolute inset-0 bg-linear-to-br from-surface-soft to-background" />
       )}
 
       {/* Overlays */}
@@ -215,7 +215,7 @@ export function EducationLessonGrid({
   const featured = free[0] ?? lessons[0];
 
   return (
-    <div className="min-h-screen bg-slate-950 px-4 py-10 sm:px-6 lg:px-10">
+    <div className="min-h-screen bg-background px-4 py-10 sm:px-6 lg:px-10">
 
       {/* Search bar */}
       <div className="mb-8 flex justify-center">

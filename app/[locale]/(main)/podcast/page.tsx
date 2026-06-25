@@ -17,7 +17,11 @@ export default async function PodcastIndexPage({ params }: { params: Promise<{ l
 
  return (
   <div className="flex flex-col">
-   <PublicPageHero eyebrow={t.eyebrow} title={t.title} description={t.intro} />
+   <PublicPageHero
+    title={t.title}
+    backgroundImage="/Images/bg-podcast-header.png"
+    imageOnly
+   />
    <PublicPageMain>
     {episodes.length === 0 ? (
      <EmptyState title={t.emptyTitle} description={t.emptyBody} className="mt-4" />

@@ -35,6 +35,7 @@ export default async function TechnicalAnalysisPage({
         eyebrow={copy.eyebrow}
         title={copy.title}
         description={copy.description}
+        backgroundImage="/Images/bg-technical-header.png"
       />
 
       <main className="mx-auto w-full max-w-none flex-1 px-4 pb-16 pt-10 sm:px-8 lg:px-12 xl:px-16">

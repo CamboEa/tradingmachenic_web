@@ -1,7 +1,7 @@
 const TV_BASE = "https://s.tradingview.com/embed-widget/forex-heat-map/";
 
 /** Matches app/globals.css --surface */
-const HEATMAP_BG = "#141f1d";
+const HEATMAP_BG = "#1f2f35";
 
 function buildSrc(): string {
   const config = {

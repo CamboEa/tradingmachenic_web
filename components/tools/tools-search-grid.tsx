@@ -21,7 +21,7 @@ function stripHtml(html: string | null | undefined): string {
 
 function ToolPlaceholder({ type }: { type: Tool["type"] }) {
   return (
-    <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-slate-100 via-white to-[#EEF8F7]">
+    <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-surface-soft to-background">
       <svg viewBox="0 0 64 64" fill="none" className="h-16 w-16 text-slate-300" aria-hidden>
         {type === "indicator" ? (
           <>
@@ -62,7 +62,7 @@ function ToolCard({ tool, locale }: { tool: Tool; locale: Locale }) {
           <ToolPlaceholder type={tool.type} />
         )}
         <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent" />
-        <span className={`absolute left-2 top-2 rounded px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-widest ${isFree ? "bg-teal text-white" : "bg-[#629696] text-foreground"}`}>
+        <span className={`absolute left-2 top-2 rounded px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-widest ${isFree ? "bg-teal text-white" : "bg-highlight text-background"}`}>
           {isFree ? "Free" : "Paid"}
         </span>
         <span className="absolute bottom-3 right-3 rounded-md bg-black/50 px-2 py-0.5 text-[11px] font-semibold text-white/90 backdrop-blur-sm">
