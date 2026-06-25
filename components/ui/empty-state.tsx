@@ -19,7 +19,7 @@ export function EmptyState({
         className,
       )}
     >
-      <p className="text-xl font-bold text-slate-brand sm:text-2xl">{title}</p>
+      <p className="text-xl font-bold text-foreground sm:text-2xl">{title}</p>
       {description ? (
         <p className="mx-auto mt-3 max-w-lg text-sm leading-relaxed text-ink-soft sm:text-base">
           {description}

@@ -1,0 +1,399 @@
+"use client";
+
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useMemo } from "react";
+
+import { LessonsList } from "@/components/education/lessons-list";
+import { AdminBackLink, ButtonLink, EmptyState, TableThumb } from "@/components/ui";
+import {
+  adminLessonTopicsHref,
+  adminLessonsListHref,
+  lessonCountForMentor,
+  UNCATEGORIZED_LESSON_TOPIC,
+} from "@/lib/admin-lessons-nav";
+import type { Lesson } from "@/lib/course";
+import type { LessonTopic } from "@/lib/supabase/lesson-topics";
+import { topicsForMentor } from "@/lib/supabase/lesson-topics";
+import type { AdminMentor } from "@/lib/supabase/mentors";
+import { cn } from "@/lib/ui/cn";
+import { ui } from "@/lib/ui/styles";
+
+const UNASSIGNED_MENTOR = "__unassigned__";
+
+function PickerCard({
+  name,
+  subtitle,
+  imageUrl,
+  countLabel,
+  onClick,
+}: {
+  name: string;
+  subtitle?: string;
+  imageUrl?: string | null;
+  countLabel: string;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={cn(
+        ui.card,
+        "flex w-full items-center gap-4 p-4 text-left transition hover:border-teal/30 hover:shadow-md",
+      )}
+    >
+      {imageUrl !== undefined ? (
+        imageUrl ? (
+          <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-full border border-bridge/30">
+            <Image src={imageUrl} alt="" fill className="object-cover" sizes="56px" />
+          </div>
+        ) : (
+          <TableThumb src={null} alt={name} className="h-14 w-14 rounded-full" />
+        )
+      ) : (
+        <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border border-bridge/30 bg-surface-soft text-sm font-bold uppercase tracking-wide text-teal">
+          {name.slice(0, 2)}
+        </div>
+      )}
+      <div className="min-w-0 flex-1">
+        <p className="truncate font-semibold text-foreground">{name}</p>
+        {subtitle ? <p className="mt-0.5 truncate text-xs text-ink-soft">{subtitle}</p> : null}
+        <p className="mt-1.5 text-xs font-medium text-teal">{countLabel}</p>
+      </div>
+      <svg
+        viewBox="0 0 20 20"
+        fill="currentColor"
+        className="h-5 w-5 shrink-0 text-ink-soft"
+        aria-hidden
+      >
+        <path
+          fillRule="evenodd"
+          d="M7.21 14.77a.75.75 0 0 1 .02-1.06L11.168 10 7.23 6.29a.75.75 0 1 1 1.04-1.08l4.5 4.25a.75.75 0 0 1 0 1.08l-4.5 4.25a.75.75 0 0 1-1.06-.02Z"
+          clipRule="evenodd"
+        />
+      </svg>
+    </button>
+  );
+}
+
+function countLabel(count: number): string {
+  return count === 1 ? "1 lesson" : `${count} lessons`;
+}
+
+function mentorLessons(lessons: Lesson[], mentorSlug: string): Lesson[] {
+  return lessons.filter((lesson) => lesson.mentorSlug === mentorSlug);
+}
+
+export function AdminLessonsHub({
+  mentors,
+  lessons,
+  topics,
+}: {
+  mentors: AdminMentor[];
+  lessons: Lesson[];
+  topics: LessonTopic[];
+}) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const mentorParam = searchParams.get("mentor")?.trim() ?? "";
+  const topicParam = searchParams.get("topic")?.trim() ?? "";
+
+  const selectedMentor = useMemo(
+    () => mentors.find((mentor) => mentor.slug === mentorParam) ?? null,
+    [mentors, mentorParam],
+  );
+
+  const isUnassigned = mentorParam === UNASSIGNED_MENTOR;
+  const isUncategorized = topicParam === UNCATEGORIZED_LESSON_TOPIC;
+
+  const mentorTopicList = useMemo(
+    () => (selectedMentor ? topicsForMentor(topics, selectedMentor.slug) : []),
+    [selectedMentor, topics],
+  );
+
+  const selectedTopic = useMemo(
+    () =>
+      isUncategorized
+        ? null
+        : mentorTopicList.find((topic) => topic.slug === topicParam) ?? null,
+    [isUncategorized, mentorTopicList, topicParam],
+  );
+
+  const unassignedCount = useMemo(
+    () => lessons.filter((lesson) => !lesson.mentorSlug).length,
+    [lessons],
+  );
+
+  const uncategorizedCount = useMemo(() => {
+    if (!selectedMentor) return 0;
+    return mentorLessons(lessons, selectedMentor.slug).filter(
+      (lesson) => !lesson.lessonTopicSlug,
+    ).length;
+  }, [lessons, selectedMentor]);
+
+  const filteredLessons = useMemo(() => {
+    if (isUnassigned) {
+      return lessons.filter((lesson) => !lesson.mentorSlug);
+    }
+    if (!selectedMentor || !topicParam) return [];
+    if (isUncategorized) {
+      return mentorLessons(lessons, selectedMentor.slug).filter(
+        (lesson) => !lesson.lessonTopicSlug,
+      );
+    }
+    return mentorLessons(lessons, selectedMentor.slug).filter(
+      (lesson) => lesson.lessonTopicSlug === topicParam,
+    );
+  }, [isUncategorized, isUnassigned, lessons, selectedMentor, topicParam]);
+
+  const showMentorPicker = !mentorParam || (!isUnassigned && !selectedMentor);
+
+  const topicInvalid =
+    Boolean(topicParam) &&
+    !isUncategorized &&
+    !isUnassigned &&
+    !selectedTopic &&
+    topicParam !== UNCATEGORIZED_LESSON_TOPIC;
+
+  const hasTopicChoices =
+    mentorTopicList.length > 0 || uncategorizedCount > 0 || isUnassigned;
+
+  const showTopicPicker =
+    !showMentorPicker && !isUnassigned && (!topicParam || topicInvalid) && hasTopicChoices;
+
+  const showLessons =
+    !showMentorPicker &&
+    !showTopicPicker &&
+    Boolean(topicParam) &&
+    (isUnassigned || selectedMentor);
+
+  function pushParams(next: { mentor?: string; topic?: string }) {
+    const params = new URLSearchParams();
+    if (next.mentor) params.set("mentor", next.mentor);
+    if (next.topic) params.set("topic", next.topic);
+    const query = params.toString();
+    router.push(query ? `/admin/lessons?${query}` : "/admin/lessons");
+  }
+
+  function selectMentor(slug: string) {
+    if (slug === UNASSIGNED_MENTOR) {
+      pushParams({ mentor: slug, topic: UNCATEGORIZED_LESSON_TOPIC });
+      return;
+    }
+
+    const mentorTopics = topicsForMentor(topics, slug);
+    const mentorLessonRows = mentorLessons(lessons, slug);
+    const uncategorized = mentorLessonRows.filter((lesson) => !lesson.lessonTopicSlug).length;
+
+    if (mentorTopics.length === 1 && uncategorized === 0) {
+      pushParams({ mentor: slug, topic: mentorTopics[0].slug });
+      return;
+    }
+    if (mentorTopics.length === 0 && uncategorized > 0) {
+      pushParams({ mentor: slug, topic: UNCATEGORIZED_LESSON_TOPIC });
+      return;
+    }
+    pushParams({ mentor: slug });
+  }
+
+  function selectTopic(topicSlug: string) {
+    pushParams({ mentor: mentorParam, topic: topicSlug });
+  }
+
+  if (showMentorPicker) {
+    return (
+      <div>
+        <p className="mb-6 text-sm text-ink-soft">
+          Choose a mentor, then pick a lesson topic like ICT or CSNR.
+        </p>
+
+        {mentors.length === 0 && unassignedCount === 0 ? (
+          <EmptyState
+            title="No mentors yet"
+            description="Create a mentor profile first, then add lesson topics and lessons."
+            action={{ href: "/admin/mentors/add", label: "+ Add Mentor" }}
+          />
+        ) : (
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            {mentors.map((mentor) => (
+              <PickerCard
+                key={mentor.id}
+                name={mentor.names.en}
+                subtitle={mentor.titles.en || mentor.slug}
+                imageUrl={mentor.imageUrl}
+                countLabel={countLabel(lessonCountForMentor(lessons, mentor.slug))}
+                onClick={() => selectMentor(mentor.slug)}
+              />
+            ))}
+
+            {unassignedCount > 0 ? (
+              <PickerCard
+                name="Unassigned"
+                subtitle="Lessons without a mentor"
+                imageUrl={null}
+                countLabel={countLabel(unassignedCount)}
+                onClick={() => selectMentor(UNASSIGNED_MENTOR)}
+              />
+            ) : null}
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  if (showTopicPicker && selectedMentor) {
+    return (
+      <div>
+        <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:gap-4">
+            <AdminBackLink href="/admin/lessons" label="All mentors" />
+            <div className="min-w-0">
+              <h2 className="text-lg font-bold text-foreground sm:text-xl">
+                {selectedMentor.names.en}
+              </h2>
+              <p className="mt-0.5 text-sm text-ink-soft">
+                {selectedMentor.titles.en || selectedMentor.slug}
+              </p>
+              <p className="mt-1 text-xs text-ink-soft">
+                Select a lesson topic, or create a new one.
+              </p>
+            </div>
+          </div>
+          <ButtonLink href={adminLessonTopicsHref(selectedMentor.slug)} className="shrink-0">
+            Manage topics
+          </ButtonLink>
+        </div>
+
+        {mentorTopicList.length === 0 && uncategorizedCount === 0 ? (
+          <EmptyState
+            title="No lesson topics yet"
+            description="Create topics like ICT, CSNR, or CRT, then add lessons under each topic."
+            action={{
+              href: `/admin/lessons/topics/add?mentor=${encodeURIComponent(selectedMentor.slug)}`,
+              label: "+ Add topic",
+            }}
+          />
+        ) : (
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {mentorTopicList.map((topic) => {
+              const count = mentorLessons(lessons, selectedMentor.slug).filter(
+                (lesson) => lesson.lessonTopicSlug === topic.slug,
+              ).length;
+
+              return (
+                <PickerCard
+                  key={topic.id}
+                  name={topic.names.en}
+                  subtitle={topic.descriptions.en || topic.slug}
+                  countLabel={countLabel(count)}
+                  onClick={() => selectTopic(topic.slug)}
+                />
+              );
+            })}
+
+            {uncategorizedCount > 0 ? (
+              <PickerCard
+                name="Uncategorized"
+                subtitle="Lessons without a topic"
+                countLabel={countLabel(uncategorizedCount)}
+                onClick={() => selectTopic(UNCATEGORIZED_LESSON_TOPIC)}
+              />
+            ) : null}
+          </div>
+        )}
+
+        <p className="mt-6 text-sm text-ink-soft">
+          Need a new topic?{" "}
+          <Link
+            href={`/admin/lessons/topics/add?mentor=${encodeURIComponent(selectedMentor.slug)}`}
+            className="font-semibold text-teal hover:underline"
+          >
+            Create one here
+          </Link>
+          .
+        </p>
+      </div>
+    );
+  }
+
+  if (!showLessons || !topicParam) {
+    return (
+      <EmptyState
+        title="Topic not found"
+        description="Go back and choose a valid mentor and lesson topic."
+        action={{ href: "/admin/lessons", label: "Back to lessons" }}
+      />
+    );
+  }
+
+  const topicLabel = isUncategorized
+    ? "Uncategorized"
+    : isUnassigned
+      ? "Unassigned"
+      : selectedTopic?.names.en ?? topicParam;
+
+  const heading = isUnassigned
+    ? "Unassigned lessons"
+    : `${selectedMentor!.names.en} · ${topicLabel}`;
+
+  const subheading = isUnassigned
+    ? "Lessons without a mentor assigned."
+    : isUncategorized
+      ? "Assign these lessons to a topic when editing them."
+      : selectedTopic?.descriptions.en || selectedMentor!.titles.en;
+
+  const topicChoices = mentorTopicList.length + (uncategorizedCount > 0 ? 1 : 0);
+  const backHref =
+    isUnassigned || topicChoices <= 1
+      ? "/admin/lessons"
+      : adminLessonsListHref(mentorParam);
+  const backLabel = isUnassigned || topicChoices <= 1 ? "All mentors" : "Topics";
+
+  const addLessonHref = (() => {
+    const params = new URLSearchParams();
+    if (!isUnassigned && selectedMentor) {
+      params.set("mentor", selectedMentor.slug);
+    }
+    if (!isUncategorized && !isUnassigned && selectedTopic) {
+      params.set("topic", selectedTopic.slug);
+    }
+    return `/admin/lessons/add?${params.toString()}`;
+  })();
+
+  return (
+    <div>
+      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:gap-4">
+          <AdminBackLink href={backHref} label={backLabel} />
+          <div className="min-w-0">
+            <h2 className="text-lg font-bold text-foreground sm:text-xl">{heading}</h2>
+            <p className="mt-0.5 text-sm text-ink-soft">{subheading}</p>
+            <p className="mt-1 text-xs font-medium text-teal">
+              {countLabel(filteredLessons.length)}
+            </p>
+          </div>
+        </div>
+        <div className="flex shrink-0 flex-wrap gap-2">
+          {selectedMentor ? (
+            <ButtonLink href={adminLessonTopicsHref(selectedMentor.slug)} variant="secondary">
+              Manage topics
+            </ButtonLink>
+          ) : null}
+          <ButtonLink href={addLessonHref}>+ Add Lesson</ButtonLink>
+        </div>
+      </div>
+
+      {filteredLessons.length === 0 ? (
+        <EmptyState
+          title={`No lessons in ${topicLabel} yet`}
+          description="Add the first lesson for this topic."
+          action={{ href: addLessonHref, label: "+ Add Lesson" }}
+        />
+      ) : (
+        <LessonsList lessons={filteredLessons} />
+      )}
+    </div>
+  );
+}

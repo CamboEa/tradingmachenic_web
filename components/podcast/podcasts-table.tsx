@@ -23,9 +23,9 @@ const columns: Column<Podcast>[] = [
         <div className="flex items-center gap-3">
           <TableThumb src={thumb} alt={ep.title_en} className="h-12 w-20" />
           <div className="min-w-0">
-            <p className="truncate font-semibold text-slate-brand">{ep.title_en}</p>
+            <p className="truncate font-semibold text-foreground">{ep.title_en}</p>
             {ep.description_en ? (
-              <p className="mt-0.5 line-clamp-1 max-w-md text-xs text-slate-400">
+              <p className="mt-0.5 line-clamp-1 max-w-md text-xs text-ink-soft">
                 {ep.description_en}
               </p>
             ) : null}

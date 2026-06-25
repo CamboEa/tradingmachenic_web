@@ -21,6 +21,7 @@ export type Lesson = {
   type?: "free" | "paid";
   mentorSlug?: string;
   category?: EducationCategory;
+  lessonTopicSlug?: string;
   /** Set when loaded from admin (draft lessons are hidden on the public site). */
   status?: "draft" | "published";
 };

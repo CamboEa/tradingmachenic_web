@@ -71,8 +71,8 @@ export function LessonsList({ lessons }: LessonsListProps) {
       header: "Lesson",
       cell: (lesson) => (
         <>
-          <p className="font-semibold text-slate-brand">{lesson.titles.en}</p>
-          {lesson.titles.km ? <p className="text-xs text-slate-400">{lesson.titles.km}</p> : null}
+          <p className="font-semibold text-foreground">{lesson.titles.en}</p>
+          {lesson.titles.km ? <p className="text-xs text-ink-soft">{lesson.titles.km}</p> : null}
         </>
       ),
     },
@@ -84,7 +84,7 @@ export function LessonsList({ lessons }: LessonsListProps) {
             {lesson.type === "free" ? "Free" : "Paid"}
           </Badge>
         ) : (
-          <span className="text-slate-300">—</span>
+          <span className="text-ink-soft">—</span>
         ),
     },
     {

@@ -1,0 +1,177 @@
+"use client";
+
+import Link from "next/link";
+import { useState } from "react";
+import { toast } from "react-toastify";
+
+import { slugify } from "@/lib/slug";
+import { createLessonTopic, updateLessonTopic } from "@/lib/supabase/actions";
+import type { LessonTopic } from "@/lib/supabase/lesson-topics";
+import { adminLessonTopicsHref } from "@/lib/admin-lessons-nav";
+import { ui } from "@/lib/ui/styles";
+
+const fieldClass =
+  "w-full rounded-lg border border-bridge/40 bg-surface-soft px-4 py-2.5 text-sm text-foreground outline-none transition focus:border-gold focus:bg-surface focus:ring-2 focus:ring-teal/20";
+
+export function LessonTopicForm({
+  topic,
+  mentorSlug,
+  mentorName,
+}: {
+  topic?: LessonTopic;
+  mentorSlug: string;
+  mentorName: string;
+}) {
+  const isEdit = !!topic;
+  const [isSaving, setIsSaving] = useState(false);
+  const [slug, setSlug] = useState(topic?.slug ?? "");
+
+  const backHref = adminLessonTopicsHref(mentorSlug);
+
+  async function handleSubmit(e: React.SyntheticEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    const name_en = (formData.get("name_en") as string)?.trim() ?? "";
+    const name_km = (formData.get("name_km") as string)?.trim() ?? "";
+    const description_en = (formData.get("description_en") as string)?.trim() ?? "";
+    const description_km = (formData.get("description_km") as string)?.trim() ?? "";
+    const sortRaw = formData.get("sort_order") as string;
+    const sort_order = Number.parseInt(sortRaw, 10);
+    const resolvedSlug = slugify(slug || name_en);
+
+    if (!name_en) {
+      toast.error("English name is required");
+      return;
+    }
+    if (!resolvedSlug) {
+      toast.error("Enter a valid slug or English name");
+      return;
+    }
+    if (!Number.isFinite(sort_order)) {
+      toast.error("Sort order must be a number");
+      return;
+    }
+
+    setIsSaving(true);
+    try {
+      const payload = {
+        slug: resolvedSlug,
+        name_en,
+        name_km,
+        description_en: description_en || undefined,
+        description_km: description_km || undefined,
+        sort_order,
+      };
+
+      const result = isEdit
+        ? await updateLessonTopic(topic.id, payload)
+        : await createLessonTopic({ mentor_slug: mentorSlug, ...payload });
+
+      if (result.error) {
+        toast.error(result.error);
+        return;
+      }
+
+      toast.success(isEdit ? "Topic updated" : "Topic created");
+      window.location.href = backHref;
+    } finally {
+      setIsSaving(false);
+    }
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="max-w-2xl space-y-5">
+      <div className="rounded-xl border border-bridge/30 bg-surface-soft/40 px-4 py-3 text-sm text-ink-soft">
+        Mentor: <span className="font-semibold text-foreground">{mentorName}</span>
+      </div>
+
+      <div>
+        <label className="mb-1.5 block text-xs font-semibold text-ink-muted">
+          Name (English) <span className="text-red-500">*</span>
+        </label>
+        <input
+          type="text"
+          name="name_en"
+          defaultValue={topic?.names.en ?? ""}
+          placeholder="e.g. ICT"
+          className={fieldClass}
+          required
+        />
+      </div>
+
+      <div>
+        <label className="mb-1.5 block text-xs font-semibold text-ink-muted">
+          Name (Khmer)
+        </label>
+        <input
+          type="text"
+          name="name_km"
+          defaultValue={topic?.names.km ?? ""}
+          className={fieldClass}
+        />
+      </div>
+
+      <div>
+        <label className="mb-1.5 block text-xs font-semibold text-ink-muted">
+          Slug <span className="text-red-500">*</span>
+        </label>
+        <input
+          type="text"
+          name="slug"
+          value={slug}
+          onChange={(e) => setSlug(e.target.value)}
+          placeholder="e.g. ict"
+          className={`${fieldClass} font-mono`}
+        />
+      </div>
+
+      <div>
+        <label className="mb-1.5 block text-xs font-semibold text-ink-muted">
+          Description (English)
+        </label>
+        <textarea
+          name="description_en"
+          rows={3}
+          defaultValue={topic?.descriptions.en ?? ""}
+          placeholder="Short description shown in the admin topic picker"
+          className={fieldClass}
+        />
+      </div>
+
+      <div>
+        <label className="mb-1.5 block text-xs font-semibold text-ink-muted">
+          Description (Khmer)
+        </label>
+        <textarea
+          name="description_km"
+          rows={3}
+          defaultValue={topic?.descriptions.km ?? ""}
+          className={fieldClass}
+        />
+      </div>
+
+      <div>
+        <label className="mb-1.5 block text-xs font-semibold text-ink-muted">
+          Sort order
+        </label>
+        <input
+          type="number"
+          name="sort_order"
+          defaultValue={topic?.sortOrder ?? 0}
+          className={fieldClass}
+        />
+      </div>
+
+      <div className="flex flex-wrap gap-3 pt-2">
+        <button type="submit" disabled={isSaving} className={ui.btnPrimary}>
+          {isSaving ? "Saving…" : isEdit ? "Save topic" : "Create topic"}
+        </button>
+        <Link href={backHref} className={ui.btnSecondary}>
+          Cancel
+        </Link>
+      </div>
+    </form>
+  );
+}

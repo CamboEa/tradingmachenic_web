@@ -188,7 +188,7 @@ export function BlogForm({ post }: { post?: BlogPost }) {
   return (
     <div className="w-full rounded-2xl border border-bridge/40 bg-surface shadow-sm shadow-black/20">
       <div className="border-b border-bridge/30 px-4 py-5 sm:px-6">
-        <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+        <p className="text-xs font-semibold uppercase tracking-wider text-ink-soft">
           Step {step + 1} of {steps.length}
         </p>
         <h2 className="mt-1 text-base font-bold text-foreground">{steps[step].title}</h2>
@@ -223,7 +223,7 @@ export function BlogForm({ post }: { post?: BlogPost }) {
                       ? "border-gold bg-surface-soft text-foreground"
                       : done
                         ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-400"
-                        : "border-bridge/40 bg-surface-soft text-slate-400",
+                        : "border-bridge/40 bg-surface-soft text-ink-soft",
                     i > step ? "cursor-not-allowed opacity-60" : "cursor-pointer",
                   ].join(" ")}
                   aria-current={active ? "step" : undefined}
@@ -290,7 +290,7 @@ export function BlogForm({ post }: { post?: BlogPost }) {
               }}
               className={`${fieldClass} font-mono text-xs`}
             />
-            <p className="mt-1 text-xs text-slate-400">URL: /blog/your-slug</p>
+            <p className="mt-1 text-xs text-ink-soft">URL: /blog/your-slug</p>
           </div>
 
           <div>
@@ -399,7 +399,7 @@ export function BlogForm({ post }: { post?: BlogPost }) {
             accept="image/png,image/jpeg,image/webp"
             label={
               <>
-                Featured image <span className="font-normal text-slate-400">(optional)</span>
+                Featured image <span className="font-normal text-ink-soft">(optional)</span>
               </>
             }
             hint="PNG, JPG, WebP — shown on list and article header"

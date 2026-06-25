@@ -29,11 +29,11 @@ export function AdminTopbar() {
 
         {/* Breadcrumb */}
         <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-sm">
-          <span className="font-medium text-slate-400">Admin</span>
-          <svg viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5 text-slate-300">
+          <span className="font-medium text-ink-soft">Admin</span>
+          <svg viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5 text-ink-muted">
             <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 0 1 .02-1.06L11.168 10 7.23 6.29a.75.75 0 1 1 1.04-1.08l4.5 4.25a.75.75 0 0 1 0 1.08l-4.5 4.25a.75.75 0 0 1-1.06-.02Z" clipRule="evenodd" />
           </svg>
-          <span className="font-semibold text-slate-brand">{label}</span>
+          <span className="font-semibold text-foreground">{label}</span>
         </nav>
       </div>
 
@@ -58,7 +58,7 @@ export function AdminTopbar() {
             onClick={() => setOpen(false)}
             className="absolute inset-0 bg-slate-900/50 backdrop-blur-sm"
           />
-          <div className="absolute left-0 top-0 flex h-full w-72 max-w-[85%] flex-col bg-teal text-slate-300 shadow-xl">
+          <div className="absolute left-0 top-0 flex h-full w-72 max-w-[85%] flex-col bg-slate-brand text-ink-muted shadow-xl">
             <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
               <div className="flex items-center gap-3">
                 <SiteLogo size="sm" className="rounded-lg ring-1 ring-white/10" />
@@ -67,7 +67,7 @@ export function AdminTopbar() {
               <button
                 type="button"
                 onClick={() => setOpen(false)}
-                className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-surface/5 hover:text-white"
+                className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-ink-soft hover:bg-surface/5 hover:text-white"
                 aria-label="Close"
               >
                 <svg viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5">
@@ -93,7 +93,7 @@ export function AdminTopbar() {
                               "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
                               active
                                 ? "bg-surface/5 text-white"
-                                : "text-slate-400 hover:bg-surface/5 hover:text-white",
+                                : "text-ink-soft hover:bg-surface/5 hover:text-white",
                             ].join(" ")}
                           >
                             <span className={active ? "text-foreground" : "text-ink-soft"}>

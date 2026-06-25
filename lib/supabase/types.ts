@@ -180,6 +180,22 @@ export type Database = {
           }
         ];
       };
+      lesson_topics: {
+        Row: {
+          id: string;
+          created_at: string;
+          mentor_slug: string;
+          slug: string;
+          name_en: string;
+          name_km: string;
+          description_en: string | null;
+          description_km: string | null;
+          sort_order: number;
+        };
+        Insert: Omit<Database["public"]["Tables"]["lesson_topics"]["Row"], "id" | "created_at">;
+        Update: Partial<Database["public"]["Tables"]["lesson_topics"]["Insert"]>;
+        Relationships: [];
+      };
       lessons: {
         Row: {
           id: string;
@@ -197,6 +213,7 @@ export type Database = {
           status: LessonStatus;
           mentor_slug: string | null;
           category: string | null;
+          lesson_topic_slug: string | null;
         };
         Insert: Omit<Database["public"]["Tables"]["lessons"]["Row"], "id" | "created_at" | "thumbnail_url" | "objectives_en" | "objectives_km"> & {
           thumbnail_url?: string | null;

@@ -10,7 +10,7 @@ export default function AdminLoading() {
  {Array.from({ length: 4 }).map((_, i) => (
  <div
  key={i}
- className="rounded-2xl border border-bridge/30 border-l-4 border-l-slate-200 bg-surface/88 p-5"
+ className="rounded-2xl border border-bridge/30 border-l-4 border-l-teal/40 bg-surface/88 p-5"
  >
  <div className="h-3 w-20 rounded bg-surface-soft" />
  <div className="mt-3 h-8 w-16 rounded bg-bridge/40" />

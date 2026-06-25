@@ -1,27 +1,17 @@
-import Link from "next/link";
-
 import { BlogForm } from "@/components/blog/blog-form";
+import { AdminFormHeader } from "@/components/ui";
 
 export const metadata = { title: "New blog article" };
 
 export default function AddBlogPage() {
   return (
     <div>
-      <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
-        <Link
-          href="/admin/blog"
-          className="inline-flex shrink-0 items-center justify-center rounded-lg border border-bridge/40 px-3.5 py-2 text-sm font-medium text-ink-muted hover:bg-surface-soft"
-        >
-          ← Back
-        </Link>
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">New article</h1>
-          <p className="mt-1 text-sm text-ink-soft">
-            Write the article in English first. You can add the Khmer translation later when you
-            edit the post.
-          </p>
-        </div>
-      </div>
+      <AdminFormHeader
+        backHref="/admin/blog"
+        title="New article"
+        description="Write the article in English first. You can add the Khmer translation later when you edit the post."
+      />
+
       <BlogForm />
     </div>
   );

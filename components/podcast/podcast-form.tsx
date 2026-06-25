@@ -93,7 +93,7 @@ export function PodcastForm({ podcast }: Props) {
  placeholder="https://www.youtube.com/watch?v=… or youtu.be/…"
  className="w-full rounded-lg border border-bridge/40 px-3 py-2.5 text-sm outline-none ring-teal/30 transition focus:ring-2"
  />
- <p className="mt-1 text-xs text-slate-400">
+ <p className="mt-1 text-xs text-ink-soft">
  Paste a watch link, Shorts link, embed URL, or the 11-character video id.
  </p>
  </div>
@@ -167,7 +167,7 @@ export function PodcastForm({ podcast }: Props) {
  defaultValue={podcast?.sort_order ?? 0}
  className="w-full rounded-lg border border-bridge/40 px-3 py-2.5 text-sm outline-none ring-teal/30 transition focus:ring-2"
  />
- <p className="mt-1 text-xs text-slate-400">Higher numbers appear first on the site.</p>
+ <p className="mt-1 text-xs text-ink-soft">Higher numbers appear first on the site.</p>
  </div>
  <div>
  <span className="mb-1.5 block text-xs font-semibold text-ink-muted">Status</span>

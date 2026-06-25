@@ -17,7 +17,7 @@ export function AdminSidebar() {
         <SiteLogo size="md" className="rounded-lg ring-1 ring-white/10" />
         <div className="min-w-0">
           <p className="truncate text-sm font-semibold text-white">{BRAND_NAME}</p>
-          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-400">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-ink-soft">
             Admin Panel
           </p>
         </div>
@@ -42,7 +42,7 @@ export function AdminSidebar() {
                         "group relative flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
                         active
                           ? "bg-surface/5 text-white"
-                          : "text-slate-400 hover:bg-surface/5 hover:text-white",
+                          : "text-ink-soft hover:bg-surface/5 hover:text-white",
                       ].join(" ")}
                     >
                       <span
@@ -52,7 +52,7 @@ export function AdminSidebar() {
                         ].join(" ")}
                         aria-hidden
                       />
-                      <span className={active ? "text-foreground" : "text-ink-soft group-hover:text-slate-300"}>
+                      <span className={active ? "text-foreground" : "text-ink-muted group-hover:text-foreground"}>
                         {item.icon}
                       </span>
                       {item.label}
@@ -69,7 +69,7 @@ export function AdminSidebar() {
       <div className="border-t border-white/10 px-3 py-3">
         <Link
           href="/"
-          className="flex items-center gap-2 rounded-lg px-3 py-2 text-xs font-semibold text-slate-400 transition-colors hover:bg-surface/5 hover:text-white"
+          className="flex items-center gap-2 rounded-lg px-3 py-2 text-xs font-semibold text-ink-soft transition-colors hover:bg-surface/5 hover:text-white"
         >
           <svg viewBox="0 0 16 16" fill="currentColor" className="h-3.5 w-3.5">
             <path d="M7.78 12.53a.75.75 0 0 1-1.06 0L2.47 8.28a.75.75 0 0 1 0-1.06l4.25-4.25a.75.75 0 0 1 1.06 1.06L4.81 7h7.44a.75.75 0 0 1 0 1.5H4.81l2.97 2.97a.75.75 0 0 1 0 1.06Z" />

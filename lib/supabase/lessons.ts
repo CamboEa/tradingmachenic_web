@@ -37,6 +37,7 @@ type LessonRow = {
   status: string;
   mentor_slug: string | null;
   category: string | null;
+  lesson_topic_slug: string | null;
 };
 
 type LessonVideoRow = {
@@ -86,6 +87,7 @@ function transformLessonRow(
     type: (row.type as "free" | "paid") || undefined,
     mentorSlug: row.mentor_slug || undefined,
     category: (row.category as EducationCategory) || undefined,
+    lessonTopicSlug: row.lesson_topic_slug || undefined,
     status: row.status === "published" ? "published" : "draft",
     videos: videos.map((v) => ({
       embedUrl: resolveLessonVideoEmbedUrl(v.embed_url),

@@ -34,7 +34,7 @@ export function DataTable({
           <thead>
             <tr className={ui.tableHeadRow}>{head}</tr>
           </thead>
-          <tbody className="divide-y divide-slate-100">{children}</tbody>
+          <tbody className="divide-y divide-bridge/30">{children}</tbody>
         </table>
       </div>
     </Card>
@@ -106,7 +106,7 @@ export function TableThumb({
   return (
     <div
       className={cn(
-        "flex h-12 w-12 shrink-0 items-center justify-center border border-bridge/30 bg-surface-soft text-slate-300",
+        "flex h-12 w-12 shrink-0 items-center justify-center border border-bridge/30 bg-surface-soft text-ink-soft",
         rounded,
         className,
       )}

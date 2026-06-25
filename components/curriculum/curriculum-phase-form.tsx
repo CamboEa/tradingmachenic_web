@@ -76,7 +76,7 @@ export function CurriculumPhaseForm({ phase }: Props) {
  placeholder="e.g. theory"
  className="w-full rounded-lg border border-bridge/40 bg-surface-soft px-4 py-2.5 text-sm outline-none focus:border-gold focus:bg-surface read-only:cursor-default read-only:opacity-80"
  />
- <p className="mt-1 text-xs text-slate-400">
+ <p className="mt-1 text-xs text-ink-soft">
  {isEdit ? "Slug cannot be changed." : "Lowercase letters, numbers, hyphens."}
  </p>
  </div>

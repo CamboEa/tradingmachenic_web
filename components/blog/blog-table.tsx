@@ -32,8 +32,8 @@ const columns: Column<BlogPost>[] = [
       <div className="flex items-center gap-3">
         <TableThumb src={post.featured_image_url} alt={post.title_en} className="h-12 w-16" />
         <div className="min-w-0">
-          <p className="truncate font-semibold text-slate-brand">{post.title_en}</p>
-          <p className="truncate font-mono text-xs text-slate-400">/blog/{post.slug}</p>
+          <p className="truncate font-semibold text-foreground">{post.title_en}</p>
+          <p className="truncate font-mono text-xs text-ink-soft">/blog/{post.slug}</p>
         </div>
       </div>
     ),

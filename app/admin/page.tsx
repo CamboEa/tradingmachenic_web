@@ -16,6 +16,7 @@ import { BRAND_NAME } from "@/lib/brand";
 import { getAllLessonsForAdmin } from "@/lib/supabase/lessons";
 import { getAllTools } from "@/lib/supabase/tools";
 import { cn } from "@/lib/ui/cn";
+import { ui } from "@/lib/ui/styles";
 
 export default async function AdminDashboard() {
   const [lessons, curriculum, tools] = await Promise.all([
@@ -75,15 +76,13 @@ export default async function AdminDashboard() {
 
       <div className="mt-10">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
-            Video Lessons
-          </h2>
+          <h2 className={ui.sectionLabel}>Video Lessons</h2>
           <Link href="/admin/lessons" className="text-xs font-medium text-teal hover:underline">
             View all →
           </Link>
         </div>
         {lessons.length === 0 ? (
-          <Card className="text-center text-sm text-slate-400">No lessons yet.</Card>
+          <Card className="text-center text-sm text-ink-soft">No lessons yet.</Card>
         ) : (
           <DataTable
             head={
@@ -98,12 +97,12 @@ export default async function AdminDashboard() {
           >
             {lessons.slice(0, 6).map((lesson) => (
               <Tr key={lesson.slug}>
-                <Td className="font-medium text-slate-brand">{lesson.titles.en}</Td>
+                <Td className="font-medium text-foreground">{lesson.titles.en}</Td>
                 <Td align="center" className="tabular-nums text-ink-soft">
                   {lesson.videos.length}
                 </Td>
                 <Td className="whitespace-nowrap text-ink-soft">~{lesson.approximateMinutes} min</Td>
-                <Td className="font-mono text-xs text-slate-400">{lesson.slug}</Td>
+                <Td className="font-mono text-xs text-ink-soft">{lesson.slug}</Td>
                 <Td align="right">
                   <RowActions>
                     <EditLink href={`/admin/lessons/edit/${lesson.slug}`} />
@@ -117,9 +116,7 @@ export default async function AdminDashboard() {
 
       <div className="mt-10">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
-            Curriculum Phases
-          </h2>
+          <h2 className={ui.sectionLabel}>Curriculum Phases</h2>
           <Link href="/admin/program" className="text-xs font-medium text-teal hover:underline">
             Manage →
           </Link>

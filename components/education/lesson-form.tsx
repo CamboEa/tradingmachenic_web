@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { createLesson, updateLesson } from "@/lib/supabase/actions";
@@ -53,6 +54,7 @@ interface InitialData {
   status: "draft" | "published" | null;
   mentor_slug: string | null;
   category: string | null;
+  lesson_topic_slug: string | null;
  };
  videos: Array<{
  id: string;
@@ -67,8 +69,10 @@ interface LessonFormProps {
  initialData?: InitialData;
  isEditing?: boolean;
  mentors: Mentor[];
+ lessonTopics: Array<{ slug: string; names: { en: string }; mentorSlug: string }>;
  defaultMentorSlug?: string;
  defaultCategory?: string;
+ defaultTopicSlug?: string;
 }
 
 type FreeVideo = { embedUrl: string; titles: { en: string; km: string } };
@@ -133,8 +137,10 @@ export function LessonForm({
  initialData,
  isEditing = false,
  mentors,
+ lessonTopics,
  defaultMentorSlug = "",
  defaultCategory = "",
+ defaultTopicSlug = "",
 }: LessonFormProps) {
  const formRef = useRef<HTMLFormElement>(null);
  const initialVideos = initialVideoState(initialData);
@@ -159,6 +165,9 @@ export function LessonForm({
   initialData?.lesson.mentor_slug ?? defaultMentorSlug,
  );
  const [category, setCategory] = useState(initialData?.lesson.category ?? defaultCategory);
+ const [lessonTopicSlug, setLessonTopicSlug] = useState(
+  initialData?.lesson.lesson_topic_slug ?? defaultTopicSlug,
+ );
  const [isSaving, setIsSaving] = useState(false);
  const { confirm, ConfirmDialogHost } = useConfirm();
 
@@ -284,6 +293,7 @@ export function LessonForm({
  const thumbnail_url = thumbnailUrl.trim() || null;
  const mentor_slug = mentorSlug.trim() || null;
  const lessonCategory = category.trim() || null;
+ const lesson_topic_slug = lessonTopicSlug.trim() || null;
 
  if (isEditing && initialData) {
  const result = await updateLesson(originalSlug, {
@@ -300,6 +310,7 @@ export function LessonForm({
  thumbnail_url,
  mentor_slug,
  category: lessonCategory,
+ lesson_topic_slug,
  videos: videosToSave,
  });
 
@@ -331,6 +342,7 @@ export function LessonForm({
  thumbnail_url,
  mentor_slug,
  category: lessonCategory,
+ lesson_topic_slug,
  videos: videosToSave,
  });
 
@@ -490,7 +502,7 @@ export function LessonForm({
  ))}
 
  {videos.length === 0 ? (
- <p className="text-sm text-slate-400">
+ <p className="text-sm text-ink-soft">
  No videos yet. Click &quot;Add video&quot; to add a YouTube link.
  </p>
  ) : null}
@@ -583,7 +595,7 @@ export function LessonForm({
  ))}
 
  {paidVideos.length === 0 ? (
- <p className="text-sm text-slate-400">
+ <p className="text-sm text-ink-soft">
  No videos yet. Click &quot;Add video&quot; to upload a file.
  </p>
  ) : null}
@@ -594,7 +606,7 @@ export function LessonForm({
  <>
  <div className="w-full rounded-xl border border-bridge/40 bg-surface">
  <div className="border-b border-bridge/30 px-4 py-5 sm:px-6">
- <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+ <p className="text-xs font-semibold uppercase tracking-wider text-ink-soft">
  Step {step + 1} of {STEPS.length}
  </p>
  <h2 className="mt-1 text-base font-bold text-foreground">{STEPS[step].title}</h2>
@@ -624,7 +636,7 @@ export function LessonForm({
  ? "border-gold bg-surface-soft text-foreground"
  : done
  ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/15"
- : "border-bridge/40 bg-surface-soft text-slate-400",
+ : "border-bridge/40 bg-surface-soft text-ink-soft",
  i > step ? "cursor-not-allowed opacity-60" : "cursor-pointer",
  ].join(" ")}
  aria-current={active ? "step" : undefined}
@@ -679,7 +691,7 @@ export function LessonForm({
  <div className="grid gap-5 sm:grid-cols-2">
  <div>
  <label className="mb-1.5 block text-xs font-semibold text-ink-muted">
- Category
+ Market section
  </label>
  <select
  name="category"
@@ -703,7 +715,14 @@ export function LessonForm({
  <select
  name="mentor_slug"
  value={mentorSlug}
- onChange={(e) => setMentorSlug(e.target.value)}
+ onChange={(e) => {
+  const nextMentor = e.target.value;
+  setMentorSlug(nextMentor);
+  const stillValid = lessonTopics.some(
+   (topic) => topic.mentorSlug === nextMentor && topic.slug === lessonTopicSlug,
+  );
+  if (!stillValid) setLessonTopicSlug("");
+ }}
  className={fieldClass}
  >
  <option value="">Not assigned</option>
@@ -714,6 +733,39 @@ export function LessonForm({
  ))}
  </select>
  </div>
+ </div>
+
+ <div>
+ <div className="mb-1.5 flex flex-wrap items-center justify-between gap-2">
+ <label className="text-xs font-semibold text-ink-muted">Lesson topic</label>
+ {mentorSlug ? (
+ <Link
+ href={`/admin/lessons/topics/add?mentor=${encodeURIComponent(mentorSlug)}`}
+ className="text-xs font-semibold text-teal hover:underline"
+ >
+ + New topic
+ </Link>
+ ) : null}
+ </div>
+ <select
+ name="lesson_topic_slug"
+ value={lessonTopicSlug}
+ onChange={(e) => setLessonTopicSlug(e.target.value)}
+ className={fieldClass}
+ disabled={!mentorSlug}
+ >
+ <option value="">Not assigned</option>
+ {lessonTopics
+ .filter((topic) => topic.mentorSlug === mentorSlug)
+ .map((topic) => (
+ <option key={topic.slug} value={topic.slug}>
+ {topic.names.en}
+ </option>
+ ))}
+ </select>
+ <p className="mt-1 text-xs text-ink-soft">
+ Group lessons by topic like ICT, CSNR, or CRT.
+ </p>
  </div>
 
  <div>
@@ -760,7 +812,7 @@ export function LessonForm({
  }}
  className={`${fieldClass} font-mono`}
  />
- <p className="mt-1 text-xs text-slate-400">
+ <p className="mt-1 text-xs text-ink-soft">
  URL path for this lesson (e.g. /education/your-slug).
  </p>
  </div>
@@ -853,7 +905,7 @@ export function LessonForm({
  defaultValue={(initialData?.lesson.objectives_en || []).join("\n")}
  className={`${fieldClass} resize-y`}
  />
- <p className="mt-1 text-xs text-slate-400">One objective per line</p>
+ <p className="mt-1 text-xs text-ink-soft">One objective per line</p>
  </div>
 
  <div>
@@ -893,7 +945,7 @@ export function LessonForm({
  </label>
  ))}
  </div>
- <p className="mt-2 text-xs text-slate-400">
+ <p className="mt-2 text-xs text-ink-soft">
  Only <strong className="font-semibold text-ink-muted">Published</strong> lessons
  appear on the public Education page.
  </p>
@@ -901,7 +953,7 @@ export function LessonForm({
 
  <div className="space-y-3">
  <label className="block text-xs font-semibold text-ink-muted">
- Thumbnail <span className="font-normal text-slate-400">(optional)</span>
+ Thumbnail <span className="font-normal text-ink-soft">(optional)</span>
  </label>
  <div className="flex gap-2">
  {(["url", "upload"] as const).map((mode) => (
@@ -951,7 +1003,7 @@ export function LessonForm({
  </div>
  ) : null}
 
- <p className="text-xs text-slate-400">
+ <p className="text-xs text-ink-soft">
  Used on course cards. If empty, the first YouTube thumbnail is used when available.
  </p>
  </div>

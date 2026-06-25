@@ -85,10 +85,10 @@ export function UsersTable({
             {initials(user)}
           </span>
           <div className="min-w-0">
-            <div className="truncate font-semibold text-slate-brand">
+            <div className="truncate font-semibold text-foreground">
               {user.full_name?.trim() || "—"}
             </div>
-            <div className="truncate text-xs text-slate-400">{user.email ?? "No email"}</div>
+            <div className="truncate text-xs text-ink-soft">{user.email ?? "No email"}</div>
           </div>
         </div>
       ),

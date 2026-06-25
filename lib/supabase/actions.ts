@@ -4,7 +4,7 @@ import { revalidatePath, revalidateTag } from "next/cache";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
-import { CURRICULUM_CACHE_TAG, LESSONS_CACHE_TAG, MENTORS_CACHE_TAG } from "@/lib/cache-tags";
+import { CURRICULUM_CACHE_TAG, LESSONS_CACHE_TAG, LESSON_TOPICS_CACHE_TAG, MENTORS_CACHE_TAG } from "@/lib/cache-tags";
 import { educationCategorySlugs, isEducationCategory } from "@/lib/education-categories";
 import { getClientIpFromHeaders } from "@/lib/security/client-ip";
 import { checkRateLimit, RATE_LIMITS } from "@/lib/security/rate-limit";
@@ -220,6 +220,7 @@ export async function createLesson(formData: {
   thumbnail_url?: string | null;
   mentor_slug?: string | null;
   category?: string | null;
+  lesson_topic_slug?: string | null;
   videos: Array<{
     embedUrl?: string;
     url?: string;
@@ -252,6 +253,7 @@ export async function createLesson(formData: {
           thumbnail_url: formData.thumbnail_url?.trim() || null,
           mentor_slug: formData.mentor_slug?.trim() || null,
           category: formData.category?.trim() || null,
+          lesson_topic_slug: formData.lesson_topic_slug?.trim() || null,
         },
       ])
       .select()
@@ -306,6 +308,7 @@ export async function updateLesson(
     thumbnail_url?: string | null;
     mentor_slug?: string | null;
     category?: string | null;
+    lesson_topic_slug?: string | null;
     videos: Array<{
       id?: string;
       embedUrl?: string;
@@ -351,6 +354,7 @@ export async function updateLesson(
         thumbnail_url: formData.thumbnail_url?.trim() || null,
         mentor_slug: formData.mentor_slug?.trim() || null,
         category: formData.category?.trim() || null,
+        lesson_topic_slug: formData.lesson_topic_slug?.trim() || null,
       })
       .eq("id", lesson.id);
 
@@ -1127,4 +1131,138 @@ export async function updateUserRole(
 
   revalidatePath("/admin/students");
   return { success: true };
+}
+
+function revalidateLessonTopicPaths(mentorSlug?: string) {
+  revalidatePath("/admin/lessons");
+  revalidatePath("/admin/lessons/topics");
+  revalidateTag(LESSON_TOPICS_CACHE_TAG, "max");
+  revalidateTag(LESSONS_CACHE_TAG, "max");
+  if (mentorSlug) {
+    revalidatePath(`/admin/lessons?mentor=${encodeURIComponent(mentorSlug)}`);
+  }
+}
+
+export async function createLessonTopic(formData: {
+  mentor_slug: string;
+  slug: string;
+  name_en: string;
+  name_km: string;
+  description_en?: string;
+  description_km?: string;
+  sort_order: number;
+}): Promise<{ error?: string; success?: boolean; id?: string }> {
+  const supabase = await createAdminClient();
+  const mentorSlug = formData.mentor_slug.trim();
+  const slug = slugify(formData.slug || formData.name_en);
+
+  if (!mentorSlug) return { error: "Mentor is required" };
+  if (!slug) return { error: "Slug is required" };
+  if (!formData.name_en.trim()) return { error: "English name is required" };
+
+  const { data, error } = await supabase
+    .from("lesson_topics")
+    .insert([
+      {
+        mentor_slug: mentorSlug,
+        slug,
+        name_en: formData.name_en.trim(),
+        name_km: formData.name_km.trim(),
+        description_en: formData.description_en?.trim() || null,
+        description_km: formData.description_km?.trim() || null,
+        sort_order: formData.sort_order,
+      },
+    ])
+    .select("id")
+    .single();
+
+  if (error) return { error: error.message };
+
+  revalidateLessonTopicPaths(mentorSlug);
+  return { success: true, id: data.id };
+}
+
+export async function updateLessonTopic(
+  id: string,
+  formData: {
+    slug: string;
+    name_en: string;
+    name_km: string;
+    description_en?: string;
+    description_km?: string;
+    sort_order: number;
+  },
+): Promise<{ error?: string; success?: boolean; slug?: string }> {
+  const supabase = await createAdminClient();
+  const slug = slugify(formData.slug || formData.name_en);
+  if (!slug) return { error: "Slug is required" };
+  if (!formData.name_en.trim()) return { error: "English name is required" };
+
+  const { data: existing, error: fetchError } = await supabase
+    .from("lesson_topics")
+    .select("mentor_slug, slug")
+    .eq("id", id)
+    .single();
+
+  if (fetchError || !existing) {
+    return { error: fetchError?.message ?? "Topic not found" };
+  }
+
+  const { error } = await supabase
+    .from("lesson_topics")
+    .update({
+      slug,
+      name_en: formData.name_en.trim(),
+      name_km: formData.name_km.trim(),
+      description_en: formData.description_en?.trim() || null,
+      description_km: formData.description_km?.trim() || null,
+      sort_order: formData.sort_order,
+    })
+    .eq("id", id);
+
+  if (error) return { error: error.message };
+
+  if (existing.slug !== slug) {
+    await supabase
+      .from("lessons")
+      .update({ lesson_topic_slug: slug })
+      .eq("mentor_slug", existing.mentor_slug)
+      .eq("lesson_topic_slug", existing.slug);
+  }
+
+  revalidateLessonTopicPaths(existing.mentor_slug);
+  return { success: true, slug };
+}
+
+export async function deleteLessonTopic(id: string): Promise<{ error?: string }> {
+  const supabase = await createAdminClient();
+
+  const { data: topic, error: fetchError } = await supabase
+    .from("lesson_topics")
+    .select("mentor_slug, slug, name_en")
+    .eq("id", id)
+    .single();
+
+  if (fetchError || !topic) {
+    return { error: fetchError?.message ?? "Topic not found" };
+  }
+
+  const { count, error: countError } = await supabase
+    .from("lessons")
+    .select("id", { count: "exact", head: true })
+    .eq("mentor_slug", topic.mentor_slug)
+    .eq("lesson_topic_slug", topic.slug);
+
+  if (countError) return { error: countError.message };
+  if (count && count > 0) {
+    return {
+      error: `Cannot delete "${topic.name_en}" while ${count} lesson(s) still use it. Reassign those lessons first.`,
+    };
+  }
+
+  const { error } = await supabase.from("lesson_topics").delete().eq("id", id);
+  if (error) return { error: error.message };
+
+  revalidateLessonTopicPaths(topic.mentor_slug);
+  return {};
 }

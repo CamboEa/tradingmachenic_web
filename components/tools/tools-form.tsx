@@ -243,7 +243,7 @@ export function ToolsForm({ tool }: Props) {
     <div className="w-full rounded-xl border border-bridge/40 bg-surface">
       {/* Step progress */}
       <div className="border-b border-bridge/30 px-4 py-5 sm:px-6">
-        <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+        <p className="text-xs font-semibold uppercase tracking-wider text-ink-soft">
           Step {step + 1} of {STEPS.length}
         </p>
         <h2 className="mt-1 text-base font-bold text-foreground">{STEPS[step].title}</h2>
@@ -275,7 +275,7 @@ export function ToolsForm({ tool }: Props) {
                     "flex items-center gap-2 rounded-full border px-3 py-1.5 text-left text-xs font-semibold transition",
                     active ? "border-gold bg-teal/5 text-foreground"
                            : done || isEdit ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/15"
-                                            : "border-bridge/40 bg-surface-soft text-slate-400",
+                                            : "border-bridge/40 bg-surface-soft text-ink-soft",
                     !isEdit && i > step ? "cursor-not-allowed opacity-60" : "cursor-pointer",
                   ].join(" ")}
                   aria-current={active ? "step" : undefined}
@@ -448,7 +448,7 @@ export function ToolsForm({ tool }: Props) {
 
           <R2Uploader
             bucketName="trading-tool" accept="image/png,image/jpeg,image/webp"
-            label={<>Preview image <span className="font-normal text-slate-400">(optional)</span></>}
+            label={<>Preview image <span className="font-normal text-ink-soft">(optional)</span></>}
             hint="PNG, JPG, WebP — max 20 MB"
             initialUrl={tool?.image_url ?? undefined}
             onUploaded={(url) => setUploadedImageUrl(url)}

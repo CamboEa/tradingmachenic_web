@@ -110,7 +110,7 @@ export function AdminTable<T>({
             <svg
               viewBox="0 0 20 20"
               fill="currentColor"
-              className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400"
+              className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-soft"
               aria-hidden
             >
               <path
@@ -166,7 +166,7 @@ export function AdminTable<T>({
             <svg
               viewBox="0 0 20 20"
               fill="currentColor"
-              className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400"
+              className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-soft"
               aria-hidden
             >
               <path
@@ -182,7 +182,7 @@ export function AdminTable<T>({
       {filtered.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-bridge/40 bg-surface px-6 py-12 text-center">
           <p className="text-sm font-semibold text-ink-muted">No matching results</p>
-          <p className="mt-1 text-sm text-slate-400">Try a different search term or filter.</p>
+          <p className="mt-1 text-sm text-ink-soft">Try a different search term or filter.</p>
         </div>
       ) : (
         <>
@@ -234,7 +234,7 @@ export function AdminTable<T>({
 
                 {pageList.map((p, i) =>
                   p === "…" ? (
-                    <span key={`gap-${i}`} className="px-2 text-sm text-slate-400">
+                    <span key={`gap-${i}`} className="px-2 text-sm text-ink-soft">
                       …
                     </span>
                   ) : (

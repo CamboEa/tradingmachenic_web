@@ -137,7 +137,7 @@ export function CurriculumModuleForm({ phaseId, module }: Props) {
 
  <div>
  <label className="mb-1.5 block text-xs font-semibold text-ink-muted">Activities (English)</label>
- <p className="mb-1 text-xs text-slate-400">One bullet per line.</p>
+ <p className="mb-1 text-xs text-ink-soft">One bullet per line.</p>
  <textarea
  name="activities_en"
  rows={6}
@@ -147,7 +147,7 @@ export function CurriculumModuleForm({ phaseId, module }: Props) {
  </div>
  <div>
  <label className="mb-1.5 block text-xs font-semibold text-ink-muted">Activities (Khmer)</label>
- <p className="mb-1 text-xs text-slate-400">One bullet per line (same line count as English recommended).</p>
+ <p className="mb-1 text-xs text-ink-soft">One bullet per line (same line count as English recommended).</p>
  <textarea
  name="activities_km"
  rows={6}

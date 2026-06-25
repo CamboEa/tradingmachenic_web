@@ -63,7 +63,7 @@ export default async function ProgramPage() {
                     >
                       Order {phase.sort_order} · {phase.slug}
                     </p>
-                    <h2 className="mt-0.5 text-base font-bold text-slate-brand">{phase.label_en}</h2>
+                    <h2 className="mt-0.5 text-base font-bold text-foreground">{phase.label_en}</h2>
                     <p className="text-xs text-ink-soft">{phase.label_km}</p>
                   </div>
                   <div className="flex flex-wrap items-center gap-2">
@@ -86,7 +86,7 @@ export default async function ProgramPage() {
                 </Card>
 
                 {phase.weeks.length === 0 ? (
-                  <Card className="text-center text-sm text-slate-400">
+                  <Card className="text-center text-sm text-ink-soft">
                     No modules in this phase yet.
                   </Card>
                 ) : (
@@ -114,7 +114,7 @@ export default async function ProgramPage() {
                             {i + 1}
                           </Badge>
                         </Td>
-                        <Td className="font-semibold text-slate-brand">{week.titles.en}</Td>
+                        <Td className="font-semibold text-foreground">{week.titles.en}</Td>
                         <Td className="text-ink-soft">{week.titles.km}</Td>
                         <Td className="max-w-xs text-xs leading-relaxed text-ink-soft">
                           {week.focus.en}

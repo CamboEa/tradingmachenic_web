@@ -25,8 +25,8 @@ const columns: Column<AdminMentor>[] = [
           className="h-12 w-12 rounded-full"
         />
         <div className="min-w-0">
-          <p className="truncate font-semibold text-slate-brand">{mentor.names.en}</p>
-          <p className="mt-0.5 truncate text-xs text-slate-400">{mentor.titles.en || mentor.slug}</p>
+          <p className="truncate font-semibold text-foreground">{mentor.names.en}</p>
+          <p className="mt-0.5 truncate text-xs text-ink-soft">{mentor.titles.en || mentor.slug}</p>
         </div>
       </div>
     ),
@@ -66,11 +66,11 @@ const columns: Column<AdminMentor>[] = [
     cell: (mentor) => (
       <RowActions>
         <Link
-          href={`/admin/lessons/add?mentor=${encodeURIComponent(mentor.slug)}`}
+          href={`/admin/lessons?mentor=${encodeURIComponent(mentor.slug)}`}
           className="rounded-lg border border-bridge/40 px-2.5 py-1.5 text-xs font-semibold text-teal transition hover:bg-surface-soft"
-          title="Add lesson for this mentor"
+          title="Manage lessons for this mentor"
         >
-          + Lesson
+          Lessons
         </Link>
         <EditLink href={`/admin/mentors/edit/${encodeURIComponent(mentor.slug)}`} />
         <DeleteMentorButton slug={mentor.slug} name={mentor.names.en} />

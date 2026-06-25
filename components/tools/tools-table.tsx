@@ -20,11 +20,11 @@ const columns: Column<Tool>[] = [
         <TableThumb src={tool.image_url} alt={tool.name} />
         <div className="min-w-0">
           <div className="flex items-center gap-2">
-            <span className="truncate font-semibold text-slate-brand">{tool.name}</span>
-            <span className="shrink-0 text-xs text-slate-400">v{tool.version}</span>
+            <span className="truncate font-semibold text-foreground">{tool.name}</span>
+            <span className="shrink-0 text-xs text-ink-soft">v{tool.version}</span>
           </div>
           {tool.description_en ? (
-            <p className="mt-0.5 line-clamp-1 max-w-md text-xs text-slate-400">
+            <p className="mt-0.5 line-clamp-1 max-w-md text-xs text-ink-soft">
               {tool.description_en}
             </p>
           ) : null}
@@ -55,9 +55,9 @@ const columns: Column<Tool>[] = [
     align: "center",
     cell: (tool) => (
       <div className="leading-tight">
-        <div className="font-semibold tabular-nums text-slate-brand">{tool.download_count}</div>
+        <div className="font-semibold tabular-nums text-foreground">{tool.download_count}</div>
         {tool.platform === "MT4 & MT5" ? (
-          <div className="mt-0.5 text-xs text-slate-400">
+          <div className="mt-0.5 text-xs text-ink-soft">
             MT4 {tool.download_count_mt4} · MT5 {tool.download_count_mt5}
           </div>
         ) : null}
