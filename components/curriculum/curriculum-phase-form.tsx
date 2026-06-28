@@ -4,6 +4,8 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import { createCurriculumPhase, updateCurriculumPhase } from "@/lib/supabase/actions";
 import type { CurriculumAccent } from "@/lib/curriculum";
+import { ui, FIELD_CLASS } from "@/lib/ui/styles";
+import { cn } from "@/lib/ui/cn";
 
 type PhaseRow = {
  id: string;
@@ -63,96 +65,71 @@ export function CurriculumPhaseForm({ phase }: Props) {
  }
 
  return (
- <div className="w-full rounded-xl border border-bridge/40 bg-surface p-6">
- <h2 className="mb-6 text-base font-bold text-foreground">{isEdit ? "Edit phase" : "New phase"}</h2>
- <form className="space-y-5" onSubmit={handleSubmit}>
- <div>
- <label className="mb-1.5 block text-xs font-semibold text-ink-muted">Slug</label>
- <input
- name="slug"
- required
- defaultValue={phase?.slug}
- readOnly={isEdit}
- placeholder="e.g. theory"
- className="w-full rounded-lg border border-bridge/40 bg-surface-soft px-4 py-2.5 text-sm outline-none focus:border-gold focus:bg-surface read-only:cursor-default read-only:opacity-80"
- />
- <p className="mt-1 text-xs text-ink-soft">
- {isEdit ? "Slug cannot be changed." : "Lowercase letters, numbers, hyphens."}
- </p>
- </div>
+ <form className="max-w-2xl space-y-5" onSubmit={handleSubmit}>
+   <div>
+     <label className="mb-1.5 block text-xs font-semibold text-ink-muted">Slug</label>
+     <input
+       name="slug"
+       required
+       defaultValue={phase?.slug}
+       readOnly={isEdit}
+       placeholder="e.g. theory"
+       className={cn(FIELD_CLASS, "read-only:cursor-default read-only:opacity-70")}
+     />
+     <p className="mt-1 text-xs text-ink-soft">
+       {isEdit ? "Slug cannot be changed." : "Lowercase letters, numbers, hyphens."}
+     </p>
+   </div>
 
- <div>
- <label className="mb-1.5 block text-xs font-semibold text-ink-muted">Sort order</label>
- <input
- type="number"
- name="sort_order"
- defaultValue={phase?.sort_order ?? 0}
- className="w-full max-w-[10rem] rounded-lg border border-bridge/40 bg-surface-soft px-4 py-2.5 text-sm outline-none focus:border-gold focus:bg-surface"
- />
- </div>
+   <div>
+     <label className="mb-1.5 block text-xs font-semibold text-ink-muted">Sort order</label>
+     <input
+       type="number"
+       name="sort_order"
+       defaultValue={phase?.sort_order ?? 0}
+       className={cn(FIELD_CLASS, "max-w-[10rem]")}
+     />
+   </div>
 
- <div>
- <label className="mb-1.5 block text-xs font-semibold text-ink-muted">Timeline accent</label>
- <select
- name="accent"
- defaultValue={phase?.accent ?? "gold"}
- className="w-full max-w-xs rounded-lg border border-bridge/40 bg-surface-soft px-4 py-2.5 text-sm outline-none focus:border-gold focus:bg-surface"
- >
- <option value="gold">Gold (Phase I style)</option>
- <option value="teal">Teal (Phase II style)</option>
- </select>
- </div>
+   <div>
+     <label className="mb-1.5 block text-xs font-semibold text-ink-muted">Timeline accent</label>
+     <select
+       name="accent"
+       defaultValue={phase?.accent ?? "gold"}
+       className={cn(FIELD_CLASS, "max-w-xs")}
+     >
+       <option value="gold">Gold (Phase I style)</option>
+       <option value="teal">Teal (Phase II style)</option>
+     </select>
+   </div>
 
- <div className="grid gap-4 sm:grid-cols-2">
- <div>
- <label className="mb-1.5 block text-xs font-semibold text-ink-muted">Title (English)</label>
- <input
- name="label_en"
- required
- defaultValue={phase?.label_en}
- className="w-full rounded-lg border border-bridge/40 bg-surface-soft px-4 py-2.5 text-sm outline-none focus:border-gold focus:bg-surface"
- />
- </div>
- <div>
- <label className="mb-1.5 block text-xs font-semibold text-ink-muted">Title (Khmer)</label>
- <input
- name="label_km"
- required
- defaultValue={phase?.label_km}
- className="w-full rounded-lg border border-bridge/40 bg-surface-soft px-4 py-2.5 text-sm outline-none focus:border-gold focus:bg-surface"
- />
- </div>
- </div>
+   <div className="grid gap-4 sm:grid-cols-2">
+     <div>
+       <label className="mb-1.5 block text-xs font-semibold text-ink-muted">Title (English)</label>
+       <input name="label_en" required defaultValue={phase?.label_en} className={FIELD_CLASS} />
+     </div>
+     <div>
+       <label className="mb-1.5 block text-xs font-semibold text-ink-muted">Title (Khmer)</label>
+       <input name="label_km" required defaultValue={phase?.label_km} className={FIELD_CLASS} />
+     </div>
+   </div>
 
- <div className="grid gap-4 sm:grid-cols-2">
- <div>
- <label className="mb-1.5 block text-xs font-semibold text-ink-muted">Subtitle (English)</label>
- <input
- name="sublabel_en"
- required
- defaultValue={phase?.sublabel_en}
- className="w-full rounded-lg border border-bridge/40 bg-surface-soft px-4 py-2.5 text-sm outline-none focus:border-gold focus:bg-surface"
- />
- </div>
- <div>
- <label className="mb-1.5 block text-xs font-semibold text-ink-muted">Subtitle (Khmer)</label>
- <input
- name="sublabel_km"
- required
- defaultValue={phase?.sublabel_km}
- className="w-full rounded-lg border border-bridge/40 bg-surface-soft px-4 py-2.5 text-sm outline-none focus:border-gold focus:bg-surface"
- />
- </div>
- </div>
+   <div className="grid gap-4 sm:grid-cols-2">
+     <div>
+       <label className="mb-1.5 block text-xs font-semibold text-ink-muted">Subtitle (English)</label>
+       <input name="sublabel_en" required defaultValue={phase?.sublabel_en} className={FIELD_CLASS} />
+     </div>
+     <div>
+       <label className="mb-1.5 block text-xs font-semibold text-ink-muted">Subtitle (Khmer)</label>
+       <input name="sublabel_km" required defaultValue={phase?.sublabel_km} className={FIELD_CLASS} />
+     </div>
+   </div>
 
- <button
- type="submit"
- disabled={isSaving}
- className="w-full rounded-lg bg-teal px-4 py-2.5 text-sm font-semibold text-white transition hover:brightness-110 disabled:bg-slate-300"
- >
- {isSaving ? "Saving…" : isEdit ? "Save phase" : "Create phase"}
- </button>
+   <div className="pt-2">
+     <button type="submit" disabled={isSaving} className={ui.btnPrimary}>
+       {isSaving ? "Saving…" : isEdit ? "Save phase" : "Create phase"}
+     </button>
+   </div>
  </form>
- </div>
  );
 }

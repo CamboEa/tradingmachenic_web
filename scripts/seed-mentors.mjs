@@ -54,6 +54,21 @@ const mentors = [
     status: "published",
     categories: ["forex"],
   },
+  {
+    slug: "jesse-livermore-trading-rules",
+    name_en: "Jesse Livermore's Trading Rules",
+    name_km: "វិធីប្រតិបត្តិ Jesse Livermore",
+    title_en: "Classic Trading Wisdom & Market Psychology",
+    title_km: "ប្រាជ្ញាពាណិជ្ជកម្មបុរាណ និងចិត្តសាស្ត្រទីផ្សារ",
+    bio_en:
+      "Timeless principles from the legendary Jesse Livermore — market psychology, disciplined pattern recognition, and the mindset that separates consistent winners from the crowd.",
+    bio_km:
+      "គោលការណ៍អស់កល្បជានិច្ចពី Jesse Livermore ព្រះអង្គវីរបុរសនៃការជួញដូរ — ចិត្តសាស្ត្រទីផ្សារ ការស្គាល់លំនាំដោយវិន័យ និងផ្នត់គំនិតដែលបំបែកអ្នកឈ្នះ។",
+    image_url: "/Images/mentor.png",
+    sort_order: 2,
+    status: "published",
+    categories: ["forex"],
+  },
 ];
 
 async function main() {

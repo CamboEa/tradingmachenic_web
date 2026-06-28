@@ -72,7 +72,9 @@ export function TurnstileWidget({
   const onTokenChangeRef = useRef(onTokenChange);
   const [failed, setFailed] = useState(false);
 
-  onTokenChangeRef.current = onTokenChange;
+  useEffect(() => {
+    onTokenChangeRef.current = onTokenChange;
+  }, [onTokenChange]);
 
   useEffect(() => {
     if (!siteKey || !containerRef.current) return;
@@ -85,7 +87,7 @@ export function TurnstileWidget({
 
         widgetIdRef.current = window.turnstile.render(containerRef.current, {
           sitekey: siteKey,
-          theme: "dark",
+          theme: "light",
           callback: (token) => onTokenChangeRef.current(token),
           "expired-callback": () => onTokenChangeRef.current(""),
           "error-callback": () => {

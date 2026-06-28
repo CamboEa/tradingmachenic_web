@@ -47,12 +47,6 @@ const columns: Column<AdminMentor>[] = [
     ),
   },
   {
-    header: "Order",
-    align: "center",
-    className: "tabular-nums",
-    cell: (mentor) => <span className="text-ink-soft">{mentor.sortOrder}</span>,
-  },
-  {
     header: "Status",
     cell: (mentor) => (
       <Badge variant={mentor.status === "published" ? "published" : "draft"}>

@@ -3,7 +3,7 @@ import { unstable_cache } from "next/cache";
 import type { EducationCategory } from "@/lib/education-categories";
 import { MENTORS_CACHE_TAG } from "@/lib/cache-tags";
 import type { Mentor } from "@/lib/mentors";
-import { createClient, createClient as createAdminClient } from "@supabase/supabase-js";
+import { getSharedAdminClient, getSharedPublicClient } from "./shared";
 
 export type AdminMentor = Mentor & {
   id: string;
@@ -11,20 +11,13 @@ export type AdminMentor = Mentor & {
   status: "draft" | "published";
 };
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-);
+const supabase = getSharedPublicClient();
 
 function adminSupabase() {
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
     return null;
   }
-  return createAdminClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.SUPABASE_SERVICE_ROLE_KEY,
-    { auth: { autoRefreshToken: false, persistSession: false } },
-  );
+  return getSharedAdminClient();
 }
 
 type MentorCategoryRow = {
@@ -117,15 +110,14 @@ async function fetchAdminMentors(): Promise<AdminMentor[]> {
   const { data, error } = await client
     .from("mentors")
     .select(MENTOR_WITH_CATEGORIES_SELECT)
-    .order("sort_order", { ascending: true })
-    .order("slug", { ascending: true });
+    .order("created_at", { ascending: false });
 
   if (error) {
     console.error("Error fetching admin mentors:", error);
     return [];
   }
 
-  return sortAdminMentors((data ?? []) as MentorRow[]);
+  return (data ?? []).map((row) => transformAdminMentorRow(row as MentorRow));
 }
 
 const getCachedPublishedMentors = unstable_cache(

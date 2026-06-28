@@ -12,6 +12,7 @@ import type { Dictionary, Locale } from "@/lib/i18n";
 import { AuthLanguageCluster } from "./auth-language-cluster";
 import { CenterNav } from "./center-nav";
 import { LanguageToggle } from "./language-toggle";
+import { ThemeToggle } from "./theme-toggle";
 
 export function SiteHeader({
   locale,
@@ -27,7 +28,8 @@ export function SiteHeader({
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    setOpen(false);
+    const timer = window.setTimeout(() => setOpen(false), 0);
+    return () => window.clearTimeout(timer);
   }, [pathname]);
 
   useEffect(() => {
@@ -71,6 +73,7 @@ export function SiteHeader({
         <div className="flex items-center justify-end gap-3">
           {/* Desktop auth cluster */}
           <div className="hidden xl:flex xl:items-center xl:gap-3">
+            <ThemeToggle />
             <AuthLanguageCluster
               locale={locale}
               pathname={pathname}
@@ -81,6 +84,7 @@ export function SiteHeader({
 
           {/* Mobile: language + hamburger */}
           <div className="flex items-center gap-2 xl:hidden">
+            <ThemeToggle />
             <LanguageToggle locale={locale} pathname={pathname} dict={dict} />
             <button
               type="button"

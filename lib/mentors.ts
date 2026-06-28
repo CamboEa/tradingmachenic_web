@@ -24,3 +24,12 @@ export function educationMentorHref(
 ): string {
   return `/${locale}/education/${category}/${mentorSlug}`;
 }
+
+export function educationMentorTopicHref(
+  locale: Locale,
+  category: EducationCategory,
+  mentorSlug: string,
+  topicSlug: string,
+): string {
+  return `/${locale}/education/${category}/${mentorSlug}/${topicSlug}`;
+}

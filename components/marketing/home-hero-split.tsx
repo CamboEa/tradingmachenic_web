@@ -66,7 +66,7 @@ export function HomeHeroSplit({ locale, dict }: { locale: Locale; dict: Dictiona
         {/* Decorative label */}
         <div className="mb-5 flex items-center gap-3">
           <span className="h-px w-8" style={{ backgroundColor: "color-mix(in oklab, var(--gold) 50%, transparent)" }} aria-hidden />
-          <span className="text-[11px] font-bold uppercase tracking-[0.3em]" style={{ color: "var(--gold)" }}>
+          <span className="text-[11px] font-bold uppercase tracking-[0.25em]" style={{ color: "var(--gold)" }}>
             FIN HUB KH Academy
           </span>
           <span className="h-px w-8" style={{ backgroundColor: "color-mix(in oklab, var(--gold) 50%, transparent)" }} aria-hidden />
@@ -133,11 +133,14 @@ export function HomeHeroSplit({ locale, dict }: { locale: Locale; dict: Dictiona
         </div>
 
         {/* Stat strip */}
-        <div className="mt-14 flex items-center gap-6 sm:gap-10">
-          {dict.home.stats.map((stat) => (
-            <div key={stat.label} className="text-center">
-              <p className="text-lg font-bold text-white sm:text-xl">{stat.value}</p>
-              <p className="mt-0.5 text-[11px] uppercase tracking-[0.16em] text-slate-400">{stat.label}</p>
+        <div className="mt-14 flex items-center gap-0">
+          {dict.home.stats.map((stat, i) => (
+            <div key={stat.label} className="flex items-center">
+              {i > 0 && <span className="mx-5 h-8 w-px bg-white/10 sm:mx-8" aria-hidden />}
+              <div className="text-center">
+                <p className="text-lg font-bold text-white sm:text-xl">{stat.value}</p>
+                <p className="mt-0.5 text-[11px] uppercase tracking-[0.18em] text-ink-muted">{stat.label}</p>
+              </div>
             </div>
           ))}
         </div>

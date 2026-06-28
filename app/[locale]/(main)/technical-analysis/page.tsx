@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 
 import { FastBullOrderBook } from "@/components/fastbull/fastbull-order-book";
-import { PublicPageHero } from "@/components/ui";
+import { PublicPageHero, PublicPageMain } from "@/components/ui";
 import { getDictionary, isLocale, type Locale } from "@/lib/i18n";
 
 export default async function TechnicalAnalysisPage({
@@ -38,9 +38,9 @@ export default async function TechnicalAnalysisPage({
         backgroundImage="/Images/bg-technical-header.png"
       />
 
-      <main className="mx-auto w-full max-w-none flex-1 px-4 pb-16 pt-10 sm:px-8 lg:px-12 xl:px-16">
+      <PublicPageMain className="max-w-none px-4 pb-16 pt-10 sm:px-8 lg:px-12 xl:px-16">
         <FastBullOrderBook />
-      </main>
+      </PublicPageMain>
     </div>
   );
 }

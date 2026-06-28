@@ -1,5 +1,7 @@
-import { createClient } from "./server";
-import { createClient as createAdminClient } from "@supabase/supabase-js";
+import { unstable_cache } from "next/cache";
+
+import { BLOG_CACHE_TAG } from "@/lib/cache-tags";
+import { getSharedAdminClient, getSharedPublicClient } from "./shared";
 import type { Locale } from "@/lib/i18n";
 import { parseBlogVideos, type BlogVideoItem } from "./blog-videos";
 
@@ -64,11 +66,7 @@ export async function getAllBlogPosts(): Promise<BlogPost[]> {
       return [];
     }
 
-    const adminClient = createAdminClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL,
-      process.env.SUPABASE_SERVICE_ROLE_KEY,
-      { auth: { autoRefreshToken: false, persistSession: false } },
-    );
+    const adminClient = getSharedAdminClient();
 
     const { data, error } = await adminClient
       .from("blog_posts")
@@ -86,29 +84,36 @@ export async function getAllBlogPosts(): Promise<BlogPost[]> {
   }
 }
 
-export async function getPublishedBlogPosts(): Promise<BlogPost[]> {
-  try {
-    const supabase = await createClient();
+const getCachedPublishedBlogPosts = unstable_cache(
+  async () => {
+    const supabase = getSharedPublicClient();
     const { data, error } = await supabase
       .from("blog_posts")
       .select("*")
       .eq("status", "published")
       .order("published_at", { ascending: false });
 
-    if (error) {
-      console.error("Error fetching published blog posts:", error.message);
-      return [];
-    }
-
+    if (error) throw error;
     return (data || []).map((row) => mapBlogRow(row as Record<string, unknown>));
+  },
+  ["published-blog-posts"],
+  {
+    revalidate: 60,
+    tags: [BLOG_CACHE_TAG],
+  },
+);
+
+export async function getPublishedBlogPosts(): Promise<BlogPost[]> {
+  try {
+    return await getCachedPublishedBlogPosts();
   } catch {
     return [];
   }
 }
 
-export async function getPublishedBlogBySlug(slug: string): Promise<BlogPost | null> {
-  try {
-    const supabase = await createClient();
+const getCachedPublishedBlogBySlug = unstable_cache(
+  async (slug: string) => {
+    const supabase = getSharedPublicClient();
     const { data, error } = await supabase
       .from("blog_posts")
       .select("*")
@@ -116,8 +121,19 @@ export async function getPublishedBlogBySlug(slug: string): Promise<BlogPost | n
       .eq("status", "published")
       .single();
 
-    if (error) return null;
+    if (error) throw error;
     return mapBlogRow(data as Record<string, unknown>);
+  },
+  ["published-blog-by-slug"],
+  {
+    revalidate: 60,
+    tags: [BLOG_CACHE_TAG],
+  },
+);
+
+export async function getPublishedBlogBySlug(slug: string): Promise<BlogPost | null> {
+  try {
+    return await getCachedPublishedBlogBySlug(slug);
   } catch {
     return null;
   }

@@ -1,6 +1,8 @@
-import { createClient } from "./server";
-import { createClient as createAdminClient } from "@supabase/supabase-js";
+import { unstable_cache } from "next/cache";
+
+import { TOOLS_CACHE_TAG } from "@/lib/cache-tags";
 import { parseToolGallery, type ToolGalleryItem } from "./tool-gallery";
+import { getSharedAdminClient, getSharedPublicClient } from "./shared";
 
 export type { ToolGalleryItem };
 
@@ -53,16 +55,7 @@ export async function getAllTools() {
     }
 
     // Use service role for admin access (bypasses RLS)
-    const adminClient = createAdminClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL,
-      process.env.SUPABASE_SERVICE_ROLE_KEY,
-      {
-        auth: {
-          autoRefreshToken: false,
-          persistSession: false,
-        },
-      }
-    );
+    const adminClient = getSharedAdminClient();
 
     const { data, error } = await adminClient
       .from("tools")
@@ -86,42 +79,55 @@ export async function getAllTools() {
   }
 }
 
-export async function getPublishedToolById(id: string): Promise<Tool | null> {
-  try {
-    const supabase = await createClient();
+const getCachedPublishedToolById = unstable_cache(
+  async (id: string) => {
+    const supabase = getSharedPublicClient();
     const { data, error } = await supabase
       .from("tools")
       .select("*")
       .eq("id", id)
       .eq("status", "published")
       .single();
-    if (error) return null;
+    if (error) throw error;
     return normalizeToolRow(data as Record<string, unknown>);
+  },
+  ["published-tool-by-id"],
+  {
+    revalidate: 60,
+    tags: [TOOLS_CACHE_TAG],
+  },
+);
+
+export async function getPublishedToolById(id: string): Promise<Tool | null> {
+  try {
+    return await getCachedPublishedToolById(id);
   } catch {
     return null;
   }
 }
 
-export async function getPublishedTools() {
-  try {
-    const supabase = await createClient();
-
+const getCachedPublishedTools = unstable_cache(
+  async () => {
+    const supabase = getSharedPublicClient();
     const { data, error } = await supabase
       .from("tools")
       .select("*")
       .eq("status", "published")
       .order("created_at", { ascending: false });
 
-    if (error) {
-      console.error("Error fetching published tools:", {
-        message: error.message,
-        code: error.code,
-        details: error.details,
-      });
-      return [];
-    }
-
+    if (error) throw error;
     return (data || []).map((row) => normalizeToolRow(row as Record<string, unknown>));
+  },
+  ["published-tools"],
+  {
+    revalidate: 60,
+    tags: [TOOLS_CACHE_TAG],
+  },
+);
+
+export async function getPublishedTools() {
+  try {
+    return await getCachedPublishedTools();
   } catch (err) {
     console.error("Exception fetching published tools:", err);
     return [];

@@ -7,6 +7,7 @@ import { R2Uploader } from "@/components/shared/r2-uploader";
 import { ToolDocEditor } from "@/components/tools/tool-doc-editor";
 import type { Tool } from "@/lib/supabase/tools";
 import { slugify } from "@/lib/slug";
+import { FIELD_CLASS } from "@/lib/ui/styles";
 
 /**
  * Builds a Khmer translation template from English HTML.
@@ -63,8 +64,7 @@ const STEPS = [
   { title: "Files & publish", hint: "Download files, preview image, and publish status" },
 ] as const;
 
-const fieldClass =
-  "w-full rounded-lg border border-bridge/40 bg-surface-soft px-4 py-2.5 text-sm text-foreground outline-none transition focus:border-gold focus:bg-surface focus:ring-2 focus:ring-teal/20";
+const fieldClass = FIELD_CLASS;
 
 interface Props { tool?: Tool }
 

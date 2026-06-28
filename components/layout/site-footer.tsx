@@ -15,7 +15,7 @@ function FooterNavColumn({
 }) {
  return (
  <div>
- <h2 className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--color-gold)]">
+ <h2 className="text-xs font-bold uppercase tracking-[0.25em] text-(--color-gold)">
  {title}
  </h2>
  <ul className="mt-5 space-y-3">
@@ -49,7 +49,8 @@ export function SiteFooter({ locale, dict }: { locale: Locale; dict: Dictionary 
   const programLinks: FooterLink[] = [
     { href: `${base}/tools`, label: n.tools },
     { href: `${base}/podcast`, label: n.podcast },
-    { href: `${base}/blog`, label: n.blog },
+    // Temporarily hidden: blog
+    // { href: `${base}/blog`, label: n.blog },
     { href: `${base}/about`, label: n.about },
   ];
 
@@ -87,14 +88,14 @@ export function SiteFooter({ locale, dict }: { locale: Locale; dict: Dictionary 
  <span className="block text-lg font-bold tracking-tight text-white transition group-hover:text-slate-100">
  {BRAND_NAME}
  </span>
- <span className="block text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
+ <span className="block text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-300">
  {f.academyLabel}
  </span>
  </span>
  </Link>
  <p className="mt-5 max-w-md text-pretty text-sm leading-relaxed text-slate-300">
  {f.description}
- </p> 
+ </p>
  </div>
 
  <div className="grid gap-10 sm:grid-cols-3 lg:col-span-7 lg:gap-8">
@@ -105,9 +106,9 @@ export function SiteFooter({ locale, dict }: { locale: Locale; dict: Dictionary 
  </div>
 
  <div className="mt-14 flex flex-col gap-6 border-t border-white/10 pt-8 sm:flex-row sm:items-center sm:justify-between">
- <p className="max-w-2xl text-xs leading-relaxed text-slate-400">{f.tagline}</p>
+ <p className="max-w-2xl text-xs leading-relaxed text-slate-300">{f.tagline}</p>
  <div className="flex flex-col gap-4 sm:items-end">
- <p className="text-xs text-ink-soft">
+ <p className="text-xs text-slate-400">
  © {year} {f.rights}
  </p>
  </div>

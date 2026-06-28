@@ -1,28 +1,29 @@
 #!/usr/bin/env node
 
 /**
- * Seed mentor ThunTula-FT + grouped lessons from @ThunTula-FT YouTube channel.
- * Multi-part series (CSNR, CRT, ICT Mentorship, etc.) become one lesson with many videos.
+ * Seed mentor ThunTula-FT + lessons from YouTube playlists (one lesson per playlist).
  *
- * Video list: scripts/data/thun-tula-ft-videos.jsonl
- * Refresh:   node scripts/seed-thun-tula-mentor.mjs --fetch
+ * Playlist snapshot: scripts/data/thun-tula-ft-playlists.snapshot.json
+ * Refresh snapshot:  node scripts/fetch-thun-tula-playlists.mjs
  *
  * Usage: node scripts/seed-thun-tula-mentor.mjs
+ *        node scripts/seed-thun-tula-mentor.mjs --fetch
  */
 
 import { spawnSync } from "node:child_process";
-import { readFileSync, writeFileSync, existsSync } from "node:fs";
+import { readFileSync, existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import dotenv from "dotenv";
 import { createClient } from "@supabase/supabase-js";
 
+import { THUN_TULA_PLAYLISTS } from "./data/thun-tula-ft-playlists.mjs";
+
 dotenv.config();
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const DATA_FILE = join(__dirname, "data/thun-tula-ft-videos.jsonl");
-const CHANNEL_URL = "https://www.youtube.com/@ThunTula-FT/videos";
+const SNAPSHOT_FILE = join(__dirname, "data/thun-tula-ft-playlists.snapshot.json");
 
 const MENTOR_SLUG = "thun-tula-ft";
 const CATEGORY = "forex";
@@ -54,23 +55,6 @@ const mentor = {
   status: "published",
 };
 
-function slugify(input) {
-  return (
-    input
-      .trim()
-      .toLowerCase()
-      .replace(/\s+/g, "-")
-      .replace(/[^a-z0-9-]/g, "")
-      .replace(/-+/g, "-")
-      .replace(/^-|-$/g, "")
-      .slice(0, 48) || "lesson"
-  );
-}
-
-function lessonSlug(groupKey) {
-  return `${MENTOR_SLUG}-${groupKey}`;
-}
-
 function embedUrl(videoId) {
   return `https://www.youtube-nocookie.com/embed/${videoId}?rel=0`;
 }
@@ -84,125 +68,86 @@ function minutesFromDuration(seconds) {
   return Math.max(1, Math.ceil(seconds / 60));
 }
 
-function extractEpisode(title) {
-  const match =
-    title.match(/\bEP\s*(\d+)\b/i) ||
-    title.match(/\[ep\.\s*(\d+)\]/i) ||
-    title.match(/\bep\.\s*(\d+)\b/i);
-  return match ? parseInt(match[1], 10) : null;
+function runYtDlp(args) {
+  const result = spawnSync("yt-dlp", ["--no-update", ...args], {
+    encoding: "utf8",
+    maxBuffer: 50 * 1024 * 1024,
+  });
+  if (result.status !== 0) {
+    throw new Error(result.stderr || "yt-dlp failed");
+  }
+  return result.stdout.trim().split("\n").filter(Boolean).map((l) => JSON.parse(l));
 }
 
-function classifyVideo(video) {
-  const title = video.title.trim();
+function fetchPlaylistSnapshot() {
+  const playlists = runYtDlp([
+    "--flat-playlist",
+    "--dump-json",
+    "https://www.youtube.com/@ThunTula-FT/playlists",
+  ]);
 
-  if (
-    /^សេចក្តីណែនាំមេរៀន\s*CSNR/i.test(title) ||
-    /CSNR\s*ENTRY\s*MODEL/i.test(title)
-  ) {
-    return {
-      groupKey: "csnr-entry-model",
-      lessonTitle: "CSNR Entry Model",
-      episode: extractEpisode(title) ?? 0,
-    };
+  const snapshot = [];
+  for (const playlist of playlists) {
+    const videos = runYtDlp([
+      "--flat-playlist",
+      "--dump-json",
+      `https://www.youtube.com/playlist?list=${playlist.id}`,
+    ]);
+    snapshot.push({
+      id: playlist.id,
+      title: playlist.title,
+      count: videos.length,
+      videos: videos.map((v) => ({
+        playlist_index: v.playlist_index ?? null,
+        id: v.id,
+        title: v.title,
+        duration: v.duration ?? null,
+      })),
+    });
   }
-
-  if (/ONE\s*CRT\s*MODEL/i.test(title)) {
-    return {
-      groupKey: "one-crt-model",
-      lessonTitle: "ONE CRT Model",
-      episode: extractEpisode(title) ?? 0,
-    };
-  }
-
-  if (/2022\s*ICT\s*MENTORSHIP/i.test(title)) {
-    return {
-      groupKey: "2022-ict-mentorship",
-      lessonTitle: "2022 ICT Mentorship",
-      episode: extractEpisode(title) ?? 99,
-    };
-  }
-
-  if (/2023\s*ICT\s*MENTORSHIP/i.test(title)) {
-    const topic = title.replace(/^2023\s*ICT\s*Mentorship\s*/i, "").trim();
-    return {
-      groupKey: "2023-ict-mentorship",
-      lessonTitle: "2023 ICT Mentorship",
-      episode: 0,
-      videoLabel: topic || title,
-    };
-  }
-
-  const lecture = title.match(/^Lecture\s*Series\s*[-–]\s*(.+)$/i);
-  if (lecture) {
-    const topic = lecture[1]
-      .replace(
-        /\s*(January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2},?\s*\d{4}\s*$/i,
-        "",
-      )
-      .trim();
-    return {
-      groupKey: `lecture-${slugify(topic)}`,
-      lessonTitle: `Lecture Series: ${topic}`,
-      episode: extractEpisode(title) ?? 0,
-    };
-  }
-
-  if (/Live\s+discord\s+The\s+study\s+ict/i.test(title)) {
-    return {
-      groupKey: "live-discord-study-ict",
-      lessonTitle: "Live Discord: The Study ICT",
-      episode: extractEpisode(title) ?? 0,
-    };
-  }
-
-  return {
-    groupKey: `topic-${slugify(title)}-${video.id.toLowerCase()}`,
-    lessonTitle: title,
-    episode: 0,
-    standalone: true,
-  };
+  return snapshot;
 }
 
-function groupVideosIntoLessons(videos) {
-  const groups = new Map();
+function loadSnapshot() {
+  if (!existsSync(SNAPSHOT_FILE)) {
+    console.log("No snapshot found — fetching playlists from YouTube...\n");
+    return fetchPlaylistSnapshot();
+  }
+  return JSON.parse(readFileSync(SNAPSHOT_FILE, "utf8"));
+}
 
-  for (const video of videos) {
-    const meta = classifyVideo(video);
-    const key = meta.groupKey;
+function buildLessonsFromPlaylists(snapshot) {
+  const byId = new Map(snapshot.map((p) => [p.id, p]));
+  const lessons = [];
 
-    if (!groups.has(key)) {
-      groups.set(key, {
-        groupKey: key,
-        lessonTitle: meta.lessonTitle,
-        videos: [],
-      });
+  for (const config of THUN_TULA_PLAYLISTS) {
+    const playlist = byId.get(config.id);
+    if (!playlist) {
+      console.warn(`  ! Playlist not in snapshot: ${config.id}`);
+      continue;
     }
 
-    groups.get(key).videos.push({
-      ...video,
-      episode: meta.episode ?? 0,
-      videoLabel: meta.videoLabel,
-    });
-  }
-
-  const lessons = [...groups.values()].map((group) => {
-    group.videos.sort((a, b) => {
-      if (a.episode !== b.episode) return a.episode - b.episode;
-      return a.title.localeCompare(b.title);
+    const videos = [...playlist.videos].sort((a, b) => {
+      const ai = a.playlist_index ?? 0;
+      const bi = b.playlist_index ?? 0;
+      return ai - bi;
     });
 
-    const totalMinutes = group.videos.reduce(
+    if (videos.length === 0) continue;
+
+    const totalMinutes = videos.reduce(
       (sum, v) => sum + minutesFromDuration(v.duration),
       0,
     );
-    const first = group.videos[0];
+    const first = videos[0];
+    const title = playlist.title.trim();
 
-    return {
-      slug: lessonSlug(group.groupKey),
-      title_en: group.lessonTitle,
-      title_km: group.lessonTitle,
-      summary_en: `${group.videos.length} video${group.videos.length === 1 ? "" : "s"} from the ThunTula-FT YouTube channel.`,
-      summary_km: `វីដេអូ ${group.videos.length} ករណីពីឆានែល YouTube ThunTula-FT។`,
+    lessons.push({
+      slug: config.slug,
+      title_en: title,
+      title_km: title,
+      summary_en: `${videos.length} episode${videos.length === 1 ? "" : "s"} from the "${title}" YouTube playlist.`,
+      summary_km: `ភាគ ${videos.length} ពីបញ្ជី YouTube "${title}"។`,
       thumbnail_url: thumbnailUrl(first.id),
       approximate_minutes: totalMinutes,
       type: "free",
@@ -211,45 +156,19 @@ function groupVideosIntoLessons(videos) {
       status: "published",
       mentor_slug: MENTOR_SLUG,
       category: CATEGORY,
-      videos: group.videos.map((v, index) => ({
+      lesson_topic_slug: config.topic,
+      sort_order: config.sortOrder,
+      youtube_playlist_id: config.id,
+      videos: videos.map((v, index) => ({
         embed_url: embedUrl(v.id),
-        title_en: v.videoLabel || v.title.trim(),
-        title_km: v.videoLabel || v.title.trim(),
+        title_en: (v.title ?? "").trim() || `Episode ${index + 1}`,
+        title_km: (v.title ?? "").trim() || `Episode ${index + 1}`,
         sort_order: index,
       })),
-    };
-  });
+    });
+  }
 
-  lessons.sort((a, b) => a.title_en.localeCompare(b.title_en));
   return lessons;
-}
-
-function fetchChannelVideos() {
-  console.log(`Fetching videos from ${CHANNEL_URL} ...\n`);
-  const result = spawnSync(
-    "yt-dlp",
-    ["--no-update", "--flat-playlist", "--dump-json", CHANNEL_URL],
-    { encoding: "utf8", maxBuffer: 50 * 1024 * 1024 },
-  );
-
-  if (result.status !== 0) {
-    console.error(result.stderr || "yt-dlp failed");
-    console.error("\nInstall yt-dlp: pip install -U yt-dlp");
-    process.exit(1);
-  }
-
-  const lines = result.stdout.trim().split("\n").filter(Boolean);
-  writeFileSync(DATA_FILE, `${lines.join("\n")}\n`, "utf8");
-  console.log(`Saved ${lines.length} videos to ${DATA_FILE}\n`);
-  return lines.map((line) => JSON.parse(line));
-}
-
-function loadVideos() {
-  if (!existsSync(DATA_FILE)) {
-    return fetchChannelVideos();
-  }
-  const lines = readFileSync(DATA_FILE, "utf8").trim().split("\n").filter(Boolean);
-  return lines.map((line) => JSON.parse(line));
 }
 
 async function upsertMentor() {
@@ -314,11 +233,26 @@ async function deleteExistingLessons() {
 async function insertLesson(lesson) {
   const { videos, ...lessonRow } = lesson;
 
-  const { data: row, error: lessonError } = await supabase
+  let row;
+  let lessonError;
+
+  ({ data: row, error: lessonError } = await supabase
     .from("lessons")
     .insert(lessonRow)
     .select("id, slug")
-    .single();
+    .single());
+
+  if (
+    lessonError?.message?.includes("sort_order") ||
+    lessonError?.message?.includes("youtube_playlist_id")
+  ) {
+    const { sort_order, youtube_playlist_id, ...fallbackRow } = lessonRow;
+    ({ data: row, error: lessonError } = await supabase
+      .from("lessons")
+      .insert(fallbackRow)
+      .select("id, slug")
+      .single());
+  }
 
   if (lessonError) {
     throw new Error(`Lesson ${lesson.slug}: ${lessonError.message}`);
@@ -342,13 +276,12 @@ async function insertLesson(lesson) {
 
 async function main() {
   const shouldFetch = process.argv.includes("--fetch");
-
-  const rawVideos = shouldFetch ? fetchChannelVideos() : loadVideos();
-  const lessons = groupVideosIntoLessons(rawVideos);
+  const snapshot = shouldFetch ? fetchPlaylistSnapshot() : loadSnapshot();
+  const lessons = buildLessonsFromPlaylists(snapshot);
   const videoCount = lessons.reduce((n, l) => n + l.videos.length, 0);
 
   console.log(
-    `Seeding ${MENTOR_SLUG}: ${lessons.length} lesson(s), ${videoCount} video(s) from ${rawVideos.length} YouTube uploads...\n`,
+    `Seeding ${MENTOR_SLUG}: ${lessons.length} playlist lesson(s), ${videoCount} episode(s)...\n`,
   );
 
   const upsertedMentor = await upsertMentor();
@@ -366,22 +299,16 @@ async function main() {
     try {
       await insertLesson(lesson);
       ok++;
-      const parts =
-        lesson.videos.length > 1
-          ? ` (${lesson.videos.length} videos)`
-          : "";
-      console.log(`  + ${lesson.slug}${parts}`);
+      console.log(
+        `  + ${lesson.slug} [${lesson.lesson_topic_slug}] (${lesson.videos.length} ep)`,
+      );
     } catch (err) {
       fail++;
       console.error(`  x ${lesson.slug}: ${err.message}`);
     }
   }
 
-  const grouped = lessons.filter((l) => l.videos.length > 1);
-  console.log(`\nDone. ${ok} lesson(s), ${fail} failed.`);
-  console.log(
-    `Grouped series: ${grouped.length} (${grouped.reduce((n, l) => n + l.videos.length, 0)} videos in multi-part lessons)`,
-  );
+  console.log(`\nDone. ${ok} playlist lesson(s), ${fail} failed.`);
 }
 
 main().catch((err) => {

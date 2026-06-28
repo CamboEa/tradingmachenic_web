@@ -4,6 +4,8 @@ import Link from "next/link";
 import type { Lesson } from "@/lib/course";
 import { getLessonThumbnailSrc, lessonVideoCount } from "@/lib/course";
 import type { Dictionary, Locale } from "@/lib/i18n";
+import { cn } from "@/lib/ui/cn";
+import { ui } from "@/lib/ui/styles";
 
 export function CourseLessonCard({
   lesson,
@@ -27,7 +29,11 @@ export function CourseLessonCard({
 
   return (
     <article
-      className={`group relative flex flex-col overflow-hidden rounded-2xl border border-bridge/40 bg-surface shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg ${large ? "min-h-[22rem] sm:min-h-[24rem]" : ""}`}
+      className={cn(
+        ui.linkCard,
+        "relative cursor-pointer",
+        large && "min-h-[22rem] sm:min-h-[24rem]",
+      )}
     >
       <Link href={href} className="flex flex-1 flex-col focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal/40">
 
@@ -48,9 +54,6 @@ export function CourseLessonCard({
                 {videoCount}
               </span>
             )}
-            <span className={`rounded-md px-2 py-1 text-[10px] font-bold uppercase tracking-wide backdrop-blur-sm ${isFree ? "bg-teal/80 text-white" : "bg-highlight/80 text-background"}`}>
-              {isFree ? dict.course.filterFree : dict.course.filterPaid}
-            </span>
           </div>
 
           <span className="absolute bottom-3 right-3 rounded-md bg-black/50 px-2 py-1 text-[10px] font-semibold tabular-nums text-white backdrop-blur-sm">

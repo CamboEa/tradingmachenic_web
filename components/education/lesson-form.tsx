@@ -12,6 +12,7 @@ import { slugify } from "@/lib/slug";
 import { educationCategorySlugs } from "@/lib/education-categories";
 import type { Mentor } from "@/lib/mentors";
 import { extractYouTubeVideoId, resolveLessonVideoEmbedUrl } from "@/lib/youtube";
+import { FIELD_CLASS } from "@/lib/ui/styles";
 
 type LessonType = "free" | "paid";
 
@@ -23,8 +24,7 @@ const STEPS = [
  { title: "Thumbnail & publish", hint: "Cover image and visibility" },
 ] as const;
 
-const fieldClass =
- "w-full rounded-lg border border-bridge/40 bg-surface-soft px-4 py-2.5 text-sm text-foreground outline-none transition focus:border-gold focus:bg-surface focus:ring-2 focus:ring-teal/20";
+const fieldClass = FIELD_CLASS;
 
 function parseObjectives(value: string): string[] {
  return value
@@ -467,7 +467,7 @@ export function LessonForm({
  placeholder="https://www.youtube.com/watch?v=… or youtu.be/…"
  value={video.embedUrl}
  onChange={(e) => updateVideo(idx, "embedUrl", e.target.value)}
- className="w-full rounded-lg border border-bridge/40 bg-surface px-4 py-2.5 text-sm text-foreground outline-none transition focus:border-gold focus:ring-2 focus:ring-teal/20"
+ className={fieldClass}
  />
  <YoutubeUrlPreview url={video.embedUrl} />
  </div>
@@ -481,7 +481,7 @@ export function LessonForm({
  placeholder="Optional heading for this video"
  value={video.titles.en}
  onChange={(e) => updateVideo(idx, "titles", e.target.value, "en")}
- className="w-full rounded-lg border border-bridge/40 bg-surface px-4 py-2.5 text-sm text-foreground outline-none transition focus:border-gold focus:ring-2 focus:ring-teal/20"
+ className={fieldClass}
  />
  </div>
 
@@ -494,7 +494,7 @@ export function LessonForm({
  placeholder="ចំណងជើងវីដេអូ (ច្រើនឯក)"
  value={video.titles.km}
  onChange={(e) => updateVideo(idx, "titles", e.target.value, "km")}
- className="w-full rounded-lg border border-bridge/40 bg-surface px-4 py-2.5 text-sm text-foreground outline-none transition focus:border-gold focus:ring-2 focus:ring-teal/20"
+ className={fieldClass}
  />
  </div>
  </div>
@@ -574,7 +574,7 @@ export function LessonForm({
  placeholder="Optional heading for this video"
  value={video.titles.en}
  onChange={(e) => updatePaidVideo(idx, "titles", e.target.value, "en")}
- className="w-full rounded-lg border border-bridge/40 bg-surface px-4 py-2.5 text-sm text-foreground outline-none transition focus:border-gold focus:ring-2 focus:ring-teal/20"
+ className={fieldClass}
  />
  </div>
 
@@ -587,7 +587,7 @@ export function LessonForm({
  placeholder="ចំណងជើងវីដេអូ (ច្រើនឯក)"
  value={video.titles.km}
  onChange={(e) => updatePaidVideo(idx, "titles", e.target.value, "km")}
- className="w-full rounded-lg border border-bridge/40 bg-surface px-4 py-2.5 text-sm text-foreground outline-none transition focus:border-gold focus:ring-2 focus:ring-teal/20"
+ className={fieldClass}
  />
  </div>
  </div>

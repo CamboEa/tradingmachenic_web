@@ -12,18 +12,18 @@ export default async function EditCurriculumModulePage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const module = await getCurriculumModuleForEdit(id);
-  if (!module) notFound();
+  const curriculumModule = await getCurriculumModuleForEdit(id);
+  if (!curriculumModule) notFound();
 
   return (
     <div>
       <AdminFormHeader
         backHref="/admin/program"
         title="Edit module"
-        description={module.title_en}
+        description={curriculumModule.title_en}
       />
 
-      <CurriculumModuleForm phaseId={module.phase_id} module={module} />
+      <CurriculumModuleForm phaseId={curriculumModule.phase_id} module={curriculumModule} />
     </div>
   );
 }

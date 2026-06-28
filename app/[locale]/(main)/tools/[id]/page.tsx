@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { GalleryLightbox } from "@/components/tools/gallery-lightbox";
+import { PublicPageHero, PublicPageMain } from "@/components/ui";
 import { isLocale, type Locale } from "@/lib/i18n";
 import { getPublishedToolById, type Tool } from "@/lib/supabase/tools";
 import { formatDownloadCount, getToolDownloadTotal } from "@/lib/tools/download-stats";
@@ -94,71 +95,70 @@ export default async function ToolDetailPage({
     { label: locale === "km" ? "ប្រភេទ" : "Type", value: typeLabel },
     { label: locale === "km" ? "វេទិកា" : "Platform", value: tool.platform },
     { label: locale === "km" ? "កំណែ" : "Version", value: `v${tool.version}` },
-    {
-      label: locale === "km" ? "តម្លៃ" : "Pricing",
-      value: isFree ? (locale === "km" ? "ឥតគិតថ្លៃ" : "Free") : (locale === "km" ? "បង់ប្រាក់" : "Paid"),
-    },
     { label: locale === "km" ? "ទាញយក" : "Downloads", value: downloadTotal },
   ];
 
   return (
-    <div className="flex flex-col bg-background pb-16">
-      <div className="w-full px-4 pt-8 sm:px-6 lg:px-8">
-        <p className="text-sm">
-          <Link href={`/${locale}/tools`} className="font-semibold text-teal transition hover:text-highlight">
-            ← {toolsLabel}
-          </Link>
-        </p>
+    <div className="flex flex-col bg-background">
+      <PublicPageHero
+        title={tool.name}
+        backgroundImage="/Images/bg-tool-header.png"
+        panel={
+          <div className="mx-auto w-full max-w-7xl">
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-300">
+              <Link href={`/${locale}/tools`} className="inline-flex items-center gap-1.5 text-white/80 transition hover:text-gold">
+                <svg viewBox="0 0 16 16" fill="currentColor" className="h-4 w-4" aria-hidden>
+                  <path fillRule="evenodd" d="M9.78 12.78a.75.75 0 0 1-1.06 0L4.47 8.53a.75.75 0 0 1 0-1.06l4.25-4.25a.75.75 0 0 1 1.06 1.06L6.06 8l3.72 3.72a.75.75 0 0 1 0 1.06Z" clipRule="evenodd" />
+                </svg>
+                {toolsLabel}
+              </Link>
+            </p>
 
-        <header className="mt-6">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className={`rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${isFree ? "bg-teal/80 text-white" : "bg-highlight/80 text-background"}`}>
-              {isFree ? (locale === "km" ? "ឥតគិតថ្លៃ" : "Free") : (locale === "km" ? "បង់ប្រាក់" : "Paid")}
-            </span>
-            <span className="rounded-md bg-surface-soft px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-ink-muted ring-1 ring-bridge/40">
-              {typeLabel}
-            </span>
-            <span className="rounded-md bg-surface-soft px-2 py-0.5 text-[10px] font-semibold text-ink-muted ring-1 ring-bridge/40">
-              {tool.platform}
-            </span>
-            <span className="rounded-md bg-surface-soft px-2 py-0.5 font-mono text-[10px] text-ink-soft ring-1 ring-bridge/40">
-              v{tool.version}
-            </span>
+            <div className="mt-6 flex flex-wrap items-center gap-2">
+              <span className="rounded-md bg-white/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-slate-100 ring-1 ring-white/20">
+                {typeLabel}
+              </span>
+              <span className="rounded-md bg-white/10 px-2 py-0.5 text-[10px] font-semibold text-slate-100 ring-1 ring-white/20">
+                {tool.platform}
+              </span>
+              <span className="rounded-md bg-white/10 px-2 py-0.5 font-mono text-[10px] text-slate-200 ring-1 ring-white/10">
+                v{tool.version}
+              </span>
+            </div>
+            <h1 className="mt-4 text-3xl font-black tracking-tight text-white sm:text-4xl lg:text-[2.75rem]">{tool.name}</h1>
           </div>
-          <h1 className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">{tool.name}</h1>
-        </header>
-      </div>
+        }
+      />
 
-      <div className="mt-6 w-full px-6 sm:px-10 lg:px-16 xl:px-24">
-        {tool.image_url ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={tool.image_url}
-            alt={tool.name}
-            className="mx-auto block h-auto w-full max-w-6xl"
-          />
-        ) : (
-          <div className="mx-auto flex h-[26.25rem] w-full max-w-6xl items-center justify-center rounded-2xl bg-surface-soft">
-            <svg viewBox="0 0 64 64" fill="none" className="h-20 w-20 text-ink-soft/40" aria-hidden>
-              {tool.type === "indicator" ? (
-                <>
-                  <path d="M12 46h40" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
-                  <path d="M18 40V26M32 40V16M46 40V30" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
-                  <path d="M14 24c7 5 12 6 18 1s10-8 18-2" stroke="currentColor" strokeWidth="3" strokeLinecap="round" opacity="0.5" />
-                </>
-              ) : (
-                <>
-                  <rect x="15" y="18" width="34" height="28" rx="8" stroke="currentColor" strokeWidth="3" />
-                  <path d="M24 30h.01M40 30h.01M27 39h10" stroke="currentColor" strokeWidth="3" strokeLinecap="round" opacity="0.5" />
-                  <path d="M32 18v-6" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
-                </>
-              )}
-            </svg>
-          </div>
-        )}
-      </div>
-
-      <main className="mt-10 w-full px-4 sm:px-6 lg:px-8">
+      <PublicPageMain className="pb-16 pt-10">
+        <div className="mb-10">
+          {tool.image_url ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={tool.image_url}
+              alt={tool.name}
+              className="mx-auto block h-auto w-full max-w-5xl rounded-2xl border border-bridge/40 shadow-sm"
+            />
+          ) : (
+            <div className="mx-auto flex h-[26.25rem] w-full max-w-5xl items-center justify-center rounded-2xl bg-surface-soft border border-bridge/40 shadow-sm">
+              <svg viewBox="0 0 64 64" fill="none" className="h-20 w-20 text-ink-soft/40" aria-hidden>
+                {tool.type === "indicator" ? (
+                  <>
+                    <path d="M12 46h40" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+                    <path d="M18 40V26M32 40V16M46 40V30" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+                    <path d="M14 24c7 5 12 6 18 1s10-8 18-2" stroke="currentColor" strokeWidth="3" strokeLinecap="round" opacity="0.5" />
+                  </>
+                ) : (
+                  <>
+                    <rect x="15" y="18" width="34" height="28" rx="8" stroke="currentColor" strokeWidth="3" />
+                    <path d="M24 30h.01M40 30h.01M27 39h10" stroke="currentColor" strokeWidth="3" strokeLinecap="round" opacity="0.5" />
+                    <path d="M32 18v-6" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+                  </>
+                )}
+              </svg>
+            </div>
+          )}
+        </div>
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-10">
           <div className="min-w-0 space-y-6">
             {desc && desc.includes("<") ? (
@@ -304,7 +304,7 @@ export default async function ToolDetailPage({
             </div>
           </aside>
         </div>
-      </main>
+      </PublicPageMain>
     </div>
   );
 }

@@ -2,6 +2,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 
+import { PublicPageHero, PublicPageMain } from "@/components/ui";
+
 import { getDictionary, isLocale, type Locale } from "@/lib/i18n";
 import { getPublishedPodcastById } from "@/lib/supabase/podcasts";
 import { extractYouTubeVideoId, youtubeEmbedSrc, youtubeThumbnailUrl } from "@/lib/youtube";
@@ -45,72 +47,44 @@ export default async function PodcastEpisodePage({
   const thumb = youtubeThumbnailUrl(vid);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="flex flex-col bg-background">
+      <PublicPageHero
+        title={title}
+        backgroundImage="/Images/bg-podcast-header.png"
+        panel={
+          <div className="mx-auto w-full max-w-7xl">
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-300">
+              <Link href={`/${locale}/podcast`} className="inline-flex items-center gap-1.5 text-white/80 transition hover:text-gold">
+                <svg viewBox="0 0 16 16" fill="currentColor" className="h-4 w-4" aria-hidden>
+                  <path fillRule="evenodd" d="M9.78 12.78a.75.75 0 0 1-1.06 0L4.47 8.53a.75.75 0 0 1 0-1.06l4.25-4.25a.75.75 0 0 1 1.06 1.06L6.06 8l3.72 3.72a.75.75 0 0 1 0 1.06Z" clipRule="evenodd" />
+                </svg>
+                {t.backToList}
+              </Link>
+            </p>
 
-      {/* Gold top accent line */}
-      <div
-        className="h-0.75"
-        style={{
-          background: "linear-gradient(to right, var(--teal) 0%, color-mix(in oklab, var(--highlight) 40%, transparent) 60%, transparent 100%)",
-        }}
-      />
-
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-
-        {/* ── Back nav ─────────────────────────────────────────── */}
-        <div className="py-7">
-          <Link
-            href={`/${locale}/podcast`}
-            className="group inline-flex items-center gap-2 text-sm font-semibold text-foreground transition-colors hover:text-gold"
-          >
-            <svg
-              viewBox="0 0 16 16"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="h-3.5 w-3.5 transition-transform group-hover:-translate-x-0.5"
-              aria-hidden
-            >
-              <path d="M10 3L5 8l5 5" />
-            </svg>
-            {t.backToList}
-          </Link>
-        </div>
-
-        {/* ── Header: title left, thumbnail right ──────────────── */}
-        <div className="grid items-center gap-10 pb-10 lg:grid-cols-[1fr_400px]">
-
-          {/* Left — text */}
-          <div>
-            <div className="mb-4 flex items-center gap-3">
+            <div className="mt-6 flex items-center gap-3">
               <span className="h-px w-8 bg-teal" aria-hidden />
-              <p className="text-[10px] font-bold uppercase tracking-[0.35em] text-highlight">
+              <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-gold">
                 {t.episodeEyebrow}
               </p>
             </div>
 
-            <h1 className="text-4xl font-black leading-[1.08] tracking-tight text-foreground sm:text-5xl lg:text-[3.5rem]">
+            <h1 className="mt-4 text-3xl font-black leading-[1.12] tracking-tight text-white sm:text-4xl lg:text-[2.75rem]">
               {title}
             </h1>
 
             {description ? (
-              <p className="mt-5 max-w-xl text-base leading-7 text-ink-soft sm:text-lg">
+              <p className="mt-5 max-w-2xl text-base leading-relaxed text-slate-100/90 sm:text-lg">
                 {description}
               </p>
             ) : null}
           </div>
+        }
+      />
 
-          {/* Right — thumbnail card */}
-        </div>
-
-        {/* ── Divider ──────────────────────────────────────────── */}
-        <div className="h-px bg-bridge/40" aria-hidden />
-
-        {/* ── Player ───────────────────────────────────────────── */}
-        <div className="py-10">
-          <div className="overflow-hidden rounded-2xl bg-black shadow-[0_24px_64px_-12px_rgba(30,41,59,0.35)] ring-1 ring-slate-900/10">
+      <PublicPageMain className="pb-16 pt-10">
+        <div className="mx-auto max-w-5xl">
+          <div className="overflow-hidden rounded-2xl bg-black shadow-[0_24px_64px_-12px_rgba(30,41,59,0.35)] border border-bridge/40 ring-1 ring-slate-900/10">
             <div className="aspect-video w-full">
               <iframe
                 title={title}
@@ -123,8 +97,7 @@ export default async function PodcastEpisodePage({
             </div>
           </div>
         </div>
-
-      </div>
+      </PublicPageMain>
     </div>
   );
 }

@@ -58,7 +58,7 @@ export function AdminTopbar() {
             onClick={() => setOpen(false)}
             className="absolute inset-0 bg-slate-900/50 backdrop-blur-sm"
           />
-          <div className="absolute left-0 top-0 flex h-full w-72 max-w-[85%] flex-col bg-slate-brand text-ink-muted shadow-xl">
+          <div className="absolute left-0 top-0 flex h-full w-72 max-w-[85%] flex-col bg-slate-brand shadow-xl">
             <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
               <div className="flex items-center gap-3">
                 <SiteLogo size="sm" className="rounded-lg ring-1 ring-white/10" />
@@ -67,7 +67,7 @@ export function AdminTopbar() {
               <button
                 type="button"
                 onClick={() => setOpen(false)}
-                className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-ink-soft hover:bg-surface/5 hover:text-white"
+                className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-white/8 hover:text-white"
                 aria-label="Close"
               >
                 <svg viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5">
@@ -78,7 +78,7 @@ export function AdminTopbar() {
             <nav className="flex-1 space-y-6 overflow-y-auto px-3 py-5">
               {NAV.map((section) => (
                 <div key={section.heading}>
-                  <p className="mb-1.5 px-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-ink-soft">
+                  <p className="mb-1.5 px-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
                     {section.heading}
                   </p>
                   <ul className="space-y-0.5">
@@ -90,13 +90,13 @@ export function AdminTopbar() {
                             href={item.href}
                             onClick={() => setOpen(false)}
                             className={[
-                              "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+                              "group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
                               active
-                                ? "bg-surface/5 text-white"
-                                : "text-ink-soft hover:bg-surface/5 hover:text-white",
+                                ? "bg-white/10 text-white"
+                                : "text-slate-400 hover:bg-white/8 hover:text-white",
                             ].join(" ")}
                           >
-                            <span className={active ? "text-foreground" : "text-ink-soft"}>
+                            <span className={active ? "text-teal" : "text-slate-500 group-hover:text-slate-200"}>
                               {item.icon}
                             </span>
                             {item.label}

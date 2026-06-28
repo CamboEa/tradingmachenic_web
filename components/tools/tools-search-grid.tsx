@@ -179,7 +179,7 @@ export function ToolsSearchGrid({ tools, locale }: { tools: Tool[]; locale: Loca
         </div>
       ) : (
         <>
-          <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
+          <div className="grid gap-3 grid-cols-2 sm:grid-cols-3 lg:grid-cols-3">
             {paginated.map((tool) => (
               <ToolCard key={tool.id} tool={tool} locale={locale} />
             ))}

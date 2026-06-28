@@ -14,6 +14,8 @@ type BucketEntry = {
 };
 
 const buckets = new Map<string, BucketEntry>();
+let lastCleanup = Date.now();
+const CLEANUP_INTERVAL_MS = 5 * 60 * 1000; // 5 minutes
 
 /** In-memory sliding window — per server instance; pair with Cloudflare edge rules in production. */
 export function checkRateLimit(
@@ -22,6 +24,17 @@ export function checkRateLimit(
   options: RateLimitOptions,
 ): RateLimitResult {
   const now = Date.now();
+
+  // Periodic memory cleanup to prevent memory leaks
+  if (now - lastCleanup > CLEANUP_INTERVAL_MS) {
+    lastCleanup = now;
+    for (const [k, entry] of buckets.entries()) {
+      if (now >= entry.resetAt) {
+        buckets.delete(k);
+      }
+    }
+  }
+
   const bucketKey = `${namespace}:${key}`;
   const existing = buckets.get(bucketKey);
 

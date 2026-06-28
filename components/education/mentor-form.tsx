@@ -9,9 +9,9 @@ import { educationCategorySlugs } from "@/lib/education-categories";
 import { slugify } from "@/lib/slug";
 import { createMentor, updateMentor } from "@/lib/supabase/actions";
 import type { AdminMentor } from "@/lib/supabase/mentors";
+import { FIELD_CLASS } from "@/lib/ui/styles";
 
-const fieldClass =
-  "w-full rounded-lg border border-bridge/40 bg-surface-soft px-4 py-2.5 text-sm text-foreground outline-none transition focus:border-gold focus:bg-surface focus:ring-2 focus:ring-teal/20";
+const fieldClass = FIELD_CLASS;
 
 const categoryLabels: Record<(typeof educationCategorySlugs)[number], string> = {
   forex: "Forex",

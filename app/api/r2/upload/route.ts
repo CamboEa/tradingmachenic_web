@@ -1,13 +1,13 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
-import { createClient as createSupabaseAdmin } from "@supabase/supabase-js";
 import { r2 } from "@/lib/r2/client";
 import { enforceApiRateLimit } from "@/lib/security/api-rate-limit";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, getSharedAdminClient } from "@/lib/supabase/server";
 
 const ALLOWED_BUCKETS = ["trading-lesson", "trading-tool"] as const;
+type AllowedBucket = (typeof ALLOWED_BUCKETS)[number];
 
-const ALLOWED_TYPES: Record<string, string[]> = {
+const ALLOWED_TYPES: Record<AllowedBucket, string[]> = {
   "trading-lesson": [
     "video/mp4",
     "video/webm",
@@ -26,10 +26,14 @@ const ALLOWED_TYPES: Record<string, string[]> = {
   ],
 };
 
-const MAX_SIZE_MB: Record<string, number> = {
+const MAX_SIZE_MB: Record<AllowedBucket, number> = {
   "trading-lesson": 500,
   "trading-tool": 20,
 };
+
+function isAllowedBucket(value: FormDataEntryValue | null): value is AllowedBucket {
+  return typeof value === "string" && ALLOWED_BUCKETS.includes(value as AllowedBucket);
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -50,11 +54,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check admin role using bare service-role client (no cookies needed)
-    const serviceClient = createSupabaseAdmin(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!,
-      { auth: { autoRefreshToken: false, persistSession: false } }
-    );
+    const serviceClient = getSharedAdminClient();
 
     const { data: profile, error: profileError } = await serviceClient
       .from("profiles")
@@ -73,7 +73,7 @@ export async function POST(request: NextRequest) {
 
     const formData = await request.formData();
     const file = formData.get("file") as File;
-    const bucketName = formData.get("bucketName") as string;
+    const bucketName = formData.get("bucketName");
 
     if (!file) {
       return NextResponse.json(
@@ -82,7 +82,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!ALLOWED_BUCKETS.includes(bucketName as any)) {
+    if (!isAllowedBucket(bucketName)) {
       return NextResponse.json(
         { error: "Invalid bucket" },
         { status: 400 }

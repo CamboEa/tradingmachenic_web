@@ -3,23 +3,17 @@ import { unstable_cache } from "next/cache";
 import type { Lesson } from "@/lib/course";
 import type { EducationCategory } from "@/lib/education-categories";
 import { LESSONS_CACHE_TAG } from "@/lib/cache-tags";
+import { sortLessonsByDisplayOrder } from "@/lib/lessons-sort";
 import { resolveLessonVideoEmbedUrl } from "@/lib/youtube";
-import { createClient, createClient as createAdminClient } from "@supabase/supabase-js";
+import { getSharedAdminClient, getSharedPublicClient } from "./shared";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-);
+const supabase = getSharedPublicClient();
 
 function adminSupabase() {
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
     return null;
   }
-  return createAdminClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.SUPABASE_SERVICE_ROLE_KEY,
-    { auth: { autoRefreshToken: false, persistSession: false } },
-  );
+  return getSharedAdminClient();
 }
 
 type LessonRow = {
@@ -38,6 +32,8 @@ type LessonRow = {
   mentor_slug: string | null;
   category: string | null;
   lesson_topic_slug: string | null;
+  sort_order: number | null;
+  youtube_playlist_id: string | null;
 };
 
 type LessonVideoRow = {
@@ -88,6 +84,8 @@ function transformLessonRow(
     mentorSlug: row.mentor_slug || undefined,
     category: (row.category as EducationCategory) || undefined,
     lessonTopicSlug: row.lesson_topic_slug || undefined,
+    sortOrder: row.sort_order ?? 0,
+    youtubePlaylistId: row.youtube_playlist_id || undefined,
     status: row.status === "published" ? "published" : "draft",
     videos: videos.map((v) => ({
       embedUrl: resolveLessonVideoEmbedUrl(v.embed_url),
@@ -118,7 +116,7 @@ async function fetchPublishedLessons(): Promise<Lesson[]> {
     return [];
   }
 
-  return rowsToLessons((data ?? []) as LessonRowWithVideos[]);
+  return rowsToLessons((data ?? []) as unknown as LessonRowWithVideos[]);
 }
 
 async function fetchAdminLessons(): Promise<Lesson[]> {
@@ -138,7 +136,7 @@ async function fetchAdminLessons(): Promise<Lesson[]> {
     return [];
   }
 
-  return rowsToLessons((data ?? []) as LessonRowWithVideos[]);
+  return rowsToLessons((data ?? []) as unknown as LessonRowWithVideos[]);
 }
 
 const getCachedPublishedLessons = unstable_cache(
@@ -171,8 +169,10 @@ export async function getLessonsByMentorAndCategory(
   category: EducationCategory,
 ): Promise<Lesson[]> {
   const lessons = await getAllLessons();
-  return lessons.filter(
-    (lesson) =>
-      lesson.mentorSlug === mentorSlug && lesson.category === category,
+  return sortLessonsByDisplayOrder(
+    lessons.filter(
+      (lesson) =>
+        lesson.mentorSlug === mentorSlug && lesson.category === category,
+    ),
   );
 }

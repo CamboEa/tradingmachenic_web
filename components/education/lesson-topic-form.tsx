@@ -4,14 +4,14 @@ import Link from "next/link";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
+import { R2Uploader } from "@/components/shared/r2-uploader";
 import { slugify } from "@/lib/slug";
 import { createLessonTopic, updateLessonTopic } from "@/lib/supabase/actions";
 import type { LessonTopic } from "@/lib/supabase/lesson-topics";
 import { adminLessonTopicsHref } from "@/lib/admin-lessons-nav";
-import { ui } from "@/lib/ui/styles";
+import { ui, FIELD_CLASS } from "@/lib/ui/styles";
 
-const fieldClass =
-  "w-full rounded-lg border border-bridge/40 bg-surface-soft px-4 py-2.5 text-sm text-foreground outline-none transition focus:border-gold focus:bg-surface focus:ring-2 focus:ring-teal/20";
+const fieldClass = FIELD_CLASS;
 
 export function LessonTopicForm({
   topic,
@@ -25,6 +25,7 @@ export function LessonTopicForm({
   const isEdit = !!topic;
   const [isSaving, setIsSaving] = useState(false);
   const [slug, setSlug] = useState(topic?.slug ?? "");
+  const [imageUrl, setImageUrl] = useState(topic?.imageUrl ?? "");
 
   const backHref = adminLessonTopicsHref(mentorSlug);
 
@@ -37,8 +38,6 @@ export function LessonTopicForm({
     const name_km = (formData.get("name_km") as string)?.trim() ?? "";
     const description_en = (formData.get("description_en") as string)?.trim() ?? "";
     const description_km = (formData.get("description_km") as string)?.trim() ?? "";
-    const sortRaw = formData.get("sort_order") as string;
-    const sort_order = Number.parseInt(sortRaw, 10);
     const resolvedSlug = slugify(slug || name_en);
 
     if (!name_en) {
@@ -47,10 +46,6 @@ export function LessonTopicForm({
     }
     if (!resolvedSlug) {
       toast.error("Enter a valid slug or English name");
-      return;
-    }
-    if (!Number.isFinite(sort_order)) {
-      toast.error("Sort order must be a number");
       return;
     }
 
@@ -62,7 +57,7 @@ export function LessonTopicForm({
         name_km,
         description_en: description_en || undefined,
         description_km: description_km || undefined,
-        sort_order,
+        image_url: imageUrl.trim() || undefined,
       };
 
       const result = isEdit
@@ -154,14 +149,27 @@ export function LessonTopicForm({
 
       <div>
         <label className="mb-1.5 block text-xs font-semibold text-ink-muted">
-          Sort order
+          Cover image URL
         </label>
         <input
-          type="number"
-          name="sort_order"
-          defaultValue={topic?.sortOrder ?? 0}
+          type="text"
+          name="image_url"
+          value={imageUrl}
+          onChange={(e) => setImageUrl(e.target.value)}
+          placeholder="https://... or upload below"
           className={fieldClass}
         />
+        <div className="mt-3">
+          <R2Uploader
+            bucketName="trading-tool"
+            accept="image/png,image/jpeg,image/webp"
+            label="Or upload a cover image"
+            hint="PNG, JPG, or WebP. Saved to cloud storage."
+            initialUrl={topic?.imageUrl || undefined}
+            onUploaded={(url) => setImageUrl(url)}
+            getKeyPrefix={() => "lesson-topics/"}
+          />
+        </div>
       </div>
 
       <div className="flex flex-wrap gap-3 pt-2">

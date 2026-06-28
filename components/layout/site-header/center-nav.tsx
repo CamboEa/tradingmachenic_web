@@ -187,8 +187,9 @@ export function CenterNav({
     { suffix: "curriculum",          label: dict.nav.curriculum,       href: `/${locale}/curriculum` },
     { suffix: "tools",               label: dict.nav.tools,            href: `/${locale}/tools` },
     { suffix: "podcast",             label: dict.nav.podcast,          href: `/${locale}/podcast` },
-    { suffix: "blog",                label: dict.nav.blog,             href: `/${locale}/blog` },
-    { suffix: "technical-analysis",  label: dict.nav.technicalAnalysis, href: `/${locale}/technical-analysis` },
+    // Temporarily hidden: blog, technical-analysis
+    // { suffix: "blog",                label: dict.nav.blog,             href: `/${locale}/blog` },
+    // { suffix: "technical-analysis",  label: dict.nav.technicalAnalysis, href: `/${locale}/technical-analysis` },
     { suffix: "about",               label: dict.nav.about,            href: `/${locale}/about` },
   ];
 
@@ -240,7 +241,7 @@ export function CenterNav({
 
   /* ── Desktop: all items inline ── */
   return (
-    <nav aria-label="Primary" className="flex min-w-0 items-center justify-center gap-0">
+    <nav aria-label="Primary" className="flex min-w-0 items-center justify-center gap-0.5">
       <Link
         href={`/${locale}`}
         aria-current={navPathActive(pathname, locale, "") ? "page" : undefined}

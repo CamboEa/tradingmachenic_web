@@ -1,9 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server";
 
-import { createClient as createSupabaseAdmin } from "@supabase/supabase-js";
 import { enforceApiRateLimit } from "@/lib/security/api-rate-limit";
-
-import type { Database } from "@/lib/supabase/types";
+import { getSharedAdminClient } from "@/lib/supabase/server";
 
 type PlatformParam = "mt4" | "mt5" | "single";
 
@@ -22,11 +20,7 @@ export async function GET(
   const { id } = await params;
   const platform = resolvePlatform(request.nextUrl.searchParams.get("platform"));
 
-  const supabase = createSupabaseAdmin<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-    { auth: { autoRefreshToken: false, persistSession: false } },
-  );
+  const supabase = getSharedAdminClient();
 
   const { data: tool, error } = await supabase
     .from("tools")

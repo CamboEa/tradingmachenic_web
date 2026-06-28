@@ -4,26 +4,41 @@
   --site-ticker-h: 3rem;
   --site-header-h: 4rem;
   --site-chrome-top: calc(var(--site-ticker-h) + var(--site-header-h));
-  /* Logo palette — softer slate-teal (lighter than near-black) */
-  --background: #182428;
-  --foreground: #fcffff;
-  --surface: #1f2f35;
-  --surface-soft: #2a3f46;
-  /* Legacy token name: bright cyan rim-light from the logo */
-  --gold: #2ee8f5;
+  /* Structured Clarity palette */
+  --background: #F8FAFC;
+  --foreground: #1E293B;
+  --surface: #FFFFFF;
+  --surface-soft: #F1F5F9;
+  /* Institutional Gold — warm brand accent per design system */
+  --gold: #D4AF37;
   /* Primary brand teal — logo face / body */
-  --teal: #0a9396;
-  --highlight: #00e5ff;
-  --ink-muted: #a8e8ea;
-  --ink-soft: #85c9cc;
-  --bridge: #35565c;
-  --slate: #182428;
-  color-scheme: dark;
+  --teal: #0EA5E9;
+  --highlight: #0EA5E9;
+  --ink-muted: #475569;
+  --ink-soft: #64748B;
+  --bridge: #CBD5E1;
+  --slate: #1E293B;
+  color-scheme: light;
   --font-stack-en: var(--font-barlow), "Barlow", system-ui, sans-serif;
   --font-stack-km: var(--font-khmer), var(--font-barlow), "Barlow", system-ui, sans-serif;
   --font-stack-km-title: var(--font-khmer-title), var(--font-khmer), var(--font-barlow), "Barlow",
     system-ui, sans-serif;
   --font-stack: var(--font-stack-en);
+}
+
+.dark {
+  --background: #020617; /* Very dark slate for high contrast */
+  --foreground: #F8FAFC;
+  --surface: #0f172a;
+  --surface-soft: #1e293b;
+  --gold: #D4AF37;
+  --teal: #0EA5E9;
+  --highlight: #0EA5E9;
+  --ink-muted: #94a3b8;
+  --ink-soft: #64748b;
+  --bridge: #334155;
+  --slate: #020617;
+  color-scheme: dark;
 }
 
 html[lang="km"] {
@@ -52,13 +67,7 @@ html {
 }
 
 body {
-  background:
-    radial-gradient(
-      ellipse 120% 70% at 50% -15%,
-      color-mix(in oklab, var(--teal) 14%, transparent),
-      transparent 55%
-    ),
-    var(--background);
+  background: var(--background);
   color: var(--foreground);
   font-family: var(--font-stack);
   min-height: 100vh;

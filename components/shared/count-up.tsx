@@ -11,8 +11,8 @@ export function CountUp({ end, duration = 1200 }: { end: number; duration?: numb
     if (!el) return;
 
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setCount(end);
-      return;
+      const frame = requestAnimationFrame(() => setCount(end));
+      return () => cancelAnimationFrame(frame);
     }
 
     const obs = new IntersectionObserver(

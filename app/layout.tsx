@@ -7,7 +7,7 @@ import {
   Noto_Sans_Khmer,
 } from "next/font/google";
 
-import { HtmlLang } from "@/components/layout/html-lang";
+import { ThemeProvider } from "@/components/shared/theme-provider";
 import { ToastProvider } from "@/components/shared/toast-provider";
 import { BRAND_NAME } from "@/lib/brand";
 
@@ -66,10 +66,11 @@ export default function RootLayout({
  suppressHydrationWarning
  className={`${barlow.variable} ${barlowCondensed.variable} ${geistMono.variable} ${fontKhmer.variable} ${fontKhmerTitle.variable} font-sans h-full antialiased`}
  >
- <body className="flex min-h-screen flex-col bg-[var(--background)] font-sans text-[var(--foreground)]">
- <HtmlLang />
- <ToastProvider />
- {children}
+ <body className="flex min-h-screen flex-col bg-background font-sans text-foreground">
+  <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+   <ToastProvider />
+   {children}
+  </ThemeProvider>
  </body>
  </html>
  );

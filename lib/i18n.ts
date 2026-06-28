@@ -117,6 +117,9 @@ export type Dictionary = {
     noMentorsMatch: string;
     mentorLessons: string;
     noLessonsForMentor: string;
+    selectLessonTopic: string;
+    episodeLabel: string;
+    episodesInPlaylist: string;
     categoryMentorsIntro: string;
     mentorLabel: string;
     categoryLabel: string;
@@ -407,6 +410,9 @@ const en: Dictionary = {
     noMentorsMatch: "No mentors match your search.",
     mentorLessons: "Lessons with {mentor}",
     noLessonsForMentor: "No lessons published for this mentor yet.",
+    selectLessonTopic: "Choose a topic to view its lessons.",
+    episodeLabel: "EP {n}",
+    episodesInPlaylist: "Episodes",
     categoryMentorsIntro: "Select a mentor to explore their lessons in this market.",
     mentorLabel: "Mentor",
     categoryLabel: "Category",
@@ -737,6 +743,9 @@ const km: Dictionary = {
     noMentorsMatch: "រកមិនឃើញអ្នកណែនាំដែលត្រូវគ្នា។",
     mentorLessons: "មេរៀនជាមួយ {mentor}",
     noLessonsForMentor: "មិនទាន់មានមេរៀនដែលបានផ្សាយសម្រាប់អ្នកណែនាំនេះទេ។",
+    selectLessonTopic: "ជ្រើសរើសប្រធានបទដើម្បីមើលមេរៀន។",
+    episodeLabel: "ភាគ {n}",
+    episodesInPlaylist: "ភាគ",
     categoryMentorsIntro: "ជ្រើសរើសអ្នកណែនាំដើម្បីរុករកមេរៀនក្នុងទីផ្សារនេះ។",
     mentorLabel: "អ្នកណែនាំ",
     categoryLabel: "ប្រភេទ",

@@ -2,8 +2,7 @@ import { type NextRequest, NextResponse } from "next/server";
 
 import { presignUpload, type BucketName } from "@/lib/r2/upload";
 import { enforceApiRateLimit } from "@/lib/security/api-rate-limit";
-import { createClient as createSupabaseAdmin } from "@supabase/supabase-js";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, getSharedAdminClient } from "@/lib/supabase/server";
 
 const ALLOWED_BUCKETS: BucketName[] = ["trading-lesson", "trading-tool"];
 
@@ -50,11 +49,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check admin role using bare service-role client (no cookies needed)
-    const serviceClient = createSupabaseAdmin(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!,
-      { auth: { autoRefreshToken: false, persistSession: false } }
-    );
+    const serviceClient = getSharedAdminClient();
 
     const { data: profile } = await serviceClient
       .from("profiles")

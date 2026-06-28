@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { EmptyState, PublicPageHero } from "@/components/ui";
+import { EmptyState, PublicPageHero, PublicPageMain } from "@/components/ui";
 import { ToolsSearchGrid } from "@/components/tools/tools-search-grid";
 import { getDictionary, isLocale, type Locale } from "@/lib/i18n";
 import { getPublishedTools, type Tool } from "@/lib/supabase/tools";
@@ -12,7 +12,7 @@ function TopToolsSidebar({ tools, locale }: { tools: Tool[]; locale: Locale }) {
 
   return (
     <aside className="lg:sticky lg:top-24 lg:self-start">
-      <div className="overflow-hidden border border-bridge/40 bg-surface shadow-sm">
+      <div className="overflow-hidden rounded-xl border border-bridge/40 bg-surface shadow-sm">
         <div className="flex items-center gap-3 border-b border-bridge/40 bg-linear-to-r from-surface-soft to-background px-4 py-4">
           <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-teal/20">
             <svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4 text-highlight" aria-hidden>
@@ -20,10 +20,10 @@ function TopToolsSidebar({ tools, locale }: { tools: Tool[]; locale: Locale }) {
             </svg>
           </div>
           <div>
-            <p className="text-sm font-bold text-white">
+            <p className="text-sm font-bold text-foreground">
               {locale === "km" ? "ឧបករណ៍ពេញនិយម" : "Top Downloads"}
             </p>
-            <p className="text-[10px] text-slate-400">
+            <p className="text-[10px] text-ink-soft">
               {locale === "km" ? "កំពូលទាំង ១០" : "Most downloaded tools"}
             </p>
           </div>
@@ -95,7 +95,7 @@ export default async function ToolsPage({
         title={t.title}
         backgroundImage="/Images/bg-tool-header.png"
       />
-      <main className="w-full flex-1 px-3.75 py-10">
+      <PublicPageMain className="pb-16">
         {tools.length === 0 ? (
           <EmptyState title={t.comingSoon} description={t.comingSoonDetail} className="mt-4" />
         ) : (
@@ -104,7 +104,7 @@ export default async function ToolsPage({
             <TopToolsSidebar tools={tools} locale={locale} />
           </div>
         )}
-      </main>
+      </PublicPageMain>
     </div>
   );
 }

@@ -1,5 +1,7 @@
-import { createClient } from "./server";
-import { createClient as createAdminClient } from "@supabase/supabase-js";
+import { unstable_cache } from "next/cache";
+
+import { PODCASTS_CACHE_TAG } from "@/lib/cache-tags";
+import { getSharedAdminClient, getSharedPublicClient } from "./shared";
 
 export type PodcastStatus = "draft" | "published";
 
@@ -22,16 +24,7 @@ export async function getAllPodcasts(): Promise<Podcast[]> {
       return [];
     }
 
-    const adminClient = createAdminClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL,
-      process.env.SUPABASE_SERVICE_ROLE_KEY,
-      {
-        auth: {
-          autoRefreshToken: false,
-          persistSession: false,
-        },
-      },
-    );
+    const adminClient = getSharedAdminClient();
 
     const { data, error } = await adminClient
       .from("podcasts")
@@ -51,9 +44,9 @@ export async function getAllPodcasts(): Promise<Podcast[]> {
   }
 }
 
-export async function getPublishedPodcasts(): Promise<Podcast[]> {
-  try {
-    const supabase = await createClient();
+const getCachedPublishedPodcasts = unstable_cache(
+  async () => {
+    const supabase = getSharedPublicClient();
     const { data, error } = await supabase
       .from("podcasts")
       .select("*")
@@ -61,29 +54,47 @@ export async function getPublishedPodcasts(): Promise<Podcast[]> {
       .order("sort_order", { ascending: false })
       .order("created_at", { ascending: false });
 
-    if (error) {
-      console.error("Error fetching published podcasts:", error.message);
-      return [];
-    }
-
+    if (error) throw error;
     return (data || []) as Podcast[];
+  },
+  ["published-podcasts"],
+  {
+    revalidate: 60,
+    tags: [PODCASTS_CACHE_TAG],
+  },
+);
+
+export async function getPublishedPodcasts(): Promise<Podcast[]> {
+  try {
+    return await getCachedPublishedPodcasts();
   } catch (err) {
     console.error("Exception fetching published podcasts:", err);
     return [];
   }
 }
 
-export async function getPublishedPodcastById(id: string): Promise<Podcast | null> {
-  try {
-    const supabase = await createClient();
+const getCachedPublishedPodcastById = unstable_cache(
+  async (id: string) => {
+    const supabase = getSharedPublicClient();
     const { data, error } = await supabase
       .from("podcasts")
       .select("*")
       .eq("id", id)
       .eq("status", "published")
       .single();
-    if (error) return null;
+    if (error) throw error;
     return data as Podcast;
+  },
+  ["published-podcast-by-id"],
+  {
+    revalidate: 60,
+    tags: [PODCASTS_CACHE_TAG],
+  },
+);
+
+export async function getPublishedPodcastById(id: string): Promise<Podcast | null> {
+  try {
+    return await getCachedPublishedPodcastById(id);
   } catch {
     return null;
   }

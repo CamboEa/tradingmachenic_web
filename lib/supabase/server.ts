@@ -4,6 +4,7 @@ import { cache } from "react";
 
 import type { Database } from "./types";
 import type { User } from "@supabase/supabase-js";
+export { getSharedAdminClient, getSharedPublicClient } from "./shared";
 
 export async function createClient() {
   const cookieStore = await cookies();
@@ -64,3 +65,4 @@ export async function createAdminClient() {
     },
   );
 }
+

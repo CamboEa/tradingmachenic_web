@@ -49,16 +49,11 @@ function RowCard({ lesson, locale, index, dict }: {
 
       {/* Info */}
       <div className="flex flex-1 flex-col gap-1.5 p-3">
-        <h3 className="line-clamp-2 text-sm font-semibold leading-snug text-white transition-colors group-hover:text-gold">
+        <h3 className="line-clamp-2 text-sm font-semibold leading-snug text-foreground transition-colors group-hover:text-teal">
           {title}
         </h3>
-        <div className="mt-auto flex items-center justify-between">
-          <span className={`rounded px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider ${
-            isFree ? "bg-teal/20 text-teal" : "bg-gold/20 text-gold"
-          }`}>
-            {isFree ? dict.course.filterFree : dict.course.filterPaid}
-          </span>
-          <span className="text-[10px] tabular-nums text-white/40">{lesson.approximateMinutes} min</span>
+        <div className="mt-auto flex items-center justify-end">
+          <span className="text-[10px] tabular-nums text-slate-400">{lesson.approximateMinutes} min</span>
         </div>
       </div>
     </Link>
@@ -90,33 +85,27 @@ function FeaturedHero({ lesson, locale, index, dict }: {
       )}
 
       {/* Overlays */}
-      <div className="absolute inset-0 bg-linear-to-r from-slate-900 via-slate-900/80 to-transparent" />
-      <div className="absolute inset-0 bg-linear-to-t from-slate-900/60 to-transparent" />
+      <div className="absolute inset-0 bg-linear-to-r from-background via-background/80 to-transparent" />
+      <div className="absolute inset-0 bg-linear-to-t from-background/60 to-transparent" />
 
       {/* Content */}
       <div className="relative px-8 py-10 sm:px-12 sm:py-14">
         {/* Eyebrow */}
-        <div className="mb-4 flex items-center gap-3">
-          <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-gold/70">
+        <div className="mb-4">
+          <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-(--color-gold)/70">
             {dict.course.lessonProgress?.split("{current}")[0]?.trim() || "Lesson"} {num}
-          </span>
-          <span className="h-px w-8 bg-gold/30" aria-hidden />
-          <span className={`rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
-            isFree ? "bg-teal/20 text-teal" : "bg-gold/20 text-gold"
-          }`}>
-            {isFree ? dict.course.filterFree : dict.course.filterPaid}
           </span>
         </div>
 
-        <h2 className="max-w-xl text-2xl font-black leading-tight text-white sm:text-3xl lg:text-4xl">
+        <h2 className="max-w-xl text-2xl font-black leading-tight text-foreground sm:text-3xl lg:text-4xl">
           {title}
         </h2>
-        <p className="mt-3 max-w-md text-sm leading-relaxed text-slate-400 sm:text-base">
+        <p className="mt-3 max-w-md text-sm leading-relaxed text-ink-muted sm:text-base">
           {summary}
         </p>
 
         {/* Meta */}
-        <div className="mt-5 flex flex-wrap items-center gap-4 text-xs text-slate-400">
+        <div className="mt-5 flex flex-wrap items-center gap-4 text-xs text-ink-muted">
           <span className="flex items-center gap-1.5">
             <svg viewBox="0 0 16 16" fill="currentColor" className="h-3.5 w-3.5 text-ink-soft" aria-hidden>
               <path fillRule="evenodd" d="M1 8a7 7 0 1 1 14 0A7 7 0 0 1 1 8Zm7.75-4.25a.75.75 0 0 0-1.5 0V8c0 .414.336.75.75.75h3.25a.75.75 0 0 0 0-1.5h-2.5v-3.5Z" clipRule="evenodd"/>
@@ -161,7 +150,7 @@ function LessonRow({ title, accent, lessons, locale, allLessons, dict }: {
       {/* Row header */}
       <div className="mb-4 flex items-center gap-3">
         <div className={`h-5 w-1 shrink-0 rounded-full ${accent}`} aria-hidden />
-        <h2 className="text-base font-bold uppercase tracking-[0.15em] text-white">{title}</h2>
+        <h2 className="text-base font-bold uppercase tracking-[0.15em] text-foreground">{title}</h2>
         <span className="ml-1 text-xs text-ink-soft">({lessons.length})</span>
       </div>
 
@@ -226,7 +215,7 @@ export function EducationLessonGrid({
             value={query}
             onChange={e => setQuery(e.target.value)}
             placeholder={dict.course.searchPlaceholder}
-            className="w-full rounded-xl border border-slate-700 bg-slate-800/60 py-2.5 pl-9 pr-4 text-sm text-white placeholder-slate-500 outline-none backdrop-blur transition focus:border-teal focus:ring-2 focus:ring-teal/20"
+            className="w-full rounded-xl border border-bridge/50 bg-surface/80 py-2.5 pl-9 pr-4 text-sm text-foreground placeholder-ink-soft outline-none backdrop-blur transition focus:border-teal focus:ring-2 focus:ring-teal/20"
           />
         </div>
       </div>

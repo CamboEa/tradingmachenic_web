@@ -55,7 +55,7 @@ function FastBullOrderPanel({
       </p>
       <div ref={wrapRef} className="w-full min-w-0">
         <div
-          className="relative w-full overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm"
+          className="relative w-full overflow-hidden rounded-2xl border border-bridge/80 bg-surface shadow-sm"
           style={{ height: displayHeight }}
         >
           <div
@@ -70,7 +70,7 @@ function FastBullOrderPanel({
             <iframe
               title={label}
               src={panelUrl(orderType)}
-              className="absolute border-0 bg-white"
+              className="absolute border-0 bg-surface"
               style={{
                 top: -CHART.cropTop,
                 left: -CHART.cropLeft,

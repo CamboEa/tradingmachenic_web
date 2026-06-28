@@ -10,13 +10,14 @@ const TICK_MARKS = [
 ] as const;
 
 function HeroBackdrop({ photo }: { photo?: boolean }) {
-  if (photo) return null;
-
   return (
     <>
       <div
         aria-hidden
-        className="page-hero-grid pointer-events-none absolute inset-0 opacity-[0.12]"
+        className={cn(
+          "page-hero-grid pointer-events-none absolute inset-0",
+          photo ? "opacity-[0.06]" : "opacity-[0.12]"
+        )}
         style={{
           backgroundImage: [
             "repeating-linear-gradient(90deg, rgba(255,255,255,0.06) 0 1px, transparent 1px 56px)",
@@ -27,21 +28,10 @@ function HeroBackdrop({ photo }: { photo?: boolean }) {
 
       <div
         aria-hidden
-        className="page-hero-orb-gold pointer-events-none absolute -right-24 -top-24 h-80 w-80 rounded-full bg-gold/12 blur-3xl"
-      />
-      <div
-        aria-hidden
-        className="page-hero-orb-teal pointer-events-none absolute -bottom-32 -left-20 h-72 w-72 rounded-full bg-teal/10 blur-3xl"
-      />
-      <div
-        aria-hidden
-        className="page-hero-orb-gold pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_55%_at_85%_15%,color-mix(in_oklab,var(--color-gold)_14%,transparent),transparent_55%)]"
-        style={{ animationDuration: "22s" }}
-      />
-      <div
-        aria-hidden
-        className="page-hero-orb-teal pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_10%_90%,color-mix(in_oklab,var(--color-teal)_12%,transparent),transparent_50%)]"
-        style={{ animationDuration: "24s" }}
+        className={cn(
+          "pointer-events-none absolute inset-0 bg-[linear-gradient(120deg,color-mix(in_oklab,var(--color-gold)_12%,transparent),transparent_34%),linear-gradient(300deg,color-mix(in_oklab,var(--color-teal)_14%,transparent),transparent_38%)]",
+          photo && "opacity-40"
+        )}
       />
 
       {TICK_MARKS.map((tick) => (
@@ -51,6 +41,7 @@ function HeroBackdrop({ photo }: { photo?: boolean }) {
           className={cn(
             "page-hero-tick pointer-events-none absolute w-px rounded-full bg-gold/50",
             tick.delayClass,
+            photo && "opacity-50"
           )}
           style={{ left: tick.left, bottom: tick.bottom, height: tick.height }}
         />
@@ -58,7 +49,10 @@ function HeroBackdrop({ photo }: { photo?: boolean }) {
 
       <svg
         aria-hidden
-        className="pointer-events-none absolute bottom-0 right-0 h-[70%] w-[min(72%,42rem)] text-gold/10"
+        className={cn(
+          "pointer-events-none absolute bottom-0 right-0 h-[70%] w-[min(72%,42rem)]",
+          photo ? "text-gold/5" : "text-gold/10"
+        )}
         viewBox="0 0 640 280"
         fill="none"
         preserveAspectRatio="none"
@@ -87,7 +81,7 @@ function HeroBackdrop({ photo }: { photo?: boolean }) {
 
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-linear-to-t from-background to-transparent"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-linear-to-t from-slate-brand to-transparent"
       />
     </>
   );
@@ -109,7 +103,7 @@ function HeroPhotoLayer({ src }: { src: string }) {
 
 function HeroEyebrow({ children }: { children: string }) {
   return (
-    <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-highlight">{children}</p>
+    <p className="text-[11px] font-bold uppercase tracking-[0.25em] text-(--color-gold)">{children}</p>
   );
 }
 
@@ -153,6 +147,12 @@ export function PublicPageHero({
       )}
     >
       {backgroundImage ? <HeroPhotoLayer src={backgroundImage} /> : null}
+      {backgroundImage && !showImageOnly ? (
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(30,41,59,0.78),rgba(30,41,59,0.50)_45%,rgba(30,41,59,0.30)),linear-gradient(0deg,rgba(30,41,59,0.65),rgba(30,41,59,0.10)_55%)]"
+        />
+      ) : null}
       <HeroBackdrop photo={hasPhoto} />
 
       {showImageOnly ? (
@@ -177,7 +177,7 @@ export function PublicPageHero({
             ) : null}
 
             {description ? (
-              <p className="mt-4 max-w-2xl text-base leading-relaxed text-foreground/90 sm:text-lg">
+              <p className="mt-4 max-w-2xl text-base leading-relaxed text-slate-100/90 sm:text-lg">
                 {description}
               </p>
             ) : null}

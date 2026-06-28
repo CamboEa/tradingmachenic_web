@@ -191,6 +191,7 @@ export type Database = {
           description_en: string | null;
           description_km: string | null;
           sort_order: number;
+          image_url: string | null;
         };
         Insert: Omit<Database["public"]["Tables"]["lesson_topics"]["Row"], "id" | "created_at">;
         Update: Partial<Database["public"]["Tables"]["lesson_topics"]["Insert"]>;

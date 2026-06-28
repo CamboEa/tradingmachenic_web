@@ -4,7 +4,7 @@ import { revalidatePath, revalidateTag } from "next/cache";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
-import { CURRICULUM_CACHE_TAG, LESSONS_CACHE_TAG, LESSON_TOPICS_CACHE_TAG, MENTORS_CACHE_TAG } from "@/lib/cache-tags";
+import { BLOG_CACHE_TAG, CURRICULUM_CACHE_TAG, LESSONS_CACHE_TAG, LESSON_TOPICS_CACHE_TAG, MENTORS_CACHE_TAG, PODCASTS_CACHE_TAG, TOOLS_CACHE_TAG } from "@/lib/cache-tags";
 import { educationCategorySlugs, isEducationCategory } from "@/lib/education-categories";
 import { getClientIpFromHeaders } from "@/lib/security/client-ip";
 import { checkRateLimit, RATE_LIMITS } from "@/lib/security/rate-limit";
@@ -423,6 +423,7 @@ type ToolFormData = {
 };
 
 function revalidateToolPaths(toolId?: string) {
+  revalidateTag(TOOLS_CACHE_TAG, "max");
   for (const loc of locales) {
     revalidatePath(`/${loc}/tools`);
     if (toolId) revalidatePath(`/${loc}/tools/${toolId}`);
@@ -544,6 +545,7 @@ type PodcastFormData = {
 };
 
 function revalidatePodcastPaths(podcastId?: string) {
+  revalidateTag(PODCASTS_CACHE_TAG, "max");
   for (const loc of locales) {
     revalidatePath(`/${loc}/podcast`);
     if (podcastId) revalidatePath(`/${loc}/podcast/${podcastId}`);
@@ -638,6 +640,7 @@ type BlogFormData = {
 };
 
 function revalidateBlogPaths(slug?: string) {
+  revalidateTag(BLOG_CACHE_TAG, "max");
   for (const loc of locales) {
     revalidatePath(`/${loc}/blog`);
     if (slug) revalidatePath(`/${loc}/blog/${slug}`);
@@ -1091,19 +1094,48 @@ export async function deleteMentor(slug: string): Promise<{ error?: string }> {
   const supabase = await createAdminClient();
   const decoded = decodeURIComponent(slug);
 
-  const { count, error: countError } = await supabase
+  // Block if lessons still reference this mentor
+  const { count: lessonCount, error: lessonCountError } = await supabase
     .from("lessons")
     .select("id", { count: "exact", head: true })
     .eq("mentor_slug", decoded);
 
-  if (countError) {
-    return { error: countError.message };
-  }
-  if (count && count > 0) {
+  if (lessonCountError) return { error: lessonCountError.message };
+  if (lessonCount && lessonCount > 0) {
     return {
-      error: `Cannot delete this mentor while ${count} lesson(s) still reference them. Reassign or delete those lessons first.`,
+      error: `Cannot delete this mentor while ${lessonCount} lesson(s) still reference them. Delete those lessons first.`,
     };
   }
+
+  // Block if lesson topics still reference this mentor
+  const { count: topicCount, error: topicCountError } = await supabase
+    .from("lesson_topics")
+    .select("id", { count: "exact", head: true })
+    .eq("mentor_slug", decoded);
+
+  if (topicCountError) return { error: topicCountError.message };
+  if (topicCount && topicCount > 0) {
+    return {
+      error: `Cannot delete this mentor while ${topicCount} topic(s) still exist. Delete those topics first.`,
+    };
+  }
+
+  // Fetch mentor ID so we can remove category links
+  const { data: mentorRow, error: fetchError } = await supabase
+    .from("mentors")
+    .select("id")
+    .eq("slug", decoded)
+    .single();
+
+  if (fetchError || !mentorRow) return { error: fetchError?.message ?? "Mentor not found" };
+
+  // Remove category links before deleting the mentor row
+  const { error: catError } = await supabase
+    .from("mentor_categories")
+    .delete()
+    .eq("mentor_id", mentorRow.id);
+
+  if (catError) return { error: catError.message };
 
   const { error } = await supabase.from("mentors").delete().eq("slug", decoded);
   if (error) return { error: error.message };
@@ -1150,7 +1182,8 @@ export async function createLessonTopic(formData: {
   name_km: string;
   description_en?: string;
   description_km?: string;
-  sort_order: number;
+  sort_order?: number;
+  image_url?: string;
 }): Promise<{ error?: string; success?: boolean; id?: string }> {
   const supabase = await createAdminClient();
   const mentorSlug = formData.mentor_slug.trim();
@@ -1170,7 +1203,8 @@ export async function createLessonTopic(formData: {
         name_km: formData.name_km.trim(),
         description_en: formData.description_en?.trim() || null,
         description_km: formData.description_km?.trim() || null,
-        sort_order: formData.sort_order,
+        image_url: formData.image_url?.trim() || null,
+        sort_order: formData.sort_order ?? 0,
       },
     ])
     .select("id")
@@ -1190,7 +1224,8 @@ export async function updateLessonTopic(
     name_km: string;
     description_en?: string;
     description_km?: string;
-    sort_order: number;
+    sort_order?: number;
+    image_url?: string;
   },
 ): Promise<{ error?: string; success?: boolean; slug?: string }> {
   const supabase = await createAdminClient();
@@ -1216,7 +1251,8 @@ export async function updateLessonTopic(
       name_km: formData.name_km.trim(),
       description_en: formData.description_en?.trim() || null,
       description_km: formData.description_km?.trim() || null,
-      sort_order: formData.sort_order,
+      image_url: formData.image_url?.trim() || null,
+      ...(formData.sort_order != null ? { sort_order: formData.sort_order } : {}),
     })
     .eq("id", id);
 

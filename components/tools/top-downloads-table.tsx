@@ -42,7 +42,7 @@ export function TopDownloadsTable({
   if (top.length === 0) return null;
 
   return (
-    <div className="w-full overflow-hidden rounded-none border border-bridge/40 bg-surface shadow-sm">
+    <div className="w-full overflow-hidden rounded-lg border border-bridge bg-surface shadow-sm">
       <div className="w-full overflow-x-auto">
         <table className="w-full min-w-full table-fixed border-collapse text-left">
           <colgroup>
@@ -53,20 +53,20 @@ export function TopDownloadsTable({
             <col style={{ width: "8.5rem" }} />
           </colgroup>
           <thead>
-            <tr className="border-b border-bridge/40 bg-linear-to-r from-surface-soft to-background">
-              <th className="w-12 px-4 py-3.5 text-[11px] font-bold uppercase tracking-wider text-white/70">
+            <tr className="border-b border-bridge bg-linear-to-r from-surface-soft to-background">
+              <th className="w-12 px-4 py-3.5 text-[11px] font-bold uppercase tracking-wider text-ink-soft">
                 {t.rank}
               </th>
-              <th className="px-4 py-3.5 text-[11px] font-bold uppercase tracking-wider text-white/90">
+              <th className="px-4 py-3.5 text-[11px] font-bold uppercase tracking-wider text-foreground">
                 {t.tool}
               </th>
-              <th className="hidden px-4 py-3.5 text-[11px] font-bold uppercase tracking-wider text-white/70 sm:table-cell">
+              <th className="hidden px-4 py-3.5 text-[11px] font-bold uppercase tracking-wider text-ink-soft sm:table-cell">
                 {t.type}
               </th>
-              <th className="hidden px-4 py-3.5 text-[11px] font-bold uppercase tracking-wider text-white/70 md:table-cell">
+              <th className="hidden px-4 py-3.5 text-[11px] font-bold uppercase tracking-wider text-ink-soft md:table-cell">
                 {t.platform}
               </th>
-              <th className="px-4 py-3.5 text-right text-[11px] font-bold uppercase tracking-wider text-white/70">
+              <th className="px-4 py-3.5 text-right text-[11px] font-bold uppercase tracking-wider text-ink-soft">
                 {t.downloads}
               </th>
             </tr>
@@ -78,7 +78,7 @@ export function TopDownloadsTable({
 
               return (
                 <tr key={tool.id} className="transition hover:bg-surface-soft/80">
-                  <td className="px-4 py-4 text-sm font-bold tabular-nums text-slate-300">
+                  <td className="px-4 py-4 text-sm font-bold tabular-nums text-ink-soft">
                     {i + 1}
                   </td>
                   <td className="min-w-0 px-4 py-4">

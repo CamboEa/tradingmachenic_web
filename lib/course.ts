@@ -22,6 +22,8 @@ export type Lesson = {
   mentorSlug?: string;
   category?: EducationCategory;
   lessonTopicSlug?: string;
+  sortOrder?: number;
+  youtubePlaylistId?: string;
   /** Set when loaded from admin (draft lessons are hidden on the public site). */
   status?: "draft" | "published";
 };

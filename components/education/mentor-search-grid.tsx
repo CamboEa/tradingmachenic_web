@@ -130,7 +130,7 @@ export function MentorSearchGrid({
           <p className="text-sm font-medium text-ink-muted">{dict.course.noMentorsMatch}</p>
         </div>
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:gap-5">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 lg:gap-5">
           {filtered.map((mentor) => (
             <MentorCard
               key={mentor.slug}

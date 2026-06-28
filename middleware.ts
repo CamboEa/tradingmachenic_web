@@ -110,7 +110,10 @@ export async function middleware(request: NextRequest) {
   let user: { id: string } | null = null;
   let supabase: ReturnType<typeof createServerClient> | null = null;
 
+  const hasAuthCookie = request.cookies.getAll().some((c) => c.name.startsWith("sb-"));
+
   if (
+    hasAuthCookie &&
     process.env.NEXT_PUBLIC_SUPABASE_URL &&
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
   ) {

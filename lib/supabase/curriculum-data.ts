@@ -1,15 +1,10 @@
 import { unstable_cache } from "next/cache";
-import { createClient } from "@supabase/supabase-js";
-
 import { CURRICULUM_CACHE_TAG } from "@/lib/cache-tags";
 import type { CurriculumPhaseWithWeeks } from "@/lib/curriculum";
 
-import { createAdminClient } from "./server";
+import { getSharedAdminClient, getSharedPublicClient } from "./shared";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-);
+const supabase = getSharedPublicClient();
 
 async function fetchCurriculum(): Promise<CurriculumPhaseWithWeeks[]> {
   const { data: phases, error: pErr } = await supabase
@@ -77,14 +72,14 @@ export async function getCurriculum(): Promise<CurriculumPhaseWithWeeks[]> {
 }
 
 export async function getCurriculumPhaseForEdit(id: string) {
-  const supabase = await createAdminClient();
+  const supabase = getSharedAdminClient();
   const { data, error } = await supabase.from("curriculum_phases").select("*").eq("id", id).single();
   if (error) return null;
   return data;
 }
 
 export async function getCurriculumModuleForEdit(id: string) {
-  const supabase = await createAdminClient();
+  const supabase = getSharedAdminClient();
   const { data, error } = await supabase.from("curriculum_modules").select("*").eq("id", id).single();
   if (error) return null;
   return data;
