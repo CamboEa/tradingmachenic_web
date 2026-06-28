@@ -95,10 +95,10 @@ export default async function EducationSlugPage({
       (l) => l.mentorSlug === lesson.mentorSlug && l.category === lesson.category
     );
     const topicLessons = mentorLessons.filter(
-      (l) => resolveLessonTopicSlug(l, l.mentorSlug) === topicSlug
+      (l) => resolveLessonTopicSlug(l, lesson.mentorSlug!) === topicSlug
     );
     const mentorTopicsCount = new Set(
-      mentorLessons.map((l) => resolveLessonTopicSlug(l, l.mentorSlug)).filter(Boolean)
+      mentorLessons.map((l) => resolveLessonTopicSlug(l, lesson.mentorSlug!)).filter(Boolean)
     ).size;
 
     if (topicLessons.length > 1) {
