@@ -181,7 +181,7 @@ export default async function CurriculumPage({
                           key={week.id}
                           className="relative lg:grid lg:grid-cols-[1fr_3rem_1fr] lg:items-center lg:gap-0"
                         >
-                          <div className={isLeft ? "lg:pr-10" : "lg:pr-10 lg:invisible"}>
+                          <div className={`hidden lg:block ${isLeft ? "lg:pr-10" : "lg:pr-10 lg:invisible"}`}>
                             {isLeft && (
                               <Reveal delayMs={delay}>
                                 <TimelineCard
@@ -199,7 +199,7 @@ export default async function CurriculumPage({
                             <TimelineCircle number={i + 1} accent={phase.accent} />
                           </div>
 
-                          <div className={!isLeft ? "lg:pl-10" : "lg:pl-10 lg:invisible"}>
+                          <div className={`hidden lg:block ${!isLeft ? "lg:pl-10" : "lg:pl-10 lg:invisible"}`}>
                             {!isLeft && (
                               <Reveal delayMs={delay}>
                                 <TimelineCard

@@ -7,7 +7,15 @@ import type { Dictionary, Locale } from "@/lib/i18n";
 
 const HERO_VIDEO = "/video/herosectionvideo.mp4";
 
-export function HomeHeroSplit({ locale, dict }: { locale: Locale; dict: Dictionary }) {
+export function HomeHeroSplit({
+  locale,
+  dict,
+  videoCount,
+}: {
+  locale: Locale;
+  dict: Dictionary;
+  videoCount?: number;
+}) {
   const h = dict.home;
   const headingRef = useRef<HTMLHeadingElement>(null);
   const subRef = useRef<HTMLParagraphElement>(null);
@@ -138,7 +146,9 @@ export function HomeHeroSplit({ locale, dict }: { locale: Locale; dict: Dictiona
             <div key={stat.label} className="flex items-center">
               {i > 0 && <span className="mx-5 h-8 w-px bg-white/10 sm:mx-8" aria-hidden />}
               <div className="text-center">
-                <p className="text-lg font-bold text-white sm:text-xl">{stat.value}</p>
+                <p className="text-lg font-bold text-white sm:text-xl">
+                  {stat.value.replace("{count}", String(videoCount ?? 0))}
+                </p>
                 <p className="mt-0.5 text-[11px] uppercase tracking-[0.18em] text-ink-muted">{stat.label}</p>
               </div>
             </div>

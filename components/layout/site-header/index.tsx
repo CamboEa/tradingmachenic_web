@@ -39,9 +39,25 @@ export function SiteHeader({
     return () => window.removeEventListener("scroll", handler);
   }, []);
 
+  // Lock body scroll + close on Escape while the mobile sidebar is open
+  useEffect(() => {
+    if (!open) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
   const raised = scrolled || open;
 
   return (
+    <>
     <header
       className={`sticky top-0 z-40 border-b transition-all duration-200 backdrop-blur-md ${
         raised
@@ -104,35 +120,82 @@ export function SiteHeader({
           </div>
         </div>
       </div>
-
-      {/* ── Mobile drawer ── */}
-      {open && (
-        <div className="border-t border-bridge/40 bg-surface xl:hidden">
-          <div className="mx-auto max-w-7xl">
-            <CenterNav locale={locale} dict={dict} pathname={pathname} mobile />
-            <div className="border-t border-bridge/30 px-4 py-3">
-              {user ? (
-                <ProfileMenu user={user} signOutLabel={dict.nav.signOut} />
-              ) : (
-                <div className="flex gap-2">
-                  <Link
-                    href={`/${locale}/register`}
-                    className="flex-1 rounded-lg border border-bridge/40 py-2.5 text-center text-sm font-semibold text-ink-muted transition hover:bg-surface-soft"
-                  >
-                    {dict.nav.register}
-                  </Link>
-                  <Link
-                    href={`/${locale}/login`}
-                    className="flex-1 rounded-lg bg-teal py-2.5 text-center text-sm font-semibold text-white shadow-sm shadow-teal/20 transition hover:brightness-110"
-                  >
-                    {dict.nav.login}
-                  </Link>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
     </header>
+
+      {/* ── Mobile sidebar drawer ── */}
+      <div
+        className={`fixed inset-0 z-50 xl:hidden ${open ? "" : "pointer-events-none"}`}
+        aria-hidden={!open}
+      >
+        {/* Backdrop */}
+        <div
+          onClick={() => setOpen(false)}
+          className={`absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300 ${
+            open ? "opacity-100" : "opacity-0"
+          }`}
+        />
+
+        {/* Panel */}
+        <aside
+          role="dialog"
+          aria-modal="true"
+          aria-label={dict.nav.home}
+          style={{ transform: open ? "translateX(0)" : "translateX(100%)" }}
+          className="absolute right-0 top-0 flex h-full w-[82%] max-w-xs flex-col border-l border-bridge/40 bg-surface shadow-2xl shadow-black/40 transition-transform duration-300 ease-out"
+        >
+          {/* Drawer header */}
+          <div className="flex h-16 shrink-0 items-center justify-between border-b border-bridge/40 px-4">
+            <Link
+              href={`/${locale}`}
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal/30"
+            >
+              <SiteLogo size="nav" />
+              <span className="text-sm font-bold uppercase leading-none tracking-[0.14em]">
+                <span className="text-foreground">FINHUB</span>
+                <span className="text-teal">KH</span>
+              </span>
+            </Link>
+            <button
+              type="button"
+              onClick={() => setOpen(false)}
+              aria-label="Close menu"
+              className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg border border-bridge/40 bg-surface text-ink-muted transition hover:border-bridge/60 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal/30"
+            >
+              <svg aria-hidden className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" d="M6 6l12 12M18 6L6 18" />
+              </svg>
+            </button>
+          </div>
+
+          {/* Scrollable nav */}
+          <div className="flex-1 overflow-y-auto overscroll-contain py-2">
+            <CenterNav locale={locale} dict={dict} pathname={pathname} mobile />
+          </div>
+
+          {/* Auth footer */}
+          <div className="shrink-0 border-t border-bridge/30 px-4 py-4">
+            {user ? (
+              <ProfileMenu user={user} signOutLabel={dict.nav.signOut} />
+            ) : (
+              <div className="flex gap-2">
+                <Link
+                  href={`/${locale}/register`}
+                  className="flex-1 rounded-lg border border-bridge/40 py-2.5 text-center text-sm font-semibold text-ink-muted transition hover:bg-surface-soft"
+                >
+                  {dict.nav.register}
+                </Link>
+                <Link
+                  href={`/${locale}/login`}
+                  className="flex-1 rounded-lg bg-teal py-2.5 text-center text-sm font-semibold text-white shadow-sm shadow-teal/20 transition hover:brightness-110"
+                >
+                  {dict.nav.login}
+                </Link>
+              </div>
+            )}
+          </div>
+        </aside>
+      </div>
+    </>
   );
 }

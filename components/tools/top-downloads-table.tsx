@@ -44,29 +44,22 @@ export function TopDownloadsTable({
   return (
     <div className="w-full overflow-hidden rounded-lg border border-bridge bg-surface shadow-sm">
       <div className="w-full overflow-x-auto">
-        <table className="w-full min-w-full table-fixed border-collapse text-left">
-          <colgroup>
-            <col style={{ width: "3.5rem" }} />
-            <col />
-            <col style={{ width: "11rem" }} />
-            <col style={{ width: "9rem" }} />
-            <col style={{ width: "8.5rem" }} />
-          </colgroup>
+        <table className="w-full table-fixed border-collapse text-left">
           <thead>
             <tr className="border-b border-bridge bg-linear-to-r from-surface-soft to-background">
-              <th className="w-12 px-4 py-3.5 text-[11px] font-bold uppercase tracking-wider text-ink-soft">
+              <th className="w-10 px-3 py-3.5 text-[11px] font-bold uppercase tracking-wider text-ink-soft sm:w-14 sm:px-4">
                 {t.rank}
               </th>
-              <th className="px-4 py-3.5 text-[11px] font-bold uppercase tracking-wider text-foreground">
+              <th className="px-3 py-3.5 text-[11px] font-bold uppercase tracking-wider text-foreground sm:px-4">
                 {t.tool}
               </th>
-              <th className="hidden px-4 py-3.5 text-[11px] font-bold uppercase tracking-wider text-ink-soft sm:table-cell">
+              <th className="hidden px-4 py-3.5 text-[11px] font-bold uppercase tracking-wider text-ink-soft sm:table-cell sm:w-44">
                 {t.type}
               </th>
-              <th className="hidden px-4 py-3.5 text-[11px] font-bold uppercase tracking-wider text-ink-soft md:table-cell">
+              <th className="hidden px-4 py-3.5 text-[11px] font-bold uppercase tracking-wider text-ink-soft md:table-cell md:w-36">
                 {t.platform}
               </th>
-              <th className="px-4 py-3.5 text-right text-[11px] font-bold uppercase tracking-wider text-ink-soft">
+              <th className="w-24 px-3 py-3.5 text-right text-[11px] font-bold uppercase tracking-wider text-ink-soft sm:w-32 sm:px-4">
                 {t.downloads}
               </th>
             </tr>
@@ -78,13 +71,13 @@ export function TopDownloadsTable({
 
               return (
                 <tr key={tool.id} className="transition hover:bg-surface-soft/80">
-                  <td className="px-4 py-4 text-sm font-bold tabular-nums text-ink-soft">
+                  <td className="px-3 py-4 text-sm font-bold tabular-nums text-ink-soft sm:px-4">
                     {i + 1}
                   </td>
-                  <td className="min-w-0 px-4 py-4">
+                  <td className="min-w-0 px-3 py-4 sm:px-4">
                     <Link
                       href={`/${locale}/tools/${tool.id}`}
-                      className="group flex w-full items-center gap-3"
+                      className="group flex w-full items-center gap-2.5 sm:gap-3"
                     >
                       {tool.image_url ? (
                         // eslint-disable-next-line @next/next/no-img-element
@@ -123,7 +116,7 @@ export function TopDownloadsTable({
                   <td className="hidden px-4 py-4 text-sm text-ink-muted md:table-cell">
                     {tool.platform}
                   </td>
-                  <td className="px-4 py-4 text-right">
+                  <td className="px-3 py-4 text-right sm:px-4">
                     <div className="font-semibold tabular-nums text-foreground">
                       {formatDownloadCount(total)}
                     </div>

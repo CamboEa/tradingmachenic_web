@@ -74,7 +74,7 @@ function ToolCard({ tool, locale }: { tool: Tool; locale: Locale }) {
       </div>
       <div className="flex flex-1 flex-col p-5">
         <div className="flex items-baseline justify-between gap-2">
-          <h3 className="font-bold leading-snug text-foreground transition-colors group-hover:text-foreground">{tool.name}</h3>
+          <h3 className="min-w-0 font-bold leading-snug text-foreground transition-colors group-hover:text-foreground">{tool.name}</h3>
           <span className="shrink-0 rounded bg-surface-soft px-1.5 py-0.5 font-mono text-[10px] text-slate-400">v{tool.version}</span>
         </div>
         {description ? (

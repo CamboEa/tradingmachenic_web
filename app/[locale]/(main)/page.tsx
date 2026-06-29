@@ -85,7 +85,7 @@ export default async function HomePage({
   return (
     <>
     <main className="flex-1 bg-background">
-      <HomeHeroSplit locale={locale} dict={dict} />
+      <HomeHeroSplit locale={locale} dict={dict} videoCount={lessons.length} />
 
       {/* ── Meet the mentor ── */}
       <HomeSection labelledBy="home-mentor">

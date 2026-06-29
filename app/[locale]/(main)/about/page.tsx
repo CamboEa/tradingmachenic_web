@@ -155,12 +155,12 @@ export default async function AboutPage({
               </div>
               <h3 className="mt-5 text-lg font-bold text-foreground">Srun Vireakyuth</h3>
               <p className="mt-1 text-xs font-semibold uppercase tracking-[0.18em] text-foreground">
-                {locale === "km" ? "អ្នកអភិវឌ្ឍន៍ MQL5" : "MQL5 Developer"}
+                {locale === "km" ? "អ្នកអភិវឌ្ឍន៍ MQL5" : "Algorithmic Trader"}
               </p>
               <p className="mt-3 max-w-55 text-sm leading-relaxed text-ink-soft">
                 {locale === "km"
                   ? "អ្នកស្ទាត់ជំនាញក្នុងការសរសេរ Expert Advisors និង Custom Indicators ក្នុង MQL5។"
-                  : "Specialist in writing Expert Advisors and custom indicators for MT4 & MT5."}
+                  : "Specializes in developing Indicators & Expert Advisors for financial markets."}
               </p>
             </div>
           </div>
