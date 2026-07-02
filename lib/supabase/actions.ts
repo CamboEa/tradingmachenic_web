@@ -25,7 +25,7 @@ import {
   serializeBlogVideosForDb,
   type BlogVideoItem,
 } from "@/lib/supabase/blog-videos";
-import { isBlogBodyEmpty } from "@/lib/blog-content";
+import { isBlogBodyEmpty } from "@/lib/blog/content";
 import { slugify } from "@/lib/slug";
 import { extractYouTubeVideoId, resolveLessonVideoEmbedUrl } from "@/lib/youtube";
 
