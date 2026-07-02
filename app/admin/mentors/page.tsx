@@ -11,14 +11,14 @@ export default async function MentorsPage() {
     <div>
       <AdminPageHeader
         title="Mentors"
-        description="Create mentor profiles, assign market categories, then add lessons for each mentor."
+        description="Create mentor profiles, assign market categories, then open any row to manage that mentor's categories and lessons."
         action={<ButtonLink href="/admin/mentors/add">+ Add Mentor</ButtonLink>}
       />
 
       {mentors.length === 0 ? (
         <EmptyState
           title="No mentors yet"
-          description="Create a mentor profile first, then add lessons from the Lessons section."
+          description="Create a mentor profile first, then open the mentor row to manage categories and lessons."
           action={{ href: "/admin/mentors/add", label: "+ Add Mentor" }}
         />
       ) : (

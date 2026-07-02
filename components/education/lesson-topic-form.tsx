@@ -17,10 +17,14 @@ export function LessonTopicForm({
   topic,
   mentorSlug,
   mentorName,
+  onSuccess,
+  onCancel,
 }: {
   topic?: LessonTopic;
   mentorSlug: string;
   mentorName: string;
+  onSuccess?: () => void;
+  onCancel?: () => void;
 }) {
   const isEdit = !!topic;
   const [isSaving, setIsSaving] = useState(false);
@@ -70,7 +74,11 @@ export function LessonTopicForm({
       }
 
       toast.success(isEdit ? "Topic updated" : "Topic created");
-      window.location.href = backHref;
+      if (onSuccess) {
+        onSuccess();
+      } else {
+        window.location.href = backHref;
+      }
     } finally {
       setIsSaving(false);
     }
@@ -176,9 +184,15 @@ export function LessonTopicForm({
         <button type="submit" disabled={isSaving} className={ui.btnPrimary}>
           {isSaving ? "Saving…" : isEdit ? "Save topic" : "Create topic"}
         </button>
-        <Link href={backHref} className={ui.btnSecondary}>
-          Cancel
-        </Link>
+        {onCancel ? (
+          <button type="button" onClick={onCancel} className={ui.btnSecondary}>
+            Cancel
+          </button>
+        ) : (
+          <Link href={backHref} className={ui.btnSecondary}>
+            Cancel
+          </Link>
+        )}
       </div>
     </form>
   );

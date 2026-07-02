@@ -223,6 +223,8 @@ function ResizableImageNodeView({ node, updateAttributes, selected }: NodeViewPr
         className="group relative inline-block"
         style={{ width: w ? `${w}px` : "auto", maxWidth: "100%" }}
       >
+        {/* Tiptap requires a native image node so its NodeView can own the DOM element. */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           ref={imgRef}
           src={node.attrs.src as string}
@@ -507,7 +509,6 @@ export function ToolDocEditor({
       dom.removeEventListener("drop",  onDrop  as EventListener);
       dom.removeEventListener("paste", onPaste as EventListener);
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editor, getKeyPrefix]);
 
   // Safe image insert — uses ref so it works even if component re-rendered

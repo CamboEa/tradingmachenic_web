@@ -1,7 +1,5 @@
 "use client";
 
-import Link from "next/link";
-
 import { DeleteMentorButton } from "@/components/education/delete-mentor-button";
 import {
   AdminTable,
@@ -59,13 +57,6 @@ const columns: Column<AdminMentor>[] = [
     align: "right",
     cell: (mentor) => (
       <RowActions>
-        <Link
-          href={`/admin/lessons?mentor=${encodeURIComponent(mentor.slug)}`}
-          className="rounded-lg border border-bridge/40 px-2.5 py-1.5 text-xs font-semibold text-teal transition hover:bg-surface-soft"
-          title="Manage lessons for this mentor"
-        >
-          Lessons
-        </Link>
         <EditLink href={`/admin/mentors/edit/${encodeURIComponent(mentor.slug)}`} />
         <DeleteMentorButton slug={mentor.slug} name={mentor.names.en} />
       </RowActions>
@@ -100,6 +91,7 @@ export function MentorsTable({ mentors }: { mentors: AdminMentor[] }) {
       getKey={(mentor) => mentor.id}
       columns={columns}
       filter={filter}
+      rowHref={(mentor) => `/admin/mentors/edit/${encodeURIComponent(mentor.slug)}`}
       searchPlaceholder="Search mentors by name or strategy…"
       searchText={(mentor) =>
         `${mentor.names.en} ${mentor.names.km} ${mentor.titles.en} ${mentor.titles.km} ${mentor.bios.en} ${mentor.slug}`

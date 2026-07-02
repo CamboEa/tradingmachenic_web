@@ -930,10 +930,32 @@ type MentorFormData = {
   bio_en?: string;
   bio_km?: string;
   image_url?: string;
-  sort_order: number;
+  sort_order?: number;
   status: "draft" | "published";
   categories: string[];
 };
+
+async function resolveMentorSortOrder(
+  supabase: Awaited<ReturnType<typeof createAdminClient>>,
+  sortOrder?: number,
+): Promise<number> {
+  if (Number.isFinite(sortOrder)) {
+    return sortOrder as number;
+  }
+
+  const { data, error } = await supabase
+    .from("mentors")
+    .select("sort_order")
+    .order("sort_order", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return (data?.sort_order ?? -1) + 1;
+}
 
 function revalidateMentorPaths() {
   revalidateTag(MENTORS_CACHE_TAG, "max");
@@ -989,6 +1011,8 @@ export async function createMentor(
   }
 
   try {
+    const sortOrder = await resolveMentorSortOrder(supabase, formData.sort_order);
+
     const { data: mentor, error: mentorError } = await supabase
       .from("mentors")
       .insert([
@@ -1001,7 +1025,7 @@ export async function createMentor(
           bio_en: formData.bio_en?.trim() || null,
           bio_km: formData.bio_km?.trim() || null,
           image_url: formData.image_url?.trim() || null,
-          sort_order: formData.sort_order,
+          sort_order: sortOrder,
           status: formData.status,
         },
       ])
@@ -1048,6 +1072,18 @@ export async function updateMentor(
       return { error: fetchError?.message ?? "Mentor not found." };
     }
 
+    const { data: current, error: currentError } = await supabase
+      .from("mentors")
+      .select("sort_order")
+      .eq("id", existing.id)
+      .maybeSingle();
+
+    if (currentError) {
+      return { error: currentError.message };
+    }
+
+    const sortOrder = await resolveMentorSortOrder(supabase, current?.sort_order ?? undefined);
+
     const { error: updateError } = await supabase
       .from("mentors")
       .update({
@@ -1059,7 +1095,7 @@ export async function updateMentor(
         bio_en: formData.bio_en?.trim() || null,
         bio_km: formData.bio_km?.trim() || null,
         image_url: formData.image_url?.trim() || null,
-        sort_order: formData.sort_order,
+        sort_order: sortOrder,
         status: formData.status,
       })
       .eq("id", existing.id);

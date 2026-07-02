@@ -1,4 +1,4 @@
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 
 import { EducationMentorLessonsPage } from "@/components/education/education-mentor-lessons-page";
 import { EducationMentorTopicPage } from "@/components/education/education-mentor-topic-page";
@@ -9,7 +9,7 @@ import {
   topicsWithLessonCounts,
   resolveLessonTopicSlug,
 } from "@/lib/lesson-topic-slug";
-import { educationMentorTopicHref, mentorTeachesCategory } from "@/lib/mentors";
+import { mentorTeachesCategory } from "@/lib/mentors";
 import { getLessonsByMentorAndCategory } from "@/lib/supabase/lessons";
 import { sortLessonsByDisplayOrder } from "@/lib/lessons-sort";
 import {

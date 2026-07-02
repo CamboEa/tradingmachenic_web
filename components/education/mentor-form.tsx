@@ -48,8 +48,6 @@ export function MentorForm({ mentor }: { mentor?: AdminMentor }) {
     const title_km = (formData.get("title_km") as string)?.trim() ?? "";
     const bio_en = (formData.get("bio_en") as string)?.trim() ?? "";
     const bio_km = (formData.get("bio_km") as string)?.trim() ?? "";
-    const sortRaw = formData.get("sort_order") as string;
-    const sort_order = Number.parseInt(sortRaw, 10);
     const status = formData.get("status") as string;
     const resolvedSlug = slugify(slug || name_en);
 
@@ -59,10 +57,6 @@ export function MentorForm({ mentor }: { mentor?: AdminMentor }) {
     }
     if (!resolvedSlug) {
       toast.error("Enter a valid slug or English name");
-      return;
-    }
-    if (!Number.isFinite(sort_order)) {
-      toast.error("Sort order must be a number");
       return;
     }
     if (selectedCategories.length === 0) {
@@ -81,7 +75,6 @@ export function MentorForm({ mentor }: { mentor?: AdminMentor }) {
         bio_en: bio_en || undefined,
         bio_km: bio_km || undefined,
         image_url: imageUrl.trim() || undefined,
-        sort_order,
         status: (status === "Published" ? "published" : "draft") as "draft" | "published",
         categories: selectedCategories,
       };
@@ -274,19 +267,6 @@ export function MentorForm({ mentor }: { mentor?: AdminMentor }) {
 
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
-            <label htmlFor="sort_order" className="mb-1.5 block text-xs font-semibold text-ink-muted">
-              Sort order
-            </label>
-            <input
-              id="sort_order"
-              name="sort_order"
-              type="number"
-              required
-              defaultValue={mentor?.sortOrder ?? 0}
-              className={fieldClass}
-            />
-          </div>
-          <div>
             <label htmlFor="status" className="mb-1.5 block text-xs font-semibold text-ink-muted">
               Status
             </label>
@@ -304,14 +284,7 @@ export function MentorForm({ mentor }: { mentor?: AdminMentor }) {
 
         {isEdit ? (
           <div className="rounded-lg border border-bridge/30 bg-surface-soft px-4 py-3 text-sm text-ink-muted">
-            After saving, add lessons for this mentor from{" "}
-            <Link
-              href={`/admin/lessons/add?mentor=${encodeURIComponent(mentor.slug)}`}
-              className="font-semibold text-teal hover:underline"
-            >
-              Add lesson
-            </Link>
-            .
+            After saving, use the lesson sections below to manage topics and add lessons.
           </div>
         ) : null}
 

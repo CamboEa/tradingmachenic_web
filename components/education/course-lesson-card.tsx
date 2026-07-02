@@ -25,8 +25,6 @@ export function CourseLessonCard({
   const title      = lesson.titles[locale];
   const summary    = lesson.summaries[locale];
   const videoCount = lessonVideoCount(lesson);
-  const isFree     = lesson.type === "free";
-
   return (
     <article
       className={cn(

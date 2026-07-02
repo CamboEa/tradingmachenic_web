@@ -62,11 +62,29 @@ export function Th({
 export function Tr({
   children,
   className,
+  onClick,
+  onKeyDown,
+  tabIndex,
+  role,
 }: {
   children: React.ReactNode;
   className?: string;
+  onClick?: React.MouseEventHandler<HTMLTableRowElement>;
+  onKeyDown?: React.KeyboardEventHandler<HTMLTableRowElement>;
+  tabIndex?: number;
+  role?: string;
 }) {
-  return <tr className={cn(ui.tableRow, className)}>{children}</tr>;
+  return (
+    <tr
+      className={cn(ui.tableRow, className)}
+      onClick={onClick}
+      onKeyDown={onKeyDown}
+      tabIndex={tabIndex}
+      role={role}
+    >
+      {children}
+    </tr>
+  );
 }
 
 export function Td({

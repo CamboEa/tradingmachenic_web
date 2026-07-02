@@ -97,7 +97,8 @@ async function uploadToR2(seedSlug, tool) {
 }
 
 function toRow(tool, fileUrl) {
-  const { seed_slug: _slug, ...rest } = tool;
+  const rest = { ...tool };
+  delete rest.seed_slug;
   return {
     ...rest,
     gallery: [],

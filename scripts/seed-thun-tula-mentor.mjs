@@ -246,7 +246,9 @@ async function insertLesson(lesson) {
     lessonError?.message?.includes("sort_order") ||
     lessonError?.message?.includes("youtube_playlist_id")
   ) {
-    const { sort_order, youtube_playlist_id, ...fallbackRow } = lessonRow;
+    const fallbackRow = { ...lessonRow };
+    delete fallbackRow.sort_order;
+    delete fallbackRow.youtube_playlist_id;
     ({ data: row, error: lessonError } = await supabase
       .from("lessons")
       .insert(fallbackRow)

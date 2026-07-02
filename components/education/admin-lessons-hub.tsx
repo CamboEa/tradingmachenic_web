@@ -3,13 +3,21 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 
+import { DeleteLessonTopicButton } from "@/components/education/delete-lesson-topic-button";
+import { LessonTopicModal } from "@/components/education/lesson-topic-modal";
 import { LessonsList } from "@/components/education/lessons-list";
-import { AdminBackLink, ButtonLink, EmptyState, TableThumb } from "@/components/ui";
+import {
+  AdminBackLink,
+  ButtonLink,
+  EmptyState,
+  TableThumb,
+} from "@/components/ui";
 import {
   adminLessonTopicsHref,
   adminLessonsListHref,
+  adminTopicHref,
   lessonCountForMentor,
   UNCATEGORIZED_LESSON_TOPIC,
 } from "@/lib/admin-lessons-nav";
@@ -78,6 +86,70 @@ function PickerCard({
   );
 }
 
+function TopicPickerCard({
+  topic,
+  count,
+  href,
+  onEdit,
+}: {
+  topic: LessonTopic;
+  count: number;
+  href: string;
+  onEdit: () => void;
+}) {
+  return (
+    <article
+      className={cn(
+        ui.card,
+        "group flex min-w-0 items-stretch overflow-hidden transition hover:border-teal/30 hover:shadow-md",
+      )}
+    >
+      <Link
+        href={href}
+        className="flex min-w-0 flex-1 items-center gap-4 p-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-teal/40"
+      >
+        <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border border-bridge/30 bg-surface-soft text-sm font-bold uppercase tracking-wide text-teal">
+          {topic.names.en.slice(0, 2)}
+        </div>
+        <div className="min-w-0 flex-1">
+          <h3 className="truncate font-semibold text-foreground">{topic.names.en}</h3>
+          <p className="mt-0.5 truncate text-xs text-ink-soft">
+            {topic.descriptions.en || topic.slug}
+          </p>
+          <p className="mt-1.5 text-xs font-medium text-teal">{countLabel(count)}</p>
+        </div>
+        <svg
+          viewBox="0 0 20 20"
+          fill="currentColor"
+          className="h-5 w-5 shrink-0 text-ink-soft transition group-hover:translate-x-0.5 group-hover:text-teal"
+          aria-hidden
+        >
+          <path
+            fillRule="evenodd"
+            d="M7.21 14.77a.75.75 0 0 1 .02-1.06L11.168 10 7.23 6.29a.75.75 0 1 1 1.04-1.08l4.5 4.25a.75.75 0 0 1 0 1.08l-4.5 4.25a.75.75 0 0 1-1.06-.02Z"
+            clipRule="evenodd"
+          />
+        </svg>
+      </Link>
+
+      <div className="flex shrink-0 flex-col items-center justify-center gap-1.5 border-l border-bridge/30 bg-surface-soft/40 px-2">
+        <button
+          type="button"
+          onClick={onEdit}
+          className={ui.iconBtn}
+          aria-label={`Edit ${topic.names.en}`}
+          title="Edit"
+        >
+          <svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4" aria-hidden>
+            <path d="M2.695 14.762l-1.262 3.155a.5.5 0 0 0 .65.65l3.155-1.262a4 4 0 0 0 1.343-.886L17.5 5.501a2.121 2.121 0 0 0-3-3L3.58 13.419a4 4 0 0 0-.885 1.343Z" />
+          </svg>
+        </button>
+        <DeleteLessonTopicButton id={topic.id} name={topic.names.en} />
+      </div>
+    </article>
+  );
+}
+
 function countLabel(count: number): string {
   return count === 1 ? "1 lesson" : `${count} lessons`;
 }
@@ -97,6 +169,7 @@ export function AdminLessonsHub({
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [topicModal, setTopicModal] = useState<LessonTopic | "new" | null>(null);
   const mentorParam = searchParams.get("mentor")?.trim() ?? "";
   const topicParam = searchParams.get("topic")?.trim() ?? "";
 
@@ -202,6 +275,13 @@ export function AdminLessonsHub({
     pushParams({ mentor: mentorParam, topic: topicSlug });
   }
 
+  const closeTopicModal = useCallback(() => setTopicModal(null), []);
+
+  const handleTopicSaved = useCallback(() => {
+    setTopicModal(null);
+    router.refresh();
+  }, [router]);
+
   if (showMentorPicker) {
     return (
       <div>
@@ -261,34 +341,34 @@ export function AdminLessonsHub({
               </p>
             </div>
           </div>
-          <ButtonLink href={adminLessonTopicsHref(selectedMentor.slug)} className="shrink-0">
-            Manage topics
-          </ButtonLink>
+          <button
+            type="button"
+            onClick={() => setTopicModal("new")}
+            className={cn(ui.btnPrimary, "shrink-0")}
+          >
+            + Add topic
+          </button>
         </div>
 
         {mentorTopicList.length === 0 && uncategorizedCount === 0 ? (
           <EmptyState
             title="No lesson topics yet"
-            description="Create topics like ICT, CSNR, or CRT, then add lessons under each topic."
-            action={{
-              href: `/admin/lessons/topics/add?mentor=${encodeURIComponent(selectedMentor.slug)}`,
-              label: "+ Add topic",
-            }}
+            description="Use the Add topic button above to create ICT, CSNR, CRT, or another topic."
           />
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {mentorTopicList.map((topic) => {
-              const count = mentorLessons(lessons, selectedMentor.slug).filter(
+              const topicLessons = mentorLessons(lessons, selectedMentor.slug).filter(
                 (lesson) => lesson.lessonTopicSlug === topic.slug,
-              ).length;
+              );
 
               return (
-                <PickerCard
+                <TopicPickerCard
                   key={topic.id}
-                  name={topic.names.en}
-                  subtitle={topic.descriptions.en || topic.slug}
-                  countLabel={countLabel(count)}
-                  onClick={() => selectTopic(topic.slug)}
+                  topic={topic}
+                  count={topicLessons.length}
+                  href={adminTopicHref(selectedMentor.slug, topic.slug, topicLessons)}
+                  onEdit={() => setTopicModal(topic)}
                 />
               );
             })}
@@ -304,16 +384,16 @@ export function AdminLessonsHub({
           </div>
         )}
 
-        <p className="mt-6 text-sm text-ink-soft">
-          Need a new topic?{" "}
-          <Link
-            href={`/admin/lessons/topics/add?mentor=${encodeURIComponent(selectedMentor.slug)}`}
-            className="font-semibold text-teal hover:underline"
-          >
-            Create one here
-          </Link>
-          .
-        </p>
+        {topicModal ? (
+          <LessonTopicModal
+            key={topicModal === "new" ? "new" : topicModal.id}
+            mentorSlug={selectedMentor.slug}
+            mentorName={selectedMentor.names.en}
+            topic={topicModal === "new" ? undefined : topicModal}
+            onClose={closeTopicModal}
+            onSaved={handleTopicSaved}
+          />
+        ) : null}
       </div>
     );
   }

@@ -78,12 +78,6 @@ function transformAdminMentorRow(row: MentorRow): AdminMentor {
   };
 }
 
-function sortAdminMentors(mentors: MentorRow[]): AdminMentor[] {
-  return [...mentors]
-    .sort((a, b) => a.sort_order - b.sort_order || a.slug.localeCompare(b.slug))
-    .map(transformAdminMentorRow);
-}
-
 async function fetchPublishedMentors(): Promise<Mentor[]> {
   const { data, error } = await supabase
     .from("mentors")

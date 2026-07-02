@@ -5,12 +5,24 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 import { SiteLogo } from "@/components/shared/site-logo";
-import { NAV, currentAdminLabel, isNavActive } from "@/components/layout/admin-nav";
+import {
+  NAV,
+  currentAdminLabel,
+  currentAdminNavItem,
+  isNavActive,
+} from "@/components/layout/admin-nav";
 
 export function AdminTopbar() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const label = currentAdminLabel(pathname);
+  const section = currentAdminNavItem(pathname);
+  const backHref =
+    section && pathname !== section.href
+      ? section.href
+      : pathname !== "/admin"
+        ? "/admin"
+        : null;
 
   return (
     <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-3 border-b border-bridge/40 bg-surface/85 px-4 backdrop-blur-md lg:px-10">
@@ -27,8 +39,25 @@ export function AdminTopbar() {
           </svg>
         </button>
 
+        {backHref ? (
+          <Link
+            href={backHref}
+            className="inline-flex h-9 w-9 shrink-0 items-center justify-center gap-1.5 rounded-lg text-sm font-semibold text-ink-muted transition hover:bg-surface-soft hover:text-foreground sm:w-20"
+          >
+            <svg viewBox="0 0 16 16" fill="currentColor" className="h-4 w-4" aria-hidden>
+              <path d="M7.78 12.53a.75.75 0 0 1-1.06 0L2.47 8.28a.75.75 0 0 1 0-1.06l4.25-4.25a.75.75 0 0 1 1.06 1.06L4.81 7h7.44a.75.75 0 0 1 0 1.5H4.81l2.97 2.97a.75.75 0 0 1 0 1.06Z" />
+            </svg>
+            <span className="hidden sm:inline">Back</span>
+          </Link>
+        ) : (
+          <span aria-hidden className="h-9 w-9 shrink-0 sm:w-20" />
+        )}
+
         {/* Breadcrumb */}
-        <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-sm">
+        <nav
+          aria-label="Breadcrumb"
+          className="flex h-9 items-center gap-1.5 border-l border-bridge/40 pl-3 text-sm"
+        >
           <span className="font-medium text-ink-soft">Admin</span>
           <svg viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5 text-ink-muted">
             <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 0 1 .02-1.06L11.168 10 7.23 6.29a.75.75 0 1 1 1.04-1.08l4.5 4.25a.75.75 0 0 1 0 1.08l-4.5 4.25a.75.75 0 0 1-1.06-.02Z" clipRule="evenodd" />

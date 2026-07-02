@@ -158,7 +158,6 @@ export function LessonPlayer({
 
   const objectives = lesson.objectives[locale];
   const summary = lesson.summaries[locale];
-  const isPaid = lesson.type === "paid";
   const durationLine = locale === "km" ? `${lesson.approximateMinutes} នាទី` : `${lesson.approximateMinutes} min`;
   const metaLine = `${formatCount(t.videosInLesson, total)} · ~${durationLine}`;
   const toggleLabel = descOpen

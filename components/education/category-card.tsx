@@ -7,7 +7,6 @@ import { categoryHintKeys, categoryNavKeys } from "@/lib/education-category-meta
 import { getCategoryImage, getCategoryTheme } from "@/lib/education-category-theme";
 import type { Dictionary, Locale } from "@/lib/i18n";
 import { cn } from "@/lib/ui/cn";
-import { ui } from "@/lib/ui/styles";
 
 export function CategoryCard({
   category,

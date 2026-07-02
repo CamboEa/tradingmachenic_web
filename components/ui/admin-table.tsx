@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import { DataTable, Td, Th, Tr } from "@/components/ui/data-table";
 import { cn } from "@/lib/ui/cn";
@@ -63,6 +64,7 @@ export function AdminTable<T>({
   searchPlaceholder = "Search…",
   filter,
   pageSize = 10,
+  rowHref,
 }: {
   data: T[];
   getKey: (item: T) => string;
@@ -73,7 +75,9 @@ export function AdminTable<T>({
   filter?: Filter<T>;
   /** Rows shown per page. Defaults to 10. */
   pageSize?: number;
+  rowHref?: (item: T) => string;
 }) {
+  const router = useRouter();
   const [query, setQuery] = useState("");
   const [filterValue, setFilterValue] = useState("all");
   const [page, setPage] = useState(1);
@@ -198,7 +202,37 @@ export function AdminTable<T>({
             }
           >
             {paged.map((item) => (
-              <Tr key={getKey(item)}>
+              <Tr
+                key={getKey(item)}
+                className={rowHref ? "cursor-pointer" : undefined}
+                tabIndex={rowHref ? 0 : undefined}
+                role={rowHref ? "link" : undefined}
+                onClick={
+                  rowHref
+                    ? (event) => {
+                        const target = event.target as HTMLElement | null;
+                        if (
+                          target?.closest(
+                            "a,button,input,select,textarea,label,[role='button']",
+                          )
+                        ) {
+                          return;
+                        }
+                        router.push(rowHref(item));
+                      }
+                    : undefined
+                }
+                onKeyDown={
+                  rowHref
+                    ? (e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          router.push(rowHref(item));
+                        }
+                      }
+                    : undefined
+                }
+              >
                 {columns.map((col, i) => (
                   <Td key={i} align={col.align} className={cn(col.className, col.tdClassName)}>
                     {col.cell(item)}

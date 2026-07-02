@@ -2,7 +2,7 @@ import { notFound, redirect } from "next/navigation";
 
 import { LessonTopicsTable } from "@/components/education/lesson-topics-table";
 import { AdminBackLink, AdminPageHeader, ButtonLink, EmptyState } from "@/components/ui";
-import { adminLessonTopicsHref, adminLessonsListHref } from "@/lib/admin-lessons-nav";
+import { adminLessonsListHref } from "@/lib/admin-lessons-nav";
 import { getAllLessonTopicsForAdmin, topicsForMentor } from "@/lib/supabase/lesson-topics";
 import { getAllMentorsForAdmin } from "@/lib/supabase/mentors";
 

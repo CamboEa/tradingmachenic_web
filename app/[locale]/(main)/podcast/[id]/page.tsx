@@ -6,7 +6,7 @@ import { PublicPageHero, PublicPageMain } from "@/components/ui";
 
 import { getDictionary, isLocale, type Locale } from "@/lib/i18n";
 import { getPublishedPodcastById } from "@/lib/supabase/podcasts";
-import { extractYouTubeVideoId, youtubeEmbedSrc, youtubeThumbnailUrl } from "@/lib/youtube";
+import { extractYouTubeVideoId, youtubeEmbedSrc } from "@/lib/youtube";
 
 export const dynamic = "force-dynamic";
 
@@ -44,7 +44,6 @@ export default async function PodcastEpisodePage({
   if (!vid) notFound();
 
   const embedSrc = youtubeEmbedSrc(vid);
-  const thumb = youtubeThumbnailUrl(vid);
 
   return (
     <div className="flex flex-col bg-background">

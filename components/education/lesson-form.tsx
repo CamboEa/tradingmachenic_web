@@ -8,65 +8,29 @@ import { useConfirm } from "@/components/shared/confirm-dialog";
 import { LocaleParityHint } from "@/components/shared/locale-parity-hint";
 import { R2Uploader } from "@/components/shared/r2-uploader";
 import { YoutubeUrlPreview } from "@/components/education/youtube-url-preview";
+import {
+ LESSON_FORM_STEPS,
+ initialVideoState,
+ parseObjectives,
+ readFormString,
+ type FreeVideo,
+ type LessonFormInitialData,
+ type LessonType,
+ type PaidVideo,
+ videoValidationError,
+} from "@/components/education/lesson-form/lesson-form-model";
 import { slugify } from "@/lib/slug";
 import { educationCategorySlugs } from "@/lib/education-categories";
 import type { Mentor } from "@/lib/mentors";
-import { extractYouTubeVideoId, resolveLessonVideoEmbedUrl } from "@/lib/youtube";
+import { resolveLessonVideoEmbedUrl } from "@/lib/youtube";
 import { FIELD_CLASS } from "@/lib/ui/styles";
 
-type LessonType = "free" | "paid";
-
-const STEPS = [
- { title: "Basics", hint: "Lesson type, titles, slug, and duration" },
- { title: "Summary", hint: "Short overview in English and Khmer" },
- { title: "Videos", hint: "YouTube links or uploaded video files" },
- { title: "Objectives", hint: "What learners will achieve" },
- { title: "Thumbnail & publish", hint: "Cover image and visibility" },
-] as const;
+const STEPS = LESSON_FORM_STEPS;
 
 const fieldClass = FIELD_CLASS;
 
-function parseObjectives(value: string): string[] {
- return value
- .split("\n")
- .map((line) => line.trim().replace(/^[•\-*]\s*/, ""))
- .filter(Boolean);
-}
-
-function readFormString(form: HTMLFormElement, name: string): string {
- const raw = new FormData(form).get(name);
- return typeof raw === "string" ? raw.trim() : "";
-}
-
-interface InitialData {
- lesson: {
- id: string;
- slug: string;
- title_en: string;
- title_km: string;
- summary_en: string | null;
- summary_km: string | null;
- approximate_minutes: number | null;
- thumbnail_url: string | null;
- objectives_en: string[] | null;
- objectives_km: string[] | null;
-  type: "free" | "paid" | null;
-  status: "draft" | "published" | null;
-  mentor_slug: string | null;
-  category: string | null;
-  lesson_topic_slug: string | null;
- };
- videos: Array<{
- id: string;
- embed_url: string;
- title_en: string | null;
- title_km: string | null;
- sort_order: number;
- }>;
-}
-
 interface LessonFormProps {
- initialData?: InitialData;
+ initialData?: LessonFormInitialData;
  isEditing?: boolean;
  mentors: Mentor[];
  lessonTopics: Array<{ slug: string; names: { en: string }; mentorSlug: string }>;
@@ -75,62 +39,10 @@ interface LessonFormProps {
  defaultTopicSlug?: string;
 }
 
-type FreeVideo = { embedUrl: string; titles: { en: string; km: string } };
-type PaidVideo = { url: string; titles: { en: string; km: string } };
-
-function initialVideoState(data?: InitialData): {
- videos: FreeVideo[];
- paidVideos: PaidVideo[];
-} {
- if (!data?.videos.length) {
- return { videos: [], paidVideos: [] };
- }
-
- const mapped = data.videos.map((v) => ({
- embedUrl: v.embed_url,
- url: v.embed_url,
- titles: { en: v.title_en || "", km: v.title_km || "" },
- }));
-
- if (data.lesson.type === "paid") {
- return {
- videos: [],
- paidVideos: mapped.map(({ url, titles }) => ({ url, titles })),
- };
- }
-
- return {
- videos: mapped.map(({ embedUrl, titles }) => ({ embedUrl, titles })),
- paidVideos: [],
- };
-}
-
 function validateVideos(lessonType: LessonType, videos: FreeVideo[], paidVideos: PaidVideo[]): boolean {
- if (lessonType === "free") {
- if (videos.length === 0) {
- toast.error("Please add at least one YouTube video");
- return false;
- }
- if (videos.some((v) => !v.embedUrl.trim())) {
- toast.error("Each free video needs a YouTube URL");
- return false;
- }
- if (videos.some((v) => !extractYouTubeVideoId(v.embedUrl))) {
- toast.error("Use a valid YouTube watch, share, or embed link for each free video");
- return false;
- }
- return true;
- }
-
- if (paidVideos.length === 0) {
- toast.error("Please add at least one paid video");
- return false;
- }
- if (paidVideos.some((v) => !v.url.trim())) {
- toast.error("Please upload all paid videos before continuing");
- return false;
- }
- return true;
+ const error = videoValidationError(lessonType, videos, paidVideos);
+ if (error) toast.error(error);
+ return error === null;
 }
 
 export function LessonForm({

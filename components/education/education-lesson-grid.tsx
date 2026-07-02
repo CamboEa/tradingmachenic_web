@@ -10,13 +10,12 @@ import type { Dictionary, Locale } from "@/lib/i18n";
 
 /* ── Small Netflix-style card (for horizontal rows) ──────────────────── */
 
-function RowCard({ lesson, locale, index, dict }: {
-  lesson: Lesson; locale: Locale; index: number; dict: Dictionary;
+function RowCard({ lesson, locale }: {
+  lesson: Lesson; locale: Locale;
 }) {
   const href       = `/${locale}/education/${lesson.slug}`;
   const thumbSrc   = getLessonThumbnailSrc(lesson);
   const title      = lesson.titles[locale];
-  const isFree     = lesson.type === "free";
   const videoCount = lessonVideoCount(lesson);
 
   return (
@@ -69,7 +68,6 @@ function FeaturedHero({ lesson, locale, index, dict }: {
   const thumbSrc   = getLessonThumbnailSrc(lesson);
   const title      = lesson.titles[locale];
   const summary    = lesson.summaries[locale];
-  const isFree     = lesson.type === "free";
   const videoCount = lessonVideoCount(lesson);
   const num        = String(index + 1).padStart(2, "0");
 
@@ -139,10 +137,9 @@ function FeaturedHero({ lesson, locale, index, dict }: {
 
 /* ── Horizontal lesson row ────────────────────────────────────────────── */
 
-function LessonRow({ title, accent, lessons, locale, allLessons, dict }: {
+function LessonRow({ title, accent, lessons, locale }: {
   title: string; accent: string;
   lessons: Lesson[]; locale: Locale;
-  allLessons: Lesson[]; dict: Dictionary;
 }) {
   if (lessons.length === 0) return null;
   return (
@@ -159,18 +156,9 @@ function LessonRow({ title, accent, lessons, locale, allLessons, dict }: {
         className="flex gap-4 overflow-x-auto pb-3"
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
-        {lessons.map((lesson) => {
-          const idx = allLessons.findIndex(l => l.slug === lesson.slug);
-          return (
-            <RowCard
-              key={lesson.slug}
-              lesson={lesson}
-              locale={locale}
-              index={idx >= 0 ? idx : 0}
-              dict={dict}
-            />
-          );
-        })}
+        {lessons.map((lesson) => (
+          <RowCard key={lesson.slug} lesson={lesson} locale={locale} />
+        ))}
       </div>
     </section>
   );
@@ -232,10 +220,9 @@ export function EducationLessonGrid({
             </div>
           ) : (
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {searched.map(lesson => {
-                const idx = lessons.findIndex(l => l.slug === lesson.slug);
-                return <RowCard key={lesson.slug} lesson={lesson} locale={locale} index={idx >= 0 ? idx : 0} dict={dict} />;
-              })}
+              {searched.map((lesson) => (
+                <RowCard key={lesson.slug} lesson={lesson} locale={locale} />
+              ))}
             </div>
           )}
         </div>
@@ -256,8 +243,6 @@ export function EducationLessonGrid({
             accent="bg-teal"
             lessons={lessons}
             locale={locale}
-            allLessons={lessons}
-            dict={dict}
           />
         </>
       )}

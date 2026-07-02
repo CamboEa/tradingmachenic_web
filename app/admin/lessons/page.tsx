@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 
 import { AdminLessonsHub } from "@/components/education/admin-lessons-hub";
-import { AdminPageHeader, ButtonLink, EmptyState } from "@/components/ui";
+import { EmptyState } from "@/components/ui";
 import { getAllLessonsForAdmin } from "@/lib/supabase/lessons";
 import { getAllLessonTopicsForAdmin } from "@/lib/supabase/lesson-topics";
 import { getAllMentorsForAdmin } from "@/lib/supabase/mentors";
@@ -32,16 +32,6 @@ export default async function LessonsPage() {
 
   return (
     <div>
-      <AdminPageHeader
-        title="Lessons"
-        description="Choose a mentor and lesson topic (ICT, CSNR, CRT, etc.), then manage their lessons."
-        action={
-          hasContent ? (
-            <ButtonLink href="/admin/lessons/add">+ Add Lesson</ButtonLink>
-          ) : undefined
-        }
-      />
-
       {!hasContent ? (
         <EmptyState
           title="No lessons yet"

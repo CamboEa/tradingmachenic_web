@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 import type { EducationCategory } from "@/lib/education-categories";
@@ -28,13 +29,10 @@ export function EducationMentorTopicPicker({
 
   return (
     <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {topics.map(({ topic, lessonCount, thumbnail }, index) => {
+      {topics.map(({ topic, thumbnail }) => {
         const title = topic.names[locale] || topic.names.en;
         const description = topic.descriptions[locale] || topic.descriptions.en;
         const href = educationMentorTopicHref(locale, category, mentorSlug, topic.slug);
-        const lessonsLabel = locale === "km"
-          ? `${lessonCount} មេរៀន`
-          : `${lessonCount} ${lessonCount === 1 ? "lesson" : "lessons"}`;
         const startLabel = locale === "km" ? "ចាប់ផ្តើមរៀន" : "Start learning";
 
         return (
@@ -45,10 +43,12 @@ export function EducationMentorTopicPicker({
           >
             {thumbnail ? (
               <div className="relative aspect-video w-full overflow-hidden bg-surface-soft border-b border-bridge/20">
-                <img
+                <Image
                   src={thumbnail}
                   alt=""
-                  className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                  fill
+                  sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                  className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-linear-to-t from-slate-brand/60 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
               </div>

@@ -9,6 +9,7 @@
     "lint": "eslint",
     "test:youtube": "tsx --test lib/youtube.test.ts",
     "test:slug": "tsx --test lib/slug.test.ts",
+    "test:admin-nav": "tsx --test lib/admin-lessons-nav.test.ts",
     "gen:curriculum-sql": "tsx scripts/gen-curriculum-sql.ts",
     "seed": "node scripts/seed.mjs",
     "seed:blog": "node scripts/seed-blog.mjs",
