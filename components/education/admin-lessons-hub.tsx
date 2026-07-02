@@ -8,6 +8,7 @@ import { useCallback, useMemo, useState } from "react";
 import { DeleteLessonTopicButton } from "@/components/education/delete-lesson-topic-button";
 import { LessonTopicModal } from "@/components/education/lesson-topic-modal";
 import { LessonsList } from "@/components/education/lessons-list";
+import { TopicVideoList } from "@/components/education/topic-video-list";
 import {
   AdminBackLink,
   ButtonLink,
@@ -17,7 +18,6 @@ import {
 import {
   adminLessonTopicsHref,
   adminLessonsListHref,
-  adminTopicHref,
   lessonCountForMentor,
   UNCATEGORIZED_LESSON_TOPIC,
 } from "@/lib/education/admin-lessons-nav";
@@ -358,16 +358,16 @@ export function AdminLessonsHub({
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {mentorTopicList.map((topic) => {
-              const topicLessons = mentorLessons(lessons, selectedMentor.slug).filter(
+              const count = mentorLessons(lessons, selectedMentor.slug).filter(
                 (lesson) => lesson.lessonTopicSlug === topic.slug,
-              );
+              ).length;
 
               return (
                 <TopicPickerCard
                   key={topic.id}
                   topic={topic}
-                  count={topicLessons.length}
-                  href={adminTopicHref(selectedMentor.slug, topic.slug, topicLessons)}
+                  count={count}
+                  href={adminLessonsListHref(selectedMentor.slug, topic.slug)}
                   onEdit={() => setTopicModal(topic)}
                 />
               );
@@ -424,6 +424,13 @@ export function AdminLessonsHub({
       ? "Assign these lessons to a topic when editing them."
       : selectedTopic?.descriptions.en || selectedMentor!.titles.en;
 
+  // A real topic maps to a single lesson; open it straight onto its video list
+  // instead of a one-row lessons table.
+  const topicLesson =
+    !isUnassigned && !isUncategorized && filteredLessons.length === 1
+      ? filteredLessons[0]
+      : null;
+
   const topicChoices = mentorTopicList.length + (uncategorizedCount > 0 ? 1 : 0);
   const backHref =
     isUnassigned || topicChoices <= 1
@@ -451,17 +458,27 @@ export function AdminLessonsHub({
             <h2 className="text-lg font-bold text-foreground sm:text-xl">{heading}</h2>
             <p className="mt-0.5 text-sm text-ink-soft">{subheading}</p>
             <p className="mt-1 text-xs font-medium text-teal">
-              {countLabel(filteredLessons.length)}
+              {topicLesson
+                ? `${topicLesson.videos.length} ${topicLesson.videos.length === 1 ? "video" : "videos"}`
+                : countLabel(filteredLessons.length)}
             </p>
           </div>
         </div>
         <div className="flex shrink-0 flex-wrap gap-2">
-          {selectedMentor ? (
-            <ButtonLink href={adminLessonTopicsHref(selectedMentor.slug)} variant="secondary">
-              Manage topics
+          {topicLesson ? (
+            <ButtonLink href={`/admin/lessons/edit/${topicLesson.slug}`}>
+              Manage videos
             </ButtonLink>
-          ) : null}
-          <ButtonLink href={addLessonHref}>+ Add Lesson</ButtonLink>
+          ) : (
+            <>
+              {selectedMentor ? (
+                <ButtonLink href={adminLessonTopicsHref(selectedMentor.slug)} variant="secondary">
+                  Manage topics
+                </ButtonLink>
+              ) : null}
+              <ButtonLink href={addLessonHref}>+ Add Lesson</ButtonLink>
+            </>
+          )}
         </div>
       </div>
 
@@ -471,6 +488,8 @@ export function AdminLessonsHub({
           description="Add the first lesson for this topic."
           action={{ href: addLessonHref, label: "+ Add Lesson" }}
         />
+      ) : topicLesson ? (
+        <TopicVideoList lesson={topicLesson} />
       ) : (
         <LessonsList lessons={filteredLessons} />
       )}
