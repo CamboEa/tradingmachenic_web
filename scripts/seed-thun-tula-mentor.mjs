@@ -120,7 +120,7 @@ function buildLessonsFromPlaylists(snapshot) {
   const byId = new Map(snapshot.map((p) => [p.id, p]));
   const lessons = [];
 
-  for (const config of THUN_TULA_PLAYLISTS) {
+  for (const [index, config] of THUN_TULA_PLAYLISTS.entries()) {
     const playlist = byId.get(config.id);
     if (!playlist) {
       console.warn(`  ! Playlist not in snapshot: ${config.id}`);
@@ -157,7 +157,7 @@ function buildLessonsFromPlaylists(snapshot) {
       mentor_slug: MENTOR_SLUG,
       category: CATEGORY,
       lesson_topic_slug: config.topic,
-      sort_order: config.sortOrder,
+      sort_order: index + 1,
       youtube_playlist_id: config.id,
       videos: videos.map((v, index) => ({
         embed_url: embedUrl(v.id),

@@ -82,7 +82,7 @@ export function EducationTopicPlaylistSections({
                       <span className="mt-3 w-8 shrink-0 text-center text-xs font-bold tabular-nums text-ink-soft">
                         {dict.course.episodeLabel.replace("{n}", String(index + 1))}
                       </span>
-                      <div className="relative aspect-video w-36 shrink-0 overflow-hidden rounded-lg bg-slate-900">
+                      <div className="relative aspect-video w-36 shrink-0 overflow-hidden bg-slate-900">
                         {thumb ? (
                           <Image
                             src={thumb}
