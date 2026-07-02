@@ -147,13 +147,13 @@ export default async function AboutPage({
               <div className="relative overflow-hidden rounded-2xl border-2 border-teal/40 shadow-lg" style={{ width: 220, height: 280 }}>
                 <Image
                   src="/team/vireakyuth.png"
-                  alt="Srun Vireakyuth"
+                  alt="Srun Virakyuth"
                   fill
                   className="object-cover object-top"
                   sizes="220px"
                 />
               </div>
-              <h3 className="mt-5 text-lg font-bold text-foreground">Srun Vireakyuth</h3>
+              <h3 className="mt-5 text-lg font-bold text-foreground">Srun Virakyuth</h3>
               <p className="mt-1 text-xs font-semibold uppercase tracking-[0.18em] text-foreground">
                 {locale === "km" ? "អ្នកអភិវឌ្ឍន៍ MQL5" : "Algorithmic Trader"}
               </p>
