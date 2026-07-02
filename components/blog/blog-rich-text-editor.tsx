@@ -3,7 +3,7 @@
 import { EditorContent, useEditor } from "@tiptap/react";
 import Placeholder from "@tiptap/extension-placeholder";
 import StarterKit from "@tiptap/starter-kit";
-import { blogBodyForEditor } from "@/lib/blog-content";
+import { blogBodyForEditor } from "@/lib/blog/content";
 
 type ToolbarAction = {
   label: string;

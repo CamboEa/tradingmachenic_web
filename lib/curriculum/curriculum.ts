@@ -1,4 +1,4 @@
-import type { Locale } from "./i18n";
+import type { Locale } from "@/lib/i18n";
 
 /** One module (week) in the curriculum timeline. */
 export type CurriculumWeek = {

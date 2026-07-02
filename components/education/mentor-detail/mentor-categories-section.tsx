@@ -3,8 +3,8 @@ import {
   addLessonHref,
   categoryLabels,
 } from "@/components/education/mentor-detail/mentor-detail-config";
-import { adminLessonTopicsHref } from "@/lib/admin-lessons-nav";
-import type { EducationCategory } from "@/lib/education-categories";
+import { adminLessonTopicsHref } from "@/lib/education/admin-lessons-nav";
+import type { EducationCategory } from "@/lib/education/categories";
 import type { AdminMentor } from "@/lib/supabase/mentors";
 
 type MentorCategoriesSectionProps = {

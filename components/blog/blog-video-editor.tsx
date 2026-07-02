@@ -9,7 +9,7 @@ import {
   type BlogVideoItem,
   type BlogVideoSource,
 } from "@/lib/supabase/blog-videos";
-import { extractYouTubeVideoId } from "@/lib/youtube";
+import { extractYouTubeVideoId } from "@/lib/media/youtube";
 
 type VideoRow = BlogVideoItem & { key: string };
 

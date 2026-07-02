@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 
 import { createPodcast, updatePodcast } from "@/lib/supabase/actions";
 import type { Podcast } from "@/lib/supabase/podcasts";
-import { extractYouTubeVideoId } from "@/lib/youtube";
+import { extractYouTubeVideoId } from "@/lib/media/youtube";
 import { ui, FIELD_CLASS } from "@/lib/ui/styles";
 import { cn } from "@/lib/ui/cn";
 

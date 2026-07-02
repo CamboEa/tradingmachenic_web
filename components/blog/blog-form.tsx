@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { BlogRichTextEditor } from "@/components/blog/blog-rich-text-editor";
 import { BlogVideoEditor, validateBlogVideos } from "@/components/blog/blog-video-editor";
-import { isBlogBodyEmpty } from "@/lib/blog-content";
+import { isBlogBodyEmpty } from "@/lib/blog/content";
 import { createBlogPost, updateBlogPost } from "@/lib/supabase/actions";
 import { LocaleParityHint } from "@/components/shared/locale-parity-hint";
 import { R2Uploader } from "@/components/shared/r2-uploader";

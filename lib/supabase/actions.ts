@@ -5,13 +5,13 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { BLOG_CACHE_TAG, CURRICULUM_CACHE_TAG, LESSONS_CACHE_TAG, LESSON_TOPICS_CACHE_TAG, MENTORS_CACHE_TAG, PODCASTS_CACHE_TAG, TOOLS_CACHE_TAG } from "@/lib/cache-tags";
-import { educationCategorySlugs, isEducationCategory } from "@/lib/education-categories";
+import { educationCategorySlugs, isEducationCategory } from "@/lib/education/categories";
 import { getClientIpFromHeaders } from "@/lib/security/client-ip";
 import { checkRateLimit, RATE_LIMITS } from "@/lib/security/rate-limit";
 import { verifyTurnstileToken } from "@/lib/security/turnstile";
 
 import { defaultLocale, locales } from "@/lib/i18n";
-import type { CurriculumAccent } from "@/lib/curriculum";
+import type { CurriculumAccent } from "@/lib/curriculum/curriculum";
 import type { Tool } from "@/lib/supabase/tools";
 import {
   normalizeToolGallery,
@@ -25,9 +25,9 @@ import {
   serializeBlogVideosForDb,
   type BlogVideoItem,
 } from "@/lib/supabase/blog-videos";
-import { isBlogBodyEmpty } from "@/lib/blog-content";
+import { isBlogBodyEmpty } from "@/lib/blog/content";
 import { slugify } from "@/lib/slug";
-import { extractYouTubeVideoId, resolveLessonVideoEmbedUrl } from "@/lib/youtube";
+import { extractYouTubeVideoId, resolveLessonVideoEmbedUrl } from "@/lib/media/youtube";
 
 import { createClient, createAdminClient, getSessionUser } from "./server";
 

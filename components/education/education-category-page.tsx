@@ -1,10 +1,10 @@
 import { PublicPageHero, PublicPageMain } from "@/components/ui";
-import type { EducationCategory } from "@/lib/education-categories";
-import { categoryHintKeys, categoryNavKeys } from "@/lib/education-category-meta";
-import { getCategoryTheme, getCategoryHeaderImage } from "@/lib/education-category-theme";
+import type { EducationCategory } from "@/lib/education/categories";
+import { categoryHintKeys, categoryNavKeys } from "@/lib/education/category-meta";
+import { getCategoryTheme, getCategoryHeaderImage } from "@/lib/education/category-theme";
 import type { Dictionary, Locale } from "@/lib/i18n";
-import type { Lesson } from "@/lib/course";
-import type { Mentor } from "@/lib/mentors";
+import type { Lesson } from "@/lib/education/course";
+import type { Mentor } from "@/lib/education/mentors";
 
 import { EducationBreadcrumb } from "./education-breadcrumb";
 import { MentorGrid } from "./mentor-grid";

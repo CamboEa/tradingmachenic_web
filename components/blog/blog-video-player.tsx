@@ -7,7 +7,7 @@ import type { Locale } from "@/lib/i18n";
 import {
   isDirectVideoFileUrl,
   resolveLessonVideoEmbedUrl,
-} from "@/lib/video";
+} from "@/lib/media/video";
 
 function VideoSurface({
   src,

@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/search-grid-pagination";
 import type { Locale } from "@/lib/i18n";
 import type { Podcast } from "@/lib/supabase/podcasts";
-import { extractYouTubeVideoId, youtubeThumbnailUrl } from "@/lib/youtube";
+import { extractYouTubeVideoId, youtubeThumbnailUrl } from "@/lib/media/youtube";
 
 const ITEMS_PER_PAGE = 9;
 

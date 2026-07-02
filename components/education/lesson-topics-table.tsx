@@ -9,7 +9,7 @@ import {
   RowActions,
   type Column,
 } from "@/components/ui";
-import { adminLessonsListHref } from "@/lib/admin-lessons-nav";
+import { adminLessonsListHref } from "@/lib/education/admin-lessons-nav";
 import type { LessonTopic } from "@/lib/supabase/lesson-topics";
 
 export function LessonTopicsTable({

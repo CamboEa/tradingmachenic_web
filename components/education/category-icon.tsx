@@ -1,4 +1,4 @@
-import type { EducationCategory } from "@/lib/education-categories";
+import type { EducationCategory } from "@/lib/education/categories";
 
 type IconProps = {
   className?: string;

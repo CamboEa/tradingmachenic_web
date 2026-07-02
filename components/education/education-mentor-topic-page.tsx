@@ -1,12 +1,12 @@
 import { EducationBreadcrumb } from "@/components/education/education-breadcrumb";
 import { EducationTopicPlaylistSections } from "@/components/education/education-topic-playlist-sections";
 import { PublicPageHero, PublicPageMain } from "@/components/ui";
-import type { EducationCategory } from "@/lib/education-categories";
-import { getCategoryHeaderImage } from "@/lib/education-category-theme";
+import type { EducationCategory } from "@/lib/education/categories";
+import { getCategoryHeaderImage } from "@/lib/education/category-theme";
 import type { Dictionary, Locale } from "@/lib/i18n";
-import type { Lesson } from "@/lib/course";
-import { educationMentorHref } from "@/lib/mentors";
-import type { Mentor } from "@/lib/mentors";
+import type { Lesson } from "@/lib/education/course";
+import { educationMentorHref } from "@/lib/education/mentors";
+import type { Mentor } from "@/lib/education/mentors";
 import type { LessonTopic } from "@/lib/supabase/lesson-topics";
 
 export function EducationMentorTopicPage({

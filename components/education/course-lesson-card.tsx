@@ -1,8 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import type { Lesson } from "@/lib/course";
-import { getLessonThumbnailSrc, lessonVideoCount } from "@/lib/course";
+import type { Lesson } from "@/lib/education/course";
+import { getLessonThumbnailSrc, lessonVideoCount } from "@/lib/education/course";
 import type { Dictionary, Locale } from "@/lib/i18n";
 import { cn } from "@/lib/ui/cn";
 import { ui } from "@/lib/ui/styles";

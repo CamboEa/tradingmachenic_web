@@ -2,8 +2,8 @@
  * Maps YouTube grouping keys / lesson slugs to admin lesson topic slugs.
  * Keep in sync with seed-thun-tula-mentor.mjs and SQL backfill migrations.
  */
-import type { Lesson } from "@/lib/course";
-import { sortLessonsByDisplayOrder } from "@/lib/lessons-sort";
+import type { Lesson } from "@/lib/education/course";
+import { sortLessonsByDisplayOrder } from "@/lib/education/lessons-sort";
 import type { LessonTopic } from "@/lib/supabase/lesson-topics";
 
 export function deriveTopicSlugFromGroupKey(groupKey: string): string {

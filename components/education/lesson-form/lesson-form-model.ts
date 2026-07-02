@@ -1,4 +1,4 @@
-import { extractYouTubeVideoId } from "@/lib/youtube";
+import { extractYouTubeVideoId } from "@/lib/media/youtube";
 
 export type LessonType = "free" | "paid";
 export type FreeVideo = { embedUrl: string; titles: { en: string; km: string } };

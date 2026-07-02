@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 
 import { LessonForm } from "@/components/education/lesson-form";
 import { AdminFormHeader } from "@/components/ui";
-import { adminLessonsListHref } from "@/lib/admin-lessons-nav";
+import { adminLessonsListHref } from "@/lib/education/admin-lessons-nav";
 import { getLessonForEdit } from "@/lib/supabase/actions";
 import { getAllLessonTopicsForAdmin } from "@/lib/supabase/lesson-topics";
 import { getAllMentorsForAdmin } from "@/lib/supabase/mentors";

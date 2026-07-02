@@ -2,16 +2,16 @@ import { notFound } from "next/navigation";
 
 import { EducationMentorLessonsPage } from "@/components/education/education-mentor-lessons-page";
 import { EducationMentorTopicPage } from "@/components/education/education-mentor-topic-page";
-import { isEducationCategory, type EducationCategory } from "@/lib/education-categories";
+import { isEducationCategory, type EducationCategory } from "@/lib/education/categories";
 import { getDictionary, isLocale, type Locale } from "@/lib/i18n";
 import {
   filterLessonsByTopic,
   topicsWithLessonCounts,
   resolveLessonTopicSlug,
-} from "@/lib/lesson-topic-slug";
-import { mentorTeachesCategory } from "@/lib/mentors";
+} from "@/lib/education/lesson-topic-slug";
+import { mentorTeachesCategory } from "@/lib/education/mentors";
 import { getLessonsByMentorAndCategory } from "@/lib/supabase/lessons";
-import { sortLessonsByDisplayOrder } from "@/lib/lessons-sort";
+import { sortLessonsByDisplayOrder } from "@/lib/education/lessons-sort";
 import {
   getLessonTopicByMentorAndSlug,
   getLessonTopicsByMentor,

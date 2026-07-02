@@ -7,7 +7,7 @@ import {
   educationCategoryHref,
   educationCategorySlugs,
   type EducationCategory,
-} from "@/lib/education-categories";
+} from "@/lib/education/categories";
 import type { Dictionary, Locale } from "@/lib/i18n";
 
 import { navPathActive } from "./nav-utils";

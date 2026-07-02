@@ -3,16 +3,16 @@ import { notFound } from "next/navigation";
 import { EducationBreadcrumb } from "@/components/education/education-breadcrumb";
 import { LessonPlayer } from "@/components/education/lesson-player";
 import { PublicPageMain } from "@/components/ui";
-import { renderCategoryPage } from "@/lib/education-category-page";
-import { isEducationCategory } from "@/lib/education-categories";
-import { categoryNavKeys } from "@/lib/education-category-meta";
+import { renderCategoryPage } from "@/components/education/category-page-renderer";
+import { isEducationCategory } from "@/lib/education/categories";
+import { categoryNavKeys } from "@/lib/education/category-meta";
 import { getDictionary, isLocale, type Locale } from "@/lib/i18n";
-import { educationMentorHref, educationMentorTopicHref } from "@/lib/mentors";
-import { resolveLessonTopicSlug } from "@/lib/lesson-topic-slug";
+import { educationMentorHref, educationMentorTopicHref } from "@/lib/education/mentors";
+import { resolveLessonTopicSlug } from "@/lib/education/lesson-topic-slug";
 import { getAllLessons, getLessonBySlug } from "@/lib/supabase/lessons";
 import { getLessonTopicByMentorAndSlug } from "@/lib/supabase/lesson-topics";
 import { getMentorBySlug } from "@/lib/supabase/mentors";
-import { isDirectVideoFileUrl } from "@/lib/video";
+import { isDirectVideoFileUrl } from "@/lib/media/video";
 
 export async function generateStaticParams() {
   const paths: { locale: Locale; slug: string }[] = [];

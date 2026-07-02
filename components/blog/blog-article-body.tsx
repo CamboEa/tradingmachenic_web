@@ -1,5 +1,5 @@
-import { isBlogHtmlContent, parseBlogBody, splitBoldSegments, type BlogBlock } from "@/lib/blog-content";
-import { sanitizeBlogHtml } from "@/lib/blog-content-sanitize";
+import { isBlogHtmlContent, parseBlogBody, splitBoldSegments, type BlogBlock } from "@/lib/blog/content";
+import { sanitizeBlogHtml } from "@/lib/blog/content-sanitize";
 
 function InlineText({ text }: { text: string }) {
   const segments = splitBoldSegments(text);

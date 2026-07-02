@@ -2,7 +2,7 @@
 
 **Date:** 2026-06-29
 **Branch:** `refactor/restructure-codebase`
-**Status:** Approved (pending spec review)
+**Status:** Implemented
 
 ## Goal
 

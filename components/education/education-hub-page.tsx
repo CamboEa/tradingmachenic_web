@@ -1,6 +1,6 @@
 import { PublicPageHero, PublicPageMain } from "@/components/ui";
-import { educationCategorySlugs } from "@/lib/education-categories";
-import { educationHubHeaderImage } from "@/lib/education-category-theme";
+import { educationCategorySlugs } from "@/lib/education/categories";
+import { educationHubHeaderImage } from "@/lib/education/category-theme";
 import type { Dictionary, Locale } from "@/lib/i18n";
 
 import { CategoryCard } from "./category-card";

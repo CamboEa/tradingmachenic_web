@@ -1,4 +1,4 @@
-import { resolveLessonVideoEmbedUrl } from "@/lib/video";
+import { resolveLessonVideoEmbedUrl } from "@/lib/media/video";
 
 export type BlogVideoSource = "youtube" | "upload";
 
