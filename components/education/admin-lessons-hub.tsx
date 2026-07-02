@@ -15,6 +15,7 @@ import {
   EmptyState,
   TableThumb,
 } from "@/components/ui";
+import { ChevronRightIcon, PencilIcon } from "@/components/ui/icons";
 import {
   adminLessonTopicsHref,
   adminLessonsListHref,
@@ -29,6 +30,15 @@ import { cn } from "@/lib/ui/cn";
 import { ui } from "@/lib/ui/styles";
 
 const UNASSIGNED_MENTOR = "__unassigned__";
+
+/** Two-letter monogram tile used when a mentor/topic has no image. */
+function InitialsBadge({ label }: { label: string }) {
+  return (
+    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border border-bridge/30 bg-surface-soft text-sm font-bold uppercase tracking-wide text-teal">
+      {label.slice(0, 2)}
+    </div>
+  );
+}
 
 function PickerCard({
   name,
@@ -61,27 +71,14 @@ function PickerCard({
           <TableThumb src={null} alt={name} className="h-14 w-14 rounded-full" />
         )
       ) : (
-        <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border border-bridge/30 bg-surface-soft text-sm font-bold uppercase tracking-wide text-teal">
-          {name.slice(0, 2)}
-        </div>
+        <InitialsBadge label={name} />
       )}
       <div className="min-w-0 flex-1">
         <p className="truncate font-semibold text-foreground">{name}</p>
         {subtitle ? <p className="mt-0.5 truncate text-xs text-ink-soft">{subtitle}</p> : null}
         <p className="mt-1.5 text-xs font-medium text-teal">{countLabel}</p>
       </div>
-      <svg
-        viewBox="0 0 20 20"
-        fill="currentColor"
-        className="h-5 w-5 shrink-0 text-ink-soft"
-        aria-hidden
-      >
-        <path
-          fillRule="evenodd"
-          d="M7.21 14.77a.75.75 0 0 1 .02-1.06L11.168 10 7.23 6.29a.75.75 0 1 1 1.04-1.08l4.5 4.25a.75.75 0 0 1 0 1.08l-4.5 4.25a.75.75 0 0 1-1.06-.02Z"
-          clipRule="evenodd"
-        />
-      </svg>
+      <ChevronRightIcon className="h-5 w-5 shrink-0 text-ink-soft" />
     </button>
   );
 }
@@ -108,9 +105,7 @@ function TopicPickerCard({
         href={href}
         className="flex min-w-0 flex-1 items-center gap-4 p-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-teal/40"
       >
-        <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border border-bridge/30 bg-surface-soft text-sm font-bold uppercase tracking-wide text-teal">
-          {topic.names.en.slice(0, 2)}
-        </div>
+        <InitialsBadge label={topic.names.en} />
         <div className="min-w-0 flex-1">
           <h3 className="truncate font-semibold text-foreground">{topic.names.en}</h3>
           <p className="mt-0.5 truncate text-xs text-ink-soft">
@@ -118,18 +113,7 @@ function TopicPickerCard({
           </p>
           <p className="mt-1.5 text-xs font-medium text-teal">{videoCountLabel(videoCount)}</p>
         </div>
-        <svg
-          viewBox="0 0 20 20"
-          fill="currentColor"
-          className="h-5 w-5 shrink-0 text-ink-soft transition group-hover:translate-x-0.5 group-hover:text-teal"
-          aria-hidden
-        >
-          <path
-            fillRule="evenodd"
-            d="M7.21 14.77a.75.75 0 0 1 .02-1.06L11.168 10 7.23 6.29a.75.75 0 1 1 1.04-1.08l4.5 4.25a.75.75 0 0 1 0 1.08l-4.5 4.25a.75.75 0 0 1-1.06-.02Z"
-            clipRule="evenodd"
-          />
-        </svg>
+        <ChevronRightIcon className="h-5 w-5 shrink-0 text-ink-soft transition group-hover:translate-x-0.5 group-hover:text-teal" />
       </Link>
 
       <div className="flex shrink-0 flex-col items-center justify-center gap-1.5 border-l border-bridge/30 bg-surface-soft/40 px-2">
@@ -140,9 +124,7 @@ function TopicPickerCard({
           aria-label={`Edit ${topic.names.en}`}
           title="Edit"
         >
-          <svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4" aria-hidden>
-            <path d="M2.695 14.762l-1.262 3.155a.5.5 0 0 0 .65.65l3.155-1.262a4 4 0 0 0 1.343-.886L17.5 5.501a2.121 2.121 0 0 0-3-3L3.58 13.419a4 4 0 0 0-.885 1.343Z" />
-          </svg>
+          <PencilIcon className="h-4 w-4" />
         </button>
         <DeleteLessonTopicButton id={topic.id} name={topic.names.en} />
       </div>

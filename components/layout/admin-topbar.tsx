@@ -11,6 +11,7 @@ import {
   currentAdminNavItem,
   isNavActive,
 } from "@/components/layout/admin-nav";
+import { ChevronRightIcon } from "@/components/ui/icons";
 
 export function AdminTopbar() {
   const pathname = usePathname();
@@ -59,9 +60,7 @@ export function AdminTopbar() {
           className="flex h-9 items-center gap-1.5 border-l border-bridge/40 pl-3 text-sm"
         >
           <span className="font-medium text-ink-soft">Admin</span>
-          <svg viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5 text-ink-muted">
-            <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 0 1 .02-1.06L11.168 10 7.23 6.29a.75.75 0 1 1 1.04-1.08l4.5 4.25a.75.75 0 0 1 0 1.08l-4.5 4.25a.75.75 0 0 1-1.06-.02Z" clipRule="evenodd" />
-          </svg>
+          <ChevronRightIcon className="h-3.5 w-3.5 text-ink-muted" />
           <span className="font-semibold text-foreground">{label}</span>
         </nav>
       </div>
