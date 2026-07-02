@@ -1,7 +1,7 @@
 import { LessonForm } from "@/components/education/lesson-form";
 import { AdminFormHeader } from "@/components/ui";
-import { adminLessonsListHref } from "@/lib/admin-lessons-nav";
-import { isEducationCategory } from "@/lib/education-categories";
+import { adminLessonsListHref } from "@/lib/education/admin-lessons-nav";
+import { isEducationCategory } from "@/lib/education/categories";
 import { getAllLessonTopicsForAdmin } from "@/lib/supabase/lesson-topics";
 import { getAllMentorsForAdmin } from "@/lib/supabase/mentors";
 

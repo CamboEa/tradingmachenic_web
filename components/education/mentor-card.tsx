@@ -1,9 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import type { EducationCategory } from "@/lib/education-categories";
+import type { EducationCategory } from "@/lib/education/categories";
 import type { Dictionary, Locale } from "@/lib/i18n";
-import { educationMentorHref, type Mentor } from "@/lib/mentors";
+import { educationMentorHref, type Mentor } from "@/lib/education/mentors";
 
 export function MentorCard({
   mentor,

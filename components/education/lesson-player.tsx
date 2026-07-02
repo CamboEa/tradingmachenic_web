@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { useState } from "react";
 
-import type { Lesson, LessonVideo } from "@/lib/course";
-import { youtubeThumbnailFromEmbed } from "@/lib/course";
+import type { Lesson, LessonVideo } from "@/lib/education/course";
+import { youtubeThumbnailFromEmbed } from "@/lib/education/course";
 import type { Locale } from "@/lib/i18n";
 import {
   isDirectVideoFileUrl,

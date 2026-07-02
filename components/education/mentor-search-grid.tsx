@@ -2,10 +2,10 @@
 
 import { useMemo, useState } from "react";
 
-import type { EducationCategory } from "@/lib/education-categories";
+import type { EducationCategory } from "@/lib/education/categories";
 import type { Dictionary, Locale } from "@/lib/i18n";
-import type { Lesson } from "@/lib/course";
-import type { Mentor } from "@/lib/mentors";
+import type { Lesson } from "@/lib/education/course";
+import type { Mentor } from "@/lib/education/mentors";
 
 import { MentorCard } from "./mentor-card";
 

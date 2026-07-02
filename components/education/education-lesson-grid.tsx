@@ -4,8 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 
-import type { Lesson } from "@/lib/course";
-import { getLessonThumbnailSrc, lessonVideoCount } from "@/lib/course";
+import type { Lesson } from "@/lib/education/course";
+import { getLessonThumbnailSrc, lessonVideoCount } from "@/lib/education/course";
 import type { Dictionary, Locale } from "@/lib/i18n";
 
 /* ── Small Netflix-style card (for horizontal rows) ──────────────────── */

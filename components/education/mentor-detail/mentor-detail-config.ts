@@ -1,4 +1,4 @@
-import type { EducationCategory } from "@/lib/education-categories";
+import type { EducationCategory } from "@/lib/education/categories";
 
 export const mentorDetailSections = [
   { id: "mentor-profile", label: "Profile" },

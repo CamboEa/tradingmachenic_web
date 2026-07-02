@@ -20,8 +20,8 @@ import {
   adminTopicHref,
   lessonCountForMentor,
   UNCATEGORIZED_LESSON_TOPIC,
-} from "@/lib/admin-lessons-nav";
-import type { Lesson } from "@/lib/course";
+} from "@/lib/education/admin-lessons-nav";
+import type { Lesson } from "@/lib/education/course";
 import type { LessonTopic } from "@/lib/supabase/lesson-topics";
 import { topicsForMentor } from "@/lib/supabase/lesson-topics";
 import type { AdminMentor } from "@/lib/supabase/mentors";

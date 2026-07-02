@@ -1,4 +1,4 @@
-import type { EducationCategory } from "@/lib/education-categories";
+import type { EducationCategory } from "@/lib/education/categories";
 import type { Dictionary } from "@/lib/i18n";
 
 export const categoryNavKeys: Record<EducationCategory, keyof Dictionary["nav"]> = {

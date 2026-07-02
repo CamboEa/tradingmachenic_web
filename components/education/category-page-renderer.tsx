@@ -4,7 +4,7 @@ import { EducationCategoryPage } from "@/components/education/education-category
 import { getAllLessons } from "@/lib/supabase/lessons";
 import { getMentorsByCategory } from "@/lib/supabase/mentors";
 import { getDictionary, isLocale, type Locale } from "@/lib/i18n";
-import type { EducationCategory } from "@/lib/education-categories";
+import type { EducationCategory } from "@/lib/education/categories";
 
 export async function renderCategoryPage(locale: Locale, category: EducationCategory) {
   const [dict, lessons, mentors] = await Promise.all([

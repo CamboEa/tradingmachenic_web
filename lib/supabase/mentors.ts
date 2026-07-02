@@ -1,8 +1,8 @@
 import { unstable_cache } from "next/cache";
 
-import type { EducationCategory } from "@/lib/education-categories";
+import type { EducationCategory } from "@/lib/education/categories";
 import { MENTORS_CACHE_TAG } from "@/lib/cache-tags";
-import type { Mentor } from "@/lib/mentors";
+import type { Mentor } from "@/lib/education/mentors";
 import { getSharedAdminClient, getSharedPublicClient } from "./shared";
 
 export type AdminMentor = Mentor & {

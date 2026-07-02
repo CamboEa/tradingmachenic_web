@@ -1,4 +1,4 @@
-import type { EducationCategory } from "@/lib/education-categories";
+import type { EducationCategory } from "@/lib/education/categories";
 
 /** FIN HUB KH brand tokens — match app/globals.css (logoV4 teal/cyan). */
 export const brand = {

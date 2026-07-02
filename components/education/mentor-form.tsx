@@ -5,7 +5,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 
 import { R2Uploader } from "@/components/shared/r2-uploader";
-import { educationCategorySlugs } from "@/lib/education-categories";
+import { educationCategorySlugs } from "@/lib/education/categories";
 import { slugify } from "@/lib/slug";
 import { createMentor, updateMentor } from "@/lib/supabase/actions";
 import type { AdminMentor } from "@/lib/supabase/mentors";

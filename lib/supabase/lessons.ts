@@ -1,9 +1,9 @@
 import { unstable_cache } from "next/cache";
 
-import type { Lesson } from "@/lib/course";
-import type { EducationCategory } from "@/lib/education-categories";
+import type { Lesson } from "@/lib/education/course";
+import type { EducationCategory } from "@/lib/education/categories";
 import { LESSONS_CACHE_TAG } from "@/lib/cache-tags";
-import { sortLessonsByDisplayOrder } from "@/lib/lessons-sort";
+import { sortLessonsByDisplayOrder } from "@/lib/education/lessons-sort";
 import { resolveLessonVideoEmbedUrl } from "@/lib/youtube";
 import { getSharedAdminClient, getSharedPublicClient } from "./shared";
 

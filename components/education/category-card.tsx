@@ -1,10 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import type { EducationCategory } from "@/lib/education-categories";
-import { educationCategoryHref } from "@/lib/education-categories";
-import { categoryHintKeys, categoryNavKeys } from "@/lib/education-category-meta";
-import { getCategoryImage, getCategoryTheme } from "@/lib/education-category-theme";
+import type { EducationCategory } from "@/lib/education/categories";
+import { educationCategoryHref } from "@/lib/education/categories";
+import { categoryHintKeys, categoryNavKeys } from "@/lib/education/category-meta";
+import { getCategoryImage, getCategoryTheme } from "@/lib/education/category-theme";
 import type { Dictionary, Locale } from "@/lib/i18n";
 import { cn } from "@/lib/ui/cn";
 

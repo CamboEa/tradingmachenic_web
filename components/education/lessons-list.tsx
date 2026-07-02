@@ -13,7 +13,7 @@ import {
   type Filter,
 } from "@/components/ui";
 import { SpinnerIcon, TrashIcon } from "@/components/ui/icons";
-import type { Lesson } from "@/lib/course";
+import type { Lesson } from "@/lib/education/course";
 import { deleteLesson } from "@/lib/supabase/actions";
 import { ui } from "@/lib/ui/styles";
 

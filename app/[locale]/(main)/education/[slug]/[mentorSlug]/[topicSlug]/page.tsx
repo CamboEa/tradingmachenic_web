@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 
-import { isEducationCategory } from "@/lib/education-categories";
+import { isEducationCategory } from "@/lib/education/categories";
 import { renderEducationMentorTopicPage } from "@/components/education/mentor-page-renderer";
 import { isLocale, type Locale } from "@/lib/i18n";
 

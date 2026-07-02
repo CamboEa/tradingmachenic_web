@@ -1,6 +1,6 @@
 import { CourseLessonCard } from "@/components/education/course-lesson-card";
 import type { Dictionary, Locale } from "@/lib/i18n";
-import type { Lesson } from "@/lib/course";
+import type { Lesson } from "@/lib/education/course";
 
 export function EducationLessonList({
   lessons,

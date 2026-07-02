@@ -1,9 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import type { EducationCategory } from "@/lib/education-categories";
+import type { EducationCategory } from "@/lib/education/categories";
 import type { Dictionary, Locale } from "@/lib/i18n";
-import { educationMentorTopicHref } from "@/lib/mentors";
+import { educationMentorTopicHref } from "@/lib/education/mentors";
 import type { LessonTopic } from "@/lib/supabase/lesson-topics";
 
 export function EducationMentorTopicPicker({

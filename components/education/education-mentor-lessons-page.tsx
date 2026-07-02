@@ -3,12 +3,12 @@ import Image from "next/image";
 import { EducationBreadcrumb } from "@/components/education/education-breadcrumb";
 import { EducationMentorTopicPicker } from "@/components/education/education-mentor-topic-picker";
 import { PublicPageHero, PublicPageMain } from "@/components/ui";
-import { educationCategoryHref } from "@/lib/education-categories";
-import type { EducationCategory } from "@/lib/education-categories";
-import { getCategoryHeaderImage } from "@/lib/education-category-theme";
-import { categoryNavKeys } from "@/lib/education-category-meta";
+import { educationCategoryHref } from "@/lib/education/categories";
+import type { EducationCategory } from "@/lib/education/categories";
+import { getCategoryHeaderImage } from "@/lib/education/category-theme";
+import { categoryNavKeys } from "@/lib/education/category-meta";
 import type { Dictionary, Locale } from "@/lib/i18n";
-import type { Mentor } from "@/lib/mentors";
+import type { Mentor } from "@/lib/education/mentors";
 import type { LessonTopic } from "@/lib/supabase/lesson-topics";
 
 export function EducationMentorLessonsPage({

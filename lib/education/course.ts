@@ -1,6 +1,6 @@
-import type { Locale } from "./i18n";
-import type { EducationCategory } from "./education-categories";
-import { extractYouTubeVideoId, youtubeThumbnailUrl } from "./youtube";
+import type { Locale } from "@/lib/i18n";
+import type { EducationCategory } from "./categories";
+import { extractYouTubeVideoId, youtubeThumbnailUrl } from "@/lib/youtube";
 
 export type LessonVideo = {
   /** Public embed URL, e.g. YouTube embed link */

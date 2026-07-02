@@ -1,7 +1,7 @@
 import { addLessonHref } from "@/components/education/mentor-detail/mentor-detail-config";
 import { LessonsList } from "@/components/education/lessons-list";
 import { ButtonLink, Card } from "@/components/ui";
-import type { Lesson } from "@/lib/course";
+import type { Lesson } from "@/lib/education/course";
 
 type MentorLessonsSectionProps = {
   mentorSlug: string;

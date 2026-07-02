@@ -1,5 +1,5 @@
-import type { Lesson } from "@/lib/course";
-import { thunTulaLessonOrderIndex } from "@/lib/thun-tula-playlist-order";
+import type { Lesson } from "@/lib/education/course";
+import { thunTulaLessonOrderIndex } from "@/lib/education/thun-tula-playlist-order";
 
 export function sortLessonsByDisplayOrder(lessons: Lesson[]): Lesson[] {
   return [...lessons].sort((a, b) => {
