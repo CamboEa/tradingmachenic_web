@@ -88,12 +88,12 @@ function PickerCard({
 
 function TopicPickerCard({
   topic,
-  count,
+  videoCount,
   href,
   onEdit,
 }: {
   topic: LessonTopic;
-  count: number;
+  videoCount: number;
   href: string;
   onEdit: () => void;
 }) {
@@ -116,7 +116,7 @@ function TopicPickerCard({
           <p className="mt-0.5 truncate text-xs text-ink-soft">
             {topic.descriptions.en || topic.slug}
           </p>
-          <p className="mt-1.5 text-xs font-medium text-teal">{countLabel(count)}</p>
+          <p className="mt-1.5 text-xs font-medium text-teal">{videoCountLabel(videoCount)}</p>
         </div>
         <svg
           viewBox="0 0 20 20"
@@ -152,6 +152,10 @@ function TopicPickerCard({
 
 function countLabel(count: number): string {
   return count === 1 ? "1 lesson" : `${count} lessons`;
+}
+
+function videoCountLabel(count: number): string {
+  return count === 1 ? "1 video" : `${count} videos`;
 }
 
 function mentorLessons(lessons: Lesson[], mentorSlug: string): Lesson[] {
@@ -358,15 +362,15 @@ export function AdminLessonsHub({
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {mentorTopicList.map((topic) => {
-              const count = mentorLessons(lessons, selectedMentor.slug).filter(
-                (lesson) => lesson.lessonTopicSlug === topic.slug,
-              ).length;
+              const videoCount = mentorLessons(lessons, selectedMentor.slug)
+                .filter((lesson) => lesson.lessonTopicSlug === topic.slug)
+                .reduce((sum, lesson) => sum + lesson.videos.length, 0);
 
               return (
                 <TopicPickerCard
                   key={topic.id}
                   topic={topic}
-                  count={count}
+                  videoCount={videoCount}
                   href={adminLessonsListHref(selectedMentor.slug, topic.slug)}
                   onEdit={() => setTopicModal(topic)}
                 />
