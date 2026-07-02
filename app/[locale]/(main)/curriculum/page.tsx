@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 
 import { Reveal } from "@/components/shared/reveal";
 import { PublicPageHero, PublicPageMain } from "@/components/ui";
-import type { CurriculumAccent, CurriculumWeek } from "@/lib/curriculum";
+import type { CurriculumAccent, CurriculumWeek } from "@/lib/curriculum/curriculum";
 import { getDictionary, isLocale, type Locale } from "@/lib/i18n";
 import { getCurriculum } from "@/lib/supabase/curriculum-data";
 

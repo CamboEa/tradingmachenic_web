@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { CURRICULUM_SEED_PHASES } from "../lib/curriculum-seed-source";
+import { CURRICULUM_SEED_PHASES } from "../lib/curriculum/seed-source";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 

@@ -1,6 +1,6 @@
 import { unstable_cache } from "next/cache";
 import { CURRICULUM_CACHE_TAG } from "@/lib/cache-tags";
-import type { CurriculumPhaseWithWeeks } from "@/lib/curriculum";
+import type { CurriculumPhaseWithWeeks } from "@/lib/curriculum/curriculum";
 
 import { getSharedAdminClient, getSharedPublicClient } from "./shared";
 

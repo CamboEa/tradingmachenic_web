@@ -11,7 +11,7 @@ import { checkRateLimit, RATE_LIMITS } from "@/lib/security/rate-limit";
 import { verifyTurnstileToken } from "@/lib/security/turnstile";
 
 import { defaultLocale, locales } from "@/lib/i18n";
-import type { CurriculumAccent } from "@/lib/curriculum";
+import type { CurriculumAccent } from "@/lib/curriculum/curriculum";
 import type { Tool } from "@/lib/supabase/tools";
 import {
   normalizeToolGallery,

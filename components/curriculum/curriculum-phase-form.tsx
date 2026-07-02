@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { createCurriculumPhase, updateCurriculumPhase } from "@/lib/supabase/actions";
-import type { CurriculumAccent } from "@/lib/curriculum";
+import type { CurriculumAccent } from "@/lib/curriculum/curriculum";
 import { ui, FIELD_CLASS } from "@/lib/ui/styles";
 import { cn } from "@/lib/ui/cn";
 
