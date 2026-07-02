@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { EducationBreadcrumb } from "@/components/education/education-breadcrumb";
 import { LessonPlayer } from "@/components/education/lesson-player";
 import { PublicPageMain } from "@/components/ui";
-import { renderCategoryPage } from "@/lib/education-category-page";
+import { renderCategoryPage } from "@/components/education/category-page-renderer";
 import { isEducationCategory } from "@/lib/education-categories";
 import { categoryNavKeys } from "@/lib/education-category-meta";
 import { getDictionary, isLocale, type Locale } from "@/lib/i18n";

@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 
 import { isEducationCategory } from "@/lib/education-categories";
-import { renderEducationMentorPage } from "@/lib/education-mentor-page";
+import { renderEducationMentorPage } from "@/components/education/mentor-page-renderer";
 import { isLocale, type Locale } from "@/lib/i18n";
 
 export default async function EducationMentorRoutePage({
