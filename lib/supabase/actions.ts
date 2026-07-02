@@ -27,7 +27,7 @@ import {
 } from "@/lib/supabase/blog-videos";
 import { isBlogBodyEmpty } from "@/lib/blog/content";
 import { slugify } from "@/lib/slug";
-import { extractYouTubeVideoId, resolveLessonVideoEmbedUrl } from "@/lib/youtube";
+import { extractYouTubeVideoId, resolveLessonVideoEmbedUrl } from "@/lib/media/youtube";
 
 import { createClient, createAdminClient, getSessionUser } from "./server";
 

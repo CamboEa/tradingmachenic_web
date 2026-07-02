@@ -10,7 +10,7 @@ import {
   isDirectVideoFileUrl,
   isYouTubeVideoUrl,
   resolveLessonVideoEmbedUrl,
-} from "@/lib/video";
+} from "@/lib/media/video";
 import { cn } from "@/lib/ui/cn";
 
 interface LessonStrings {

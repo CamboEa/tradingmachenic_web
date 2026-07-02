@@ -1,4 +1,4 @@
-import { extractYouTubeVideoId, resolveLessonVideoEmbedUrl } from "@/lib/youtube";
+import { extractYouTubeVideoId, resolveLessonVideoEmbedUrl } from "@/lib/media/youtube";
 
 export { resolveLessonVideoEmbedUrl };
 

@@ -4,7 +4,7 @@ import type { Lesson } from "@/lib/education/course";
 import type { EducationCategory } from "@/lib/education/categories";
 import { LESSONS_CACHE_TAG } from "@/lib/cache-tags";
 import { sortLessonsByDisplayOrder } from "@/lib/education/lessons-sort";
-import { resolveLessonVideoEmbedUrl } from "@/lib/youtube";
+import { resolveLessonVideoEmbedUrl } from "@/lib/media/youtube";
 import { getSharedAdminClient, getSharedPublicClient } from "./shared";
 
 const supabase = getSharedPublicClient();

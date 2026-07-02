@@ -11,7 +11,7 @@ import {
   type Filter,
 } from "@/components/ui";
 import type { Podcast } from "@/lib/supabase/podcasts";
-import { extractYouTubeVideoId, youtubeThumbnailUrl } from "@/lib/youtube";
+import { extractYouTubeVideoId, youtubeThumbnailUrl } from "@/lib/media/youtube";
 
 const columns: Column<Podcast>[] = [
   {

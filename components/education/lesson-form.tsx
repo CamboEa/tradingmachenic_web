@@ -22,7 +22,7 @@ import {
 import { slugify } from "@/lib/slug";
 import { educationCategorySlugs } from "@/lib/education/categories";
 import type { Mentor } from "@/lib/education/mentors";
-import { resolveLessonVideoEmbedUrl } from "@/lib/youtube";
+import { resolveLessonVideoEmbedUrl } from "@/lib/media/youtube";
 import { FIELD_CLASS } from "@/lib/ui/styles";
 
 const STEPS = LESSON_FORM_STEPS;

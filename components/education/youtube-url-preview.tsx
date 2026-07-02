@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 
-import { extractYouTubeVideoId, youtubeEmbedSrc } from "@/lib/youtube";
+import { extractYouTubeVideoId, youtubeEmbedSrc } from "@/lib/media/youtube";
 
 export function YoutubeUrlPreview({ url }: { url: string }) {
  const embedSrc = useMemo(() => {

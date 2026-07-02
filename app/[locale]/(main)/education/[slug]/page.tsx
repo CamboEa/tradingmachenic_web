@@ -12,7 +12,7 @@ import { resolveLessonTopicSlug } from "@/lib/education/lesson-topic-slug";
 import { getAllLessons, getLessonBySlug } from "@/lib/supabase/lessons";
 import { getLessonTopicByMentorAndSlug } from "@/lib/supabase/lesson-topics";
 import { getMentorBySlug } from "@/lib/supabase/mentors";
-import { isDirectVideoFileUrl } from "@/lib/video";
+import { isDirectVideoFileUrl } from "@/lib/media/video";
 
 export async function generateStaticParams() {
   const paths: { locale: Locale; slug: string }[] = [];
