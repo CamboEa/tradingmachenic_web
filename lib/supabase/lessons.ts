@@ -88,6 +88,7 @@ function transformLessonRow(
     youtubePlaylistId: row.youtube_playlist_id || undefined,
     status: row.status === "published" ? "published" : "draft",
     videos: videos.map((v) => ({
+      id: v.id,
       embedUrl: resolveLessonVideoEmbedUrl(v.embed_url),
       titles: {
         en: v.title_en || "",

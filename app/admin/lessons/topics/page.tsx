@@ -6,7 +6,7 @@ import { adminLessonsListHref } from "@/lib/education/admin-lessons-nav";
 import { getAllLessonTopicsForAdmin, topicsForMentor } from "@/lib/supabase/lesson-topics";
 import { getAllMentorsForAdmin } from "@/lib/supabase/mentors";
 
-export const metadata = { title: "Lesson topics" };
+export const metadata = { title: "Topics" };
 
 export default async function LessonTopicsPage({
   searchParams,
@@ -33,8 +33,8 @@ export default async function LessonTopicsPage({
   return (
     <div>
       <AdminPageHeader
-        title="Lesson topics"
-        description={`Create and manage lesson topics for ${mentor.names.en} (ICT, CSNR, CRT, etc.).`}
+        title="Topics"
+        description={`Create and manage topics for ${mentor.names.en} (ICT, CSNR, CRT, etc.).`}
         action={
           <ButtonLink href={`/admin/lessons/topics/add?mentor=${encodeURIComponent(mentor.slug)}`}>
             + Add topic

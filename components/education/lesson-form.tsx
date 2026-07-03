@@ -649,7 +649,7 @@ export function LessonForm({
 
  <div>
  <div className="mb-1.5 flex flex-wrap items-center justify-between gap-2">
- <label className="text-xs font-semibold text-ink-muted">Lesson topic</label>
+ <label className="text-xs font-semibold text-ink-muted">Topic</label>
  {mentorSlug ? (
  <Link
  href={`/admin/lessons/topics/add?mentor=${encodeURIComponent(mentorSlug)}`}

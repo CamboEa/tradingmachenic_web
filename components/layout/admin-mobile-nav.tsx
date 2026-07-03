@@ -5,79 +5,29 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 import { SiteLogo } from "@/components/shared/site-logo";
-import {
-  NAV,
-  currentAdminLabel,
-  currentAdminNavItem,
-  isNavActive,
-} from "@/components/layout/admin-nav";
-import { ChevronRightIcon } from "@/components/ui/icons";
+import { NAV, isNavActive } from "@/components/layout/admin-nav";
 
-export function AdminTopbar() {
+/**
+ * Floating hamburger + slide-in drawer for admin navigation on small screens.
+ * The persistent sidebar takes over at `lg`, so this is hidden there.
+ */
+export function AdminMobileNav() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  const label = currentAdminLabel(pathname);
-  const section = currentAdminNavItem(pathname);
-  const backHref =
-    section && pathname !== section.href
-      ? section.href
-      : pathname !== "/admin"
-        ? "/admin"
-        : null;
 
   return (
-    <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-3 border-b border-bridge/40 bg-surface/85 px-4 backdrop-blur-md lg:px-10">
-      <div className="flex items-center gap-3">
-        {/* Mobile menu toggle */}
-        <button
-          type="button"
-          onClick={() => setOpen(true)}
-          className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-bridge/40 text-ink-muted transition hover:bg-surface-soft lg:hidden"
-          aria-label="Open navigation menu"
-        >
-          <svg viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5">
-            <path fillRule="evenodd" d="M2 4.75A.75.75 0 0 1 2.75 4h14.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 4.75ZM2 10a.75.75 0 0 1 .75-.75h14.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 10Zm0 5.25a.75.75 0 0 1 .75-.75h14.5a.75.75 0 0 1 0 1.5H2.75a.75.75 0 0 1-.75-.75Z" clipRule="evenodd" />
-          </svg>
-        </button>
-
-        {backHref ? (
-          <Link
-            href={backHref}
-            className="inline-flex h-9 w-9 shrink-0 items-center justify-center gap-1.5 rounded-lg text-sm font-semibold text-ink-muted transition hover:bg-surface-soft hover:text-foreground sm:w-20"
-          >
-            <svg viewBox="0 0 16 16" fill="currentColor" className="h-4 w-4" aria-hidden>
-              <path d="M7.78 12.53a.75.75 0 0 1-1.06 0L2.47 8.28a.75.75 0 0 1 0-1.06l4.25-4.25a.75.75 0 0 1 1.06 1.06L4.81 7h7.44a.75.75 0 0 1 0 1.5H4.81l2.97 2.97a.75.75 0 0 1 0 1.06Z" />
-            </svg>
-            <span className="hidden sm:inline">Back</span>
-          </Link>
-        ) : (
-          <span aria-hidden className="h-9 w-9 shrink-0 sm:w-20" />
-        )}
-
-        {/* Breadcrumb */}
-        <nav
-          aria-label="Breadcrumb"
-          className="flex h-9 items-center gap-1.5 border-l border-bridge/40 pl-3 text-sm"
-        >
-          <span className="font-medium text-ink-soft">Admin</span>
-          <ChevronRightIcon className="h-3.5 w-3.5 text-ink-muted" />
-          <span className="font-semibold text-foreground">{label}</span>
-        </nav>
-      </div>
-
-      <Link
-        href="/"
-        target="_blank"
-        className="inline-flex items-center gap-1.5 rounded-lg border border-bridge/40 bg-surface px-3 py-1.5 text-xs font-semibold text-ink-muted transition hover:border-teal/40 hover:text-teal"
+    <>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        aria-label="Open navigation menu"
+        className="fixed left-4 top-4 z-40 inline-flex h-10 w-10 items-center justify-center rounded-lg border border-bridge/40 bg-surface/85 text-ink-muted shadow-sm backdrop-blur-md transition hover:bg-surface-soft hover:text-foreground lg:hidden"
       >
-        <svg viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5">
-          <path d="M11 3a1 1 0 1 0 0 2h2.586l-6.293 6.293a1 1 0 1 0 1.414 1.414L15 6.414V9a1 1 0 1 0 2 0V4a1 1 0 0 0-1-1h-5Z" />
-          <path d="M5 5a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-3a1 1 0 1 0-2 0v3H5V7h3a1 1 0 0 0 0-2H5Z" />
+        <svg viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5">
+          <path fillRule="evenodd" d="M2 4.75A.75.75 0 0 1 2.75 4h14.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 4.75ZM2 10a.75.75 0 0 1 .75-.75h14.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 10Zm0 5.25a.75.75 0 0 1 .75-.75h14.5a.75.75 0 0 1 0 1.5H2.75a.75.75 0 0 1-.75-.75Z" clipRule="evenodd" />
         </svg>
-        View site
-      </Link>
+      </button>
 
-      {/* Mobile drawer */}
       {open ? (
         <div className="fixed inset-0 z-50 lg:hidden">
           <button
@@ -139,6 +89,6 @@ export function AdminTopbar() {
           </div>
         </div>
       ) : null}
-    </header>
+    </>
   );
 }

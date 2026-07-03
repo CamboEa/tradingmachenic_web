@@ -106,3 +106,100 @@ export function Dropdown<T extends string>({
     </div>
   );
 }
+
+export function MultiSelectDropdown<T extends string>({
+  values,
+  options,
+  onChange,
+  placeholder = "Select…",
+  className,
+}: {
+  values: T[];
+  options: Option<T>[];
+  onChange: (values: T[]) => void;
+  placeholder?: string;
+  className?: string;
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  const selectedLabels = options
+    .filter((o) => values.includes(o.value))
+    .map((o) => o.label);
+
+  const toggle = (value: T) => {
+    onChange(
+      values.includes(value)
+        ? values.filter((v) => v !== value)
+        : [...values, value],
+    );
+  };
+
+  // Close on outside click
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    }
+    if (open) document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [open]);
+
+  // Close on Escape
+  useEffect(() => {
+    function handleKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setOpen(false);
+    }
+    if (open) document.addEventListener("keydown", handleKey);
+    return () => document.removeEventListener("keydown", handleKey);
+  }, [open]);
+
+  return (
+    <div ref={ref} className={`relative ${className ?? ""}`}>
+      {/* Trigger */}
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        className="flex h-full w-full min-w-36 cursor-pointer items-center justify-between gap-3 rounded-xl border border-bridge/40 bg-surface px-4 py-2.5 text-sm font-semibold shadow-sm transition hover:border-bridge/60 hover:bg-surface-soft focus:outline-none focus:ring-2 focus:ring-teal/25"
+      >
+        <span className={selectedLabels.length ? "text-ink-muted" : "text-ink-soft"}>
+          {selectedLabels.length ? selectedLabels.join(", ") : placeholder}
+        </span>
+        <ChevronDown open={open} />
+      </button>
+
+      {/* Panel */}
+      {open && (
+        <ul
+          role="listbox"
+          aria-multiselectable
+          aria-label="Options"
+          className="absolute left-0 top-full z-30 mt-1.5 min-w-full overflow-hidden rounded-xl border border-bridge/40 bg-surface py-1 shadow-lg shadow-black/25 ring-1 ring-black/5 animate-in fade-in slide-in-from-top-1 duration-150"
+        >
+          {options.map((opt) => {
+            const isSelected = values.includes(opt.value);
+            return (
+              <li
+                key={opt.value}
+                role="option"
+                aria-selected={isSelected}
+                onClick={() => toggle(opt.value)}
+                className={`flex cursor-pointer items-center justify-between gap-4 px-4 py-2.5 text-sm transition-colors ${
+                  isSelected
+                    ? "bg-teal/5 font-semibold text-teal"
+                    : "text-ink-muted hover:bg-surface-soft"
+                }`}
+              >
+                <span>{opt.label}</span>
+                {isSelected && <CheckIcon />}
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </div>
+  );
+}

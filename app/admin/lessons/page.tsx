@@ -35,7 +35,7 @@ export default async function LessonsPage() {
       {!hasContent ? (
         <EmptyState
           title="No lessons yet"
-          description="Create a mentor, add lesson topics, then add video lessons."
+          description="Create a mentor, add topics, then add video lessons."
           action={{ href: "/admin/mentors/add", label: "+ Add Mentor" }}
         />
       ) : (

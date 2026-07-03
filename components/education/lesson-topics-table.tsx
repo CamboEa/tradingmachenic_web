@@ -69,7 +69,7 @@ export function LessonTopicsTable({
       searchPlaceholder={
         mentorName
           ? `Search ${mentorName} topics…`
-          : "Search lesson topics…"
+          : "Search topics…"
       }
       searchText={(topic) =>
         `${topic.names.en} ${topic.names.km} ${topic.slug} ${topic.descriptions.en}`

@@ -5,7 +5,7 @@ import { AdminFormHeader } from "@/components/ui";
 import { adminLessonTopicsHref } from "@/lib/education/admin-lessons-nav";
 import { getAllMentorsForAdmin } from "@/lib/supabase/mentors";
 
-export const metadata = { title: "Add lesson topic" };
+export const metadata = { title: "Add topic" };
 
 export default async function AddLessonTopicPage({
   searchParams,
@@ -25,7 +25,7 @@ export default async function AddLessonTopicPage({
       <AdminFormHeader
         backHref={adminLessonTopicsHref(mentor.slug)}
         backLabel="Topics"
-        title="Add lesson topic"
+        title="Add topic"
         description={`Create a new topic for ${mentor.names.en}.`}
       />
 

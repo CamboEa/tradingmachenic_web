@@ -7,10 +7,12 @@ import { useCallback, useMemo, useState } from "react";
 
 import { DeleteLessonTopicButton } from "@/components/education/delete-lesson-topic-button";
 import { LessonTopicModal } from "@/components/education/lesson-topic-modal";
+import { LessonVideoModal } from "@/components/education/lesson-video-modal";
 import { LessonsList } from "@/components/education/lessons-list";
-import { TopicVideoList } from "@/components/education/topic-video-list";
+import { TopicVideoTable } from "@/components/education/topic-video-table";
 import {
   AdminBackLink,
+  Button,
   ButtonLink,
   EmptyState,
   TableThumb,
@@ -22,7 +24,7 @@ import {
   lessonCountForMentor,
   UNCATEGORIZED_LESSON_TOPIC,
 } from "@/lib/education/admin-lessons-nav";
-import type { Lesson } from "@/lib/education/course";
+import type { Lesson, LessonVideo } from "@/lib/education/course";
 import type { LessonTopic } from "@/lib/supabase/lesson-topics";
 import { topicsForMentor } from "@/lib/supabase/lesson-topics";
 import type { AdminMentor } from "@/lib/supabase/mentors";
@@ -156,6 +158,7 @@ export function AdminLessonsHub({
   const router = useRouter();
   const searchParams = useSearchParams();
   const [topicModal, setTopicModal] = useState<LessonTopic | "new" | null>(null);
+  const [videoModal, setVideoModal] = useState<LessonVideo | "new" | null>(null);
   const mentorParam = searchParams.get("mentor")?.trim() ?? "";
   const topicParam = searchParams.get("topic")?.trim() ?? "";
 
@@ -272,13 +275,13 @@ export function AdminLessonsHub({
     return (
       <div>
         <p className="mb-6 text-sm text-ink-soft">
-          Choose a mentor, then pick a lesson topic like ICT or CSNR.
+          Choose a mentor, then pick a topic like ICT or CSNR.
         </p>
 
         {mentors.length === 0 && unassignedCount === 0 ? (
           <EmptyState
             title="No mentors yet"
-            description="Create a mentor profile first, then add lesson topics and lessons."
+            description="Create a mentor profile first, then add topics and lessons."
             action={{ href: "/admin/mentors/add", label: "+ Add Mentor" }}
           />
         ) : (
@@ -323,7 +326,7 @@ export function AdminLessonsHub({
                 {selectedMentor.titles.en || selectedMentor.slug}
               </p>
               <p className="mt-1 text-xs text-ink-soft">
-                Select a lesson topic, or create a new one.
+                Select a topic, or create a new one.
               </p>
             </div>
           </div>
@@ -338,7 +341,7 @@ export function AdminLessonsHub({
 
         {mentorTopicList.length === 0 && uncategorizedCount === 0 ? (
           <EmptyState
-            title="No lesson topics yet"
+            title="No topics yet"
             description="Use the Add topic button above to create ICT, CSNR, CRT, or another topic."
           />
         ) : (
@@ -388,7 +391,7 @@ export function AdminLessonsHub({
     return (
       <EmptyState
         title="Topic not found"
-        description="Go back and choose a valid mentor and lesson topic."
+        description="Go back and choose a valid mentor and topic."
         action={{ href: "/admin/lessons", label: "Back to lessons" }}
       />
     );
@@ -452,9 +455,7 @@ export function AdminLessonsHub({
         </div>
         <div className="flex shrink-0 flex-wrap gap-2">
           {topicLesson ? (
-            <ButtonLink href={`/admin/lessons/edit/${topicLesson.slug}`}>
-              Manage videos
-            </ButtonLink>
+            <Button onClick={() => setVideoModal("new")}>+ Add video</Button>
           ) : (
             <>
               {selectedMentor ? (
@@ -475,10 +476,23 @@ export function AdminLessonsHub({
           action={{ href: addLessonHref, label: "+ Add Lesson" }}
         />
       ) : topicLesson ? (
-        <TopicVideoList lesson={topicLesson} />
+        <TopicVideoTable lesson={topicLesson} onEditVideo={setVideoModal} />
       ) : (
         <LessonsList lessons={filteredLessons} />
       )}
+
+      {topicLesson && videoModal ? (
+        <LessonVideoModal
+          key={videoModal === "new" ? "new" : videoModal.id}
+          lessonSlug={topicLesson.slug}
+          video={videoModal === "new" ? undefined : videoModal}
+          onClose={() => setVideoModal(null)}
+          onSaved={() => {
+            setVideoModal(null);
+            router.refresh();
+          }}
+        />
+      ) : null}
     </div>
   );
 }

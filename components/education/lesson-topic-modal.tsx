@@ -59,7 +59,7 @@ export function LessonTopicModal({
         <header className="sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-bridge/40 bg-background/95 px-6 py-4 backdrop-blur">
           <div>
             <h2 id={titleId} className="text-lg font-bold text-foreground">
-              {topic ? "Edit lesson topic" : "Add lesson topic"}
+              {topic ? "Edit topic" : "Add topic"}
             </h2>
             <p className="mt-0.5 text-sm text-ink-soft">
               {topic ? `Update ${topic.names.en}.` : `Create a topic for ${mentorName}.`}

@@ -1,33 +1,46 @@
-import Link from "next/link";
+"use client";
+
+import { useCallback, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import { addLessonHref } from "@/components/education/mentor-detail/mentor-detail-config";
-import { Badge, ButtonLink, Card } from "@/components/ui";
+import { LessonTopicModal } from "@/components/education/lesson-topic-modal";
+import { Badge, Button, ButtonLink, Card } from "@/components/ui";
 import type { LessonTopic } from "@/lib/supabase/lesson-topics";
 
 type MentorTopicsSectionProps = {
   mentorSlug: string;
+  mentorName: string;
   topics: LessonTopic[];
   lessonCountByTopic: ReadonlyMap<string, number>;
 };
 
 export function MentorTopicsSection({
   mentorSlug,
+  mentorName,
   topics,
   lessonCountByTopic,
 }: MentorTopicsSectionProps) {
+  const router = useRouter();
+  const [topicModal, setTopicModal] = useState<LessonTopic | "new" | null>(null);
+
+  const closeTopicModal = useCallback(() => setTopicModal(null), []);
+  const handleTopicSaved = useCallback(() => {
+    setTopicModal(null);
+    router.refresh();
+  }, [router]);
+
   return (
     <section>
       <Card>
         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <div>
-            <h2 className="text-base font-bold text-foreground">Lesson topics</h2>
+            <h2 className="text-base font-bold text-foreground">Topics</h2>
             <p className="mt-1 text-sm text-ink-soft">
               Use topics to organize the mentor&apos;s lessons under each category.
             </p>
           </div>
-          <ButtonLink href={`/admin/lessons/topics/add?mentor=${encodeURIComponent(mentorSlug)}`}>
-            + Add topic
-          </ButtonLink>
+          <Button onClick={() => setTopicModal("new")}>+ Add topic</Button>
         </div>
 
         <div className="mt-5">
@@ -56,12 +69,13 @@ export function MentorTopicsSection({
                     >
                       + Add lesson
                     </ButtonLink>
-                    <Link
-                      href={`/admin/lessons/topics/edit/${topic.id}`}
+                    <button
+                      type="button"
+                      onClick={() => setTopicModal(topic)}
                       className="rounded-lg border border-bridge/40 px-4 py-2 text-sm font-semibold text-teal transition hover:bg-surface"
                     >
                       Edit topic
-                    </Link>
+                    </button>
                   </div>
                 </div>
               ))}
@@ -69,6 +83,17 @@ export function MentorTopicsSection({
           )}
         </div>
       </Card>
+
+      {topicModal ? (
+        <LessonTopicModal
+          key={topicModal === "new" ? "new" : topicModal.id}
+          mentorSlug={mentorSlug}
+          mentorName={mentorName}
+          topic={topicModal === "new" ? undefined : topicModal}
+          onClose={closeTopicModal}
+          onSaved={handleTopicSaved}
+        />
+      ) : null}
     </section>
   );
 }

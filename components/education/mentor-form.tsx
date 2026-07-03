@@ -5,6 +5,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 
 import { R2Uploader } from "@/components/shared/r2-uploader";
+import { MultiSelectDropdown } from "@/components/ui/dropdown";
 import { educationCategorySlugs } from "@/lib/education/categories";
 import { slugify } from "@/lib/slug";
 import { createMentor, updateMentor } from "@/lib/supabase/actions";
@@ -20,6 +21,11 @@ const categoryLabels: Record<(typeof educationCategorySlugs)[number], string> = 
   siac: "SIAC",
 };
 
+const categoryOptions = educationCategorySlugs.map((slug) => ({
+  value: slug,
+  label: categoryLabels[slug],
+}));
+
 export function MentorForm({ mentor }: { mentor?: AdminMentor }) {
   const isEdit = !!mentor;
   const [isSaving, setIsSaving] = useState(false);
@@ -28,14 +34,6 @@ export function MentorForm({ mentor }: { mentor?: AdminMentor }) {
   const [selectedCategories, setSelectedCategories] = useState<string[]>(
     mentor?.categories ?? [],
   );
-
-  const toggleCategory = (category: string) => {
-    setSelectedCategories((current) =>
-      current.includes(category)
-        ? current.filter((value) => value !== category)
-        : [...current, category],
-    );
-  };
 
   const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -101,7 +99,7 @@ export function MentorForm({ mentor }: { mentor?: AdminMentor }) {
   const defaultStatus = mentor?.status === "published" ? "Published" : "Draft";
 
   return (
-    <div className="w-full rounded-xl border border-bridge/40 bg-surface p-6">
+    <div className="rounded-lg border border-bridge bg-surface p-5 shadow-sm sm:p-6">
       <h2 className="mb-6 text-base font-bold text-foreground">Mentor profile</h2>
 
       <form className="space-y-6" onSubmit={handleSubmit}>
@@ -238,32 +236,21 @@ export function MentorForm({ mentor }: { mentor?: AdminMentor }) {
           </div>
         </div>
 
-        <fieldset>
-          <legend className="mb-2 text-xs font-semibold text-ink-muted">Market categories</legend>
-          <div className="flex flex-wrap gap-3">
-            {educationCategorySlugs.map((category) => {
-              const checked = selectedCategories.includes(category);
-              return (
-                <label
-                  key={category}
-                  className={`inline-flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 text-sm transition ${
-                    checked
-                      ? "border-teal/50 bg-teal/10 text-teal"
-                      : "border-bridge/40 text-ink-muted hover:border-bridge/60"
-                  }`}
-                >
-                  <input
-                    type="checkbox"
-                    checked={checked}
-                    onChange={() => toggleCategory(category)}
-                    className="rounded border-bridge/50 text-teal focus:ring-teal/30"
-                  />
-                  {categoryLabels[category]}
-                </label>
-              );
-            })}
-          </div>
-        </fieldset>
+        <div>
+          <label className="mb-1.5 block text-xs font-semibold text-ink-muted">
+            Market categories
+          </label>
+          <MultiSelectDropdown
+            values={selectedCategories}
+            options={categoryOptions}
+            onChange={setSelectedCategories}
+            placeholder="Select categories…"
+            className="w-full sm:max-w-xs"
+          />
+          <p className="mt-1 text-xs text-ink-soft">
+            Pick one or more markets this mentor teaches.
+          </p>
+        </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
           <div>

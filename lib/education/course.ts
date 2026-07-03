@@ -3,6 +3,8 @@ import type { EducationCategory } from "./categories";
 import { extractYouTubeVideoId, youtubeThumbnailUrl } from "@/lib/media/youtube";
 
 export type LessonVideo = {
+  /** DB row id — present only on admin-loaded lessons; used to target inline edits. */
+  id?: string;
   /** Public embed URL, e.g. YouTube embed link */
   embedUrl: string;
   /** Optional heading shown above this embed */

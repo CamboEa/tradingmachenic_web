@@ -6,7 +6,7 @@ import { adminLessonTopicsHref } from "@/lib/education/admin-lessons-nav";
 import { getLessonTopicForEdit } from "@/lib/supabase/lesson-topics";
 import { getAllMentorsForAdmin } from "@/lib/supabase/mentors";
 
-export const metadata = { title: "Edit lesson topic" };
+export const metadata = { title: "Edit topic" };
 
 export default async function EditLessonTopicPage({
   params,
@@ -29,7 +29,7 @@ export default async function EditLessonTopicPage({
       <AdminFormHeader
         backHref={adminLessonTopicsHref(mentor.slug)}
         backLabel="Topics"
-        title="Edit lesson topic"
+        title="Edit topic"
         description={topic.names.en}
       />
 

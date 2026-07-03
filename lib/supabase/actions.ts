@@ -395,6 +395,124 @@ export async function updateLesson(
   }
 }
 
+function revalidateLessonPaths(slug?: string) {
+  revalidatePath("/admin/lessons");
+  revalidateTag(LESSONS_CACHE_TAG, "max");
+  for (const loc of locales) {
+    revalidatePath(`/${loc}/education`);
+    if (slug) revalidatePath(`/${loc}/education/${slug}`);
+  }
+}
+
+/** Append a single video to a topic's lesson (used by the inline video table). */
+export async function addLessonVideo(
+  lessonSlug: string,
+  video: { embedUrl: string; title_en: string; title_km: string },
+): Promise<{ error?: string; success?: boolean }> {
+  const supabase = await createAdminClient();
+  const slug = slugify(lessonSlug);
+
+  const { data: lesson, error: lessonError } = await supabase
+    .from("lessons")
+    .select("id, slug")
+    .eq("slug", slug)
+    .maybeSingle();
+  if (lessonError || !lesson) {
+    return { error: lessonError?.message ?? "Lesson not found." };
+  }
+
+  const embedUrl = resolveLessonVideoEmbedUrl(video.embedUrl.trim());
+  if (!extractYouTubeVideoId(embedUrl)) {
+    return { error: "Enter a valid YouTube link or 11-character video ID." };
+  }
+
+  const { data: last } = await supabase
+    .from("lesson_videos")
+    .select("sort_order")
+    .eq("lesson_id", lesson.id)
+    .order("sort_order", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  const nextSort = (last?.sort_order ?? -1) + 1;
+
+  const { error } = await supabase.from("lesson_videos").insert({
+    lesson_id: lesson.id,
+    embed_url: embedUrl,
+    title_en: video.title_en.trim(),
+    title_km: video.title_km.trim(),
+    sort_order: nextSort,
+  });
+  if (error) return { error: error.message };
+
+  revalidateLessonPaths(lesson.slug);
+  return { success: true };
+}
+
+/** Update one video's title + embed URL in place. */
+export async function updateLessonVideo(
+  videoId: string,
+  video: { embedUrl: string; title_en: string; title_km: string },
+): Promise<{ error?: string; success?: boolean }> {
+  const supabase = await createAdminClient();
+
+  const embedUrl = resolveLessonVideoEmbedUrl(video.embedUrl.trim());
+  if (!extractYouTubeVideoId(embedUrl)) {
+    return { error: "Enter a valid YouTube link or 11-character video ID." };
+  }
+
+  const { data, error } = await supabase
+    .from("lesson_videos")
+    .update({
+      embed_url: embedUrl,
+      title_en: video.title_en.trim(),
+      title_km: video.title_km.trim(),
+    })
+    .eq("id", videoId)
+    .select("lesson_id")
+    .maybeSingle();
+  if (error) return { error: error.message };
+
+  let slug: string | undefined;
+  if (data?.lesson_id) {
+    const { data: lessonRow } = await supabase
+      .from("lessons")
+      .select("slug")
+      .eq("id", data.lesson_id)
+      .maybeSingle();
+    slug = lessonRow?.slug ?? undefined;
+  }
+  revalidateLessonPaths(slug);
+  return { success: true };
+}
+
+/** Delete a single video from a lesson. */
+export async function deleteLessonVideo(
+  videoId: string,
+): Promise<{ error?: string; success?: boolean }> {
+  const supabase = await createAdminClient();
+
+  const { data: existing } = await supabase
+    .from("lesson_videos")
+    .select("lesson_id")
+    .eq("id", videoId)
+    .maybeSingle();
+
+  const { error } = await supabase.from("lesson_videos").delete().eq("id", videoId);
+  if (error) return { error: error.message };
+
+  let slug: string | undefined;
+  if (existing?.lesson_id) {
+    const { data: lessonRow } = await supabase
+      .from("lessons")
+      .select("slug")
+      .eq("id", existing.lesson_id)
+      .maybeSingle();
+    slug = lessonRow?.slug ?? undefined;
+  }
+  revalidateLessonPaths(slug);
+  return { success: true };
+}
+
 type ToolFormData = {
   name: string;
   type: "indicator" | "ea";

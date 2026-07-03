@@ -2,7 +2,6 @@ import type { EducationCategory } from "@/lib/education/categories";
 
 export const mentorDetailSections = [
   { id: "mentor-profile", label: "Profile" },
-  { id: "mentor-categories", label: "Categories" },
   { id: "mentor-lessons", label: "Lessons" },
   { id: "mentor-topics", label: "Topics" },
 ] as const;
