@@ -1,14 +1,13 @@
 export const UNCATEGORIZED_LESSON_TOPIC = "__uncategorized__";
 
-export function adminLessonsListHref(
+export function mentorLessonsHref(
   mentorSlug?: string | null,
   topicSlug?: string | null,
 ): string {
-  const params = new URLSearchParams();
-  if (mentorSlug) params.set("mentor", mentorSlug);
+  if (!mentorSlug) return "/admin/mentors";
+  const params = new URLSearchParams({ tab: "lessons" });
   if (topicSlug) params.set("topic", topicSlug);
-  const query = params.toString();
-  return query ? `/admin/lessons?${query}` : "/admin/lessons";
+  return `/admin/mentors/edit/${encodeURIComponent(mentorSlug)}?${params}`;
 }
 
 export function lessonCountForMentor(
@@ -16,9 +15,4 @@ export function lessonCountForMentor(
   mentorSlug: string,
 ): number {
   return lessons.filter((lesson) => lesson.mentorSlug === mentorSlug).length;
-}
-
-export function adminLessonTopicsHref(mentorSlug?: string): string {
-  if (!mentorSlug) return "/admin/lessons/topics";
-  return `/admin/lessons/topics?mentor=${encodeURIComponent(mentorSlug)}`;
 }

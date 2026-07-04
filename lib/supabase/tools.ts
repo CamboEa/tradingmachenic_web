@@ -36,6 +36,7 @@ export interface Tool {
   download_count_mt4: number;
   download_count_mt5: number;
   status: "draft" | "published";
+  mentor_slug: string | null;
 }
 
 function normalizeToolRow(row: Record<string, unknown>): Tool {
@@ -46,7 +47,7 @@ function normalizeToolRow(row: Record<string, unknown>): Tool {
   };
 }
 
-export async function getAllTools() {
+export async function getAllTools(mentorSlug?: string) {
   try {
     // Check environment variables
     if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
@@ -57,10 +58,16 @@ export async function getAllTools() {
     // Use service role for admin access (bypasses RLS)
     const adminClient = getSharedAdminClient();
 
-    const { data, error } = await adminClient
+    let query = adminClient
       .from("tools")
       .select("*")
       .order("created_at", { ascending: false });
+
+    if (mentorSlug?.trim()) {
+      query = query.eq("mentor_slug", mentorSlug.trim());
+    }
+
+    const { data, error } = await query;
 
     if (error) {
       console.error("Supabase error fetching tools:", {

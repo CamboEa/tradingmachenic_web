@@ -69,12 +69,18 @@ export function LessonsList({ lessons }: LessonsListProps) {
   const columns: Column<Lesson>[] = [
     {
       header: "Lesson",
-      cell: (lesson) => (
-        <>
-          <p className="font-semibold text-foreground">{lesson.titles.en}</p>
-          {lesson.titles.km ? <p className="text-xs text-ink-soft">{lesson.titles.km}</p> : null}
-        </>
-      ),
+      cell: (lesson) => {
+        const title = lesson.titles.en;
+        const subtitle = lesson.titles.km;
+        const showSubtitle = Boolean(subtitle && subtitle !== title);
+
+        return (
+          <>
+            <p className="font-semibold text-foreground">{title}</p>
+            {showSubtitle ? <p className="text-xs text-ink-soft">{subtitle}</p> : null}
+          </>
+        );
+      },
     },
     {
       header: "Type",

@@ -9,7 +9,7 @@ export default function AddMentorPage() {
       <AdminFormHeader
         backHref="/admin/mentors"
         title="Add mentor"
-        description="Create a mentor profile for the education hub."
+        description="Create a mentor profile and optionally set up their login in one step."
       />
 
       <MentorForm />

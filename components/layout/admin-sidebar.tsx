@@ -5,9 +5,14 @@ import { usePathname } from "next/navigation";
 
 import { SiteLogo } from "@/components/shared/site-logo";
 import { BRAND_NAME } from "@/lib/brand";
-import { NAV, isNavActive } from "@/components/layout/admin-nav";
+import { NAV, isNavActive, type NavSection } from "@/components/layout/admin-nav";
 
-export function AdminSidebar() {
+type AdminSidebarProps = {
+  nav?: NavSection[];
+  panelLabel?: string;
+};
+
+export function AdminSidebar({ nav = NAV, panelLabel = "Admin Panel" }: AdminSidebarProps) {
   const pathname = usePathname();
 
   return (
@@ -18,14 +23,14 @@ export function AdminSidebar() {
         <div className="min-w-0">
           <p className="truncate text-sm font-semibold text-white">{BRAND_NAME}</p>
           <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
-            Admin Panel
+            {panelLabel}
           </p>
         </div>
       </div>
 
       {/* Nav */}
       <nav className="flex-1 space-y-6 overflow-y-auto px-3 py-5">
-        {NAV.map((section) => (
+        {nav.map((section) => (
           <div key={section.heading}>
             <p className="mb-1.5 px-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
               {section.heading}

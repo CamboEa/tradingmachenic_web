@@ -33,7 +33,7 @@ function RoleSelect({ user, isSelf }: { user: Profile; isSelf: boolean }) {
   const [role, setRole] = useState<UserRole>(user.role);
   const [saving, setSaving] = useState(false);
 
-  async function handleChange(next: UserRole) {
+  async function handleChange(next: "student" | "admin") {
     const previous = role;
     setRole(next);
     setSaving(true);
@@ -49,17 +49,21 @@ function RoleSelect({ user, isSelf }: { user: Profile; isSelf: boolean }) {
 
   if (isSelf) {
     return (
-      <Badge variant={role === "admin" ? "gold" : "neutral"}>
-        {role === "admin" ? "Admin" : "Student"} (you)
+      <Badge variant={role === "admin" ? "gold" : role === "mentor" ? "teal" : "neutral"}>
+        {role === "admin" ? "Admin" : role === "mentor" ? "Mentor" : "Student"} (you)
       </Badge>
     );
+  }
+
+  if (role === "mentor") {
+    return <Badge variant="teal">Mentor</Badge>;
   }
 
   return (
     <select
       value={role}
       disabled={saving}
-      onChange={(e) => handleChange(e.target.value as UserRole)}
+      onChange={(e) => handleChange(e.target.value as "student" | "admin")}
       aria-label={`Role for ${user.email ?? user.id}`}
       className="cursor-pointer rounded-lg border border-bridge/40 bg-surface px-2.5 py-1.5 text-xs font-semibold text-ink-muted outline-none transition focus:border-teal focus:ring-2 focus:ring-teal/20 disabled:cursor-not-allowed disabled:opacity-50"
     >

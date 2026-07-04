@@ -4,13 +4,16 @@ import Link from "next/link";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
+import { MentorAccountFields } from "@/components/education/mentor-account-fields";
 import { R2Uploader } from "@/components/shared/r2-uploader";
 import { MultiSelectDropdown } from "@/components/ui/dropdown";
 import { educationCategorySlugs } from "@/lib/education/categories";
 import { slugify } from "@/lib/slug";
-import { createMentor, updateMentor } from "@/lib/supabase/actions";
+import { createMentor, createMentorAccount, updateMentor } from "@/lib/supabase/actions";
 import type { AdminMentor } from "@/lib/supabase/mentors";
-import { FIELD_CLASS } from "@/lib/ui/styles";
+import { Card } from "@/components/ui";
+import { cn } from "@/lib/ui/cn";
+import { FIELD_CLASS, ui } from "@/lib/ui/styles";
 
 const fieldClass = FIELD_CLASS;
 
@@ -26,7 +29,13 @@ const categoryOptions = educationCategorySlugs.map((slug) => ({
   label: categoryLabels[slug],
 }));
 
-export function MentorForm({ mentor }: { mentor?: AdminMentor }) {
+export function MentorForm({
+  mentor,
+  isMentorSelf = false,
+}: {
+  mentor?: AdminMentor;
+  isMentorSelf?: boolean;
+}) {
   const isEdit = !!mentor;
   const [isSaving, setIsSaving] = useState(false);
   const [slug, setSlug] = useState(mentor?.slug ?? "");
@@ -34,6 +43,8 @@ export function MentorForm({ mentor }: { mentor?: AdminMentor }) {
   const [selectedCategories, setSelectedCategories] = useState<string[]>(
     mentor?.categories ?? [],
   );
+  const [createAccount, setCreateAccount] = useState(false);
+  const [mentorNameEn, setMentorNameEn] = useState(mentor?.names.en ?? "");
 
   const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -62,6 +73,19 @@ export function MentorForm({ mentor }: { mentor?: AdminMentor }) {
       return;
     }
 
+    if (!isEdit && createAccount) {
+      const accountEmail = ((formData.get("email") as string) ?? "").trim();
+      const accountPassword = (formData.get("password") as string) ?? "";
+      if (!accountEmail) {
+        toast.error("Email is required when creating a login account");
+        return;
+      }
+      if (!accountPassword || accountPassword.length < 8) {
+        toast.error("Password must be at least 8 characters");
+        return;
+      }
+    }
+
     setIsSaving(true);
     try {
       const payload = {
@@ -84,9 +108,49 @@ export function MentorForm({ mentor }: { mentor?: AdminMentor }) {
       if (result.error) {
         toast.error(result.error);
       } else {
-        toast.success(isEdit ? "Mentor updated" : "Mentor created");
+        let accountWarning: string | null = null;
+
+        if (!isEdit && createAccount && result.slug) {
+          const accountEmail = ((formData.get("email") as string) ?? "").trim();
+          const accountPassword = (formData.get("password") as string) ?? "";
+          const accountName = ((formData.get("full_name") as string) ?? "").trim();
+
+          if (!accountEmail || !accountPassword) {
+            accountWarning = "Mentor created, but email and password are required for login access.";
+          } else {
+            const accountForm = new FormData();
+            accountForm.set("mentor_slug", result.slug);
+            accountForm.set("email", accountEmail);
+            accountForm.set("password", accountPassword);
+            if (accountName) accountForm.set("full_name", accountName);
+
+            const accountResult = await createMentorAccount(accountForm);
+            if (accountResult.error) {
+              accountWarning = `Mentor created, but login setup failed: ${accountResult.error}`;
+            }
+          }
+        }
+
+        if (accountWarning) {
+          toast.warn(accountWarning);
+        } else if (!isEdit && createAccount) {
+          toast.success("Mentor and login account created");
+        } else {
+          toast.success(isEdit ? "Mentor updated" : "Mentor created");
+        }
+
         setTimeout(() => {
-          window.location.href = "/admin/mentors";
+          if (isMentorSelf && result.slug) {
+            window.location.href = `/admin/mentors/edit/${result.slug}`;
+            return;
+          }
+          const editBase = `/admin/mentors/edit/${result.slug ?? mentor?.slug}`;
+          const accountTab = !isEdit && createAccount ? "?tab=account" : "";
+          window.location.href = isEdit
+            ? editBase
+            : result.slug
+              ? `${editBase}${accountTab}`
+              : "/admin/mentors";
         }, 900);
       }
     } catch (err) {
@@ -99,8 +163,16 @@ export function MentorForm({ mentor }: { mentor?: AdminMentor }) {
   const defaultStatus = mentor?.status === "published" ? "Published" : "Draft";
 
   return (
-    <div className="rounded-lg border border-bridge bg-surface p-5 shadow-sm sm:p-6">
-      <h2 className="mb-6 text-base font-bold text-foreground">Mentor profile</h2>
+    <Card>
+      <p className={ui.eyebrowAdmin}>Profile</p>
+      <h2 className="mt-1 text-lg font-bold tracking-tight text-foreground sm:text-xl">
+        Mentor profile
+      </h2>
+      <p className={cn(ui.pageDesc, "mt-1 mb-6")}>
+        {isEdit
+          ? "Update mentor details, market categories, and publish status."
+          : "Create the mentor profile and optionally set up their login in one step."}
+      </p>
 
       <form className="space-y-6" onSubmit={handleSubmit}>
         <div className="grid gap-4 sm:grid-cols-2">
@@ -115,6 +187,7 @@ export function MentorForm({ mentor }: { mentor?: AdminMentor }) {
               required
               defaultValue={mentor?.names.en ?? ""}
               onChange={(e) => {
+                setMentorNameEn(e.target.value);
                 if (!isEdit && !slug) {
                   setSlug(slugify(e.target.value));
                 }
@@ -148,6 +221,7 @@ export function MentorForm({ mentor }: { mentor?: AdminMentor }) {
             value={slug}
             onChange={(e) => setSlug(e.target.value)}
             placeholder="auto-generated-from-name"
+            readOnly={isMentorSelf}
             className={fieldClass}
           />
           <p className="mt-1 text-xs text-ink-soft">
@@ -252,22 +326,26 @@ export function MentorForm({ mentor }: { mentor?: AdminMentor }) {
           </p>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div>
-            <label htmlFor="status" className="mb-1.5 block text-xs font-semibold text-ink-muted">
-              Status
-            </label>
-            <select
-              id="status"
-              name="status"
-              defaultValue={defaultStatus}
-              className={fieldClass}
-            >
-              <option value="Draft">Draft</option>
-              <option value="Published">Published</option>
-            </select>
+        {!isMentorSelf ? (
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <label htmlFor="status" className="mb-1.5 block text-xs font-semibold text-ink-muted">
+                Status
+              </label>
+              <select
+                id="status"
+                name="status"
+                defaultValue={defaultStatus}
+                className={fieldClass}
+              >
+                <option value="Draft">Draft</option>
+                <option value="Published">Published</option>
+              </select>
+            </div>
           </div>
-        </div>
+        ) : (
+          <input type="hidden" name="status" value={defaultStatus} />
+        )}
 
         {isEdit ? (
           <div className="rounded-lg border border-bridge/30 bg-surface-soft px-4 py-3 text-sm text-ink-muted">
@@ -275,22 +353,53 @@ export function MentorForm({ mentor }: { mentor?: AdminMentor }) {
           </div>
         ) : null}
 
+        {!isEdit && !isMentorSelf ? (
+          <div className="space-y-4 rounded-lg border border-bridge/30 bg-surface-soft/50 px-4 py-5">
+            <div className="flex items-start gap-3">
+              <input
+                id="create_account"
+                type="checkbox"
+                checked={createAccount}
+                onChange={(e) => setCreateAccount(e.target.checked)}
+                className="mt-1 h-4 w-4 rounded border-bridge/50 text-teal focus:ring-teal/30"
+              />
+              <div>
+                <label htmlFor="create_account" className="text-sm font-semibold text-foreground">
+                  Create login account for this mentor
+                </label>
+                <p className="mt-0.5 text-xs text-ink-soft">
+                  Gives them access to manage their own profile, lessons, and tools.
+                </p>
+              </div>
+            </div>
+            {createAccount ? (
+              <MentorAccountFields mentorName={mentorNameEn.trim() || undefined} required />
+            ) : null}
+          </div>
+        ) : null}
+
         <div className="flex flex-wrap items-center gap-3 border-t border-bridge/30 pt-5">
           <button
             type="submit"
             disabled={isSaving}
-            className="rounded-lg bg-teal px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-teal/90 disabled:opacity-60"
+            className={ui.btnPrimary}
           >
-            {isSaving ? "Saving…" : isEdit ? "Save mentor" : "Create mentor"}
+            {isSaving
+              ? "Saving…"
+              : isEdit
+                ? "Save mentor"
+                : createAccount
+                  ? "Create mentor & account"
+                  : "Create mentor"}
           </button>
           <Link
-            href="/admin/mentors"
-            className="rounded-lg border border-bridge/40 px-5 py-2.5 text-sm font-semibold text-ink-muted transition hover:bg-surface-soft"
+            href={isMentorSelf ? `/admin/mentors/edit/${mentor?.slug}` : "/admin/mentors"}
+            className={ui.btnSecondary}
           >
             Cancel
           </Link>
         </div>
       </form>
-    </div>
+    </Card>
   );
 }

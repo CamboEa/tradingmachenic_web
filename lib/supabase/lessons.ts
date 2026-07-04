@@ -120,17 +120,23 @@ async function fetchPublishedLessons(): Promise<Lesson[]> {
   return rowsToLessons((data ?? []) as unknown as LessonRowWithVideos[]);
 }
 
-async function fetchAdminLessons(): Promise<Lesson[]> {
+async function fetchAdminLessons(mentorSlug?: string): Promise<Lesson[]> {
   const client = adminSupabase();
   if (!client) {
     console.error("Missing Supabase admin credentials for lessons");
     return [];
   }
 
-  const { data, error } = await client
+  let query = client
     .from("lessons")
     .select(LESSON_WITH_VIDEOS_SELECT)
     .order("created_at", { ascending: true });
+
+  if (mentorSlug?.trim()) {
+    query = query.eq("mentor_slug", mentorSlug.trim());
+  }
+
+  const { data, error } = await query;
 
   if (error) {
     console.error("Error fetching admin lessons:", error);
@@ -155,8 +161,8 @@ export async function getAllLessons(): Promise<Lesson[]> {
 }
 
 /** All lessons for admin (joined query, not cached). */
-export async function getAllLessonsForAdmin(): Promise<Lesson[]> {
-  return fetchAdminLessons();
+export async function getAllLessonsForAdmin(mentorSlug?: string): Promise<Lesson[]> {
+  return fetchAdminLessons(mentorSlug);
 }
 
 /** Single published lesson — uses the shared lessons cache. */

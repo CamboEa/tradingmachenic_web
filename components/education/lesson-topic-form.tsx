@@ -8,7 +8,7 @@ import { R2Uploader } from "@/components/shared/r2-uploader";
 import { slugify } from "@/lib/slug";
 import { createLessonTopic, updateLessonTopic } from "@/lib/supabase/actions";
 import type { LessonTopic } from "@/lib/supabase/lesson-topics";
-import { adminLessonTopicsHref } from "@/lib/education/admin-lessons-nav";
+import { mentorLessonsHref } from "@/lib/education/admin-lessons-nav";
 import { ui, FIELD_CLASS } from "@/lib/ui/styles";
 
 const fieldClass = FIELD_CLASS;
@@ -31,7 +31,7 @@ export function LessonTopicForm({
   const [slug, setSlug] = useState(topic?.slug ?? "");
   const [imageUrl, setImageUrl] = useState(topic?.imageUrl ?? "");
 
-  const backHref = adminLessonTopicsHref(mentorSlug);
+  const backHref = mentorLessonsHref(mentorSlug);
 
   async function handleSubmit(e: React.SyntheticEvent<HTMLFormElement>) {
     e.preventDefault();

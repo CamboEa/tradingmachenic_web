@@ -77,8 +77,8 @@ export default async function AdminDashboard() {
       <div className="mt-10">
         <div className="mb-4 flex items-center justify-between">
           <h2 className={ui.sectionLabel}>Video Lessons</h2>
-          <Link href="/admin/lessons" className="text-xs font-medium text-teal hover:underline">
-            View all →
+          <Link href="/admin/mentors" className="text-xs font-medium text-teal hover:underline">
+            Manage mentors →
           </Link>
         </div>
         {lessons.length === 0 ? (

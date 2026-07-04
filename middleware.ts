@@ -28,6 +28,22 @@ function isGatePath(pathname: string): boolean {
   );
 }
 
+const MENTOR_BLOCKED_PREFIXES = [
+  "/admin/students",
+  "/admin/blog",
+  "/admin/podcasts",
+  "/admin/program",
+  "/admin/mentors/add",
+  "/admin/mentor-accounts",
+  "/admin/lessons",
+];
+
+function isMentorBlockedAdminPath(pathname: string): boolean {
+  return MENTOR_BLOCKED_PREFIXES.some(
+    (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
+  );
+}
+
 function pathnameLocale(pathname: string): (typeof locales)[number] | null {
   for (const locale of locales) {
     if (pathname === `/${locale}` || pathname.startsWith(`/${locale}/`)) {
@@ -140,7 +156,7 @@ export async function middleware(request: NextRequest) {
     user = data.user;
   }
 
-  // ── Protect /admin (signed-in admins only) ─────────────────────
+  // ── Protect /admin (signed-in admins and mentors) ─────────────
   if (pathname.startsWith("/admin")) {
     if (!user) {
       const loginUrl = new URL(`/${defaultLocale}/login`, request.url);
@@ -151,13 +167,41 @@ export async function middleware(request: NextRequest) {
     if (supabase) {
       const { data: profile } = await supabase
         .from("profiles")
-        .select("role")
+        .select("role, mentor_id, mentors(slug)")
         .eq("id", user.id)
         .single();
 
-      if (profile?.role !== "admin") {
+      const role = profile?.role;
+      const mentorSlug =
+        profile?.mentors && typeof profile.mentors === "object" && "slug" in profile.mentors
+          ? String((profile.mentors as { slug: string }).slug)
+          : null;
+
+      if (role !== "admin" && role !== "mentor") {
         const home = new URL(`/${defaultLocale}`, request.url);
         return NextResponse.redirect(home);
+      }
+
+      if (role === "mentor") {
+        if (!mentorSlug) {
+          const home = new URL(`/${defaultLocale}`, request.url);
+          return NextResponse.redirect(home);
+        }
+
+        const mentorHome = `/admin/mentors/edit/${mentorSlug}`;
+
+        if (isMentorBlockedAdminPath(pathname)) {
+          return NextResponse.redirect(new URL(mentorHome, request.url));
+        }
+
+        if (pathname === "/admin" || pathname === "/admin/mentors") {
+          return NextResponse.redirect(new URL(mentorHome, request.url));
+        }
+
+        const editMatch = pathname.match(/^\/admin\/mentors\/edit\/([^/]+)/);
+        if (editMatch && decodeURIComponent(editMatch[1]) !== mentorSlug) {
+          return NextResponse.redirect(new URL(mentorHome, request.url));
+        }
       }
     }
 

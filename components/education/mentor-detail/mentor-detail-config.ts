@@ -3,10 +3,22 @@ import type { EducationCategory } from "@/lib/education/categories";
 export const mentorDetailSections = [
   { id: "mentor-profile", label: "Profile" },
   { id: "mentor-lessons", label: "Lessons" },
-  { id: "mentor-topics", label: "Topics" },
+  { id: "mentor-account", label: "Login access", adminOnly: true },
 ] as const;
 
 export type MentorDetailSectionId = (typeof mentorDetailSections)[number]["id"];
+
+export function mentorDetailSectionsForUser(isAdmin: boolean) {
+  return mentorDetailSections.filter(
+    (section) => !("adminOnly" in section && section.adminOnly) || isAdmin,
+  );
+}
+
+export function parseMentorDetailTab(tab?: string | null): MentorDetailSectionId {
+  if (tab === "lessons") return "mentor-lessons";
+  if (tab === "account") return "mentor-account";
+  return "mentor-profile";
+}
 
 export const categoryLabels: Record<EducationCategory, string> = {
   forex: "Forex",
@@ -14,19 +26,3 @@ export const categoryLabels: Record<EducationCategory, string> = {
   crypto: "Crypto",
   siac: "SIAC",
 };
-
-export function addLessonHref({
-  mentorSlug,
-  category,
-  topicSlug,
-}: {
-  mentorSlug: string;
-  category?: EducationCategory;
-  topicSlug?: string;
-}): string {
-  const params = new URLSearchParams({ mentor: mentorSlug });
-  if (category) params.set("category", category);
-  if (topicSlug) params.set("topic", topicSlug);
-
-  return `/admin/lessons/add?${params.toString()}`;
-}

@@ -30,6 +30,14 @@ import { slugify } from "@/lib/slug";
 import { extractYouTubeVideoId, resolveLessonVideoEmbedUrl } from "@/lib/media/youtube";
 
 import { createClient, createAdminClient, getSessionUser } from "./server";
+import { getSharedAdminClient } from "./shared";
+import type { Profile } from "./profiles";
+import {
+  getStaffAccess,
+  mentorScopeError,
+  requireAdminAccess,
+  toolScopeError,
+} from "@/lib/auth/staff-access";
 
 export type AuthState = { error: string } | null | undefined;
 
@@ -94,7 +102,7 @@ export async function signIn(
   const adminClient = await createAdminClient();
   const { data: profile } = await adminClient
     .from("profiles")
-    .select("role")
+    .select("role, mentor_id")
     .eq("id", data.user.id)
     .single();
 
@@ -102,6 +110,18 @@ export async function signIn(
 
   if (profile?.role === "admin") {
     redirect("/admin");
+  }
+
+  if (profile?.role === "mentor" && profile.mentor_id) {
+    const { data: mentor } = await adminClient
+      .from("mentors")
+      .select("slug")
+      .eq("id", profile.mentor_id)
+      .single();
+
+    if (mentor?.slug) {
+      redirect(`/admin/mentors/edit/${mentor.slug}`);
+    }
   }
 
   const redirectTo = (formData.get("redirectTo") as string) || `/${defaultLocale}/education`;
@@ -148,7 +168,19 @@ export async function signOut(): Promise<never> {
 }
 
 export async function deleteLesson(slug: string): Promise<{ error?: string }> {
+  const access = await getStaffAccess();
+  if (!access) return { error: "Not authorized." };
+
   const supabase = await createAdminClient();
+
+  const { data: existing } = await supabase
+    .from("lessons")
+    .select("mentor_slug")
+    .eq("slug", slug)
+    .maybeSingle();
+
+  const scopeErr = mentorScopeError(access, existing?.mentor_slug ?? "");
+  if (scopeErr) return { error: scopeErr };
 
   const { error } = await supabase
     .from("lessons")
@@ -159,8 +191,7 @@ export async function deleteLesson(slug: string): Promise<{ error?: string }> {
     return { error: error.message };
   }
 
-  revalidatePath("/admin/lessons");
-  revalidateTag(LESSONS_CACHE_TAG, "max");
+  revalidateLessonPaths(slug, existing?.mentor_slug);
   return {};
 }
 
@@ -228,6 +259,13 @@ export async function createLesson(formData: {
     title_km: string;
   }>;
 }): Promise<{ error?: string; success?: boolean; slug?: string }> {
+  const access = await getStaffAccess();
+  if (!access) return { error: "Not authorized." };
+
+  const mentorSlug = formData.mentor_slug?.trim() ?? "";
+  const scopeErr = mentorScopeError(access, mentorSlug);
+  if (scopeErr) return { error: scopeErr };
+
   const supabase = await createAdminClient();
   const slug = slugify(formData.slug);
   if (!slug) {
@@ -280,12 +318,7 @@ export async function createLesson(formData: {
       return { error: videosError.message };
     }
 
-    revalidatePath("/admin/lessons");
-    revalidateTag(LESSONS_CACHE_TAG, "max");
-    for (const loc of locales) {
-      revalidatePath(`/${loc}/education`);
-      revalidatePath(`/${loc}/education/${slug}`);
-    }
+    revalidateLessonPaths(slug, formData.mentor_slug);
     return { success: true, slug };
   } catch (err) {
     return { error: err instanceof Error ? err.message : "Failed to create lesson" };
@@ -318,6 +351,9 @@ export async function updateLesson(
     }>;
   }
 ): Promise<{ error?: string; success?: boolean; slug?: string }> {
+  const access = await getStaffAccess();
+  if (!access) return { error: "Not authorized." };
+
   const supabase = await createAdminClient();
   const decodedOriginal = decodeURIComponent(originalSlug);
   const newSlug = slugify(formData.slug);
@@ -329,13 +365,16 @@ export async function updateLesson(
     // Get lesson by slug
     const { data: lesson, error: fetchError } = await supabase
       .from("lessons")
-      .select("id")
+      .select("id, mentor_slug")
       .eq("slug", decodedOriginal)
       .single();
 
     if (fetchError) {
       return { error: fetchError.message };
     }
+
+    const scopeErr = mentorScopeError(access, lesson.mentor_slug ?? "");
+    if (scopeErr) return { error: scopeErr };
 
     // Update lesson
     const { error: lessonError } = await supabase
@@ -382,21 +421,19 @@ export async function updateLesson(
       return { error: videosError.message };
     }
 
-    revalidatePath("/admin/lessons");
-    revalidateTag(LESSONS_CACHE_TAG, "max");
-    for (const loc of locales) {
-      revalidatePath(`/${loc}/education`);
-      revalidatePath(`/${loc}/education/${decodedOriginal}`);
-      revalidatePath(`/${loc}/education/${newSlug}`);
-    }
+    revalidateLessonPaths(newSlug, formData.mentor_slug);
     return { success: true, slug: newSlug };
   } catch (err) {
     return { error: err instanceof Error ? err.message : "Failed to update lesson" };
   }
 }
 
-function revalidateLessonPaths(slug?: string) {
-  revalidatePath("/admin/lessons");
+function revalidateLessonPaths(slug?: string, mentorSlug?: string | null) {
+  revalidatePath("/admin");
+  revalidatePath("/admin/mentors");
+  if (mentorSlug?.trim()) {
+    revalidatePath(`/admin/mentors/edit/${mentorSlug.trim()}`);
+  }
   revalidateTag(LESSONS_CACHE_TAG, "max");
   for (const loc of locales) {
     revalidatePath(`/${loc}/education`);
@@ -409,17 +446,23 @@ export async function addLessonVideo(
   lessonSlug: string,
   video: { embedUrl: string; title_en: string; title_km: string },
 ): Promise<{ error?: string; success?: boolean }> {
+  const access = await getStaffAccess();
+  if (!access) return { error: "Not authorized." };
+
   const supabase = await createAdminClient();
   const slug = slugify(lessonSlug);
 
   const { data: lesson, error: lessonError } = await supabase
     .from("lessons")
-    .select("id, slug")
+    .select("id, slug, mentor_slug")
     .eq("slug", slug)
     .maybeSingle();
   if (lessonError || !lesson) {
     return { error: lessonError?.message ?? "Lesson not found." };
   }
+
+  const scopeErr = mentorScopeError(access, lesson.mentor_slug ?? "");
+  if (scopeErr) return { error: scopeErr };
 
   const embedUrl = resolveLessonVideoEmbedUrl(video.embedUrl.trim());
   if (!extractYouTubeVideoId(embedUrl)) {
@@ -453,7 +496,20 @@ export async function updateLessonVideo(
   videoId: string,
   video: { embedUrl: string; title_en: string; title_km: string },
 ): Promise<{ error?: string; success?: boolean }> {
+  const access = await getStaffAccess();
+  if (!access) return { error: "Not authorized." };
+
   const supabase = await createAdminClient();
+
+  const { data: existingVideo } = await supabase
+    .from("lesson_videos")
+    .select("lesson_id, lessons(mentor_slug, slug)")
+    .eq("id", videoId)
+    .maybeSingle();
+
+  const lessonMeta = existingVideo?.lessons as { mentor_slug: string | null; slug: string } | null;
+  const scopeErr = mentorScopeError(access, lessonMeta?.mentor_slug ?? "");
+  if (scopeErr) return { error: scopeErr };
 
   const embedUrl = resolveLessonVideoEmbedUrl(video.embedUrl.trim());
   if (!extractYouTubeVideoId(embedUrl)) {
@@ -489,13 +545,20 @@ export async function updateLessonVideo(
 export async function deleteLessonVideo(
   videoId: string,
 ): Promise<{ error?: string; success?: boolean }> {
+  const access = await getStaffAccess();
+  if (!access) return { error: "Not authorized." };
+
   const supabase = await createAdminClient();
 
   const { data: existing } = await supabase
     .from("lesson_videos")
-    .select("lesson_id")
+    .select("lesson_id, lessons(mentor_slug, slug)")
     .eq("id", videoId)
     .maybeSingle();
+
+  const lessonMeta = existing?.lessons as { mentor_slug: string | null; slug: string } | null;
+  const scopeErr = mentorScopeError(access, lessonMeta?.mentor_slug ?? "");
+  if (scopeErr) return { error: scopeErr };
 
   const { error } = await supabase.from("lesson_videos").delete().eq("id", videoId);
   if (error) return { error: error.message };
@@ -549,6 +612,9 @@ function revalidateToolPaths(toolId?: string) {
 }
 
 export async function createTool(formData: ToolFormData): Promise<{ error?: string; success?: boolean }> {
+  const access = await getStaffAccess();
+  if (!access) return { error: "Not authorized." };
+
   const supabase = await createAdminClient();
 
   try {
@@ -577,6 +643,7 @@ export async function createTool(formData: ToolFormData): Promise<{ error?: stri
       image_url: formData.image_url ?? null,
       install_guide_url: formData.install_guide_url ?? null,
       status: formData.status,
+      mentor_slug: access.role === "mentor" ? access.mentorSlug : null,
     };
 
     const { data, error } = await supabase.from("tools").insert([row]).select("id").single();
@@ -603,7 +670,19 @@ export async function getToolForEdit(id: string): Promise<Tool | null> {
 }
 
 export async function updateTool(id: string, formData: ToolFormData): Promise<{ error?: string; success?: boolean }> {
+  const access = await getStaffAccess();
+  if (!access) return { error: "Not authorized." };
+
   const supabase = await createAdminClient();
+
+  const { data: existingTool } = await supabase
+    .from("tools")
+    .select("mentor_slug")
+    .eq("id", id)
+    .maybeSingle();
+
+  const scopeErr = toolScopeError(access, existingTool ?? {});
+  if (scopeErr) return { error: scopeErr };
 
   try {
     const { error } = await supabase.from("tools").update({
@@ -644,7 +723,20 @@ export async function updateTool(id: string, formData: ToolFormData): Promise<{ 
 }
 
 export async function deleteTool(id: string): Promise<{ error?: string }> {
+  const access = await getStaffAccess();
+  if (!access) return { error: "Not authorized." };
+
   const supabase = await createAdminClient();
+
+  const { data: existingTool } = await supabase
+    .from("tools")
+    .select("mentor_slug")
+    .eq("id", id)
+    .maybeSingle();
+
+  const scopeErr = toolScopeError(access, existingTool ?? {});
+  if (scopeErr) return { error: scopeErr };
+
   const { error } = await supabase.from("tools").delete().eq("id", id);
   if (error) return { error: error.message };
   revalidatePath("/admin/tools");
@@ -1116,6 +1208,9 @@ async function syncMentorCategories(
 export async function createMentor(
   formData: MentorFormData,
 ): Promise<{ error?: string; success?: boolean; slug?: string }> {
+  const adminErr = await requireAdminAccess();
+  if (adminErr.error) return { error: adminErr.error };
+
   const supabase = await createAdminClient();
   const slug = slugify(formData.slug || formData.name_en);
   if (!slug) {
@@ -1166,9 +1261,15 @@ export async function updateMentor(
   originalSlug: string,
   formData: MentorFormData,
 ): Promise<{ error?: string; success?: boolean; slug?: string }> {
+  const access = await getStaffAccess();
+  if (!access) return { error: "Not authorized." };
+
   const supabase = await createAdminClient();
   const decodedOriginal = decodeURIComponent(originalSlug);
-  const slug = slugify(formData.slug || formData.name_en);
+  const scopeErr = mentorScopeError(access, decodedOriginal);
+  if (scopeErr) return { error: scopeErr };
+
+  let slug = slugify(formData.slug || formData.name_en);
   if (!slug) {
     return { error: "Slug is required (add an English name or enter a slug)." };
   }
@@ -1182,12 +1283,18 @@ export async function updateMentor(
   try {
     const { data: existing, error: fetchError } = await supabase
       .from("mentors")
-      .select("id")
+      .select("id, slug, status")
       .eq("slug", decodedOriginal)
       .maybeSingle();
 
     if (fetchError || !existing) {
       return { error: fetchError?.message ?? "Mentor not found." };
+    }
+
+    let resolvedStatus = formData.status;
+    if (access.role === "mentor") {
+      slug = existing.slug;
+      resolvedStatus = existing.status as "draft" | "published";
     }
 
     const { data: current, error: currentError } = await supabase
@@ -1214,7 +1321,7 @@ export async function updateMentor(
         bio_km: formData.bio_km?.trim() || null,
         image_url: formData.image_url?.trim() || null,
         sort_order: sortOrder,
-        status: formData.status,
+        status: resolvedStatus,
       })
       .eq("id", existing.id);
 
@@ -1245,6 +1352,9 @@ export async function updateMentor(
 }
 
 export async function deleteMentor(slug: string): Promise<{ error?: string }> {
+  const adminErr = await requireAdminAccess();
+  if (adminErr.error) return { error: adminErr.error };
+
   const supabase = await createAdminClient();
   const decoded = decodeURIComponent(slug);
 
@@ -1301,6 +1411,9 @@ export async function updateUserRole(
   id: string,
   role: "student" | "admin",
 ): Promise<{ error?: string; success?: boolean }> {
+  const adminErr = await requireAdminAccess();
+  if (adminErr.error) return { error: adminErr.error };
+
   if (role !== "student" && role !== "admin") {
     return { error: "Invalid role" };
   }
@@ -1319,14 +1432,227 @@ export async function updateUserRole(
   return { success: true };
 }
 
+async function linkProfileToMentor(
+  userId: string,
+  mentorId: string,
+  email: string,
+  fullName: string | null,
+): Promise<{ profile?: Profile; error?: string }> {
+  const admin = getSharedAdminClient();
+  const payload = {
+    role: "mentor" as const,
+    mentor_id: mentorId,
+    email,
+    full_name: fullName,
+  };
+
+  let lastError: string | undefined;
+
+  for (let attempt = 0; attempt < 10; attempt += 1) {
+    const { data: existingRow } = await admin
+      .from("profiles")
+      .select("id")
+      .eq("id", userId)
+      .maybeSingle();
+
+    if (existingRow) {
+      const { data: updated, error: updateError } = await admin
+        .from("profiles")
+        .update(payload)
+        .eq("id", userId)
+        .select("*")
+        .single();
+
+      if (!updateError && updated?.mentor_id === mentorId) {
+        return { profile: updated as Profile };
+      }
+      lastError = updateError?.message ?? "Profile update returned no linked mentor.";
+    } else if (attempt >= 2) {
+      const { data: upserted, error: upsertError } = await admin
+        .from("profiles")
+        .upsert({ id: userId, ...payload }, { onConflict: "id" })
+        .select("*")
+        .single();
+
+      if (!upsertError && upserted?.mentor_id === mentorId) {
+        return { profile: upserted as Profile };
+      }
+      lastError = upsertError?.message ?? "Profile upsert returned no linked mentor.";
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, 200));
+  }
+
+  return { error: lastError ?? "Could not link profile to mentor." };
+}
+
+async function resolveAuthUserIdByEmail(email: string): Promise<string | null> {
+  const admin = getSharedAdminClient();
+  const { data: profile } = await admin
+    .from("profiles")
+    .select("id")
+    .eq("email", email)
+    .maybeSingle();
+
+  if (profile?.id) return profile.id;
+
+  const { data: listed } = await admin.auth.admin.listUsers({ page: 1, perPage: 1000 });
+  const match = listed?.users?.find((user) => user.email?.toLowerCase() === email);
+  return match?.id ?? null;
+}
+
+export async function createMentorAccount(
+  formData: FormData,
+): Promise<{ error?: string; success?: boolean; profile?: Profile }> {
+  const adminErr = await requireAdminAccess();
+  if (adminErr.error) return { error: adminErr.error };
+
+  const mentorSlug = ((formData.get("mentor_slug") as string) ?? "").trim();
+  const email = ((formData.get("email") as string) ?? "").trim().toLowerCase();
+  const password = (formData.get("password") as string) ?? "";
+  const fullName = ((formData.get("full_name") as string) ?? "").trim();
+
+  if (!mentorSlug) return { error: "Mentor is required." };
+  if (!email) return { error: "Email is required." };
+  if (!password || password.length < 8) {
+    return { error: "Password must be at least 8 characters." };
+  }
+
+  const admin = getSharedAdminClient();
+  const { data: mentor, error: mentorError } = await admin
+    .from("mentors")
+    .select("id, slug")
+    .eq("slug", mentorSlug)
+    .maybeSingle();
+
+  if (mentorError || !mentor) {
+    return { error: mentorError?.message ?? "Mentor not found." };
+  }
+
+  const { data: existingLink } = await admin
+    .from("profiles")
+    .select("*")
+    .eq("mentor_id", mentor.id)
+    .maybeSingle();
+
+  if (existingLink) {
+    return {
+      error: "This mentor already has a linked login account.",
+      profile: existingLink as Profile,
+    };
+  }
+
+  const { data: emailProfile } = await admin
+    .from("profiles")
+    .select("*")
+    .eq("email", email)
+    .maybeSingle();
+
+  if (emailProfile?.mentor_id && emailProfile.mentor_id !== mentor.id) {
+    return { error: "This email is already linked to another mentor." };
+  }
+
+  let userId = emailProfile?.id ?? null;
+
+  if (!userId) {
+    const { data: authUser, error: createError } = await admin.auth.admin.createUser({
+      email,
+      password,
+      email_confirm: true,
+      user_metadata: fullName ? { full_name: fullName } : undefined,
+    });
+
+    if (createError || !authUser.user) {
+      const isDuplicate = createError?.message?.toLowerCase().includes("already");
+      if (isDuplicate) {
+        userId = await resolveAuthUserIdByEmail(email);
+        if (!userId) {
+          return {
+            error:
+              "An account with this email already exists but could not be linked. Remove the old user from Supabase Auth or use a different email.",
+          };
+        }
+      } else {
+        return { error: createError?.message ?? "Failed to create user." };
+      }
+    } else {
+      userId = authUser.user.id;
+    }
+  }
+
+  const linked = await linkProfileToMentor(
+    userId,
+    mentor.id,
+    email,
+    fullName || emailProfile?.full_name || null,
+  );
+
+  if (!linked.profile) {
+    return {
+      error: linked.error
+        ? `Could not link account: ${linked.error}`
+        : "Could not link account to this mentor.",
+    };
+  }
+
+  revalidatePath(`/admin/mentors/edit/${mentor.slug}`);
+  revalidatePath("/admin/mentor-accounts");
+  revalidatePath(`/admin/mentor-accounts/${mentor.slug}`);
+  return { success: true, profile: linked.profile };
+}
+
+export async function unlinkMentorAccount(
+  profileId: string,
+  mentorSlug: string,
+): Promise<{ error?: string; success?: boolean }> {
+  const adminErr = await requireAdminAccess();
+  if (adminErr.error) return { error: adminErr.error };
+
+  const admin = getSharedAdminClient();
+  const { data: profile, error: fetchError } = await admin
+    .from("profiles")
+    .select("id, role, mentor_id")
+    .eq("id", profileId)
+    .maybeSingle();
+
+  if (fetchError || !profile) {
+    return { error: fetchError?.message ?? "Account not found." };
+  }
+
+  if (profile.role !== "mentor" || !profile.mentor_id) {
+    return { error: "This account is not linked as a mentor." };
+  }
+
+  const { data: mentor } = await admin
+    .from("mentors")
+    .select("slug")
+    .eq("id", profile.mentor_id)
+    .maybeSingle();
+
+  if (!mentor || mentor.slug !== mentorSlug) {
+    return { error: "Account does not match this mentor." };
+  }
+
+  const { error } = await admin
+    .from("profiles")
+    .update({ role: "student", mentor_id: null })
+    .eq("id", profileId);
+
+  if (error) return { error: error.message };
+
+  revalidatePath(`/admin/mentors/edit/${mentorSlug}`);
+  revalidatePath("/admin/mentor-accounts");
+  revalidatePath(`/admin/mentor-accounts/${mentorSlug}`);
+  return { success: true };
+}
+
 function revalidateLessonTopicPaths(mentorSlug?: string) {
-  revalidatePath("/admin/lessons");
-  revalidatePath("/admin/lessons/topics");
+  revalidatePath("/admin/mentors");
+  if (mentorSlug?.trim()) {
+    revalidatePath(`/admin/mentors/edit/${mentorSlug.trim()}`);
+  }
   revalidateTag(LESSON_TOPICS_CACHE_TAG, "max");
   revalidateTag(LESSONS_CACHE_TAG, "max");
-  if (mentorSlug) {
-    revalidatePath(`/admin/lessons?mentor=${encodeURIComponent(mentorSlug)}`);
-  }
 }
 
 export async function createLessonTopic(formData: {
@@ -1339,8 +1665,14 @@ export async function createLessonTopic(formData: {
   sort_order?: number;
   image_url?: string;
 }): Promise<{ error?: string; success?: boolean; id?: string }> {
+  const access = await getStaffAccess();
+  if (!access) return { error: "Not authorized." };
+
   const supabase = await createAdminClient();
   const mentorSlug = formData.mentor_slug.trim();
+  const scopeErr = mentorScopeError(access, mentorSlug);
+  if (scopeErr) return { error: scopeErr };
+
   const slug = slugify(formData.slug || formData.name_en);
 
   if (!mentorSlug) return { error: "Mentor is required" };
@@ -1382,6 +1714,9 @@ export async function updateLessonTopic(
     image_url?: string;
   },
 ): Promise<{ error?: string; success?: boolean; slug?: string }> {
+  const access = await getStaffAccess();
+  if (!access) return { error: "Not authorized." };
+
   const supabase = await createAdminClient();
   const slug = slugify(formData.slug || formData.name_en);
   if (!slug) return { error: "Slug is required" };
@@ -1396,6 +1731,9 @@ export async function updateLessonTopic(
   if (fetchError || !existing) {
     return { error: fetchError?.message ?? "Topic not found" };
   }
+
+  const scopeErr = mentorScopeError(access, existing.mentor_slug);
+  if (scopeErr) return { error: scopeErr };
 
   const { error } = await supabase
     .from("lesson_topics")
@@ -1425,6 +1763,9 @@ export async function updateLessonTopic(
 }
 
 export async function deleteLessonTopic(id: string): Promise<{ error?: string }> {
+  const access = await getStaffAccess();
+  if (!access) return { error: "Not authorized." };
+
   const supabase = await createAdminClient();
 
   const { data: topic, error: fetchError } = await supabase
@@ -1436,6 +1777,9 @@ export async function deleteLessonTopic(id: string): Promise<{ error?: string }>
   if (fetchError || !topic) {
     return { error: fetchError?.message ?? "Topic not found" };
   }
+
+  const scopeErr = mentorScopeError(access, topic.mentor_slug);
+  if (scopeErr) return { error: scopeErr };
 
   const { count, error: countError } = await supabase
     .from("lessons")

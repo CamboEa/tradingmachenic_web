@@ -5,13 +5,18 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 import { SiteLogo } from "@/components/shared/site-logo";
-import { NAV, isNavActive } from "@/components/layout/admin-nav";
+import { NAV, isNavActive, type NavSection } from "@/components/layout/admin-nav";
+
+type AdminMobileNavProps = {
+  nav?: NavSection[];
+  panelLabel?: string;
+};
 
 /**
  * Floating hamburger + slide-in drawer for admin navigation on small screens.
  * The persistent sidebar takes over at `lg`, so this is hidden there.
  */
-export function AdminMobileNav() {
+export function AdminMobileNav({ nav = NAV, panelLabel = "Admin Panel" }: AdminMobileNavProps) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
@@ -40,7 +45,7 @@ export function AdminMobileNav() {
             <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
               <div className="flex items-center gap-3">
                 <SiteLogo size="sm" className="rounded-lg ring-1 ring-white/10" />
-                <p className="text-sm font-semibold text-white">Admin Panel</p>
+                <p className="text-sm font-semibold text-white">{panelLabel}</p>
               </div>
               <button
                 type="button"
@@ -54,7 +59,7 @@ export function AdminMobileNav() {
               </button>
             </div>
             <nav className="flex-1 space-y-6 overflow-y-auto px-3 py-5">
-              {NAV.map((section) => (
+              {nav.map((section) => (
                 <div key={section.heading}>
                   <p className="mb-1.5 px-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
                     {section.heading}

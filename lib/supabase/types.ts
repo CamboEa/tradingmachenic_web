@@ -4,7 +4,7 @@ export type PodcastStatus = "draft" | "published";
 export type LessonStatus = "draft" | "published";
 export type LessonType = "free" | "paid";
 export type Platform = "MT4" | "MT5" | "MT4 & MT5";
-export type UserRole = "student" | "admin";
+export type UserRole = "student" | "admin" | "mentor";
 
 export type CurriculumAccent = "gold" | "teal";
 
@@ -59,6 +59,7 @@ export type Database = {
           email: string | null;
           full_name: string | null;
           role: UserRole;
+          mentor_id: string | null;
         };
         Insert: Omit<Database["public"]["Tables"]["profiles"]["Row"], "created_at">;
         Update: Partial<Database["public"]["Tables"]["profiles"]["Insert"]>;
@@ -95,6 +96,7 @@ export type Database = {
           download_count_mt4: number;
           download_count_mt5: number;
           status: ToolStatus;
+          mentor_slug: string | null;
         };
         Insert: Omit<
           Database["public"]["Tables"]["tools"]["Row"],

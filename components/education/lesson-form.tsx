@@ -19,6 +19,7 @@ import {
  type PaidVideo,
  videoValidationError,
 } from "@/components/education/lesson-form/lesson-form-model";
+import { mentorLessonsHref } from "@/lib/education/admin-lessons-nav";
 import { slugify } from "@/lib/slug";
 import { educationCategorySlugs } from "@/lib/education/categories";
 import type { Mentor } from "@/lib/education/mentors";
@@ -266,7 +267,9 @@ export function LessonForm({
  ? "Lesson published — visible on Education."
  : "Saved as draft — set status to Published to show on Education.",
  );
- setTimeout(() => (window.location.href = "/admin/lessons"), 1500);
+ setTimeout(() => {
+ window.location.href = mentorLessonsHref(mentor_slug || undefined, lesson_topic_slug || undefined);
+ }, 1500);
  }
  }
  } catch (err) {
@@ -652,7 +655,7 @@ export function LessonForm({
  <label className="text-xs font-semibold text-ink-muted">Topic</label>
  {mentorSlug ? (
  <Link
- href={`/admin/lessons/topics/add?mentor=${encodeURIComponent(mentorSlug)}`}
+ href={mentorLessonsHref(mentorSlug)}
  className="text-xs font-semibold text-teal hover:underline"
  >
  + New topic

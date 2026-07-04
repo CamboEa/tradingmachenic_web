@@ -1,16 +1,28 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 import { ToolsForm } from "@/components/tools/tools-form";
 import { AdminFormHeader, Badge } from "@/components/ui";
+import { getStaffAccess, toolScopeError } from "@/lib/auth/staff-access";
 import { getToolForEdit } from "@/lib/supabase/actions";
 
 export const metadata = { title: "Edit Tool" };
 
 export default async function EditToolPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
+  const access = await getStaffAccess();
+  if (!access) notFound();
+
   const tool = await getToolForEdit(id);
 
   if (!tool) notFound();
+
+  const scopeErr = toolScopeError(access, tool);
+  if (scopeErr) {
+    if (access.role === "mentor") {
+      redirect("/admin/tools");
+    }
+    notFound();
+  }
 
   return (
     <div>

@@ -48,15 +48,21 @@ function transformTopicRow(row: LessonTopicRow): LessonTopic {
   };
 }
 
-export async function getAllLessonTopicsForAdmin(): Promise<LessonTopic[]> {
+export async function getAllLessonTopicsForAdmin(mentorSlug?: string): Promise<LessonTopic[]> {
   const supabase = adminSupabase();
   if (!supabase) return [];
 
-  const { data, error } = await supabase
+  let query = supabase
     .from("lesson_topics")
     .select("*")
     .order("mentor_slug", { ascending: true })
     .order("created_at", { ascending: false });
+
+  if (mentorSlug?.trim()) {
+    query = query.eq("mentor_slug", mentorSlug.trim());
+  }
+
+  const { data, error } = await query;
 
   if (error) {
     console.error("Error fetching lesson topics:", error.message);

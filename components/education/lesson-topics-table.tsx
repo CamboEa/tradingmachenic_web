@@ -9,7 +9,7 @@ import {
   RowActions,
   type Column,
 } from "@/components/ui";
-import { adminLessonsListHref } from "@/lib/education/admin-lessons-nav";
+import { mentorLessonsHref } from "@/lib/education/admin-lessons-nav";
 import type { LessonTopic } from "@/lib/supabase/lesson-topics";
 
 export function LessonTopicsTable({
@@ -49,7 +49,7 @@ export function LessonTopicsTable({
       cell: (topic) => (
         <RowActions>
           <Link
-            href={adminLessonsListHref(topic.mentorSlug, topic.slug)}
+            href={mentorLessonsHref(topic.mentorSlug, topic.slug)}
             className="rounded-lg border border-bridge/40 px-2.5 py-1.5 text-xs font-semibold text-teal transition hover:bg-surface-soft"
           >
             Lessons

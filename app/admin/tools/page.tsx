@@ -1,17 +1,25 @@
 import { ToolsTable } from "@/components/tools/tools-table";
 import { AdminPageHeader, ButtonLink, EmptyState } from "@/components/ui";
+import { getStaffAccess } from "@/lib/auth/staff-access";
 import { getAllTools } from "@/lib/supabase/tools";
 
 export const metadata = { title: "Tools" };
 
 export default async function ToolsPage() {
-  const tools = await getAllTools();
+  const access = await getStaffAccess();
+  const mentorSlug = access?.role === "mentor" ? access.mentorSlug : undefined;
+  const tools = await getAllTools(mentorSlug);
+  const isMentor = access?.role === "mentor";
 
   return (
     <div>
       <AdminPageHeader
         title="Tools"
-        description="Publish indicators and expert advisors for your students."
+        description={
+          isMentor
+            ? "Publish indicators and expert advisors for your students."
+            : "Publish indicators and expert advisors for your students."
+        }
         action={<ButtonLink href="/admin/tools/add">+ Add Tool</ButtonLink>}
       />
 
